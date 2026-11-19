@@ -18,9 +18,9 @@ const (
 	sloUnitStateDEGRADED    sloUnitState = 3
 	/// Carried and working, held out of service.
 	sloUnitStateSTANDBY     sloUnitState = 4
-	/// Carried and not working.
+	/// Carried and not working. A failed unit is still on board and stays in the answer.
 	sloUnitStateFAILED      sloUnitState = 5
-	/// No longer carried or no longer used. A winning RETIRED loadout removes the unit.
+	/// No longer carried. A winning RETIRED loadout takes the unit out of the answer.
 	sloUnitStateRETIRED     sloUnitState = 6
 )
 

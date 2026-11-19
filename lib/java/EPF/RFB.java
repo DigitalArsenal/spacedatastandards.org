@@ -31,12 +31,17 @@ import java.nio.ByteOrder;
  * one DOWNLINK — sharing ID_TRANSMITTER, each carrying its own MODE,
  * FREQ_MIN, FREQ_MAX and CENTER_FREQ.
  *
- * Records with NORAD_CAT_ID 0 are a DEFINITION: one radio configuration,
- * published once, that any number of hosts carry. The definition is every
- * unbound record sharing one ID_TRANSMITTER. A $SLO (Sensor Loadout) binds it to a
- * host or to a set of hosts by CONFIG_STANDARD "$RFB" and CONFIG_ID =
- * ID_TRANSMITTER, and carries what differs per host (dates, count, position,
- * serial number, mounting, status).
+ * DEFINITION. A record is a definition record when NORAD_CAT_ID is 0 and
+ * ID_ENTITY is absent or empty; every other record is bound to its host (a
+ * record with only ID_ENTITY, as an upstream transmitter database writes for
+ * an object with no catalogue number, is bound to that entity). A radio
+ * definition is one radio configuration, published once, that any number of
+ * hosts carry: the current definition records sharing one ID_TRANSMITTER. A
+ * $SLO (Sensor Loadout) binds it to a host or to a set of hosts by
+ * CONFIG_STANDARD "$RFB" and CONFIG_ID = ID_TRANSMITTER, and carries what
+ * differs per host (dates, count, position, serial number, mounting, status).
+ * A corrected record is republished with the same ID and a later UPDATED_AT;
+ * the latest version from a publisher is current ($SLO READING RULE, step 1).
  */
 @SuppressWarnings("unused")
 public final class RFB extends com.google.flatbuffers.Table {
@@ -127,10 +132,11 @@ public final class RFB extends com.google.flatbuffers.Table {
    */
   public long NORAD_CAT_ID() { int o = __offset(36); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
   /**
-   * Identifier of the physical transmitter, transceiver or transponder this
-   * record describes (e.g. an upstream transmitter database's UUID). Uplink
-   * and downlink
-   * records of the same device share this value.
+   * Identifier of the transmitter, transceiver or transponder this record
+   * describes (e.g. an upstream transmitter database's UUID). Uplink and
+   * downlink records of the same device share this value. On a bound record
+   * it names one physical device; on a definition record it names the radio
+   * configuration, and $SLO.CONFIG_ID carries it.
    */
   public String ID_TRANSMITTER() { int o = __offset(38); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ID_TRANSMITTERAsByteBuffer() { return __vector_as_bytebuffer(38, 1); }
@@ -170,6 +176,15 @@ public final class RFB extends com.google.flatbuffers.Table {
   public String CITATION() { int o = __offset(52); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer CITATIONAsByteBuffer() { return __vector_as_bytebuffer(52, 1); }
   public ByteBuffer CITATIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 52, 1); }
+  /**
+   * RFC 3339 UTC timestamp of this version of the record, exactly
+   * YYYY-MM-DDTHH:mm:ss.sssZ. Of two records with one ID from one publisher,
+   * the later UPDATED_AT is current; a record without one is older than any
+   * record with one.
+   */
+  public String UPDATED_AT() { int o = __offset(54); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer UPDATED_ATAsByteBuffer() { return __vector_as_bytebuffer(54, 1); }
+  public ByteBuffer UPDATED_ATInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 54, 1); }
 
   public static int createRFB(FlatBufferBuilder builder,
       int IDOffset,
@@ -196,8 +211,9 @@ public final class RFB extends com.google.flatbuffers.Table {
       byte XMT_STATUS,
       boolean INVERT,
       int IARU_COORDINATIONOffset,
-      int CITATIONOffset) {
-    builder.startTable(25);
+      int CITATIONOffset,
+      int UPDATED_ATOffset) {
+    builder.startTable(26);
     RFB.addBaud(builder, BAUD);
     RFB.addEirp(builder, EIRP);
     RFB.addErp(builder, ERP);
@@ -208,6 +224,7 @@ public final class RFB extends com.google.flatbuffers.Table {
     RFB.addCenterFreq(builder, CENTER_FREQ);
     RFB.addFreqMax(builder, FREQ_MAX);
     RFB.addFreqMin(builder, FREQ_MIN);
+    RFB.addUpdatedAt(builder, UPDATED_ATOffset);
     RFB.addCitation(builder, CITATIONOffset);
     RFB.addIaruCoordination(builder, IARU_COORDINATIONOffset);
     RFB.addService(builder, SERVICEOffset);
@@ -226,7 +243,7 @@ public final class RFB extends com.google.flatbuffers.Table {
     return RFB.endRFB(builder);
   }
 
-  public static void startRFB(FlatBufferBuilder builder) { builder.startTable(25); }
+  public static void startRFB(FlatBufferBuilder builder) { builder.startTable(26); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
   public static void addIdEntity(FlatBufferBuilder builder, int ID_ENTITYOffset) { builder.addOffset(1, ID_ENTITYOffset, 0); }
   public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(2, NAMEOffset, 0); }
@@ -252,6 +269,7 @@ public final class RFB extends com.google.flatbuffers.Table {
   public static void addInvert(FlatBufferBuilder builder, boolean INVERT) { builder.addBoolean(22, INVERT, false); }
   public static void addIaruCoordination(FlatBufferBuilder builder, int IARU_COORDINATIONOffset) { builder.addOffset(23, IARU_COORDINATIONOffset, 0); }
   public static void addCitation(FlatBufferBuilder builder, int CITATIONOffset) { builder.addOffset(24, CITATIONOffset, 0); }
+  public static void addUpdatedAt(FlatBufferBuilder builder, int UPDATED_ATOffset) { builder.addOffset(25, UPDATED_ATOffset, 0); }
   public static int endRFB(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

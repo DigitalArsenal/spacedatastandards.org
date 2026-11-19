@@ -26,12 +26,17 @@ import { snrEmissionMode } from './snrEmissionMode.js';
  * Platform: NORAD_CAT_ID and OBJECT_ID join to $CAT, SITE_ID to $SIT.ID,
  * SENSOR_ID to $SEN.ID. A sensor not attached to a platform has none of them.
  *
- * A record with none of the platform fields is a DEFINITION: one sensor
- * configuration, published once, that any number of hosts carry. A $SLO
- * (Sensor Loadout) binds it to a host or to a set of hosts by CONFIG_STANDARD "$SNR"
- * and CONFIG_ID = SENSOR_ID, and carries what differs per host (dates, count,
- * position, serial number, mounting, status). A definition's SENSOR_ID names
- * the configuration, not one physical sensor, so it has no $SEN.
+ * DEFINITION. A record is a definition when NORAD_CAT_ID is 0 and OBJECT_ID,
+ * SITE_ID and ENTITY_ID are all absent or empty. It is one sensor
+ * configuration, published once, that any number of hosts carry; every other
+ * record is bound to its platform. A $SLO (Sensor Loadout) binds a definition
+ * to a host or to a set of hosts by CONFIG_STANDARD "$SNR" and CONFIG_ID =
+ * SENSOR_ID, and carries what differs per host (dates, count, position,
+ * serial number, mounting, status). A definition's SENSOR_ID names the
+ * configuration, not one physical sensor, so it has no $SEN. A corrected
+ * definition is republished with the same SENSOR_ID and a later UPDATED_AT;
+ * the latest version from a publisher is the definition ($SLO READING RULE,
+ * step 1).
  */
 export class SNR implements flatbuffers.IUnpackableObject<SNRT> {
   bb: flatbuffers.ByteBuffer|null = null;
@@ -185,8 +190,21 @@ NOTES(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * RFC 3339 UTC timestamp of this version of the record, exactly
+ * YYYY-MM-DDTHH:mm:ss.sssZ. Of two records with one SENSOR_ID from one
+ * publisher, the later UPDATED_AT is current; a record without one is older
+ * than any record with one.
+ */
+UPDATED_AT():string|null
+UPDATED_AT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+UPDATED_AT(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startSNR(builder:flatbuffers.Builder) {
-  builder.startObject(16);
+  builder.startObject(17);
 }
 
 static addSensorId(builder:flatbuffers.Builder, SENSOR_IDOffset:flatbuffers.Offset) {
@@ -265,6 +283,10 @@ static addNotes(builder:flatbuffers.Builder, NOTESOffset:flatbuffers.Offset) {
   builder.addFieldOffset(15, NOTESOffset, 0);
 }
 
+static addUpdatedAt(builder:flatbuffers.Builder, UPDATED_ATOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(16, UPDATED_ATOffset, 0);
+}
+
 static endSNR(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // SENSOR_ID
@@ -297,7 +319,8 @@ unpack(): SNRT {
     (this.RF() !== null ? this.RF()!.unpack() : null),
     (this.OPTICAL() !== null ? this.OPTICAL()!.unpack() : null),
     (this.PROVENANCE() !== null ? this.PROVENANCE()!.unpack() : null),
-    this.NOTES()
+    this.NOTES(),
+    this.UPDATED_AT()
   );
 }
 
@@ -319,6 +342,7 @@ unpackTo(_o: SNRT): void {
   _o.OPTICAL = (this.OPTICAL() !== null ? this.OPTICAL()!.unpack() : null);
   _o.PROVENANCE = (this.PROVENANCE() !== null ? this.PROVENANCE()!.unpack() : null);
   _o.NOTES = this.NOTES();
+  _o.UPDATED_AT = this.UPDATED_AT();
 }
 }
 
@@ -339,7 +363,8 @@ constructor(
   public RF: SNRRfParametersT|null = null,
   public OPTICAL: SNROpticalParametersT|null = null,
   public PROVENANCE: OPPProvenanceT|null = null,
-  public NOTES: string|Uint8Array|null = null
+  public NOTES: string|Uint8Array|null = null,
+  public UPDATED_AT: string|Uint8Array|null = null
 ){}
 
 
@@ -357,6 +382,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const OPTICAL = (this.OPTICAL !== null ? this.OPTICAL!.pack(builder) : 0);
   const PROVENANCE = (this.PROVENANCE !== null ? this.PROVENANCE!.pack(builder) : 0);
   const NOTES = (this.NOTES !== null ? builder.createString(this.NOTES!) : 0);
+  const UPDATED_AT = (this.UPDATED_AT !== null ? builder.createString(this.UPDATED_AT!) : 0);
 
   SNR.startSNR(builder);
   SNR.addSensorId(builder, SENSOR_ID);
@@ -375,6 +401,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   SNR.addOptical(builder, OPTICAL);
   SNR.addProvenance(builder, PROVENANCE);
   SNR.addNotes(builder, NOTES);
+  SNR.addUpdatedAt(builder, UPDATED_AT);
 
   return SNR.endSNR(builder);
 }

@@ -30,8 +30,8 @@ class SLO : Table() {
         return this
     }
     /**
-     * Publisher-stable identifier of this loadout. Together with the publishing key it is the
-     * loadout's identity across versions. Recommended form: "<CONFIG_ID>@<host field value>".
+     * Publisher-stable identifier of this loadout. Together with the publisher it is the loadout's
+     * identity across versions. Recommended form: "<CONFIG_ID>@<host field value>".
      */
     val loadoutId : String
         get() {
@@ -45,8 +45,8 @@ class SLO : Table() {
     val loadoutIdAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
     fun loadoutIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
     /**
-     * Four-character standard code of the definition, `$` included: "\$SNR" or "\$RFB". Never the
-     * union ordinal.
+     * Four-character standard code of the definition, `$` included: "\$SNR" or "\$RFB" today. Never
+     * the union ordinal. A reader skips a value it does not implement (READING RULE, step 1).
      */
     val configStandard : String
         get() {
@@ -74,7 +74,9 @@ class SLO : Table() {
     val configIdAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
     fun configIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
     /**
-     * Optional content identifier pinning the exact definition bytes.
+     * "\$SNR" only: raw CIDv1 (sha2-256, base32 lowercase) of one exact version of the definition,
+     * over its size-prefixed bytes as published. A reader that finds no version with this CID does
+     * not resolve the loadout.
      */
     val configCid : String?
         get() {
@@ -174,8 +176,8 @@ class SLO : Table() {
     val busIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(24, 1)
     fun busIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 24, 1)
     /**
-     * RFC 3339 UTC fixed-millisecond timestamp the host starts carrying the configuration,
-     * inclusive. Absent = open.
+     * When the host starts carrying the configuration, inclusive, exactly YYYY-MM-DDTHH:mm:ss.sssZ.
+     * Absent = open.
      */
     val validFrom : String?
         get() {
@@ -189,7 +191,7 @@ class SLO : Table() {
     val validFromAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(26, 1)
     fun validFromInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 26, 1)
     /**
-     * RFC 3339 UTC fixed-millisecond timestamp the host stops carrying it, exclusive. Absent = open.
+     * When the host stops carrying it, exclusive, in the same form, after VALID_FROM. Absent = open.
      */
     val validTo : String?
         get() {
@@ -212,7 +214,8 @@ class SLO : Table() {
         }
     /**
      * Where the unit sits on the host, as the source names it (a slot, a face, a panel). Two units
-     * of one configuration on one host differ by POSITION.
+     * of one configuration on one host differ by POSITION. Absent: the loadout speaks for every unit
+     * of the configuration on the host (READING RULE, step 6).
      */
     val position : String?
         get() {
@@ -240,7 +243,7 @@ class SLO : Table() {
     val serialNumberAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(34, 1)
     fun serialNumberInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 34, 1)
     /**
-     * How this unit sits and points, over the definition's MOUNTING (READING RULE, step 5).
+     * How this unit sits and points, over the definition's MOUNTING (READING RULE, step 9).
      */
     val mounting : SNRMounting? get() = mounting(SNRMounting())
     fun mounting(obj: SNRMounting) : SNRMounting? {
@@ -257,7 +260,7 @@ class SLO : Table() {
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
     /**
-     * RFC 3339 UTC fixed-millisecond timestamp of this version of the loadout.
+     * This version of the loadout, exactly YYYY-MM-DDTHH:mm:ss.sssZ.
      */
     val updatedAt : String
         get() {
@@ -315,6 +318,35 @@ class SLO : Table() {
         }
     val notesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(46, 1)
     fun notesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 46, 1)
+    /**
+     * $DPM.PROVIDER_PEER_ID of the publisher of the definition. Absent: the loadout's own publisher.
+     */
+    val configPublisherPeerId : String?
+        get() {
+            val o = __offset(48)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val configPublisherPeerIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(48, 1)
+    fun configPublisherPeerIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 48, 1)
+    /**
+     * $DPM.PROVIDER_PEER_ID of the publisher of the $EGP, $CMR or $CAT a GROUP, CONSTELLATION or BUS
+     * scope reads. Absent: the loadout's own publisher.
+     */
+    val setPublisherPeerId : String?
+        get() {
+            val o = __offset(50)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val setPublisherPeerIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(50, 1)
+    fun setPublisherPeerIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 50, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSLO(_bb: ByteBuffer): SLO = getRootAsSLO(_bb, SLO())
@@ -323,8 +355,10 @@ class SLO : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun SLOBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$SLO")
-        fun createSLO(builder: FlatBufferBuilder, loadoutIdOffset: Int, configStandardOffset: Int, configIdOffset: Int, configCidOffset: Int, hostScope: Byte, noradCatId: UInt, siteIdOffset: Int, entityIdOffset: Int, constellationIdOffset: Int, groupIdOffset: Int, busIdOffset: Int, validFromOffset: Int, validToOffset: Int, count: UInt, positionOffset: Int, serialNumberOffset: Int, mountingOffset: Int, status: Byte, updatedAtOffset: Int, provenanceOffset: Int, citationOffset: Int, notesOffset: Int) : Int {
-            builder.startTable(22)
+        fun createSLO(builder: FlatBufferBuilder, loadoutIdOffset: Int, configStandardOffset: Int, configIdOffset: Int, configCidOffset: Int, hostScope: Byte, noradCatId: UInt, siteIdOffset: Int, entityIdOffset: Int, constellationIdOffset: Int, groupIdOffset: Int, busIdOffset: Int, validFromOffset: Int, validToOffset: Int, count: UInt, positionOffset: Int, serialNumberOffset: Int, mountingOffset: Int, status: Byte, updatedAtOffset: Int, provenanceOffset: Int, citationOffset: Int, notesOffset: Int, configPublisherPeerIdOffset: Int, setPublisherPeerIdOffset: Int) : Int {
+            builder.startTable(24)
+            addSETPUBLISHERPEERID(builder, setPublisherPeerIdOffset)
+            addCONFIGPUBLISHERPEERID(builder, configPublisherPeerIdOffset)
             addNOTES(builder, notesOffset)
             addCITATION(builder, citationOffset)
             addPROVENANCE(builder, provenanceOffset)
@@ -349,7 +383,7 @@ class SLO : Table() {
             addHOSTSCOPE(builder, hostScope)
             return endSLO(builder)
         }
-        fun startSLO(builder: FlatBufferBuilder) = builder.startTable(22)
+        fun startSLO(builder: FlatBufferBuilder) = builder.startTable(24)
         fun addLOADOUTID(builder: FlatBufferBuilder, loadoutId: Int) = builder.addOffset(0, loadoutId, 0)
         fun addCONFIGSTANDARD(builder: FlatBufferBuilder, configStandard: Int) = builder.addOffset(1, configStandard, 0)
         fun addCONFIGID(builder: FlatBufferBuilder, configId: Int) = builder.addOffset(2, configId, 0)
@@ -380,6 +414,8 @@ class SLO : Table() {
         fun startProvenanceVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addCITATION(builder: FlatBufferBuilder, citation: Int) = builder.addOffset(20, citation, 0)
         fun addNOTES(builder: FlatBufferBuilder, notes: Int) = builder.addOffset(21, notes, 0)
+        fun addCONFIGPUBLISHERPEERID(builder: FlatBufferBuilder, configPublisherPeerId: Int) = builder.addOffset(22, configPublisherPeerId, 0)
+        fun addSETPUBLISHERPEERID(builder: FlatBufferBuilder, setPublisherPeerId: Int) = builder.addOffset(23, setPublisherPeerId, 0)
         fun endSLO(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

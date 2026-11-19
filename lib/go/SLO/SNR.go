@@ -17,12 +17,17 @@ import (
 /// Platform: NORAD_CAT_ID and OBJECT_ID join to $CAT, SITE_ID to $SIT.ID,
 /// SENSOR_ID to $SEN.ID. A sensor not attached to a platform has none of them.
 ///
-/// A record with none of the platform fields is a DEFINITION: one sensor
-/// configuration, published once, that any number of hosts carry. A $SLO
-/// (Sensor Loadout) binds it to a host or to a set of hosts by CONFIG_STANDARD "$SNR"
-/// and CONFIG_ID = SENSOR_ID, and carries what differs per host (dates, count,
-/// position, serial number, mounting, status). A definition's SENSOR_ID names
-/// the configuration, not one physical sensor, so it has no $SEN.
+/// DEFINITION. A record is a definition when NORAD_CAT_ID is 0 and OBJECT_ID,
+/// SITE_ID and ENTITY_ID are all absent or empty. It is one sensor
+/// configuration, published once, that any number of hosts carry; every other
+/// record is bound to its platform. A $SLO (Sensor Loadout) binds a definition
+/// to a host or to a set of hosts by CONFIG_STANDARD "$SNR" and CONFIG_ID =
+/// SENSOR_ID, and carries what differs per host (dates, count, position,
+/// serial number, mounting, status). A definition's SENSOR_ID names the
+/// configuration, not one physical sensor, so it has no $SEN. A corrected
+/// definition is republished with the same SENSOR_ID and a later UPDATED_AT;
+/// the latest version from a publisher is the definition ($SLO READING RULE,
+/// step 1).
 type SNR struct {
 	_tab flatbuffers.Table
 }
@@ -365,8 +370,28 @@ func (rcv *SNR) Notes() []byte {
 	return rcv.NOTES()
 }
 
+/// RFC 3339 UTC timestamp of this version of the record, exactly
+/// YYYY-MM-DDTHH:mm:ss.sssZ. Of two records with one SENSOR_ID from one
+/// publisher, the later UPDATED_AT is current; a record without one is older
+/// than any record with one.
+func (rcv *SNR) UPDATED_AT() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *SNR) UpdatedAt() []byte {
+	return rcv.UPDATED_AT()
+}
+
+/// RFC 3339 UTC timestamp of this version of the record, exactly
+/// YYYY-MM-DDTHH:mm:ss.sssZ. Of two records with one SENSOR_ID from one
+/// publisher, the later UPDATED_AT is current; a record without one is older
+/// than any record with one.
 func SNRStart(builder *flatbuffers.Builder) {
-	builder.StartObject(16)
+	builder.StartObject(17)
 }
 func SNRAddSENSOR_ID(builder *flatbuffers.Builder, SENSOR_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(SENSOR_ID), 0)
@@ -469,6 +494,12 @@ func SNRAddNOTES(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
 }
 func SNRAddNotes(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
 	SNRAddNOTES(builder, NOTES)
+}
+func SNRAddUPDATED_AT(builder *flatbuffers.Builder, UPDATED_AT flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(UPDATED_AT), 0)
+}
+func SNRAddUpdatedAt(builder *flatbuffers.Builder, UPDATED_AT flatbuffers.UOffsetT) {
+	SNRAddUPDATED_AT(builder, UPDATED_AT)
 }
 func SNREnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

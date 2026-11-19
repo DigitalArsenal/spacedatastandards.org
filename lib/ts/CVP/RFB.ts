@@ -25,12 +25,17 @@ import { rfTransmitterState } from './rfTransmitterState.js';
  * one DOWNLINK — sharing ID_TRANSMITTER, each carrying its own MODE,
  * FREQ_MIN, FREQ_MAX and CENTER_FREQ.
  *
- * Records with NORAD_CAT_ID 0 are a DEFINITION: one radio configuration,
- * published once, that any number of hosts carry. The definition is every
- * unbound record sharing one ID_TRANSMITTER. A $SLO (Sensor Loadout) binds it to a
- * host or to a set of hosts by CONFIG_STANDARD "$RFB" and CONFIG_ID =
- * ID_TRANSMITTER, and carries what differs per host (dates, count, position,
- * serial number, mounting, status).
+ * DEFINITION. A record is a definition record when NORAD_CAT_ID is 0 and
+ * ID_ENTITY is absent or empty; every other record is bound to its host (a
+ * record with only ID_ENTITY, as an upstream transmitter database writes for
+ * an object with no catalogue number, is bound to that entity). A radio
+ * definition is one radio configuration, published once, that any number of
+ * hosts carry: the current definition records sharing one ID_TRANSMITTER. A
+ * $SLO (Sensor Loadout) binds it to a host or to a set of hosts by
+ * CONFIG_STANDARD "$RFB" and CONFIG_ID = ID_TRANSMITTER, and carries what
+ * differs per host (dates, count, position, serial number, mounting, status).
+ * A corrected record is republished with the same ID and a later UPDATED_AT;
+ * the latest version from a publisher is current ($SLO READING RULE, step 1).
  */
 export class RFB implements flatbuffers.IUnpackableObject<RFBT> {
   bb: flatbuffers.ByteBuffer|null = null;
@@ -202,10 +207,11 @@ NORAD_CAT_ID():number {
 }
 
 /**
- * Identifier of the physical transmitter, transceiver or transponder this
- * record describes (e.g. an upstream transmitter database's UUID). Uplink
- * and downlink
- * records of the same device share this value.
+ * Identifier of the transmitter, transceiver or transponder this record
+ * describes (e.g. an upstream transmitter database's UUID). Uplink and
+ * downlink records of the same device share this value. On a bound record
+ * it names one physical device; on a definition record it names the radio
+ * configuration, and $SLO.CONFIG_ID carries it.
  */
 ID_TRANSMITTER():string|null
 ID_TRANSMITTER(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -277,8 +283,21 @@ CITATION(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * RFC 3339 UTC timestamp of this version of the record, exactly
+ * YYYY-MM-DDTHH:mm:ss.sssZ. Of two records with one ID from one publisher,
+ * the later UPDATED_AT is current; a record without one is older than any
+ * record with one.
+ */
+UPDATED_AT():string|null
+UPDATED_AT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+UPDATED_AT(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 54);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startRFB(builder:flatbuffers.Builder) {
-  builder.startObject(25);
+  builder.startObject(26);
 }
 
 static addId(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset) {
@@ -381,6 +400,10 @@ static addCitation(builder:flatbuffers.Builder, CITATIONOffset:flatbuffers.Offse
   builder.addFieldOffset(24, CITATIONOffset, 0);
 }
 
+static addUpdatedAt(builder:flatbuffers.Builder, UPDATED_ATOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(25, UPDATED_ATOffset, 0);
+}
+
 static endRFB(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -394,7 +417,7 @@ static finishSizePrefixedRFBBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$RFB', true);
 }
 
-static createRFB(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, ID_ENTITYOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, BAND:rfBandDesignation, MODEOffset:flatbuffers.Offset, PURPOSEOffset:flatbuffers.Offset, FREQ_MIN:number, FREQ_MAX:number, CENTER_FREQ:number, BANDWIDTH:number, PEAK_GAIN:number, EDGE_GAIN:number, BEAMWIDTH:number, POLARIZATION:rfPolarization, ERP:number, EIRP:number, NORAD_CAT_ID:number, ID_TRANSMITTEROffset:flatbuffers.Offset, LINK_DIRECTION:linkCategory, BAUD:number, SERVICEOffset:flatbuffers.Offset, XMT_STATUS:rfTransmitterState, INVERT:boolean, IARU_COORDINATIONOffset:flatbuffers.Offset, CITATIONOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createRFB(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, ID_ENTITYOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, BAND:rfBandDesignation, MODEOffset:flatbuffers.Offset, PURPOSEOffset:flatbuffers.Offset, FREQ_MIN:number, FREQ_MAX:number, CENTER_FREQ:number, BANDWIDTH:number, PEAK_GAIN:number, EDGE_GAIN:number, BEAMWIDTH:number, POLARIZATION:rfPolarization, ERP:number, EIRP:number, NORAD_CAT_ID:number, ID_TRANSMITTEROffset:flatbuffers.Offset, LINK_DIRECTION:linkCategory, BAUD:number, SERVICEOffset:flatbuffers.Offset, XMT_STATUS:rfTransmitterState, INVERT:boolean, IARU_COORDINATIONOffset:flatbuffers.Offset, CITATIONOffset:flatbuffers.Offset, UPDATED_ATOffset:flatbuffers.Offset):flatbuffers.Offset {
   RFB.startRFB(builder);
   RFB.addId(builder, IDOffset);
   RFB.addIdEntity(builder, ID_ENTITYOffset);
@@ -421,6 +444,7 @@ static createRFB(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, ID_EN
   RFB.addInvert(builder, INVERT);
   RFB.addIaruCoordination(builder, IARU_COORDINATIONOffset);
   RFB.addCitation(builder, CITATIONOffset);
+  RFB.addUpdatedAt(builder, UPDATED_ATOffset);
   return RFB.endRFB(builder);
 }
 
@@ -450,7 +474,8 @@ unpack(): RFBT {
     this.XMT_STATUS(),
     this.INVERT(),
     this.IARU_COORDINATION(),
-    this.CITATION()
+    this.CITATION(),
+    this.UPDATED_AT()
   );
 }
 
@@ -481,6 +506,7 @@ unpackTo(_o: RFBT): void {
   _o.INVERT = this.INVERT();
   _o.IARU_COORDINATION = this.IARU_COORDINATION();
   _o.CITATION = this.CITATION();
+  _o.UPDATED_AT = this.UPDATED_AT();
 }
 }
 
@@ -510,7 +536,8 @@ constructor(
   public XMT_STATUS: rfTransmitterState = rfTransmitterState.UNKNOWN,
   public INVERT: boolean = false,
   public IARU_COORDINATION: string|Uint8Array|null = null,
-  public CITATION: string|Uint8Array|null = null
+  public CITATION: string|Uint8Array|null = null,
+  public UPDATED_AT: string|Uint8Array|null = null
 ){}
 
 
@@ -524,6 +551,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const SERVICE = (this.SERVICE !== null ? builder.createString(this.SERVICE!) : 0);
   const IARU_COORDINATION = (this.IARU_COORDINATION !== null ? builder.createString(this.IARU_COORDINATION!) : 0);
   const CITATION = (this.CITATION !== null ? builder.createString(this.CITATION!) : 0);
+  const UPDATED_AT = (this.UPDATED_AT !== null ? builder.createString(this.UPDATED_AT!) : 0);
 
   return RFB.createRFB(builder,
     ID,
@@ -550,7 +578,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.XMT_STATUS,
     this.INVERT,
     IARU_COORDINATION,
-    CITATION
+    CITATION,
+    UPDATED_AT
   );
 }
 }

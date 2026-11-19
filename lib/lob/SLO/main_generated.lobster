@@ -36,27 +36,29 @@ enum sloUnitState:
     sloUnitState_DEGRADED = 3
     /// Carried and working, held out of service.
     sloUnitState_STANDBY = 4
-    /// Carried and not working.
+    /// Carried and not working. A failed unit is still on board and stays in the answer.
     sloUnitState_FAILED = 5
-    /// No longer carried or no longer used. A winning RETIRED loadout removes the unit.
+    /// No longer carried. A winning RETIRED loadout takes the unit out of the answer.
     sloUnitState_RETIRED = 6
 
 class SLO
 
 /// Loadout: one host, or one set of hosts, carries one published configuration.
 class SLO : flatbuffers.handle
-    /// Publisher-stable identifier of this loadout. Together with the publishing key it is the
-    /// loadout's identity across versions. Recommended form: "<CONFIG_ID>@<host field value>".
+    /// Publisher-stable identifier of this loadout. Together with the publisher it is the loadout's
+    /// identity across versions. Recommended form: "<CONFIG_ID>@<host field value>".
     def LOADOUT_ID() -> string:
         return flatbuffers.field_string(buf_, pos_, 4)
-    /// Four-character standard code of the definition, `$` included: "$SNR" or "$RFB". Never the
-    /// union ordinal.
+    /// Four-character standard code of the definition, `$` included: "$SNR" or "$RFB" today. Never
+    /// the union ordinal. A reader skips a value it does not implement (READING RULE, step 1).
     def CONFIG_STANDARD() -> string:
         return flatbuffers.field_string(buf_, pos_, 6)
     /// The definition's id, verbatim: $SNR.SENSOR_ID, or $RFB.ID_TRANSMITTER.
     def CONFIG_ID() -> string:
         return flatbuffers.field_string(buf_, pos_, 8)
-    /// Optional content identifier pinning the exact definition bytes.
+    /// "$SNR" only: raw CIDv1 (sha2-256, base32 lowercase) of one exact version of the definition,
+    /// over its size-prefixed bytes as published. A reader that finds no version with this CID does
+    /// not resolve the loadout.
     def CONFIG_CID() -> string:
         return flatbuffers.field_string(buf_, pos_, 10)
     /// Which host field is set.
@@ -80,30 +82,31 @@ class SLO : flatbuffers.handle
     /// BUS: $BUS.ID of the host set, matched against $CAT.BUS_ID.
     def BUS_ID() -> string:
         return flatbuffers.field_string(buf_, pos_, 24)
-    /// RFC 3339 UTC fixed-millisecond timestamp the host starts carrying the configuration,
-    /// inclusive. Absent = open.
+    /// When the host starts carrying the configuration, inclusive, exactly YYYY-MM-DDTHH:mm:ss.sssZ.
+    /// Absent = open.
     def VALID_FROM() -> string:
         return flatbuffers.field_string(buf_, pos_, 26)
-    /// RFC 3339 UTC fixed-millisecond timestamp the host stops carrying it, exclusive. Absent = open.
+    /// When the host stops carrying it, exclusive, in the same form, after VALID_FROM. Absent = open.
     def VALID_TO() -> string:
         return flatbuffers.field_string(buf_, pos_, 28)
     /// Units of this configuration on each host. 0 = not stated.
     def COUNT() -> int:
         return flatbuffers.field_uint32(buf_, pos_, 30, 0)
     /// Where the unit sits on the host, as the source names it (a slot, a face, a panel). Two units
-    /// of one configuration on one host differ by POSITION.
+    /// of one configuration on one host differ by POSITION. Absent: the loadout speaks for every unit
+    /// of the configuration on the host (READING RULE, step 6).
     def POSITION() -> string:
         return flatbuffers.field_string(buf_, pos_, 32)
     /// Serial number of the unit, for a single-host loadout.
     def SERIAL_NUMBER() -> string:
         return flatbuffers.field_string(buf_, pos_, 34)
-    /// How this unit sits and points, over the definition's MOUNTING (READING RULE, step 5).
+    /// How this unit sits and points, over the definition's MOUNTING (READING RULE, step 9).
     def MOUNTING() -> SNRMounting?:
         let o = flatbuffers.field_table(buf_, pos_, 36)
         return if o: SNRMounting { buf_, o } else: nil
     def STATUS() -> sloUnitState:
         return sloUnitState(flatbuffers.field_int8(buf_, pos_, 38, 0))
-    /// RFC 3339 UTC fixed-millisecond timestamp of this version of the loadout.
+    /// This version of the loadout, exactly YYYY-MM-DDTHH:mm:ss.sssZ.
     def UPDATED_AT() -> string:
         return flatbuffers.field_string(buf_, pos_, 40)
     /// Where the binding was read, one entry per source: a filing, the operator, a catalogue. A
@@ -118,13 +121,20 @@ class SLO : flatbuffers.handle
     /// Publisher note; never a substitute for a field.
     def NOTES() -> string:
         return flatbuffers.field_string(buf_, pos_, 46)
+    /// $DPM.PROVIDER_PEER_ID of the publisher of the definition. Absent: the loadout's own publisher.
+    def CONFIG_PUBLISHER_PEER_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 48)
+    /// $DPM.PROVIDER_PEER_ID of the publisher of the $EGP, $CMR or $CAT a GROUP, CONSTELLATION or BUS
+    /// scope reads. Absent: the loadout's own publisher.
+    def SET_PUBLISHER_PEER_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 50)
 
 def GetRootAsSLO(buf:string): return SLO { buf, flatbuffers.indirect(buf, 0) }
 
 struct SLOBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(22)
+        b_.StartObject(24)
         return this
     def add_LOADOUT_ID(LOADOUT_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, LOADOUT_ID)
@@ -191,6 +201,12 @@ struct SLOBuilder:
         return this
     def add_NOTES(NOTES:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(21, NOTES)
+        return this
+    def add_CONFIG_PUBLISHER_PEER_ID(CONFIG_PUBLISHER_PEER_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(22, CONFIG_PUBLISHER_PEER_ID)
+        return this
+    def add_SET_PUBLISHER_PEER_ID(SET_PUBLISHER_PEER_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(23, SET_PUBLISHER_PEER_ID)
         return this
     def end():
         return b_.EndObject()

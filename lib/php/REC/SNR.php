@@ -17,12 +17,17 @@ use \Google\FlatBuffers\FlatBufferBuilder;
 /// Platform: NORAD_CAT_ID and OBJECT_ID join to $CAT, SITE_ID to $SIT.ID,
 /// SENSOR_ID to $SEN.ID. A sensor not attached to a platform has none of them.
 ///
-/// A record with none of the platform fields is a DEFINITION: one sensor
-/// configuration, published once, that any number of hosts carry. A $SLO
-/// (Sensor Loadout) binds it to a host or to a set of hosts by CONFIG_STANDARD '$SNR'
-/// and CONFIG_ID = SENSOR_ID, and carries what differs per host (dates, count,
-/// position, serial number, mounting, status). A definition's SENSOR_ID names
-/// the configuration, not one physical sensor, so it has no $SEN.
+/// DEFINITION. A record is a definition when NORAD_CAT_ID is 0 and OBJECT_ID,
+/// SITE_ID and ENTITY_ID are all absent or empty. It is one sensor
+/// configuration, published once, that any number of hosts carry; every other
+/// record is bound to its platform. A $SLO (Sensor Loadout) binds a definition
+/// to a host or to a set of hosts by CONFIG_STANDARD '$SNR' and CONFIG_ID =
+/// SENSOR_ID, and carries what differs per host (dates, count, position,
+/// serial number, mounting, status). A definition's SENSOR_ID names the
+/// configuration, not one physical sensor, so it has no $SEN. A corrected
+/// definition is republished with the same SENSOR_ID and a later UPDATED_AT;
+/// the latest version from a publisher is the definition ($SLO READING RULE,
+/// step 1).
 class SNR extends Table
 {
     /**
@@ -196,22 +201,32 @@ class SNR extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// RFC 3339 UTC timestamp of this version of the record, exactly
+    /// YYYY-MM-DDTHH:mm:ss.sssZ. Of two records with one SENSOR_ID from one
+    /// publisher, the later UPDATED_AT is current; a record without one is older
+    /// than any record with one.
+    public function getUPDATED_AT()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startSNR(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(16);
+        $builder->StartObject(17);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return SNR
      */
-    public static function createSNR(FlatBufferBuilder $builder, $SENSOR_ID, $NAME, $NORAD_CAT_ID, $OBJECT_ID, $SITE_ID, $ENTITY_ID, $TYPE, $EMISSION, $SPECTRAL_BANDS, $FIELD_OF_VIEW, $FIELD_OF_VIEW_PROVENANCE, $MOUNTING, $RF, $OPTICAL, $PROVENANCE, $NOTES)
+    public static function createSNR(FlatBufferBuilder $builder, $SENSOR_ID, $NAME, $NORAD_CAT_ID, $OBJECT_ID, $SITE_ID, $ENTITY_ID, $TYPE, $EMISSION, $SPECTRAL_BANDS, $FIELD_OF_VIEW, $FIELD_OF_VIEW_PROVENANCE, $MOUNTING, $RF, $OPTICAL, $PROVENANCE, $NOTES, $UPDATED_AT)
     {
-        $builder->startObject(16);
+        $builder->startObject(17);
         self::addSENSOR_ID($builder, $SENSOR_ID);
         self::addNAME($builder, $NAME);
         self::addNORAD_CAT_ID($builder, $NORAD_CAT_ID);
@@ -228,6 +243,7 @@ class SNR extends Table
         self::addOPTICAL($builder, $OPTICAL);
         self::addPROVENANCE($builder, $PROVENANCE);
         self::addNOTES($builder, $NOTES);
+        self::addUPDATED_AT($builder, $UPDATED_AT);
         $o = $builder->endObject();
         $builder->required($o, 4);  // SENSOR_ID
         return $o;
@@ -415,6 +431,16 @@ class SNR extends Table
     public static function addNOTES(FlatBufferBuilder $builder, $NOTES)
     {
         $builder->addOffsetX(15, $NOTES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addUPDATED_AT(FlatBufferBuilder $builder, $UPDATED_AT)
+    {
+        $builder->addOffsetX(16, $UPDATED_AT, 0);
     }
 
     /**

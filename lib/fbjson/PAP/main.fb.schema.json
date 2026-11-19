@@ -1245,7 +1245,7 @@
     },
     "RFB": {
       "type": "object",
-      "description": "RF Band Specification\n\nUNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources\nthat publish Hz (as open transmitter databases commonly do) MUST divide by\n1e6 before encoding; sources\nthat publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),\nnever kilobaud. Encoding a Hz value into a MHz field is a defect, not a\nconvention.\n\nOne RFB record carries exactly one LINK_DIRECTION. A transceiver or\ntransponder is therefore represented as TWO RFB records \u2014 one UPLINK and\none DOWNLINK \u2014 sharing ID_TRANSMITTER, each carrying its own MODE,\nFREQ_MIN, FREQ_MAX and CENTER_FREQ.\n\nRecords with NORAD_CAT_ID 0 are a DEFINITION: one radio configuration,\npublished once, that any number of hosts carry. The definition is every\nunbound record sharing one ID_TRANSMITTER. A $SLO (Sensor Loadout) binds it to a\nhost or to a set of hosts by CONFIG_STANDARD \"$RFB\" and CONFIG_ID =\nID_TRANSMITTER, and carries what differs per host (dates, count, position,\nserial number, mounting, status).",
+      "description": "RF Band Specification\n\nUNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources\nthat publish Hz (as open transmitter databases commonly do) MUST divide by\n1e6 before encoding; sources\nthat publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),\nnever kilobaud. Encoding a Hz value into a MHz field is a defect, not a\nconvention.\n\nOne RFB record carries exactly one LINK_DIRECTION. A transceiver or\ntransponder is therefore represented as TWO RFB records \u2014 one UPLINK and\none DOWNLINK \u2014 sharing ID_TRANSMITTER, each carrying its own MODE,\nFREQ_MIN, FREQ_MAX and CENTER_FREQ.\n\nDEFINITION. A record is a definition record when NORAD_CAT_ID is 0 and\nID_ENTITY is absent or empty; every other record is bound to its host (a\nrecord with only ID_ENTITY, as an upstream transmitter database writes for\nan object with no catalogue number, is bound to that entity). A radio\ndefinition is one radio configuration, published once, that any number of\nhosts carry: the current definition records sharing one ID_TRANSMITTER. A\n$SLO (Sensor Loadout) binds it to a host or to a set of hosts by\nCONFIG_STANDARD \"$RFB\" and CONFIG_ID = ID_TRANSMITTER, and carries what\ndiffers per host (dates, count, position, serial number, mounting, status).\nA corrected record is republished with the same ID and a later UPDATED_AT;\nthe latest version from a publisher is current ($SLO READING RULE, step 1).",
       "properties": {
         "ID": {
           "type": "string",
@@ -1427,7 +1427,7 @@
         },
         "ID_TRANSMITTER": {
           "type": "string",
-          "description": "Identifier of the physical transmitter, transceiver or transponder this\nrecord describes (e.g. an upstream transmitter database's UUID). Uplink\nand downlink\nrecords of the same device share this value.",
+          "description": "Identifier of the transmitter, transceiver or transponder this record\ndescribes (e.g. an upstream transmitter database's UUID). Uplink and\ndownlink records of the same device share this value. On a bound record\nit names one physical device; on a definition record it names the radio\nconfiguration, and $SLO.CONFIG_ID carries it.",
           "x-flatbuffer-type": "string"
         },
         "LINK_DIRECTION": {
@@ -1500,6 +1500,11 @@
         "CITATION": {
           "type": "string",
           "description": "Attribution/citation string the source license requires this record to\ncarry downstream.",
+          "x-flatbuffer-type": "string"
+        },
+        "UPDATED_AT": {
+          "type": "string",
+          "description": "RFC 3339 UTC timestamp of this version of the record, exactly\nYYYY-MM-DDTHH:mm:ss.sssZ. Of two records with one ID from one publisher,\nthe later UPDATED_AT is current; a record without one is older than any\nrecord with one.",
           "x-flatbuffer-type": "string"
         }
       },

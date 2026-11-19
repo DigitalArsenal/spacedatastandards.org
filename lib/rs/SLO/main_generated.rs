@@ -166,9 +166,9 @@ impl sloUnitState {
     pub const DEGRADED: Self = Self(3);
     /// Carried and working, held out of service.
     pub const STANDBY: Self = Self(4);
-    /// Carried and not working.
+    /// Carried and not working. A failed unit is still on board and stays in the answer.
     pub const FAILED: Self = Self(5);
-    /// No longer carried or no longer used. A winning RETIRED loadout removes the unit.
+    /// No longer carried. A winning RETIRED loadout takes the unit out of the answer.
     pub const RETIRED: Self = Self(6);
 
     pub const ENUM_MIN: i8 = 0;
@@ -294,6 +294,8 @@ impl<'a> SLO<'a> {
     pub const VT_PROVENANCE: ::flatbuffers::VOffsetT = 42;
     pub const VT_CITATION: ::flatbuffers::VOffsetT = 44;
     pub const VT_NOTES: ::flatbuffers::VOffsetT = 46;
+    pub const VT_CONFIG_PUBLISHER_PEER_ID: ::flatbuffers::VOffsetT = 48;
+    pub const VT_SET_PUBLISHER_PEER_ID: ::flatbuffers::VOffsetT = 50;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -306,6 +308,8 @@ impl<'a> SLO<'a> {
         args: &'args SLOArgs<'args>
     ) -> ::flatbuffers::WIPOffset<SLO<'bldr>> {
         let mut builder = SLOBuilder::new(_fbb);
+        if let Some(x) = args.SET_PUBLISHER_PEER_ID { builder.add_SET_PUBLISHER_PEER_ID(x); }
+        if let Some(x) = args.CONFIG_PUBLISHER_PEER_ID { builder.add_CONFIG_PUBLISHER_PEER_ID(x); }
         if let Some(x) = args.NOTES { builder.add_NOTES(x); }
         if let Some(x) = args.CITATION { builder.add_CITATION(x); }
         if let Some(x) = args.PROVENANCE { builder.add_PROVENANCE(x); }
@@ -395,6 +399,12 @@ impl<'a> SLO<'a> {
         let NOTES = self.NOTES().map(|x| {
             alloc::string::ToString::to_string(x)
         });
+        let CONFIG_PUBLISHER_PEER_ID = self.CONFIG_PUBLISHER_PEER_ID().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let SET_PUBLISHER_PEER_ID = self.SET_PUBLISHER_PEER_ID().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
         SLOT {
             LOADOUT_ID,
             CONFIG_STANDARD,
@@ -418,11 +428,13 @@ impl<'a> SLO<'a> {
             PROVENANCE,
             CITATION,
             NOTES,
+            CONFIG_PUBLISHER_PEER_ID,
+            SET_PUBLISHER_PEER_ID,
         }
     }
 
-    /// Publisher-stable identifier of this loadout. Together with the publishing key it is the
-    /// loadout's identity across versions. Recommended form: "<CONFIG_ID>@<host field value>".
+    /// Publisher-stable identifier of this loadout. Together with the publisher it is the loadout's
+    /// identity across versions. Recommended form: "<CONFIG_ID>@<host field value>".
     #[inline]
     pub fn LOADOUT_ID(&self) -> &'a str {
         // Safety:
@@ -431,8 +443,8 @@ impl<'a> SLO<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SLO::VT_LOADOUT_ID, None).unwrap()}
     }
 
-    /// Four-character standard code of the definition, `$` included: "$SNR" or "$RFB". Never the
-    /// union ordinal.
+    /// Four-character standard code of the definition, `$` included: "$SNR" or "$RFB" today. Never
+    /// the union ordinal. A reader skips a value it does not implement (READING RULE, step 1).
     #[inline]
     pub fn CONFIG_STANDARD(&self) -> &'a str {
         // Safety:
@@ -450,7 +462,9 @@ impl<'a> SLO<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SLO::VT_CONFIG_ID, None).unwrap()}
     }
 
-    /// Optional content identifier pinning the exact definition bytes.
+    /// "$SNR" only: raw CIDv1 (sha2-256, base32 lowercase) of one exact version of the definition,
+    /// over its size-prefixed bytes as published. A reader that finds no version with this CID does
+    /// not resolve the loadout.
     #[inline]
     pub fn CONFIG_CID(&self) -> Option<&'a str> {
         // Safety:
@@ -522,8 +536,8 @@ impl<'a> SLO<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SLO::VT_BUS_ID, None)}
     }
 
-    /// RFC 3339 UTC fixed-millisecond timestamp the host starts carrying the configuration,
-    /// inclusive. Absent = open.
+    /// When the host starts carrying the configuration, inclusive, exactly YYYY-MM-DDTHH:mm:ss.sssZ.
+    /// Absent = open.
     #[inline]
     pub fn VALID_FROM(&self) -> Option<&'a str> {
         // Safety:
@@ -532,7 +546,7 @@ impl<'a> SLO<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SLO::VT_VALID_FROM, None)}
     }
 
-    /// RFC 3339 UTC fixed-millisecond timestamp the host stops carrying it, exclusive. Absent = open.
+    /// When the host stops carrying it, exclusive, in the same form, after VALID_FROM. Absent = open.
     #[inline]
     pub fn VALID_TO(&self) -> Option<&'a str> {
         // Safety:
@@ -551,7 +565,8 @@ impl<'a> SLO<'a> {
     }
 
     /// Where the unit sits on the host, as the source names it (a slot, a face, a panel). Two units
-    /// of one configuration on one host differ by POSITION.
+    /// of one configuration on one host differ by POSITION. Absent: the loadout speaks for every unit
+    /// of the configuration on the host (READING RULE, step 6).
     #[inline]
     pub fn POSITION(&self) -> Option<&'a str> {
         // Safety:
@@ -569,7 +584,7 @@ impl<'a> SLO<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SLO::VT_SERIAL_NUMBER, None)}
     }
 
-    /// How this unit sits and points, over the definition's MOUNTING (READING RULE, step 5).
+    /// How this unit sits and points, over the definition's MOUNTING (READING RULE, step 9).
     #[inline]
     pub fn MOUNTING(&self) -> Option<SNRMounting<'a>> {
         // Safety:
@@ -586,7 +601,7 @@ impl<'a> SLO<'a> {
         unsafe { self._tab.get::<sloUnitState>(SLO::VT_STATUS, Some(sloUnitState::UNKNOWN)).unwrap()}
     }
 
-    /// RFC 3339 UTC fixed-millisecond timestamp of this version of the loadout.
+    /// This version of the loadout, exactly YYYY-MM-DDTHH:mm:ss.sssZ.
     #[inline]
     pub fn UPDATED_AT(&self) -> &'a str {
         // Safety:
@@ -622,6 +637,25 @@ impl<'a> SLO<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SLO::VT_NOTES, None)}
     }
+
+    /// $DPM.PROVIDER_PEER_ID of the publisher of the definition. Absent: the loadout's own publisher.
+    #[inline]
+    pub fn CONFIG_PUBLISHER_PEER_ID(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SLO::VT_CONFIG_PUBLISHER_PEER_ID, None)}
+    }
+
+    /// $DPM.PROVIDER_PEER_ID of the publisher of the $EGP, $CMR or $CAT a GROUP, CONSTELLATION or BUS
+    /// scope reads. Absent: the loadout's own publisher.
+    #[inline]
+    pub fn SET_PUBLISHER_PEER_ID(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SLO::VT_SET_PUBLISHER_PEER_ID, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for SLO<'_> {
@@ -652,6 +686,8 @@ impl ::flatbuffers::Verifiable for SLO<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<OPPProvenance>>>>("PROVENANCE", Self::VT_PROVENANCE, true)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CITATION", Self::VT_CITATION, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("NOTES", Self::VT_NOTES, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CONFIG_PUBLISHER_PEER_ID", Self::VT_CONFIG_PUBLISHER_PEER_ID, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SET_PUBLISHER_PEER_ID", Self::VT_SET_PUBLISHER_PEER_ID, false)?
             .finish();
         Ok(())
     }
@@ -680,6 +716,8 @@ pub struct SLOArgs<'a> {
     pub PROVENANCE: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OPPProvenance<'a>>>>>,
     pub CITATION: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub NOTES: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CONFIG_PUBLISHER_PEER_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SET_PUBLISHER_PEER_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
 }
 
 impl<'a> Default for SLOArgs<'a> {
@@ -708,6 +746,8 @@ impl<'a> Default for SLOArgs<'a> {
             PROVENANCE: None, // required field
             CITATION: None,
             NOTES: None,
+            CONFIG_PUBLISHER_PEER_ID: None,
+            SET_PUBLISHER_PEER_ID: None,
         }
     }
 }
@@ -829,6 +869,16 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SLOBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_CONFIG_PUBLISHER_PEER_ID(&mut self, CONFIG_PUBLISHER_PEER_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SLO::VT_CONFIG_PUBLISHER_PEER_ID, CONFIG_PUBLISHER_PEER_ID);
+    }
+
+    #[inline]
+    pub fn add_SET_PUBLISHER_PEER_ID(&mut self, SET_PUBLISHER_PEER_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SLO::VT_SET_PUBLISHER_PEER_ID, SET_PUBLISHER_PEER_ID);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SLOBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         SLOBuilder {
@@ -874,6 +924,8 @@ impl ::core::fmt::Debug for SLO<'_> {
         ds.field("PROVENANCE", &self.PROVENANCE());
         ds.field("CITATION", &self.CITATION());
         ds.field("NOTES", &self.NOTES());
+        ds.field("CONFIG_PUBLISHER_PEER_ID", &self.CONFIG_PUBLISHER_PEER_ID());
+        ds.field("SET_PUBLISHER_PEER_ID", &self.SET_PUBLISHER_PEER_ID());
         ds.finish()
     }
 }
@@ -903,6 +955,8 @@ pub struct SLOT {
     pub PROVENANCE: alloc::vec::Vec<OPPProvenanceT>,
     pub CITATION: Option<alloc::string::String>,
     pub NOTES: Option<alloc::string::String>,
+    pub CONFIG_PUBLISHER_PEER_ID: Option<alloc::string::String>,
+    pub SET_PUBLISHER_PEER_ID: Option<alloc::string::String>,
 }
 
 impl Default for SLOT {
@@ -930,6 +984,8 @@ impl Default for SLOT {
             PROVENANCE: Default::default(),
             CITATION: None,
             NOTES: None,
+            CONFIG_PUBLISHER_PEER_ID: None,
+            SET_PUBLISHER_PEER_ID: None,
         }
     }
 }
@@ -1002,6 +1058,12 @@ impl SLOT {
         let NOTES = self.NOTES.as_ref().map(|x|{
             _fbb.create_string(x)
         });
+        let CONFIG_PUBLISHER_PEER_ID = self.CONFIG_PUBLISHER_PEER_ID.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let SET_PUBLISHER_PEER_ID = self.SET_PUBLISHER_PEER_ID.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
         SLO::create(_fbb, &SLOArgs{
             LOADOUT_ID,
             CONFIG_STANDARD,
@@ -1025,6 +1087,8 @@ impl SLOT {
             PROVENANCE,
             CITATION,
             NOTES,
+            CONFIG_PUBLISHER_PEER_ID,
+            SET_PUBLISHER_PEER_ID,
         })
     }
 }

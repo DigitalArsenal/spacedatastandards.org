@@ -387,12 +387,17 @@ struct SNROpticalParametersBuilder:
 /// Platform: NORAD_CAT_ID and OBJECT_ID join to $CAT, SITE_ID to $SIT.ID,
 /// SENSOR_ID to $SEN.ID. A sensor not attached to a platform has none of them.
 ///
-/// A record with none of the platform fields is a DEFINITION: one sensor
-/// configuration, published once, that any number of hosts carry. A $SLO
-/// (Sensor Loadout) binds it to a host or to a set of hosts by CONFIG_STANDARD "$SNR"
-/// and CONFIG_ID = SENSOR_ID, and carries what differs per host (dates, count,
-/// position, serial number, mounting, status). A definition's SENSOR_ID names
-/// the configuration, not one physical sensor, so it has no $SEN.
+/// DEFINITION. A record is a definition when NORAD_CAT_ID is 0 and OBJECT_ID,
+/// SITE_ID and ENTITY_ID are all absent or empty. It is one sensor
+/// configuration, published once, that any number of hosts carry; every other
+/// record is bound to its platform. A $SLO (Sensor Loadout) binds a definition
+/// to a host or to a set of hosts by CONFIG_STANDARD "$SNR" and CONFIG_ID =
+/// SENSOR_ID, and carries what differs per host (dates, count, position,
+/// serial number, mounting, status). A definition's SENSOR_ID names the
+/// configuration, not one physical sensor, so it has no $SEN. A corrected
+/// definition is republished with the same SENSOR_ID and a later UPDATED_AT;
+/// the latest version from a publisher is the definition ($SLO READING RULE,
+/// step 1).
 class SNR : flatbuffers.handle
     /// Stable identifier of this sensor, or of the configuration when the record
     /// is a definition. $SEN.ID of the same sensor when the record has a platform.
@@ -449,13 +454,19 @@ class SNR : flatbuffers.handle
         return if o: OPPProvenance { buf_, o } else: nil
     def NOTES() -> string:
         return flatbuffers.field_string(buf_, pos_, 34)
+    /// RFC 3339 UTC timestamp of this version of the record, exactly
+    /// YYYY-MM-DDTHH:mm:ss.sssZ. Of two records with one SENSOR_ID from one
+    /// publisher, the later UPDATED_AT is current; a record without one is older
+    /// than any record with one.
+    def UPDATED_AT() -> string:
+        return flatbuffers.field_string(buf_, pos_, 36)
 
 def GetRootAsSNR(buf:string): return SNR { buf, flatbuffers.indirect(buf, 0) }
 
 struct SNRBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(16)
+        b_.StartObject(17)
         return this
     def add_SENSOR_ID(SENSOR_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, SENSOR_ID)
@@ -504,6 +515,9 @@ struct SNRBuilder:
         return this
     def add_NOTES(NOTES:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(15, NOTES)
+        return this
+    def add_UPDATED_AT(UPDATED_AT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(16, UPDATED_AT)
         return this
     def end():
         return b_.EndObject()

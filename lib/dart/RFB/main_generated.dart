@@ -184,12 +184,17 @@ class _rfTransmitterStateReader extends fb.Reader<rfTransmitterState> {
 ///  one DOWNLINK — sharing ID_TRANSMITTER, each carrying its own MODE,
 ///  FREQ_MIN, FREQ_MAX and CENTER_FREQ.
 ///
-///  Records with NORAD_CAT_ID 0 are a DEFINITION: one radio configuration,
-///  published once, that any number of hosts carry. The definition is every
-///  unbound record sharing one ID_TRANSMITTER. A $SLO (Sensor Loadout) binds it to a
-///  host or to a set of hosts by CONFIG_STANDARD "$RFB" and CONFIG_ID =
-///  ID_TRANSMITTER, and carries what differs per host (dates, count, position,
-///  serial number, mounting, status).
+///  DEFINITION. A record is a definition record when NORAD_CAT_ID is 0 and
+///  ID_ENTITY is absent or empty; every other record is bound to its host (a
+///  record with only ID_ENTITY, as an upstream transmitter database writes for
+///  an object with no catalogue number, is bound to that entity). A radio
+///  definition is one radio configuration, published once, that any number of
+///  hosts carry: the current definition records sharing one ID_TRANSMITTER. A
+///  $SLO (Sensor Loadout) binds it to a host or to a set of hosts by
+///  CONFIG_STANDARD "$RFB" and CONFIG_ID = ID_TRANSMITTER, and carries what
+///  differs per host (dates, count, position, serial number, mounting, status).
+///  A corrected record is republished with the same ID and a later UPDATED_AT;
+///  the latest version from a publisher is current ($SLO READING RULE, step 1).
 class RFB {
   RFB._(this._bc, this._bcOffset);
   factory RFB(List<int> bytes) {
@@ -244,10 +249,11 @@ class RFB {
   ///  CAT.NORAD_CAT_ID. 0 when unbound.
   int get NORAD_CAT_ID => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 36, 0);
   int get noradCatId => NORAD_CAT_ID;
-  ///  Identifier of the physical transmitter, transceiver or transponder this
-  ///  record describes (e.g. an upstream transmitter database's UUID). Uplink
-  ///  and downlink
-  ///  records of the same device share this value.
+  ///  Identifier of the transmitter, transceiver or transponder this record
+  ///  describes (e.g. an upstream transmitter database's UUID). Uplink and
+  ///  downlink records of the same device share this value. On a bound record
+  ///  it names one physical device; on a definition record it names the radio
+  ///  configuration, and $SLO.CONFIG_ID carries it.
   String? get ID_TRANSMITTER => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 38);
   String? get idTransmitter => ID_TRANSMITTER;
   ///  Direction of this emission relative to the spacecraft.
@@ -268,10 +274,16 @@ class RFB {
   ///  Attribution/citation string the source license requires this record to
   ///  carry downstream.
   String? get CITATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 52);
+  ///  RFC 3339 UTC timestamp of this version of the record, exactly
+  ///  YYYY-MM-DDTHH:mm:ss.sssZ. Of two records with one ID from one publisher,
+  ///  the later UPDATED_AT is current; a record without one is older than any
+  ///  record with one.
+  String? get UPDATED_AT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 54);
+  String? get updatedAt => UPDATED_AT;
 
   @override
   String toString() {
-    return 'RFB{ID: ${ID}, idEntity: ${idEntity}, NAME: ${NAME}, BAND: ${BAND}, MODE: ${MODE}, PURPOSE: ${PURPOSE}, freqMin: ${freqMin}, freqMax: ${freqMax}, centerFreq: ${centerFreq}, BANDWIDTH: ${BANDWIDTH}, peakGain: ${peakGain}, edgeGain: ${edgeGain}, BEAMWIDTH: ${BEAMWIDTH}, POLARIZATION: ${POLARIZATION}, ERP: ${ERP}, EIRP: ${EIRP}, noradCatId: ${noradCatId}, idTransmitter: ${idTransmitter}, linkDirection: ${linkDirection}, BAUD: ${BAUD}, SERVICE: ${SERVICE}, xmtStatus: ${xmtStatus}, INVERT: ${INVERT}, iaruCoordination: ${iaruCoordination}, CITATION: ${CITATION}}';
+    return 'RFB{ID: ${ID}, idEntity: ${idEntity}, NAME: ${NAME}, BAND: ${BAND}, MODE: ${MODE}, PURPOSE: ${PURPOSE}, freqMin: ${freqMin}, freqMax: ${freqMax}, centerFreq: ${centerFreq}, BANDWIDTH: ${BANDWIDTH}, peakGain: ${peakGain}, edgeGain: ${edgeGain}, BEAMWIDTH: ${BEAMWIDTH}, POLARIZATION: ${POLARIZATION}, ERP: ${ERP}, EIRP: ${EIRP}, noradCatId: ${noradCatId}, idTransmitter: ${idTransmitter}, linkDirection: ${linkDirection}, BAUD: ${BAUD}, SERVICE: ${SERVICE}, xmtStatus: ${xmtStatus}, INVERT: ${INVERT}, iaruCoordination: ${iaruCoordination}, CITATION: ${CITATION}, updatedAt: ${updatedAt}}';
   }
 }
 
@@ -289,7 +301,7 @@ class RFBBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(25);
+    fbBuilder.startTable(26);
   }
 
   int addIdOffset(int? offset) {
@@ -392,6 +404,10 @@ class RFBBuilder {
     fbBuilder.addOffset(24, offset);
     return fbBuilder.offset;
   }
+  int addUpdatedAtOffset(int? offset) {
+    fbBuilder.addOffset(25, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -424,6 +440,7 @@ class RFBObjectBuilder extends fb.ObjectBuilder {
   final bool? _INVERT;
   final String? _IARU_COORDINATION;
   final String? _CITATION;
+  final String? _UPDATED_AT;
 
   RFBObjectBuilder({
     String? ID,
@@ -462,6 +479,8 @@ class RFBObjectBuilder extends fb.ObjectBuilder {
     String? IARU_COORDINATION,
     String? iaruCoordination,
     String? CITATION,
+    String? UPDATED_AT,
+    String? updatedAt,
   })
       : _ID = ID,
         _ID_ENTITY = idEntity ?? ID_ENTITY,
@@ -487,7 +506,8 @@ class RFBObjectBuilder extends fb.ObjectBuilder {
         _XMT_STATUS = xmtStatus ?? XMT_STATUS,
         _INVERT = INVERT,
         _IARU_COORDINATION = iaruCoordination ?? IARU_COORDINATION,
-        _CITATION = CITATION;
+        _CITATION = CITATION,
+        _UPDATED_AT = updatedAt ?? UPDATED_AT;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -510,7 +530,9 @@ class RFBObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_IARU_COORDINATION!);
     final int? CITATIONOffset = _CITATION == null ? null
         : fbBuilder.writeString(_CITATION!);
-    fbBuilder.startTable(25);
+    final int? UPDATED_ATOffset = _UPDATED_AT == null ? null
+        : fbBuilder.writeString(_UPDATED_AT!);
+    fbBuilder.startTable(26);
     fbBuilder.addOffset(0, IDOffset);
     fbBuilder.addOffset(1, ID_ENTITYOffset);
     fbBuilder.addOffset(2, NAMEOffset);
@@ -536,6 +558,7 @@ class RFBObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addBool(22, _INVERT);
     fbBuilder.addOffset(23, IARU_COORDINATIONOffset);
     fbBuilder.addOffset(24, CITATIONOffset);
+    fbBuilder.addOffset(25, UPDATED_ATOffset);
     return fbBuilder.endTable();
   }
 

@@ -2187,12 +2187,17 @@ pub enum SNROffset {}
 /// Platform: NORAD_CAT_ID and OBJECT_ID join to $CAT, SITE_ID to $SIT.ID,
 /// SENSOR_ID to $SEN.ID. A sensor not attached to a platform has none of them.
 ///
-/// A record with none of the platform fields is a DEFINITION: one sensor
-/// configuration, published once, that any number of hosts carry. A $SLO
-/// (Sensor Loadout) binds it to a host or to a set of hosts by CONFIG_STANDARD "$SNR"
-/// and CONFIG_ID = SENSOR_ID, and carries what differs per host (dates, count,
-/// position, serial number, mounting, status). A definition's SENSOR_ID names
-/// the configuration, not one physical sensor, so it has no $SEN.
+/// DEFINITION. A record is a definition when NORAD_CAT_ID is 0 and OBJECT_ID,
+/// SITE_ID and ENTITY_ID are all absent or empty. It is one sensor
+/// configuration, published once, that any number of hosts carry; every other
+/// record is bound to its platform. A $SLO (Sensor Loadout) binds a definition
+/// to a host or to a set of hosts by CONFIG_STANDARD "$SNR" and CONFIG_ID =
+/// SENSOR_ID, and carries what differs per host (dates, count, position,
+/// serial number, mounting, status). A definition's SENSOR_ID names the
+/// configuration, not one physical sensor, so it has no $SEN. A corrected
+/// definition is republished with the same SENSOR_ID and a later UPDATED_AT;
+/// the latest version from a publisher is the definition ($SLO READING RULE,
+/// step 1).
 #[derive(Copy, Clone, PartialEq)]
 pub struct SNR<'a> {
     pub _tab: ::flatbuffers::Table<'a>,
@@ -2224,6 +2229,7 @@ impl<'a> SNR<'a> {
     pub const VT_OPTICAL: ::flatbuffers::VOffsetT = 30;
     pub const VT_PROVENANCE: ::flatbuffers::VOffsetT = 32;
     pub const VT_NOTES: ::flatbuffers::VOffsetT = 34;
+    pub const VT_UPDATED_AT: ::flatbuffers::VOffsetT = 36;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -2236,6 +2242,7 @@ impl<'a> SNR<'a> {
         args: &'args SNRArgs<'args>
     ) -> ::flatbuffers::WIPOffset<SNR<'bldr>> {
         let mut builder = SNRBuilder::new(_fbb);
+        if let Some(x) = args.UPDATED_AT { builder.add_UPDATED_AT(x); }
         if let Some(x) = args.NOTES { builder.add_NOTES(x); }
         if let Some(x) = args.PROVENANCE { builder.add_PROVENANCE(x); }
         if let Some(x) = args.OPTICAL { builder.add_OPTICAL(x); }
@@ -2299,6 +2306,9 @@ impl<'a> SNR<'a> {
         let NOTES = self.NOTES().map(|x| {
             alloc::string::ToString::to_string(x)
         });
+        let UPDATED_AT = self.UPDATED_AT().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
         SNRT {
             SENSOR_ID,
             NAME,
@@ -2316,6 +2326,7 @@ impl<'a> SNR<'a> {
             OPTICAL,
             PROVENANCE,
             NOTES,
+            UPDATED_AT,
         }
     }
 
@@ -2461,6 +2472,18 @@ impl<'a> SNR<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SNR::VT_NOTES, None)}
     }
+
+    /// RFC 3339 UTC timestamp of this version of the record, exactly
+    /// YYYY-MM-DDTHH:mm:ss.sssZ. Of two records with one SENSOR_ID from one
+    /// publisher, the later UPDATED_AT is current; a record without one is older
+    /// than any record with one.
+    #[inline]
+    pub fn UPDATED_AT(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SNR::VT_UPDATED_AT, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for SNR<'_> {
@@ -2485,6 +2508,7 @@ impl ::flatbuffers::Verifiable for SNR<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<SNROpticalParameters>>("OPTICAL", Self::VT_OPTICAL, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<OPPProvenance>>("PROVENANCE", Self::VT_PROVENANCE, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("NOTES", Self::VT_NOTES, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("UPDATED_AT", Self::VT_UPDATED_AT, false)?
             .finish();
         Ok(())
     }
@@ -2507,6 +2531,7 @@ pub struct SNRArgs<'a> {
     pub OPTICAL: Option<::flatbuffers::WIPOffset<SNROpticalParameters<'a>>>,
     pub PROVENANCE: Option<::flatbuffers::WIPOffset<OPPProvenance<'a>>>,
     pub NOTES: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub UPDATED_AT: Option<::flatbuffers::WIPOffset<&'a str>>,
 }
 
 impl<'a> Default for SNRArgs<'a> {
@@ -2529,6 +2554,7 @@ impl<'a> Default for SNRArgs<'a> {
             OPTICAL: None,
             PROVENANCE: None,
             NOTES: None,
+            UPDATED_AT: None,
         }
     }
 }
@@ -2620,6 +2646,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SNRBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_UPDATED_AT(&mut self, UPDATED_AT: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SNR::VT_UPDATED_AT, UPDATED_AT);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SNRBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         SNRBuilder {
@@ -2655,6 +2686,7 @@ impl ::core::fmt::Debug for SNR<'_> {
         ds.field("OPTICAL", &self.OPTICAL());
         ds.field("PROVENANCE", &self.PROVENANCE());
         ds.field("NOTES", &self.NOTES());
+        ds.field("UPDATED_AT", &self.UPDATED_AT());
         ds.finish()
     }
 }
@@ -2678,6 +2710,7 @@ pub struct SNRT {
     pub OPTICAL: Option<alloc::boxed::Box<SNROpticalParametersT>>,
     pub PROVENANCE: Option<alloc::boxed::Box<OPPProvenanceT>>,
     pub NOTES: Option<alloc::string::String>,
+    pub UPDATED_AT: Option<alloc::string::String>,
 }
 
 impl Default for SNRT {
@@ -2699,6 +2732,7 @@ impl Default for SNRT {
             OPTICAL: None,
             PROVENANCE: None,
             NOTES: None,
+            UPDATED_AT: None,
         }
     }
 }
@@ -2751,6 +2785,9 @@ impl SNRT {
         let NOTES = self.NOTES.as_ref().map(|x|{
             _fbb.create_string(x)
         });
+        let UPDATED_AT = self.UPDATED_AT.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
         SNR::create(_fbb, &SNRArgs{
             SENSOR_ID,
             NAME,
@@ -2768,6 +2805,7 @@ impl SNRT {
             OPTICAL,
             PROVENANCE,
             NOTES,
+            UPDATED_AT,
         })
     }
 }

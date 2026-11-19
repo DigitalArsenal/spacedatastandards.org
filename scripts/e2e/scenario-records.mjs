@@ -41,7 +41,8 @@ const diffPath = (a, b, at = '') => {
 const same = (a, b, msg) => { const d = diffPath(a, b); assert.ok(d === null, `${msg}: ${d}`); };
 
 // 1.287.0 (62f0004422): the types whose fields or members grow, with their counts then.
-const PREFIX = { scenarioReferenceKind: 9, SCN: 12, egpMembershipMode: 4, EGP: 11, RFL: 59, snrAntennaPattern: 12, acwRefractionModelKind: 2, acwConstraintKind: 10 };
+// SNR and RFB grow again in 1.291.0 (UPDATED_AT).
+const PREFIX = { scenarioReferenceKind: 9, SCN: 12, egpMembershipMode: 4, EGP: 11, RFL: 59, snrAntennaPattern: 12, acwRefractionModelKind: 2, acwConstraintKind: 10, SNR: 16, RFB: 25 };
 // Per family: [number of types at 1.287.0, first 16 hex of the digest over their signatures].
 const FAMILIES = { SCN: [101, '27a54940a9778c1e'], EGP: [5, 'de801ea262fd5729'], RFL: [33, 'f42843450a76033c'], SNR: [69, '6cd832e0113d0c1e'], ACW: [43, 'f301a07e60d74dad'] };
 const NEW_TYPES = new Set(['SCNPinnedRow', 'egpWalkerPattern', 'EGPWalker', 'RFLJamming']);
@@ -54,6 +55,8 @@ const ADDITIONS = {
   snrAntennaPattern: ['PHASED_ARRAY=12'],
   acwRefractionModelKind: ['ITU_R_P834=2'],
   acwConstraintKind: ['TERRAIN_LINE_OF_SIGHT=10'],
+  SNR: ['UPDATED_AT:string='],
+  RFB: ['UPDATED_AT:string='],
 };
 const COA_TYPES = ['EcoaKind:byte|UNSPECIFIED=0;MANEUVER=1;RIDE_OUT=2;RECOVERY=3', 'TCOAStep:NAME:string=!;DURATION_SECONDS:double=',
   'TCOA:ID:string=!;NAME:string=;KIND:coaKind=UNSPECIFIED;NORAD_CAT_ID:uint=;GROUP_ID:string=;EVENT_STANDARD:string=;EVENT_ID:string=;'

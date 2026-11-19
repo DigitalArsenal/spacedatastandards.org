@@ -49,9 +49,9 @@ public enum sloUnitState: Int8, FlatbuffersVectorInitializable, Enum, Verifiable
   case degraded = 3
   ///  Carried and working, held out of service.
   case standby = 4
-  ///  Carried and not working.
+  ///  Carried and not working. A failed unit is still on board and stays in the answer.
   case failed = 5
-  ///  No longer carried or no longer used. A winning RETIRED loadout removes the unit.
+  ///  No longer carried. A winning RETIRED loadout takes the unit out of the answer.
   case retired = 6
 
   public static var max: sloUnitState { return .retired }
@@ -94,20 +94,24 @@ public struct SLO: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let PROVENANCE: VOffset = 42
     static let CITATION: VOffset = 44
     static let NOTES: VOffset = 46
+    static let CONFIG_PUBLISHER_PEER_ID: VOffset = 48
+    static let SET_PUBLISHER_PEER_ID: VOffset = 50
   }
 
-  ///  Publisher-stable identifier of this loadout. Together with the publishing key it is the
-  ///  loadout's identity across versions. Recommended form: "<CONFIG_ID>@<host field value>".
+  ///  Publisher-stable identifier of this loadout. Together with the publisher it is the loadout's
+  ///  identity across versions. Recommended form: "<CONFIG_ID>@<host field value>".
   public var LOADOUT_ID: String! { let o = _accessor.offset(VT.LOADOUT_ID); return _accessor.string(at: o) }
   public var LOADOUT_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.LOADOUT_ID) }
-  ///  Four-character standard code of the definition, `$` included: "$SNR" or "$RFB". Never the
-  ///  union ordinal.
+  ///  Four-character standard code of the definition, `$` included: "$SNR" or "$RFB" today. Never
+  ///  the union ordinal. A reader skips a value it does not implement (READING RULE, step 1).
   public var CONFIG_STANDARD: String! { let o = _accessor.offset(VT.CONFIG_STANDARD); return _accessor.string(at: o) }
   public var CONFIG_STANDARDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.CONFIG_STANDARD) }
   ///  The definition's id, verbatim: $SNR.SENSOR_ID, or $RFB.ID_TRANSMITTER.
   public var CONFIG_ID: String! { let o = _accessor.offset(VT.CONFIG_ID); return _accessor.string(at: o) }
   public var CONFIG_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.CONFIG_ID) }
-  ///  Optional content identifier pinning the exact definition bytes.
+  ///  "$SNR" only: raw CIDv1 (sha2-256, base32 lowercase) of one exact version of the definition,
+  ///  over its size-prefixed bytes as published. A reader that finds no version with this CID does
+  ///  not resolve the loadout.
   public var CONFIG_CID: String? { let o = _accessor.offset(VT.CONFIG_CID); return o == 0 ? nil : _accessor.string(at: o) }
   public var CONFIG_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CONFIG_CID) }
   ///  Which host field is set.
@@ -129,26 +133,27 @@ public struct SLO: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  BUS: $BUS.ID of the host set, matched against $CAT.BUS_ID.
   public var BUS_ID: String? { let o = _accessor.offset(VT.BUS_ID); return o == 0 ? nil : _accessor.string(at: o) }
   public var BUS_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.BUS_ID) }
-  ///  RFC 3339 UTC fixed-millisecond timestamp the host starts carrying the configuration,
-  ///  inclusive. Absent = open.
+  ///  When the host starts carrying the configuration, inclusive, exactly YYYY-MM-DDTHH:mm:ss.sssZ.
+  ///  Absent = open.
   public var VALID_FROM: String? { let o = _accessor.offset(VT.VALID_FROM); return o == 0 ? nil : _accessor.string(at: o) }
   public var VALID_FROMSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.VALID_FROM) }
-  ///  RFC 3339 UTC fixed-millisecond timestamp the host stops carrying it, exclusive. Absent = open.
+  ///  When the host stops carrying it, exclusive, in the same form, after VALID_FROM. Absent = open.
   public var VALID_TO: String? { let o = _accessor.offset(VT.VALID_TO); return o == 0 ? nil : _accessor.string(at: o) }
   public var VALID_TOSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.VALID_TO) }
   ///  Units of this configuration on each host. 0 = not stated.
   public var COUNT: UInt32 { let o = _accessor.offset(VT.COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Where the unit sits on the host, as the source names it (a slot, a face, a panel). Two units
-  ///  of one configuration on one host differ by POSITION.
+  ///  of one configuration on one host differ by POSITION. Absent: the loadout speaks for every unit
+  ///  of the configuration on the host (READING RULE, step 6).
   public var POSITION: String? { let o = _accessor.offset(VT.POSITION); return o == 0 ? nil : _accessor.string(at: o) }
   public var POSITIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.POSITION) }
   ///  Serial number of the unit, for a single-host loadout.
   public var SERIAL_NUMBER: String? { let o = _accessor.offset(VT.SERIAL_NUMBER); return o == 0 ? nil : _accessor.string(at: o) }
   public var SERIAL_NUMBERSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SERIAL_NUMBER) }
-  ///  How this unit sits and points, over the definition's MOUNTING (READING RULE, step 5).
+  ///  How this unit sits and points, over the definition's MOUNTING (READING RULE, step 9).
   public var MOUNTING: SNRMounting? { let o = _accessor.offset(VT.MOUNTING); return o == 0 ? nil : SNRMounting(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public var STATUS: sloUnitState { let o = _accessor.offset(VT.STATUS); return o == 0 ? .unknown : sloUnitState(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unknown }
-  ///  RFC 3339 UTC fixed-millisecond timestamp of this version of the loadout.
+  ///  This version of the loadout, exactly YYYY-MM-DDTHH:mm:ss.sssZ.
   public var UPDATED_AT: String! { let o = _accessor.offset(VT.UPDATED_AT); return _accessor.string(at: o) }
   public var UPDATED_ATSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.UPDATED_AT) }
   ///  Where the binding was read, one entry per source: a filing, the operator, a catalogue. A
@@ -160,7 +165,14 @@ public struct SLO: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  Publisher note; never a substitute for a field.
   public var NOTES: String? { let o = _accessor.offset(VT.NOTES); return o == 0 ? nil : _accessor.string(at: o) }
   public var NOTESSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NOTES) }
-  public static func startSLO(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 22) }
+  ///  $DPM.PROVIDER_PEER_ID of the publisher of the definition. Absent: the loadout's own publisher.
+  public var CONFIG_PUBLISHER_PEER_ID: String? { let o = _accessor.offset(VT.CONFIG_PUBLISHER_PEER_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CONFIG_PUBLISHER_PEER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CONFIG_PUBLISHER_PEER_ID) }
+  ///  $DPM.PROVIDER_PEER_ID of the publisher of the $EGP, $CMR or $CAT a GROUP, CONSTELLATION or BUS
+  ///  scope reads. Absent: the loadout's own publisher.
+  public var SET_PUBLISHER_PEER_ID: String? { let o = _accessor.offset(VT.SET_PUBLISHER_PEER_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SET_PUBLISHER_PEER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SET_PUBLISHER_PEER_ID) }
+  public static func startSLO(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 24) }
   public static func add(LOADOUT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LOADOUT_ID, at: VT.LOADOUT_ID) }
   public static func add(CONFIG_STANDARD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONFIG_STANDARD, at: VT.CONFIG_STANDARD) }
   public static func add(CONFIG_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONFIG_ID, at: VT.CONFIG_ID) }
@@ -183,6 +195,8 @@ public struct SLO: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func addVectorOf(PROVENANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVENANCE, at: VT.PROVENANCE) }
   public static func add(CITATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CITATION, at: VT.CITATION) }
   public static func add(NOTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NOTES, at: VT.NOTES) }
+  public static func add(CONFIG_PUBLISHER_PEER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONFIG_PUBLISHER_PEER_ID, at: VT.CONFIG_PUBLISHER_PEER_ID) }
+  public static func add(SET_PUBLISHER_PEER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SET_PUBLISHER_PEER_ID, at: VT.SET_PUBLISHER_PEER_ID) }
   public static func endSLO(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 6, 8, 40, 42]); return end }
   public static func createSLO(
     _ fbb: inout FlatBufferBuilder,
@@ -207,7 +221,9 @@ public struct SLO: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     UPDATED_ATOffset UPDATED_AT: Offset,
     PROVENANCEVectorOffset PROVENANCE: Offset,
     CITATIONOffset CITATION: Offset = Offset(),
-    NOTESOffset NOTES: Offset = Offset()
+    NOTESOffset NOTES: Offset = Offset(),
+    CONFIG_PUBLISHER_PEER_IDOffset CONFIG_PUBLISHER_PEER_ID: Offset = Offset(),
+    SET_PUBLISHER_PEER_IDOffset SET_PUBLISHER_PEER_ID: Offset = Offset()
   ) -> Offset {
     let __start = SLO.startSLO(&fbb)
     SLO.add(LOADOUT_ID: LOADOUT_ID, &fbb)
@@ -232,6 +248,8 @@ public struct SLO: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     SLO.addVectorOf(PROVENANCE: PROVENANCE, &fbb)
     SLO.add(CITATION: CITATION, &fbb)
     SLO.add(NOTES: NOTES, &fbb)
+    SLO.add(CONFIG_PUBLISHER_PEER_ID: CONFIG_PUBLISHER_PEER_ID, &fbb)
+    SLO.add(SET_PUBLISHER_PEER_ID: SET_PUBLISHER_PEER_ID, &fbb)
     return SLO.endSLO(&fbb, start: __start)
   }
 
@@ -259,6 +277,8 @@ public struct SLO: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.PROVENANCE, fieldName: "PROVENANCE", required: true, type: ForwardOffset<Vector<ForwardOffset<OPPProvenance>, OPPProvenance>>.self)
     try _v.visit(field: VT.CITATION, fieldName: "CITATION", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.NOTES, fieldName: "NOTES", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CONFIG_PUBLISHER_PEER_ID, fieldName: "CONFIG_PUBLISHER_PEER_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SET_PUBLISHER_PEER_ID, fieldName: "SET_PUBLISHER_PEER_ID", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

@@ -530,12 +530,17 @@ public struct SNROpticalParameters: FlatBufferVerifiableTable, FlatbuffersVector
 ///  Platform: NORAD_CAT_ID and OBJECT_ID join to $CAT, SITE_ID to $SIT.ID,
 ///  SENSOR_ID to $SEN.ID. A sensor not attached to a platform has none of them.
 ///
-///  A record with none of the platform fields is a DEFINITION: one sensor
-///  configuration, published once, that any number of hosts carry. A $SLO
-///  (Sensor Loadout) binds it to a host or to a set of hosts by CONFIG_STANDARD "$SNR"
-///  and CONFIG_ID = SENSOR_ID, and carries what differs per host (dates, count,
-///  position, serial number, mounting, status). A definition's SENSOR_ID names
-///  the configuration, not one physical sensor, so it has no $SEN.
+///  DEFINITION. A record is a definition when NORAD_CAT_ID is 0 and OBJECT_ID,
+///  SITE_ID and ENTITY_ID are all absent or empty. It is one sensor
+///  configuration, published once, that any number of hosts carry; every other
+///  record is bound to its platform. A $SLO (Sensor Loadout) binds a definition
+///  to a host or to a set of hosts by CONFIG_STANDARD "$SNR" and CONFIG_ID =
+///  SENSOR_ID, and carries what differs per host (dates, count, position,
+///  serial number, mounting, status). A definition's SENSOR_ID names the
+///  configuration, not one physical sensor, so it has no $SEN. A corrected
+///  definition is republished with the same SENSOR_ID and a later UPDATED_AT;
+///  the latest version from a publisher is the definition ($SLO READING RULE,
+///  step 1).
 public struct SNR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
@@ -564,6 +569,7 @@ public struct SNR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let OPTICAL: VOffset = 30
     static let PROVENANCE: VOffset = 32
     static let NOTES: VOffset = 34
+    static let UPDATED_AT: VOffset = 36
   }
 
   ///  Stable identifier of this sensor, or of the configuration when the record
@@ -603,7 +609,13 @@ public struct SNR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public var PROVENANCE: OPPProvenance? { let o = _accessor.offset(VT.PROVENANCE); return o == 0 ? nil : OPPProvenance(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public var NOTES: String? { let o = _accessor.offset(VT.NOTES); return o == 0 ? nil : _accessor.string(at: o) }
   public var NOTESSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NOTES) }
-  public static func startSNR(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 16) }
+  ///  RFC 3339 UTC timestamp of this version of the record, exactly
+  ///  YYYY-MM-DDTHH:mm:ss.sssZ. Of two records with one SENSOR_ID from one
+  ///  publisher, the later UPDATED_AT is current; a record without one is older
+  ///  than any record with one.
+  public var UPDATED_AT: String? { let o = _accessor.offset(VT.UPDATED_AT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var UPDATED_ATSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.UPDATED_AT) }
+  public static func startSNR(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 17) }
   public static func add(SENSOR_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SENSOR_ID, at: VT.SENSOR_ID) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
   public static func add(NORAD_CAT_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORAD_CAT_ID, def: 0, at: VT.NORAD_CAT_ID) }
@@ -620,6 +632,7 @@ public struct SNR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func add(OPTICAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OPTICAL, at: VT.OPTICAL) }
   public static func add(PROVENANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVENANCE, at: VT.PROVENANCE) }
   public static func add(NOTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NOTES, at: VT.NOTES) }
+  public static func add(UPDATED_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UPDATED_AT, at: VT.UPDATED_AT) }
   public static func endSNR(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
   public static func createSNR(
     _ fbb: inout FlatBufferBuilder,
@@ -638,7 +651,8 @@ public struct SNR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     RFOffset RF: Offset = Offset(),
     OPTICALOffset OPTICAL: Offset = Offset(),
     PROVENANCEOffset PROVENANCE: Offset = Offset(),
-    NOTESOffset NOTES: Offset = Offset()
+    NOTESOffset NOTES: Offset = Offset(),
+    UPDATED_ATOffset UPDATED_AT: Offset = Offset()
   ) -> Offset {
     let __start = SNR.startSNR(&fbb)
     SNR.add(SENSOR_ID: SENSOR_ID, &fbb)
@@ -657,6 +671,7 @@ public struct SNR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     SNR.add(OPTICAL: OPTICAL, &fbb)
     SNR.add(PROVENANCE: PROVENANCE, &fbb)
     SNR.add(NOTES: NOTES, &fbb)
+    SNR.add(UPDATED_AT: UPDATED_AT, &fbb)
     return SNR.endSNR(&fbb, start: __start)
   }
 
@@ -678,6 +693,7 @@ public struct SNR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.OPTICAL, fieldName: "OPTICAL", required: false, type: ForwardOffset<SNROpticalParameters>.self)
     try _v.visit(field: VT.PROVENANCE, fieldName: "PROVENANCE", required: false, type: ForwardOffset<OPPProvenance>.self)
     try _v.visit(field: VT.NOTES, fieldName: "NOTES", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.UPDATED_AT, fieldName: "UPDATED_AT", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

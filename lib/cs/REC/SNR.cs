@@ -17,12 +17,17 @@ using global::Google.FlatBuffers;
 /// Platform: NORAD_CAT_ID and OBJECT_ID join to $CAT, SITE_ID to $SIT.ID,
 /// SENSOR_ID to $SEN.ID. A sensor not attached to a platform has none of them.
 ///
-/// A record with none of the platform fields is a DEFINITION: one sensor
-/// configuration, published once, that any number of hosts carry. A $SLO
-/// (Sensor Loadout) binds it to a host or to a set of hosts by CONFIG_STANDARD "$SNR"
-/// and CONFIG_ID = SENSOR_ID, and carries what differs per host (dates, count,
-/// position, serial number, mounting, status). A definition's SENSOR_ID names
-/// the configuration, not one physical sensor, so it has no $SEN.
+/// DEFINITION. A record is a definition when NORAD_CAT_ID is 0 and OBJECT_ID,
+/// SITE_ID and ENTITY_ID are all absent or empty. It is one sensor
+/// configuration, published once, that any number of hosts carry; every other
+/// record is bound to its platform. A $SLO (Sensor Loadout) binds a definition
+/// to a host or to a set of hosts by CONFIG_STANDARD "$SNR" and CONFIG_ID =
+/// SENSOR_ID, and carries what differs per host (dates, count, position,
+/// serial number, mounting, status). A definition's SENSOR_ID names the
+/// configuration, not one physical sensor, so it has no $SEN. A corrected
+/// definition is republished with the same SENSOR_ID and a later UPDATED_AT;
+/// the latest version from a publisher is the definition ($SLO READING RULE,
+/// step 1).
 public struct SNR : IFlatbufferObject
 {
   private Table __p;
@@ -103,6 +108,17 @@ public struct SNR : IFlatbufferObject
   public ArraySegment<byte>? GetNOTESBytes() { return __p.__vector_as_arraysegment(34); }
 #endif
   public byte[] GetNOTESArray() { return __p.__vector_as_array<byte>(34); }
+  /// RFC 3339 UTC timestamp of this version of the record, exactly
+  /// YYYY-MM-DDTHH:mm:ss.sssZ. Of two records with one SENSOR_ID from one
+  /// publisher, the later UPDATED_AT is current; a record without one is older
+  /// than any record with one.
+  public string UPDATED_AT { get { int o = __p.__offset(36); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetUPDATED_ATBytes() { return __p.__vector_as_span<byte>(36, 1); }
+#else
+  public ArraySegment<byte>? GetUPDATED_ATBytes() { return __p.__vector_as_arraysegment(36); }
+#endif
+  public byte[] GetUPDATED_ATArray() { return __p.__vector_as_array<byte>(36); }
 
   public static Offset<SNR> CreateSNR(FlatBufferBuilder builder,
       StringOffset SENSOR_IDOffset = default(StringOffset),
@@ -120,8 +136,10 @@ public struct SNR : IFlatbufferObject
       Offset<SNRRfParameters> RFOffset = default(Offset<SNRRfParameters>),
       Offset<SNROpticalParameters> OPTICALOffset = default(Offset<SNROpticalParameters>),
       Offset<OPPProvenance> PROVENANCEOffset = default(Offset<OPPProvenance>),
-      StringOffset NOTESOffset = default(StringOffset)) {
-    builder.StartTable(16);
+      StringOffset NOTESOffset = default(StringOffset),
+      StringOffset UPDATED_ATOffset = default(StringOffset)) {
+    builder.StartTable(17);
+    SNR.AddUPDATED_AT(builder, UPDATED_ATOffset);
     SNR.AddNOTES(builder, NOTESOffset);
     SNR.AddPROVENANCE(builder, PROVENANCEOffset);
     SNR.AddOPTICAL(builder, OPTICALOffset);
@@ -141,7 +159,7 @@ public struct SNR : IFlatbufferObject
     return SNR.EndSNR(builder);
   }
 
-  public static void StartSNR(FlatBufferBuilder builder) { builder.StartTable(16); }
+  public static void StartSNR(FlatBufferBuilder builder) { builder.StartTable(17); }
   public static void AddSENSOR_ID(FlatBufferBuilder builder, StringOffset SENSOR_IDOffset) { builder.AddOffset(0, SENSOR_IDOffset.Value, 0); }
   public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(1, NAMEOffset.Value, 0); }
   public static void AddNORAD_CAT_ID(FlatBufferBuilder builder, uint NORAD_CAT_ID) { builder.AddUint(2, NORAD_CAT_ID, 0); }
@@ -163,6 +181,7 @@ public struct SNR : IFlatbufferObject
   public static void AddOPTICAL(FlatBufferBuilder builder, Offset<SNROpticalParameters> OPTICALOffset) { builder.AddOffset(13, OPTICALOffset.Value, 0); }
   public static void AddPROVENANCE(FlatBufferBuilder builder, Offset<OPPProvenance> PROVENANCEOffset) { builder.AddOffset(14, PROVENANCEOffset.Value, 0); }
   public static void AddNOTES(FlatBufferBuilder builder, StringOffset NOTESOffset) { builder.AddOffset(15, NOTESOffset.Value, 0); }
+  public static void AddUPDATED_AT(FlatBufferBuilder builder, StringOffset UPDATED_ATOffset) { builder.AddOffset(16, UPDATED_ATOffset.Value, 0); }
   public static Offset<SNR> EndSNR(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // SENSOR_ID
@@ -193,6 +212,7 @@ public struct SNR : IFlatbufferObject
     _o.OPTICAL = this.OPTICAL.HasValue ? this.OPTICAL.Value.UnPack() : null;
     _o.PROVENANCE = this.PROVENANCE.HasValue ? this.PROVENANCE.Value.UnPack() : null;
     _o.NOTES = this.NOTES;
+    _o.UPDATED_AT = this.UPDATED_AT;
   }
   public static Offset<SNR> Pack(FlatBufferBuilder builder, SNRT _o) {
     if (_o == null) return default(Offset<SNR>);
@@ -214,6 +234,7 @@ public struct SNR : IFlatbufferObject
     var _OPTICAL = _o.OPTICAL == null ? default(Offset<SNROpticalParameters>) : SNROpticalParameters.Pack(builder, _o.OPTICAL);
     var _PROVENANCE = _o.PROVENANCE == null ? default(Offset<OPPProvenance>) : OPPProvenance.Pack(builder, _o.PROVENANCE);
     var _NOTES = _o.NOTES == null ? default(StringOffset) : builder.CreateString(_o.NOTES);
+    var _UPDATED_AT = _o.UPDATED_AT == null ? default(StringOffset) : builder.CreateString(_o.UPDATED_AT);
     return CreateSNR(
       builder,
       _SENSOR_ID,
@@ -231,7 +252,8 @@ public struct SNR : IFlatbufferObject
       _RF,
       _OPTICAL,
       _PROVENANCE,
-      _NOTES);
+      _NOTES,
+      _UPDATED_AT);
   }
 }
 
@@ -253,6 +275,7 @@ public class SNRT
   public SNROpticalParametersT OPTICAL { get; set; }
   public OPPProvenanceT PROVENANCE { get; set; }
   public string NOTES { get; set; }
+  public string UPDATED_AT { get; set; }
 
   public SNRT() {
     this.SENSOR_ID = null;
@@ -271,6 +294,7 @@ public class SNRT
     this.OPTICAL = null;
     this.PROVENANCE = null;
     this.NOTES = null;
+    this.UPDATED_AT = null;
   }
   public static SNRT DeserializeFromBinary(byte[] fbBuffer) {
     return SNR.GetRootAsSNR(new ByteBuffer(fbBuffer)).UnPack();
@@ -304,6 +328,7 @@ static public class SNRVerify
       && verifier.VerifyTable(tablePos, 30 /*OPTICAL*/, SNROpticalParametersVerify.Verify, false)
       && verifier.VerifyTable(tablePos, 32 /*PROVENANCE*/, OPPProvenanceVerify.Verify, false)
       && verifier.VerifyString(tablePos, 34 /*NOTES*/, false)
+      && verifier.VerifyString(tablePos, 36 /*UPDATED_AT*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

@@ -54,8 +54,8 @@ func (rcv *SLO) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-/// Publisher-stable identifier of this loadout. Together with the publishing key it is the
-/// loadout's identity across versions. Recommended form: "<CONFIG_ID>@<host field value>".
+/// Publisher-stable identifier of this loadout. Together with the publisher it is the loadout's
+/// identity across versions. Recommended form: "<CONFIG_ID>@<host field value>".
 func (rcv *SLO) LOADOUT_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -68,10 +68,10 @@ func (rcv *SLO) LoadoutId() []byte {
 	return rcv.LOADOUT_ID()
 }
 
-/// Publisher-stable identifier of this loadout. Together with the publishing key it is the
-/// loadout's identity across versions. Recommended form: "<CONFIG_ID>@<host field value>".
-/// Four-character standard code of the definition, `$` included: "$SNR" or "$RFB". Never the
-/// union ordinal.
+/// Publisher-stable identifier of this loadout. Together with the publisher it is the loadout's
+/// identity across versions. Recommended form: "<CONFIG_ID>@<host field value>".
+/// Four-character standard code of the definition, `$` included: "$SNR" or "$RFB" today. Never
+/// the union ordinal. A reader skips a value it does not implement (READING RULE, step 1).
 func (rcv *SLO) CONFIG_STANDARD() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -84,8 +84,8 @@ func (rcv *SLO) ConfigStandard() []byte {
 	return rcv.CONFIG_STANDARD()
 }
 
-/// Four-character standard code of the definition, `$` included: "$SNR" or "$RFB". Never the
-/// union ordinal.
+/// Four-character standard code of the definition, `$` included: "$SNR" or "$RFB" today. Never
+/// the union ordinal. A reader skips a value it does not implement (READING RULE, step 1).
 /// The definition's id, verbatim: $SNR.SENSOR_ID, or $RFB.ID_TRANSMITTER.
 func (rcv *SLO) CONFIG_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
@@ -100,7 +100,9 @@ func (rcv *SLO) ConfigId() []byte {
 }
 
 /// The definition's id, verbatim: $SNR.SENSOR_ID, or $RFB.ID_TRANSMITTER.
-/// Optional content identifier pinning the exact definition bytes.
+/// "$SNR" only: raw CIDv1 (sha2-256, base32 lowercase) of one exact version of the definition,
+/// over its size-prefixed bytes as published. A reader that finds no version with this CID does
+/// not resolve the loadout.
 func (rcv *SLO) CONFIG_CID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -113,7 +115,9 @@ func (rcv *SLO) ConfigCid() []byte {
 	return rcv.CONFIG_CID()
 }
 
-/// Optional content identifier pinning the exact definition bytes.
+/// "$SNR" only: raw CIDv1 (sha2-256, base32 lowercase) of one exact version of the definition,
+/// over its size-prefixed bytes as published. A reader that finds no version with this CID does
+/// not resolve the loadout.
 /// Which host field is set.
 func (rcv *SLO) HOST_SCOPE() sloHostScope {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
@@ -228,8 +232,8 @@ func (rcv *SLO) BusId() []byte {
 }
 
 /// BUS: $BUS.ID of the host set, matched against $CAT.BUS_ID.
-/// RFC 3339 UTC fixed-millisecond timestamp the host starts carrying the configuration,
-/// inclusive. Absent = open.
+/// When the host starts carrying the configuration, inclusive, exactly YYYY-MM-DDTHH:mm:ss.sssZ.
+/// Absent = open.
 func (rcv *SLO) VALID_FROM() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
@@ -242,9 +246,9 @@ func (rcv *SLO) ValidFrom() []byte {
 	return rcv.VALID_FROM()
 }
 
-/// RFC 3339 UTC fixed-millisecond timestamp the host starts carrying the configuration,
-/// inclusive. Absent = open.
-/// RFC 3339 UTC fixed-millisecond timestamp the host stops carrying it, exclusive. Absent = open.
+/// When the host starts carrying the configuration, inclusive, exactly YYYY-MM-DDTHH:mm:ss.sssZ.
+/// Absent = open.
+/// When the host stops carrying it, exclusive, in the same form, after VALID_FROM. Absent = open.
 func (rcv *SLO) VALID_TO() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
@@ -257,7 +261,7 @@ func (rcv *SLO) ValidTo() []byte {
 	return rcv.VALID_TO()
 }
 
-/// RFC 3339 UTC fixed-millisecond timestamp the host stops carrying it, exclusive. Absent = open.
+/// When the host stops carrying it, exclusive, in the same form, after VALID_FROM. Absent = open.
 /// Units of this configuration on each host. 0 = not stated.
 func (rcv *SLO) COUNT() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
@@ -281,7 +285,8 @@ func (rcv *SLO) MutateCount(n uint32) bool {
 }
 
 /// Where the unit sits on the host, as the source names it (a slot, a face, a panel). Two units
-/// of one configuration on one host differ by POSITION.
+/// of one configuration on one host differ by POSITION. Absent: the loadout speaks for every unit
+/// of the configuration on the host (READING RULE, step 6).
 func (rcv *SLO) POSITION() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
 	if o != 0 {
@@ -295,7 +300,8 @@ func (rcv *SLO) Position() []byte {
 }
 
 /// Where the unit sits on the host, as the source names it (a slot, a face, a panel). Two units
-/// of one configuration on one host differ by POSITION.
+/// of one configuration on one host differ by POSITION. Absent: the loadout speaks for every unit
+/// of the configuration on the host (READING RULE, step 6).
 /// Serial number of the unit, for a single-host loadout.
 func (rcv *SLO) SERIAL_NUMBER() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
@@ -310,7 +316,7 @@ func (rcv *SLO) SerialNumber() []byte {
 }
 
 /// Serial number of the unit, for a single-host loadout.
-/// How this unit sits and points, over the definition's MOUNTING (READING RULE, step 5).
+/// How this unit sits and points, over the definition's MOUNTING (READING RULE, step 9).
 func (rcv *SLO) MOUNTING(obj *SNRMounting) *SNRMounting {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
 	if o != 0 {
@@ -328,7 +334,7 @@ func (rcv *SLO) Mounting(obj *SNRMounting) *SNRMounting {
 	return rcv.MOUNTING(obj)
 }
 
-/// How this unit sits and points, over the definition's MOUNTING (READING RULE, step 5).
+/// How this unit sits and points, over the definition's MOUNTING (READING RULE, step 9).
 func (rcv *SLO) STATUS() sloUnitState {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
 	if o != 0 {
@@ -349,7 +355,7 @@ func (rcv *SLO) MutateStatus(n sloUnitState) bool {
 	return rcv.MutateSTATUS(n)
 }
 
-/// RFC 3339 UTC fixed-millisecond timestamp of this version of the loadout.
+/// This version of the loadout, exactly YYYY-MM-DDTHH:mm:ss.sssZ.
 func (rcv *SLO) UPDATED_AT() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
 	if o != 0 {
@@ -362,7 +368,7 @@ func (rcv *SLO) UpdatedAt() []byte {
 	return rcv.UPDATED_AT()
 }
 
-/// RFC 3339 UTC fixed-millisecond timestamp of this version of the loadout.
+/// This version of the loadout, exactly YYYY-MM-DDTHH:mm:ss.sssZ.
 /// Where the binding was read, one entry per source: a filing, the operator, a catalogue. A
 /// user-made loadout carries METHOD USER_DEFINED.
 func (rcv *SLO) PROVENANCE(obj *OPPProvenance, j int) bool {
@@ -426,8 +432,38 @@ func (rcv *SLO) Notes() []byte {
 }
 
 /// Publisher note; never a substitute for a field.
+/// $DPM.PROVIDER_PEER_ID of the publisher of the definition. Absent: the loadout's own publisher.
+func (rcv *SLO) CONFIG_PUBLISHER_PEER_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *SLO) ConfigPublisherPeerId() []byte {
+	return rcv.CONFIG_PUBLISHER_PEER_ID()
+}
+
+/// $DPM.PROVIDER_PEER_ID of the publisher of the definition. Absent: the loadout's own publisher.
+/// $DPM.PROVIDER_PEER_ID of the publisher of the $EGP, $CMR or $CAT a GROUP, CONSTELLATION or BUS
+/// scope reads. Absent: the loadout's own publisher.
+func (rcv *SLO) SET_PUBLISHER_PEER_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *SLO) SetPublisherPeerId() []byte {
+	return rcv.SET_PUBLISHER_PEER_ID()
+}
+
+/// $DPM.PROVIDER_PEER_ID of the publisher of the $EGP, $CMR or $CAT a GROUP, CONSTELLATION or BUS
+/// scope reads. Absent: the loadout's own publisher.
 func SLOStart(builder *flatbuffers.Builder) {
-	builder.StartObject(22)
+	builder.StartObject(24)
 }
 func SLOAddLOADOUT_ID(builder *flatbuffers.Builder, LOADOUT_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(LOADOUT_ID), 0)
@@ -566,6 +602,18 @@ func SLOAddNOTES(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
 }
 func SLOAddNotes(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
 	SLOAddNOTES(builder, NOTES)
+}
+func SLOAddCONFIG_PUBLISHER_PEER_ID(builder *flatbuffers.Builder, CONFIG_PUBLISHER_PEER_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(22, flatbuffers.UOffsetT(CONFIG_PUBLISHER_PEER_ID), 0)
+}
+func SLOAddConfigPublisherPeerId(builder *flatbuffers.Builder, CONFIG_PUBLISHER_PEER_ID flatbuffers.UOffsetT) {
+	SLOAddCONFIG_PUBLISHER_PEER_ID(builder, CONFIG_PUBLISHER_PEER_ID)
+}
+func SLOAddSET_PUBLISHER_PEER_ID(builder *flatbuffers.Builder, SET_PUBLISHER_PEER_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(23, flatbuffers.UOffsetT(SET_PUBLISHER_PEER_ID), 0)
+}
+func SLOAddSetPublisherPeerId(builder *flatbuffers.Builder, SET_PUBLISHER_PEER_ID flatbuffers.UOffsetT) {
+	SLOAddSET_PUBLISHER_PEER_ID(builder, SET_PUBLISHER_PEER_ID)
 }
 func SLOEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -2109,7 +2109,7 @@
     },
     "RFB": {
       "type": "object",
-      "description": "RF Band Specification\n\nUNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources\nthat publish Hz (as open transmitter databases commonly do) MUST divide by\n1e6 before encoding; sources\nthat publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),\nnever kilobaud. Encoding a Hz value into a MHz field is a defect, not a\nconvention.\n\nOne RFB record carries exactly one LINK_DIRECTION. A transceiver or\ntransponder is therefore represented as TWO RFB records \u2014 one UPLINK and\none DOWNLINK \u2014 sharing ID_TRANSMITTER, each carrying its own MODE,\nFREQ_MIN, FREQ_MAX and CENTER_FREQ.\n\nRecords with NORAD_CAT_ID 0 are a DEFINITION: one radio configuration,\npublished once, that any number of hosts carry. The definition is every\nunbound record sharing one ID_TRANSMITTER. A $SLO (Sensor Loadout) binds it to a\nhost or to a set of hosts by CONFIG_STANDARD \"$RFB\" and CONFIG_ID =\nID_TRANSMITTER, and carries what differs per host (dates, count, position,\nserial number, mounting, status).",
+      "description": "RF Band Specification\n\nUNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources\nthat publish Hz (as open transmitter databases commonly do) MUST divide by\n1e6 before encoding; sources\nthat publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),\nnever kilobaud. Encoding a Hz value into a MHz field is a defect, not a\nconvention.\n\nOne RFB record carries exactly one LINK_DIRECTION. A transceiver or\ntransponder is therefore represented as TWO RFB records \u2014 one UPLINK and\none DOWNLINK \u2014 sharing ID_TRANSMITTER, each carrying its own MODE,\nFREQ_MIN, FREQ_MAX and CENTER_FREQ.\n\nDEFINITION. A record is a definition record when NORAD_CAT_ID is 0 and\nID_ENTITY is absent or empty; every other record is bound to its host (a\nrecord with only ID_ENTITY, as an upstream transmitter database writes for\nan object with no catalogue number, is bound to that entity). A radio\ndefinition is one radio configuration, published once, that any number of\nhosts carry: the current definition records sharing one ID_TRANSMITTER. A\n$SLO (Sensor Loadout) binds it to a host or to a set of hosts by\nCONFIG_STANDARD \"$RFB\" and CONFIG_ID = ID_TRANSMITTER, and carries what\ndiffers per host (dates, count, position, serial number, mounting, status).\nA corrected record is republished with the same ID and a later UPDATED_AT;\nthe latest version from a publisher is current ($SLO READING RULE, step 1).",
       "properties": {
         "ID": {
           "type": "string",
@@ -2291,7 +2291,7 @@
         },
         "ID_TRANSMITTER": {
           "type": "string",
-          "description": "Identifier of the physical transmitter, transceiver or transponder this\nrecord describes (e.g. an upstream transmitter database's UUID). Uplink\nand downlink\nrecords of the same device share this value.",
+          "description": "Identifier of the transmitter, transceiver or transponder this record\ndescribes (e.g. an upstream transmitter database's UUID). Uplink and\ndownlink records of the same device share this value. On a bound record\nit names one physical device; on a definition record it names the radio\nconfiguration, and $SLO.CONFIG_ID carries it.",
           "x-flatbuffer-type": "string"
         },
         "LINK_DIRECTION": {
@@ -2364,6 +2364,11 @@
         "CITATION": {
           "type": "string",
           "description": "Attribution/citation string the source license requires this record to\ncarry downstream.",
+          "x-flatbuffer-type": "string"
+        },
+        "UPDATED_AT": {
+          "type": "string",
+          "description": "RFC 3339 UTC timestamp of this version of the record, exactly\nYYYY-MM-DDTHH:mm:ss.sssZ. Of two records with one ID from one publisher,\nthe later UPDATED_AT is current; a record without one is older than any\nrecord with one.",
           "x-flatbuffer-type": "string"
         }
       },
@@ -4681,7 +4686,7 @@
     },
     "SNR": {
       "type": "object",
-      "description": "Sensor definition: the sensor a platform carries. One record is one sensor.\n\nUNKNOWN IS ABSENT. A positive quantity unset is 0, a signed quantity unset\nis NaN, an unset enum is its UNSPECIFIED (or UNKNOWN) member, an unset\nstring, table or vector is absent. A value is never invented, never zero as a\nplaceholder, never copied from another sensor. Hz is the only frequency unit.\nDisplay colors are viewer preferences and never travel in this record.\n\nPlatform: NORAD_CAT_ID and OBJECT_ID join to $CAT, SITE_ID to $SIT.ID,\nSENSOR_ID to $SEN.ID. A sensor not attached to a platform has none of them.\n\nA record with none of the platform fields is a DEFINITION: one sensor\nconfiguration, published once, that any number of hosts carry. A $SLO\n(Sensor Loadout) binds it to a host or to a set of hosts by CONFIG_STANDARD \"$SNR\"\nand CONFIG_ID = SENSOR_ID, and carries what differs per host (dates, count,\nposition, serial number, mounting, status). A definition's SENSOR_ID names\nthe configuration, not one physical sensor, so it has no $SEN.",
+      "description": "Sensor definition: the sensor a platform carries. One record is one sensor.\n\nUNKNOWN IS ABSENT. A positive quantity unset is 0, a signed quantity unset\nis NaN, an unset enum is its UNSPECIFIED (or UNKNOWN) member, an unset\nstring, table or vector is absent. A value is never invented, never zero as a\nplaceholder, never copied from another sensor. Hz is the only frequency unit.\nDisplay colors are viewer preferences and never travel in this record.\n\nPlatform: NORAD_CAT_ID and OBJECT_ID join to $CAT, SITE_ID to $SIT.ID,\nSENSOR_ID to $SEN.ID. A sensor not attached to a platform has none of them.\n\nDEFINITION. A record is a definition when NORAD_CAT_ID is 0 and OBJECT_ID,\nSITE_ID and ENTITY_ID are all absent or empty. It is one sensor\nconfiguration, published once, that any number of hosts carry; every other\nrecord is bound to its platform. A $SLO (Sensor Loadout) binds a definition\nto a host or to a set of hosts by CONFIG_STANDARD \"$SNR\" and CONFIG_ID =\nSENSOR_ID, and carries what differs per host (dates, count, position,\nserial number, mounting, status). A definition's SENSOR_ID names the\nconfiguration, not one physical sensor, so it has no $SEN. A corrected\ndefinition is republished with the same SENSOR_ID and a later UPDATED_AT;\nthe latest version from a publisher is the definition ($SLO READING RULE,\nstep 1).",
       "properties": {
         "SENSOR_ID": {
           "type": "string",
@@ -4868,6 +4873,11 @@
         },
         "NOTES": {
           "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "UPDATED_AT": {
+          "type": "string",
+          "description": "RFC 3339 UTC timestamp of this version of the record, exactly\nYYYY-MM-DDTHH:mm:ss.sssZ. Of two records with one SENSOR_ID from one\npublisher, the later UPDATED_AT is current; a record without one is older\nthan any record with one.",
           "x-flatbuffer-type": "string"
         }
       },

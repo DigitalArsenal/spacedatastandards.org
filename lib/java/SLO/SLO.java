@@ -29,15 +29,15 @@ public final class SLO extends com.google.flatbuffers.Table {
   public SLO __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   /**
-   * Publisher-stable identifier of this loadout. Together with the publishing key it is the
-   * loadout's identity across versions. Recommended form: "<CONFIG_ID>@<host field value>".
+   * Publisher-stable identifier of this loadout. Together with the publisher it is the loadout's
+   * identity across versions. Recommended form: "<CONFIG_ID>@<host field value>".
    */
   public String LOADOUT_ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer LOADOUT_IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer LOADOUT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
   /**
-   * Four-character standard code of the definition, `$` included: "$SNR" or "$RFB". Never the
-   * union ordinal.
+   * Four-character standard code of the definition, `$` included: "$SNR" or "$RFB" today. Never
+   * the union ordinal. A reader skips a value it does not implement (READING RULE, step 1).
    */
   public String CONFIG_STANDARD() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer CONFIG_STANDARDAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
@@ -49,7 +49,9 @@ public final class SLO extends com.google.flatbuffers.Table {
   public ByteBuffer CONFIG_IDAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
   public ByteBuffer CONFIG_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
   /**
-   * Optional content identifier pinning the exact definition bytes.
+   * "$SNR" only: raw CIDv1 (sha2-256, base32 lowercase) of one exact version of the definition,
+   * over its size-prefixed bytes as published. A reader that finds no version with this CID does
+   * not resolve the loadout.
    */
   public String CONFIG_CID() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer CONFIG_CIDAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
@@ -93,14 +95,14 @@ public final class SLO extends com.google.flatbuffers.Table {
   public ByteBuffer BUS_IDAsByteBuffer() { return __vector_as_bytebuffer(24, 1); }
   public ByteBuffer BUS_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 24, 1); }
   /**
-   * RFC 3339 UTC fixed-millisecond timestamp the host starts carrying the configuration,
-   * inclusive. Absent = open.
+   * When the host starts carrying the configuration, inclusive, exactly YYYY-MM-DDTHH:mm:ss.sssZ.
+   * Absent = open.
    */
   public String VALID_FROM() { int o = __offset(26); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer VALID_FROMAsByteBuffer() { return __vector_as_bytebuffer(26, 1); }
   public ByteBuffer VALID_FROMInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 26, 1); }
   /**
-   * RFC 3339 UTC fixed-millisecond timestamp the host stops carrying it, exclusive. Absent = open.
+   * When the host stops carrying it, exclusive, in the same form, after VALID_FROM. Absent = open.
    */
   public String VALID_TO() { int o = __offset(28); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer VALID_TOAsByteBuffer() { return __vector_as_bytebuffer(28, 1); }
@@ -111,7 +113,8 @@ public final class SLO extends com.google.flatbuffers.Table {
   public long COUNT() { int o = __offset(30); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
   /**
    * Where the unit sits on the host, as the source names it (a slot, a face, a panel). Two units
-   * of one configuration on one host differ by POSITION.
+   * of one configuration on one host differ by POSITION. Absent: the loadout speaks for every unit
+   * of the configuration on the host (READING RULE, step 6).
    */
   public String POSITION() { int o = __offset(32); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer POSITIONAsByteBuffer() { return __vector_as_bytebuffer(32, 1); }
@@ -123,13 +126,13 @@ public final class SLO extends com.google.flatbuffers.Table {
   public ByteBuffer SERIAL_NUMBERAsByteBuffer() { return __vector_as_bytebuffer(34, 1); }
   public ByteBuffer SERIAL_NUMBERInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 34, 1); }
   /**
-   * How this unit sits and points, over the definition's MOUNTING (READING RULE, step 5).
+   * How this unit sits and points, over the definition's MOUNTING (READING RULE, step 9).
    */
   public SNRMounting MOUNTING() { return MOUNTING(new SNRMounting()); }
   public SNRMounting MOUNTING(SNRMounting obj) { int o = __offset(36); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   public byte STATUS() { int o = __offset(38); return o != 0 ? bb.get(o + bb_pos) : 0; }
   /**
-   * RFC 3339 UTC fixed-millisecond timestamp of this version of the loadout.
+   * This version of the loadout, exactly YYYY-MM-DDTHH:mm:ss.sssZ.
    */
   public String UPDATED_AT() { int o = __offset(40); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer UPDATED_ATAsByteBuffer() { return __vector_as_bytebuffer(40, 1); }
@@ -155,6 +158,19 @@ public final class SLO extends com.google.flatbuffers.Table {
   public String NOTES() { int o = __offset(46); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer NOTESAsByteBuffer() { return __vector_as_bytebuffer(46, 1); }
   public ByteBuffer NOTESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 46, 1); }
+  /**
+   * $DPM.PROVIDER_PEER_ID of the publisher of the definition. Absent: the loadout's own publisher.
+   */
+  public String CONFIG_PUBLISHER_PEER_ID() { int o = __offset(48); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CONFIG_PUBLISHER_PEER_IDAsByteBuffer() { return __vector_as_bytebuffer(48, 1); }
+  public ByteBuffer CONFIG_PUBLISHER_PEER_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 48, 1); }
+  /**
+   * $DPM.PROVIDER_PEER_ID of the publisher of the $EGP, $CMR or $CAT a GROUP, CONSTELLATION or BUS
+   * scope reads. Absent: the loadout's own publisher.
+   */
+  public String SET_PUBLISHER_PEER_ID() { int o = __offset(50); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SET_PUBLISHER_PEER_IDAsByteBuffer() { return __vector_as_bytebuffer(50, 1); }
+  public ByteBuffer SET_PUBLISHER_PEER_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 50, 1); }
 
   public static int createSLO(FlatBufferBuilder builder,
       int LOADOUT_IDOffset,
@@ -178,8 +194,12 @@ public final class SLO extends com.google.flatbuffers.Table {
       int UPDATED_ATOffset,
       int PROVENANCEOffset,
       int CITATIONOffset,
-      int NOTESOffset) {
-    builder.startTable(22);
+      int NOTESOffset,
+      int CONFIG_PUBLISHER_PEER_IDOffset,
+      int SET_PUBLISHER_PEER_IDOffset) {
+    builder.startTable(24);
+    SLO.addSetPublisherPeerId(builder, SET_PUBLISHER_PEER_IDOffset);
+    SLO.addConfigPublisherPeerId(builder, CONFIG_PUBLISHER_PEER_IDOffset);
     SLO.addNotes(builder, NOTESOffset);
     SLO.addCitation(builder, CITATIONOffset);
     SLO.addProvenance(builder, PROVENANCEOffset);
@@ -205,7 +225,7 @@ public final class SLO extends com.google.flatbuffers.Table {
     return SLO.endSLO(builder);
   }
 
-  public static void startSLO(FlatBufferBuilder builder) { builder.startTable(22); }
+  public static void startSLO(FlatBufferBuilder builder) { builder.startTable(24); }
   public static void addLoadoutId(FlatBufferBuilder builder, int LOADOUT_IDOffset) { builder.addOffset(0, LOADOUT_IDOffset, 0); }
   public static void addConfigStandard(FlatBufferBuilder builder, int CONFIG_STANDARDOffset) { builder.addOffset(1, CONFIG_STANDARDOffset, 0); }
   public static void addConfigId(FlatBufferBuilder builder, int CONFIG_IDOffset) { builder.addOffset(2, CONFIG_IDOffset, 0); }
@@ -230,6 +250,8 @@ public final class SLO extends com.google.flatbuffers.Table {
   public static void startProvenanceVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static void addCitation(FlatBufferBuilder builder, int CITATIONOffset) { builder.addOffset(20, CITATIONOffset, 0); }
   public static void addNotes(FlatBufferBuilder builder, int NOTESOffset) { builder.addOffset(21, NOTESOffset, 0); }
+  public static void addConfigPublisherPeerId(FlatBufferBuilder builder, int CONFIG_PUBLISHER_PEER_IDOffset) { builder.addOffset(22, CONFIG_PUBLISHER_PEER_IDOffset, 0); }
+  public static void addSetPublisherPeerId(FlatBufferBuilder builder, int SET_PUBLISHER_PEER_IDOffset) { builder.addOffset(23, SET_PUBLISHER_PEER_IDOffset, 0); }
   public static int endSLO(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // LOADOUT_ID

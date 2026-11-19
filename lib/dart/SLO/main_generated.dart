@@ -115,18 +115,20 @@ class SLO {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Publisher-stable identifier of this loadout. Together with the publishing key it is the
-  ///  loadout's identity across versions. Recommended form: "<CONFIG_ID>@<host field value>".
+  ///  Publisher-stable identifier of this loadout. Together with the publisher it is the loadout's
+  ///  identity across versions. Recommended form: "<CONFIG_ID>@<host field value>".
   String? get LOADOUT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
   String? get loadoutId => LOADOUT_ID;
-  ///  Four-character standard code of the definition, `$` included: "$SNR" or "$RFB". Never the
-  ///  union ordinal.
+  ///  Four-character standard code of the definition, `$` included: "$SNR" or "$RFB" today. Never
+  ///  the union ordinal. A reader skips a value it does not implement (READING RULE, step 1).
   String? get CONFIG_STANDARD => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
   String? get configStandard => CONFIG_STANDARD;
   ///  The definition's id, verbatim: $SNR.SENSOR_ID, or $RFB.ID_TRANSMITTER.
   String? get CONFIG_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
   String? get configId => CONFIG_ID;
-  ///  Optional content identifier pinning the exact definition bytes.
+  ///  "$SNR" only: raw CIDv1 (sha2-256, base32 lowercase) of one exact version of the definition,
+  ///  over its size-prefixed bytes as published. A reader that finds no version with this CID does
+  ///  not resolve the loadout.
   String? get CONFIG_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
   String? get configCid => CONFIG_CID;
   ///  Which host field is set.
@@ -150,25 +152,26 @@ class SLO {
   ///  BUS: $BUS.ID of the host set, matched against $CAT.BUS_ID.
   String? get BUS_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
   String? get busId => BUS_ID;
-  ///  RFC 3339 UTC fixed-millisecond timestamp the host starts carrying the configuration,
-  ///  inclusive. Absent = open.
+  ///  When the host starts carrying the configuration, inclusive, exactly YYYY-MM-DDTHH:mm:ss.sssZ.
+  ///  Absent = open.
   String? get VALID_FROM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
   String? get validFrom => VALID_FROM;
-  ///  RFC 3339 UTC fixed-millisecond timestamp the host stops carrying it, exclusive. Absent = open.
+  ///  When the host stops carrying it, exclusive, in the same form, after VALID_FROM. Absent = open.
   String? get VALID_TO => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
   String? get validTo => VALID_TO;
   ///  Units of this configuration on each host. 0 = not stated.
   int get COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 30, 0);
   ///  Where the unit sits on the host, as the source names it (a slot, a face, a panel). Two units
-  ///  of one configuration on one host differ by POSITION.
+  ///  of one configuration on one host differ by POSITION. Absent: the loadout speaks for every unit
+  ///  of the configuration on the host (READING RULE, step 6).
   String? get POSITION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
   ///  Serial number of the unit, for a single-host loadout.
   String? get SERIAL_NUMBER => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
   String? get serialNumber => SERIAL_NUMBER;
-  ///  How this unit sits and points, over the definition's MOUNTING (READING RULE, step 5).
+  ///  How this unit sits and points, over the definition's MOUNTING (READING RULE, step 9).
   SNRMounting? get MOUNTING => SNRMounting.reader.vTableGetNullable(_bc, _bcOffset, 36);
   sloUnitState get STATUS => sloUnitState.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 38, 0));
-  ///  RFC 3339 UTC fixed-millisecond timestamp of this version of the loadout.
+  ///  This version of the loadout, exactly YYYY-MM-DDTHH:mm:ss.sssZ.
   String? get UPDATED_AT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 40);
   String? get updatedAt => UPDATED_AT;
   ///  Where the binding was read, one entry per source: a filing, the operator, a catalogue. A
@@ -178,10 +181,17 @@ class SLO {
   String? get CITATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 44);
   ///  Publisher note; never a substitute for a field.
   String? get NOTES => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 46);
+  ///  $DPM.PROVIDER_PEER_ID of the publisher of the definition. Absent: the loadout's own publisher.
+  String? get CONFIG_PUBLISHER_PEER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 48);
+  String? get configPublisherPeerId => CONFIG_PUBLISHER_PEER_ID;
+  ///  $DPM.PROVIDER_PEER_ID of the publisher of the $EGP, $CMR or $CAT a GROUP, CONSTELLATION or BUS
+  ///  scope reads. Absent: the loadout's own publisher.
+  String? get SET_PUBLISHER_PEER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 50);
+  String? get setPublisherPeerId => SET_PUBLISHER_PEER_ID;
 
   @override
   String toString() {
-    return 'SLO{loadoutId: ${loadoutId}, configStandard: ${configStandard}, configId: ${configId}, configCid: ${configCid}, hostScope: ${hostScope}, noradCatId: ${noradCatId}, siteId: ${siteId}, entityId: ${entityId}, constellationId: ${constellationId}, groupId: ${groupId}, busId: ${busId}, validFrom: ${validFrom}, validTo: ${validTo}, COUNT: ${COUNT}, POSITION: ${POSITION}, serialNumber: ${serialNumber}, MOUNTING: ${MOUNTING}, STATUS: ${STATUS}, updatedAt: ${updatedAt}, PROVENANCE: ${PROVENANCE}, CITATION: ${CITATION}, NOTES: ${NOTES}}';
+    return 'SLO{loadoutId: ${loadoutId}, configStandard: ${configStandard}, configId: ${configId}, configCid: ${configCid}, hostScope: ${hostScope}, noradCatId: ${noradCatId}, siteId: ${siteId}, entityId: ${entityId}, constellationId: ${constellationId}, groupId: ${groupId}, busId: ${busId}, validFrom: ${validFrom}, validTo: ${validTo}, COUNT: ${COUNT}, POSITION: ${POSITION}, serialNumber: ${serialNumber}, MOUNTING: ${MOUNTING}, STATUS: ${STATUS}, updatedAt: ${updatedAt}, PROVENANCE: ${PROVENANCE}, CITATION: ${CITATION}, NOTES: ${NOTES}, configPublisherPeerId: ${configPublisherPeerId}, setPublisherPeerId: ${setPublisherPeerId}}';
   }
 }
 
@@ -199,7 +209,7 @@ class SLOBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(22);
+    fbBuilder.startTable(24);
   }
 
   int addLoadoutIdOffset(int? offset) {
@@ -290,6 +300,14 @@ class SLOBuilder {
     fbBuilder.addOffset(21, offset);
     return fbBuilder.offset;
   }
+  int addConfigPublisherPeerIdOffset(int? offset) {
+    fbBuilder.addOffset(22, offset);
+    return fbBuilder.offset;
+  }
+  int addSetPublisherPeerIdOffset(int? offset) {
+    fbBuilder.addOffset(23, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -319,6 +337,8 @@ class SLOObjectBuilder extends fb.ObjectBuilder {
   final List<OPPProvenanceObjectBuilder>? _PROVENANCE;
   final String? _CITATION;
   final String? _NOTES;
+  final String? _CONFIG_PUBLISHER_PEER_ID;
+  final String? _SET_PUBLISHER_PEER_ID;
 
   SLOObjectBuilder({
     String? LOADOUT_ID,
@@ -358,6 +378,10 @@ class SLOObjectBuilder extends fb.ObjectBuilder {
     List<OPPProvenanceObjectBuilder>? PROVENANCE,
     String? CITATION,
     String? NOTES,
+    String? CONFIG_PUBLISHER_PEER_ID,
+    String? configPublisherPeerId,
+    String? SET_PUBLISHER_PEER_ID,
+    String? setPublisherPeerId,
   })
       : _LOADOUT_ID = loadoutId ?? LOADOUT_ID,
         _CONFIG_STANDARD = configStandard ?? CONFIG_STANDARD,
@@ -380,7 +404,9 @@ class SLOObjectBuilder extends fb.ObjectBuilder {
         _UPDATED_AT = updatedAt ?? UPDATED_AT,
         _PROVENANCE = PROVENANCE,
         _CITATION = CITATION,
-        _NOTES = NOTES;
+        _NOTES = NOTES,
+        _CONFIG_PUBLISHER_PEER_ID = configPublisherPeerId ?? CONFIG_PUBLISHER_PEER_ID,
+        _SET_PUBLISHER_PEER_ID = setPublisherPeerId ?? SET_PUBLISHER_PEER_ID;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -420,7 +446,11 @@ class SLOObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_CITATION!);
     final int? NOTESOffset = _NOTES == null ? null
         : fbBuilder.writeString(_NOTES!);
-    fbBuilder.startTable(22);
+    final int? CONFIG_PUBLISHER_PEER_IDOffset = _CONFIG_PUBLISHER_PEER_ID == null ? null
+        : fbBuilder.writeString(_CONFIG_PUBLISHER_PEER_ID!);
+    final int? SET_PUBLISHER_PEER_IDOffset = _SET_PUBLISHER_PEER_ID == null ? null
+        : fbBuilder.writeString(_SET_PUBLISHER_PEER_ID!);
+    fbBuilder.startTable(24);
     fbBuilder.addOffset(0, LOADOUT_IDOffset);
     fbBuilder.addOffset(1, CONFIG_STANDARDOffset);
     fbBuilder.addOffset(2, CONFIG_IDOffset);
@@ -443,6 +473,8 @@ class SLOObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(19, PROVENANCEOffset);
     fbBuilder.addOffset(20, CITATIONOffset);
     fbBuilder.addOffset(21, NOTESOffset);
+    fbBuilder.addOffset(22, CONFIG_PUBLISHER_PEER_IDOffset);
+    fbBuilder.addOffset(23, SET_PUBLISHER_PEER_IDOffset);
     return fbBuilder.endTable();
   }
 

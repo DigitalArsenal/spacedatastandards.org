@@ -28,12 +28,17 @@ import kotlin.math.sign
  * Platform: NORAD_CAT_ID and OBJECT_ID join to $CAT, SITE_ID to $SIT.ID,
  * SENSOR_ID to $SEN.ID. A sensor not attached to a platform has none of them.
  *
- * A record with none of the platform fields is a DEFINITION: one sensor
- * configuration, published once, that any number of hosts carry. A $SLO
- * (Sensor Loadout) binds it to a host or to a set of hosts by CONFIG_STANDARD "\$SNR"
- * and CONFIG_ID = SENSOR_ID, and carries what differs per host (dates, count,
- * position, serial number, mounting, status). A definition's SENSOR_ID names
- * the configuration, not one physical sensor, so it has no $SEN.
+ * DEFINITION. A record is a definition when NORAD_CAT_ID is 0 and OBJECT_ID,
+ * SITE_ID and ENTITY_ID are all absent or empty. It is one sensor
+ * configuration, published once, that any number of hosts carry; every other
+ * record is bound to its platform. A $SLO (Sensor Loadout) binds a definition
+ * to a host or to a set of hosts by CONFIG_STANDARD "\$SNR" and CONFIG_ID =
+ * SENSOR_ID, and carries what differs per host (dates, count, position,
+ * serial number, mounting, status). A definition's SENSOR_ID names the
+ * configuration, not one physical sensor, so it has no $SEN. A corrected
+ * definition is republished with the same SENSOR_ID and a later UPDATED_AT;
+ * the latest version from a publisher is the definition ($SLO READING RULE,
+ * step 1).
  */
 @Suppress("unused")
 class SNR : Table() {
@@ -226,6 +231,23 @@ class SNR : Table() {
         }
     val notesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(34, 1)
     fun notesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 34, 1)
+    /**
+     * RFC 3339 UTC timestamp of this version of the record, exactly
+     * YYYY-MM-DDTHH:mm:ss.sssZ. Of two records with one SENSOR_ID from one
+     * publisher, the later UPDATED_AT is current; a record without one is older
+     * than any record with one.
+     */
+    val updatedAt : String?
+        get() {
+            val o = __offset(36)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val updatedAtAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(36, 1)
+    fun updatedAtInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 36, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSNR(_bb: ByteBuffer): SNR = getRootAsSNR(_bb, SNR())
@@ -234,8 +256,9 @@ class SNR : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun SNRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$SNR")
-        fun createSNR(builder: FlatBufferBuilder, sensorIdOffset: Int, nameOffset: Int, noradCatId: UInt, objectIdOffset: Int, siteIdOffset: Int, entityIdOffset: Int, type: Byte, emission: Byte, spectralBandsOffset: Int, fieldOfViewOffset: Int, fieldOfViewProvenanceOffset: Int, mountingOffset: Int, rfOffset: Int, opticalOffset: Int, provenanceOffset: Int, notesOffset: Int) : Int {
-            builder.startTable(16)
+        fun createSNR(builder: FlatBufferBuilder, sensorIdOffset: Int, nameOffset: Int, noradCatId: UInt, objectIdOffset: Int, siteIdOffset: Int, entityIdOffset: Int, type: Byte, emission: Byte, spectralBandsOffset: Int, fieldOfViewOffset: Int, fieldOfViewProvenanceOffset: Int, mountingOffset: Int, rfOffset: Int, opticalOffset: Int, provenanceOffset: Int, notesOffset: Int, updatedAtOffset: Int) : Int {
+            builder.startTable(17)
+            addUPDATEDAT(builder, updatedAtOffset)
             addNOTES(builder, notesOffset)
             addPROVENANCE(builder, provenanceOffset)
             addOPTICAL(builder, opticalOffset)
@@ -254,7 +277,7 @@ class SNR : Table() {
             addTYPE(builder, type)
             return endSNR(builder)
         }
-        fun startSNR(builder: FlatBufferBuilder) = builder.startTable(16)
+        fun startSNR(builder: FlatBufferBuilder) = builder.startTable(17)
         fun addSENSORID(builder: FlatBufferBuilder, sensorId: Int) = builder.addOffset(0, sensorId, 0)
         fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(1, name, 0)
         fun addNORADCATID(builder: FlatBufferBuilder, noradCatId: UInt) = builder.addInt(2, noradCatId.toInt(), 0)
@@ -279,6 +302,7 @@ class SNR : Table() {
         fun addOPTICAL(builder: FlatBufferBuilder, optical: Int) = builder.addOffset(13, optical, 0)
         fun addPROVENANCE(builder: FlatBufferBuilder, provenance: Int) = builder.addOffset(14, provenance, 0)
         fun addNOTES(builder: FlatBufferBuilder, notes: Int) = builder.addOffset(15, notes, 0)
+        fun addUPDATEDAT(builder: FlatBufferBuilder, updatedAt: Int) = builder.addOffset(16, updatedAt, 0)
         fun endSNR(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

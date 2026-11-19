@@ -20,12 +20,17 @@ using global::Google.FlatBuffers;
 /// one DOWNLINK — sharing ID_TRANSMITTER, each carrying its own MODE,
 /// FREQ_MIN, FREQ_MAX and CENTER_FREQ.
 ///
-/// Records with NORAD_CAT_ID 0 are a DEFINITION: one radio configuration,
-/// published once, that any number of hosts carry. The definition is every
-/// unbound record sharing one ID_TRANSMITTER. A $SLO (Sensor Loadout) binds it to a
-/// host or to a set of hosts by CONFIG_STANDARD "$RFB" and CONFIG_ID =
-/// ID_TRANSMITTER, and carries what differs per host (dates, count, position,
-/// serial number, mounting, status).
+/// DEFINITION. A record is a definition record when NORAD_CAT_ID is 0 and
+/// ID_ENTITY is absent or empty; every other record is bound to its host (a
+/// record with only ID_ENTITY, as an upstream transmitter database writes for
+/// an object with no catalogue number, is bound to that entity). A radio
+/// definition is one radio configuration, published once, that any number of
+/// hosts carry: the current definition records sharing one ID_TRANSMITTER. A
+/// $SLO (Sensor Loadout) binds it to a host or to a set of hosts by
+/// CONFIG_STANDARD "$RFB" and CONFIG_ID = ID_TRANSMITTER, and carries what
+/// differs per host (dates, count, position, serial number, mounting, status).
+/// A corrected record is republished with the same ID and a later UPDATED_AT;
+/// the latest version from a publisher is current ($SLO READING RULE, step 1).
 public struct RFB : IFlatbufferObject
 {
   private Table __p;
@@ -103,10 +108,11 @@ public struct RFB : IFlatbufferObject
   /// NORAD catalog number of the spacecraft carrying this emitter. Joins to
   /// CAT.NORAD_CAT_ID. 0 when unbound.
   public uint NORAD_CAT_ID { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
-  /// Identifier of the physical transmitter, transceiver or transponder this
-  /// record describes (e.g. an upstream transmitter database's UUID). Uplink
-  /// and downlink
-  /// records of the same device share this value.
+  /// Identifier of the transmitter, transceiver or transponder this record
+  /// describes (e.g. an upstream transmitter database's UUID). Uplink and
+  /// downlink records of the same device share this value. On a bound record
+  /// it names one physical device; on a definition record it names the radio
+  /// configuration, and $SLO.CONFIG_ID carries it.
   public string ID_TRANSMITTER { get { int o = __p.__offset(38); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetID_TRANSMITTERBytes() { return __p.__vector_as_span<byte>(38, 1); }
@@ -147,6 +153,17 @@ public struct RFB : IFlatbufferObject
   public ArraySegment<byte>? GetCITATIONBytes() { return __p.__vector_as_arraysegment(52); }
 #endif
   public byte[] GetCITATIONArray() { return __p.__vector_as_array<byte>(52); }
+  /// RFC 3339 UTC timestamp of this version of the record, exactly
+  /// YYYY-MM-DDTHH:mm:ss.sssZ. Of two records with one ID from one publisher,
+  /// the later UPDATED_AT is current; a record without one is older than any
+  /// record with one.
+  public string UPDATED_AT { get { int o = __p.__offset(54); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetUPDATED_ATBytes() { return __p.__vector_as_span<byte>(54, 1); }
+#else
+  public ArraySegment<byte>? GetUPDATED_ATBytes() { return __p.__vector_as_arraysegment(54); }
+#endif
+  public byte[] GetUPDATED_ATArray() { return __p.__vector_as_array<byte>(54); }
 
   public static Offset<RFB> CreateRFB(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
@@ -173,8 +190,9 @@ public struct RFB : IFlatbufferObject
       rfTransmitterState XMT_STATUS = rfTransmitterState.UNKNOWN,
       bool INVERT = false,
       StringOffset IARU_COORDINATIONOffset = default(StringOffset),
-      StringOffset CITATIONOffset = default(StringOffset)) {
-    builder.StartTable(25);
+      StringOffset CITATIONOffset = default(StringOffset),
+      StringOffset UPDATED_ATOffset = default(StringOffset)) {
+    builder.StartTable(26);
     RFB.AddBAUD(builder, BAUD);
     RFB.AddEIRP(builder, EIRP);
     RFB.AddERP(builder, ERP);
@@ -185,6 +203,7 @@ public struct RFB : IFlatbufferObject
     RFB.AddCENTER_FREQ(builder, CENTER_FREQ);
     RFB.AddFREQ_MAX(builder, FREQ_MAX);
     RFB.AddFREQ_MIN(builder, FREQ_MIN);
+    RFB.AddUPDATED_AT(builder, UPDATED_ATOffset);
     RFB.AddCITATION(builder, CITATIONOffset);
     RFB.AddIARU_COORDINATION(builder, IARU_COORDINATIONOffset);
     RFB.AddSERVICE(builder, SERVICEOffset);
@@ -203,7 +222,7 @@ public struct RFB : IFlatbufferObject
     return RFB.EndRFB(builder);
   }
 
-  public static void StartRFB(FlatBufferBuilder builder) { builder.StartTable(25); }
+  public static void StartRFB(FlatBufferBuilder builder) { builder.StartTable(26); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
   public static void AddID_ENTITY(FlatBufferBuilder builder, StringOffset ID_ENTITYOffset) { builder.AddOffset(1, ID_ENTITYOffset.Value, 0); }
   public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(2, NAMEOffset.Value, 0); }
@@ -229,6 +248,7 @@ public struct RFB : IFlatbufferObject
   public static void AddINVERT(FlatBufferBuilder builder, bool INVERT) { builder.AddBool(22, INVERT, false); }
   public static void AddIARU_COORDINATION(FlatBufferBuilder builder, StringOffset IARU_COORDINATIONOffset) { builder.AddOffset(23, IARU_COORDINATIONOffset.Value, 0); }
   public static void AddCITATION(FlatBufferBuilder builder, StringOffset CITATIONOffset) { builder.AddOffset(24, CITATIONOffset.Value, 0); }
+  public static void AddUPDATED_AT(FlatBufferBuilder builder, StringOffset UPDATED_ATOffset) { builder.AddOffset(25, UPDATED_ATOffset.Value, 0); }
   public static Offset<RFB> EndRFB(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<RFB>(o);
@@ -266,6 +286,7 @@ public struct RFB : IFlatbufferObject
     _o.INVERT = this.INVERT;
     _o.IARU_COORDINATION = this.IARU_COORDINATION;
     _o.CITATION = this.CITATION;
+    _o.UPDATED_AT = this.UPDATED_AT;
   }
   public static Offset<RFB> Pack(FlatBufferBuilder builder, RFBT _o) {
     if (_o == null) return default(Offset<RFB>);
@@ -278,6 +299,7 @@ public struct RFB : IFlatbufferObject
     var _SERVICE = _o.SERVICE == null ? default(StringOffset) : builder.CreateString(_o.SERVICE);
     var _IARU_COORDINATION = _o.IARU_COORDINATION == null ? default(StringOffset) : builder.CreateString(_o.IARU_COORDINATION);
     var _CITATION = _o.CITATION == null ? default(StringOffset) : builder.CreateString(_o.CITATION);
+    var _UPDATED_AT = _o.UPDATED_AT == null ? default(StringOffset) : builder.CreateString(_o.UPDATED_AT);
     return CreateRFB(
       builder,
       _ID,
@@ -304,7 +326,8 @@ public struct RFB : IFlatbufferObject
       _o.XMT_STATUS,
       _o.INVERT,
       _IARU_COORDINATION,
-      _CITATION);
+      _CITATION,
+      _UPDATED_AT);
   }
 }
 
@@ -335,6 +358,7 @@ public class RFBT
   public bool INVERT { get; set; }
   public string IARU_COORDINATION { get; set; }
   public string CITATION { get; set; }
+  public string UPDATED_AT { get; set; }
 
   public RFBT() {
     this.ID = null;
@@ -362,6 +386,7 @@ public class RFBT
     this.INVERT = false;
     this.IARU_COORDINATION = null;
     this.CITATION = null;
+    this.UPDATED_AT = null;
   }
   public static RFBT DeserializeFromBinary(byte[] fbBuffer) {
     return RFB.GetRootAsRFB(new ByteBuffer(fbBuffer)).UnPack();
@@ -404,6 +429,7 @@ static public class RFBVerify
       && verifier.VerifyField(tablePos, 48 /*INVERT*/, 1 /*bool*/, 1, false)
       && verifier.VerifyString(tablePos, 50 /*IARU_COORDINATION*/, false)
       && verifier.VerifyString(tablePos, 52 /*CITATION*/, false)
+      && verifier.VerifyString(tablePos, 54 /*UPDATED_AT*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

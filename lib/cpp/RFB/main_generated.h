@@ -216,12 +216,17 @@ inline const char *EnumNamerfTransmitterState(rfTransmitterState e) {
 /// one DOWNLINK — sharing ID_TRANSMITTER, each carrying its own MODE,
 /// FREQ_MIN, FREQ_MAX and CENTER_FREQ.
 ///
-/// Records with NORAD_CAT_ID 0 are a DEFINITION: one radio configuration,
-/// published once, that any number of hosts carry. The definition is every
-/// unbound record sharing one ID_TRANSMITTER. A $SLO (Sensor Loadout) binds it to a
-/// host or to a set of hosts by CONFIG_STANDARD "$RFB" and CONFIG_ID =
-/// ID_TRANSMITTER, and carries what differs per host (dates, count, position,
-/// serial number, mounting, status).
+/// DEFINITION. A record is a definition record when NORAD_CAT_ID is 0 and
+/// ID_ENTITY is absent or empty; every other record is bound to its host (a
+/// record with only ID_ENTITY, as an upstream transmitter database writes for
+/// an object with no catalogue number, is bound to that entity). A radio
+/// definition is one radio configuration, published once, that any number of
+/// hosts carry: the current definition records sharing one ID_TRANSMITTER. A
+/// $SLO (Sensor Loadout) binds it to a host or to a set of hosts by
+/// CONFIG_STANDARD "$RFB" and CONFIG_ID = ID_TRANSMITTER, and carries what
+/// differs per host (dates, count, position, serial number, mounting, status).
+/// A corrected record is republished with the same ID and a later UPDATED_AT;
+/// the latest version from a publisher is current ($SLO READING RULE, step 1).
 struct RFB FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef RFBBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -249,7 +254,8 @@ struct RFB FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_XMT_STATUS = 46,
     VT_INVERT = 48,
     VT_IARU_COORDINATION = 50,
-    VT_CITATION = 52
+    VT_CITATION = 52,
+    VT_UPDATED_AT = 54
   };
   /// Unique identifier
   const ::flatbuffers::String *ID() const {
@@ -320,10 +326,11 @@ struct RFB FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   uint32_t NORAD_CAT_ID() const {
     return GetField<uint32_t>(VT_NORAD_CAT_ID, 0);
   }
-  /// Identifier of the physical transmitter, transceiver or transponder this
-  /// record describes (e.g. an upstream transmitter database's UUID). Uplink
-  /// and downlink
-  /// records of the same device share this value.
+  /// Identifier of the transmitter, transceiver or transponder this record
+  /// describes (e.g. an upstream transmitter database's UUID). Uplink and
+  /// downlink records of the same device share this value. On a bound record
+  /// it names one physical device; on a definition record it names the radio
+  /// configuration, and $SLO.CONFIG_ID carries it.
   const ::flatbuffers::String *ID_TRANSMITTER() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID_TRANSMITTER);
   }
@@ -355,6 +362,13 @@ struct RFB FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   /// carry downstream.
   const ::flatbuffers::String *CITATION() const {
     return GetPointer<const ::flatbuffers::String *>(VT_CITATION);
+  }
+  /// RFC 3339 UTC timestamp of this version of the record, exactly
+  /// YYYY-MM-DDTHH:mm:ss.sssZ. Of two records with one ID from one publisher,
+  /// the later UPDATED_AT is current; a record without one is older than any
+  /// record with one.
+  const ::flatbuffers::String *UPDATED_AT() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_UPDATED_AT);
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
@@ -393,6 +407,8 @@ struct RFB FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(IARU_COORDINATION()) &&
            VerifyOffset(verifier, VT_CITATION) &&
            verifier.VerifyString(CITATION()) &&
+           VerifyOffset(verifier, VT_UPDATED_AT) &&
+           verifier.VerifyString(UPDATED_AT()) &&
            verifier.EndTable();
   }
 };
@@ -476,6 +492,9 @@ struct RFBBuilder {
   void add_CITATION(::flatbuffers::Offset<::flatbuffers::String> CITATION) {
     fbb_.AddOffset(RFB::VT_CITATION, CITATION);
   }
+  void add_UPDATED_AT(::flatbuffers::Offset<::flatbuffers::String> UPDATED_AT) {
+    fbb_.AddOffset(RFB::VT_UPDATED_AT, UPDATED_AT);
+  }
   explicit RFBBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -513,7 +532,8 @@ inline ::flatbuffers::Offset<RFB> CreateRFB(
     rfTransmitterState XMT_STATUS = rfTransmitterState_UNKNOWN,
     bool INVERT = false,
     ::flatbuffers::Offset<::flatbuffers::String> IARU_COORDINATION = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> CITATION = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> CITATION = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> UPDATED_AT = 0) {
   RFBBuilder builder_(_fbb);
   builder_.add_BAUD(BAUD);
   builder_.add_EIRP(EIRP);
@@ -525,6 +545,7 @@ inline ::flatbuffers::Offset<RFB> CreateRFB(
   builder_.add_CENTER_FREQ(CENTER_FREQ);
   builder_.add_FREQ_MAX(FREQ_MAX);
   builder_.add_FREQ_MIN(FREQ_MIN);
+  builder_.add_UPDATED_AT(UPDATED_AT);
   builder_.add_CITATION(CITATION);
   builder_.add_IARU_COORDINATION(IARU_COORDINATION);
   builder_.add_SERVICE(SERVICE);
@@ -569,7 +590,8 @@ inline ::flatbuffers::Offset<RFB> CreateRFBDirect(
     rfTransmitterState XMT_STATUS = rfTransmitterState_UNKNOWN,
     bool INVERT = false,
     const char *IARU_COORDINATION = nullptr,
-    const char *CITATION = nullptr) {
+    const char *CITATION = nullptr,
+    const char *UPDATED_AT = nullptr) {
   auto ID__ = ID ? _fbb.CreateString(ID) : 0;
   auto ID_ENTITY__ = ID_ENTITY ? _fbb.CreateString(ID_ENTITY) : 0;
   auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
@@ -579,6 +601,7 @@ inline ::flatbuffers::Offset<RFB> CreateRFBDirect(
   auto SERVICE__ = SERVICE ? _fbb.CreateString(SERVICE) : 0;
   auto IARU_COORDINATION__ = IARU_COORDINATION ? _fbb.CreateString(IARU_COORDINATION) : 0;
   auto CITATION__ = CITATION ? _fbb.CreateString(CITATION) : 0;
+  auto UPDATED_AT__ = UPDATED_AT ? _fbb.CreateString(UPDATED_AT) : 0;
   return CreateRFB(
       _fbb,
       ID__,
@@ -605,7 +628,8 @@ inline ::flatbuffers::Offset<RFB> CreateRFBDirect(
       XMT_STATUS,
       INVERT,
       IARU_COORDINATION__,
-      CITATION__);
+      CITATION__,
+      UPDATED_AT__);
 }
 
 inline const RFB *GetRFB(const void *buf) {

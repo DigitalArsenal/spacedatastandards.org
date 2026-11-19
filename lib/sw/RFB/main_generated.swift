@@ -104,12 +104,17 @@ public enum rfTransmitterState: Int8, FlatbuffersVectorInitializable, Enum, Veri
 ///  one DOWNLINK — sharing ID_TRANSMITTER, each carrying its own MODE,
 ///  FREQ_MIN, FREQ_MAX and CENTER_FREQ.
 ///
-///  Records with NORAD_CAT_ID 0 are a DEFINITION: one radio configuration,
-///  published once, that any number of hosts carry. The definition is every
-///  unbound record sharing one ID_TRANSMITTER. A $SLO (Sensor Loadout) binds it to a
-///  host or to a set of hosts by CONFIG_STANDARD "$RFB" and CONFIG_ID =
-///  ID_TRANSMITTER, and carries what differs per host (dates, count, position,
-///  serial number, mounting, status).
+///  DEFINITION. A record is a definition record when NORAD_CAT_ID is 0 and
+///  ID_ENTITY is absent or empty; every other record is bound to its host (a
+///  record with only ID_ENTITY, as an upstream transmitter database writes for
+///  an object with no catalogue number, is bound to that entity). A radio
+///  definition is one radio configuration, published once, that any number of
+///  hosts carry: the current definition records sharing one ID_TRANSMITTER. A
+///  $SLO (Sensor Loadout) binds it to a host or to a set of hosts by
+///  CONFIG_STANDARD "$RFB" and CONFIG_ID = ID_TRANSMITTER, and carries what
+///  differs per host (dates, count, position, serial number, mounting, status).
+///  A corrected record is republished with the same ID and a later UPDATED_AT;
+///  the latest version from a publisher is current ($SLO READING RULE, step 1).
 public struct RFB: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
@@ -147,6 +152,7 @@ public struct RFB: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let INVERT: VOffset = 48
     static let IARU_COORDINATION: VOffset = 50
     static let CITATION: VOffset = 52
+    static let UPDATED_AT: VOffset = 54
   }
 
   ///  Unique identifier
@@ -189,10 +195,11 @@ public struct RFB: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  NORAD catalog number of the spacecraft carrying this emitter. Joins to
   ///  CAT.NORAD_CAT_ID. 0 when unbound.
   public var NORAD_CAT_ID: UInt32 { let o = _accessor.offset(VT.NORAD_CAT_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  ///  Identifier of the physical transmitter, transceiver or transponder this
-  ///  record describes (e.g. an upstream transmitter database's UUID). Uplink
-  ///  and downlink
-  ///  records of the same device share this value.
+  ///  Identifier of the transmitter, transceiver or transponder this record
+  ///  describes (e.g. an upstream transmitter database's UUID). Uplink and
+  ///  downlink records of the same device share this value. On a bound record
+  ///  it names one physical device; on a definition record it names the radio
+  ///  configuration, and $SLO.CONFIG_ID carries it.
   public var ID_TRANSMITTER: String? { let o = _accessor.offset(VT.ID_TRANSMITTER); return o == 0 ? nil : _accessor.string(at: o) }
   public var ID_TRANSMITTERSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID_TRANSMITTER) }
   ///  Direction of this emission relative to the spacecraft.
@@ -213,7 +220,13 @@ public struct RFB: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  carry downstream.
   public var CITATION: String? { let o = _accessor.offset(VT.CITATION); return o == 0 ? nil : _accessor.string(at: o) }
   public var CITATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CITATION) }
-  public static func startRFB(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 25) }
+  ///  RFC 3339 UTC timestamp of this version of the record, exactly
+  ///  YYYY-MM-DDTHH:mm:ss.sssZ. Of two records with one ID from one publisher,
+  ///  the later UPDATED_AT is current; a record without one is older than any
+  ///  record with one.
+  public var UPDATED_AT: String? { let o = _accessor.offset(VT.UPDATED_AT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var UPDATED_ATSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.UPDATED_AT) }
+  public static func startRFB(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 26) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
   public static func add(ID_ENTITY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_ENTITY, at: VT.ID_ENTITY) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
@@ -240,6 +253,7 @@ public struct RFB: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
    at: VT.INVERT) }
   public static func add(IARU_COORDINATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IARU_COORDINATION, at: VT.IARU_COORDINATION) }
   public static func add(CITATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CITATION, at: VT.CITATION) }
+  public static func add(UPDATED_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UPDATED_AT, at: VT.UPDATED_AT) }
   public static func endRFB(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createRFB(
     _ fbb: inout FlatBufferBuilder,
@@ -267,7 +281,8 @@ public struct RFB: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     XMT_STATUS: rfTransmitterState = .unknown,
     INVERT: Bool = false,
     IARU_COORDINATIONOffset IARU_COORDINATION: Offset = Offset(),
-    CITATIONOffset CITATION: Offset = Offset()
+    CITATIONOffset CITATION: Offset = Offset(),
+    UPDATED_ATOffset UPDATED_AT: Offset = Offset()
   ) -> Offset {
     let __start = RFB.startRFB(&fbb)
     RFB.add(ID: ID, &fbb)
@@ -295,6 +310,7 @@ public struct RFB: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     RFB.add(INVERT: INVERT, &fbb)
     RFB.add(IARU_COORDINATION: IARU_COORDINATION, &fbb)
     RFB.add(CITATION: CITATION, &fbb)
+    RFB.add(UPDATED_AT: UPDATED_AT, &fbb)
     return RFB.endRFB(&fbb, start: __start)
   }
 
@@ -325,6 +341,7 @@ public struct RFB: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.INVERT, fieldName: "INVERT", required: false, type: Bool.self)
     try _v.visit(field: VT.IARU_COORDINATION, fieldName: "IARU_COORDINATION", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.CITATION, fieldName: "CITATION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.UPDATED_AT, fieldName: "UPDATED_AT", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

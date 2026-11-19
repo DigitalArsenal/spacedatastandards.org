@@ -84,9 +84,9 @@ enum sloUnitState : int8_t {
   sloUnitState_DEGRADED = 3,
   /// Carried and working, held out of service.
   sloUnitState_STANDBY = 4,
-  /// Carried and not working.
+  /// Carried and not working. A failed unit is still on board and stays in the answer.
   sloUnitState_FAILED = 5,
-  /// No longer carried or no longer used. A winning RETIRED loadout removes the unit.
+  /// No longer carried. A winning RETIRED loadout takes the unit out of the answer.
   sloUnitState_RETIRED = 6,
   sloUnitState_MIN = sloUnitState_UNKNOWN,
   sloUnitState_MAX = sloUnitState_RETIRED
@@ -150,15 +150,17 @@ struct SLO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_UPDATED_AT = 40,
     VT_PROVENANCE = 42,
     VT_CITATION = 44,
-    VT_NOTES = 46
+    VT_NOTES = 46,
+    VT_CONFIG_PUBLISHER_PEER_ID = 48,
+    VT_SET_PUBLISHER_PEER_ID = 50
   };
-  /// Publisher-stable identifier of this loadout. Together with the publishing key it is the
-  /// loadout's identity across versions. Recommended form: "<CONFIG_ID>@<host field value>".
+  /// Publisher-stable identifier of this loadout. Together with the publisher it is the loadout's
+  /// identity across versions. Recommended form: "<CONFIG_ID>@<host field value>".
   const ::flatbuffers::String *LOADOUT_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_LOADOUT_ID);
   }
-  /// Four-character standard code of the definition, `$` included: "$SNR" or "$RFB". Never the
-  /// union ordinal.
+  /// Four-character standard code of the definition, `$` included: "$SNR" or "$RFB" today. Never
+  /// the union ordinal. A reader skips a value it does not implement (READING RULE, step 1).
   const ::flatbuffers::String *CONFIG_STANDARD() const {
     return GetPointer<const ::flatbuffers::String *>(VT_CONFIG_STANDARD);
   }
@@ -166,7 +168,9 @@ struct SLO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *CONFIG_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_CONFIG_ID);
   }
-  /// Optional content identifier pinning the exact definition bytes.
+  /// "$SNR" only: raw CIDv1 (sha2-256, base32 lowercase) of one exact version of the definition,
+  /// over its size-prefixed bytes as published. A reader that finds no version with this CID does
+  /// not resolve the loadout.
   const ::flatbuffers::String *CONFIG_CID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_CONFIG_CID);
   }
@@ -198,12 +202,12 @@ struct SLO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *BUS_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_BUS_ID);
   }
-  /// RFC 3339 UTC fixed-millisecond timestamp the host starts carrying the configuration,
-  /// inclusive. Absent = open.
+  /// When the host starts carrying the configuration, inclusive, exactly YYYY-MM-DDTHH:mm:ss.sssZ.
+  /// Absent = open.
   const ::flatbuffers::String *VALID_FROM() const {
     return GetPointer<const ::flatbuffers::String *>(VT_VALID_FROM);
   }
-  /// RFC 3339 UTC fixed-millisecond timestamp the host stops carrying it, exclusive. Absent = open.
+  /// When the host stops carrying it, exclusive, in the same form, after VALID_FROM. Absent = open.
   const ::flatbuffers::String *VALID_TO() const {
     return GetPointer<const ::flatbuffers::String *>(VT_VALID_TO);
   }
@@ -212,7 +216,8 @@ struct SLO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return GetField<uint32_t>(VT_COUNT, 0);
   }
   /// Where the unit sits on the host, as the source names it (a slot, a face, a panel). Two units
-  /// of one configuration on one host differ by POSITION.
+  /// of one configuration on one host differ by POSITION. Absent: the loadout speaks for every unit
+  /// of the configuration on the host (READING RULE, step 6).
   const ::flatbuffers::String *POSITION() const {
     return GetPointer<const ::flatbuffers::String *>(VT_POSITION);
   }
@@ -220,14 +225,14 @@ struct SLO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *SERIAL_NUMBER() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SERIAL_NUMBER);
   }
-  /// How this unit sits and points, over the definition's MOUNTING (READING RULE, step 5).
+  /// How this unit sits and points, over the definition's MOUNTING (READING RULE, step 9).
   const SNRMounting *MOUNTING() const {
     return GetPointer<const SNRMounting *>(VT_MOUNTING);
   }
   sloUnitState STATUS() const {
     return static_cast<sloUnitState>(GetField<int8_t>(VT_STATUS, 0));
   }
-  /// RFC 3339 UTC fixed-millisecond timestamp of this version of the loadout.
+  /// This version of the loadout, exactly YYYY-MM-DDTHH:mm:ss.sssZ.
   const ::flatbuffers::String *UPDATED_AT() const {
     return GetPointer<const ::flatbuffers::String *>(VT_UPDATED_AT);
   }
@@ -243,6 +248,15 @@ struct SLO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   /// Publisher note; never a substitute for a field.
   const ::flatbuffers::String *NOTES() const {
     return GetPointer<const ::flatbuffers::String *>(VT_NOTES);
+  }
+  /// $DPM.PROVIDER_PEER_ID of the publisher of the definition. Absent: the loadout's own publisher.
+  const ::flatbuffers::String *CONFIG_PUBLISHER_PEER_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CONFIG_PUBLISHER_PEER_ID);
+  }
+  /// $DPM.PROVIDER_PEER_ID of the publisher of the $EGP, $CMR or $CAT a GROUP, CONSTELLATION or BUS
+  /// scope reads. Absent: the loadout's own publisher.
+  const ::flatbuffers::String *SET_PUBLISHER_PEER_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SET_PUBLISHER_PEER_ID);
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
@@ -288,6 +302,10 @@ struct SLO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(CITATION()) &&
            VerifyOffset(verifier, VT_NOTES) &&
            verifier.VerifyString(NOTES()) &&
+           VerifyOffset(verifier, VT_CONFIG_PUBLISHER_PEER_ID) &&
+           verifier.VerifyString(CONFIG_PUBLISHER_PEER_ID()) &&
+           VerifyOffset(verifier, VT_SET_PUBLISHER_PEER_ID) &&
+           verifier.VerifyString(SET_PUBLISHER_PEER_ID()) &&
            verifier.EndTable();
   }
 };
@@ -362,6 +380,12 @@ struct SLOBuilder {
   void add_NOTES(::flatbuffers::Offset<::flatbuffers::String> NOTES) {
     fbb_.AddOffset(SLO::VT_NOTES, NOTES);
   }
+  void add_CONFIG_PUBLISHER_PEER_ID(::flatbuffers::Offset<::flatbuffers::String> CONFIG_PUBLISHER_PEER_ID) {
+    fbb_.AddOffset(SLO::VT_CONFIG_PUBLISHER_PEER_ID, CONFIG_PUBLISHER_PEER_ID);
+  }
+  void add_SET_PUBLISHER_PEER_ID(::flatbuffers::Offset<::flatbuffers::String> SET_PUBLISHER_PEER_ID) {
+    fbb_.AddOffset(SLO::VT_SET_PUBLISHER_PEER_ID, SET_PUBLISHER_PEER_ID);
+  }
   explicit SLOBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -401,8 +425,12 @@ inline ::flatbuffers::Offset<SLO> CreateSLO(
     ::flatbuffers::Offset<::flatbuffers::String> UPDATED_AT = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<OPPProvenance>>> PROVENANCE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> CITATION = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> NOTES = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> NOTES = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> CONFIG_PUBLISHER_PEER_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> SET_PUBLISHER_PEER_ID = 0) {
   SLOBuilder builder_(_fbb);
+  builder_.add_SET_PUBLISHER_PEER_ID(SET_PUBLISHER_PEER_ID);
+  builder_.add_CONFIG_PUBLISHER_PEER_ID(CONFIG_PUBLISHER_PEER_ID);
   builder_.add_NOTES(NOTES);
   builder_.add_CITATION(CITATION);
   builder_.add_PROVENANCE(PROVENANCE);
@@ -451,7 +479,9 @@ inline ::flatbuffers::Offset<SLO> CreateSLODirect(
     const char *UPDATED_AT = nullptr,
     const std::vector<::flatbuffers::Offset<OPPProvenance>> *PROVENANCE = nullptr,
     const char *CITATION = nullptr,
-    const char *NOTES = nullptr) {
+    const char *NOTES = nullptr,
+    const char *CONFIG_PUBLISHER_PEER_ID = nullptr,
+    const char *SET_PUBLISHER_PEER_ID = nullptr) {
   auto LOADOUT_ID__ = LOADOUT_ID ? _fbb.CreateString(LOADOUT_ID) : 0;
   auto CONFIG_STANDARD__ = CONFIG_STANDARD ? _fbb.CreateString(CONFIG_STANDARD) : 0;
   auto CONFIG_ID__ = CONFIG_ID ? _fbb.CreateString(CONFIG_ID) : 0;
@@ -469,6 +499,8 @@ inline ::flatbuffers::Offset<SLO> CreateSLODirect(
   auto PROVENANCE__ = PROVENANCE ? _fbb.CreateVector<::flatbuffers::Offset<OPPProvenance>>(*PROVENANCE) : 0;
   auto CITATION__ = CITATION ? _fbb.CreateString(CITATION) : 0;
   auto NOTES__ = NOTES ? _fbb.CreateString(NOTES) : 0;
+  auto CONFIG_PUBLISHER_PEER_ID__ = CONFIG_PUBLISHER_PEER_ID ? _fbb.CreateString(CONFIG_PUBLISHER_PEER_ID) : 0;
+  auto SET_PUBLISHER_PEER_ID__ = SET_PUBLISHER_PEER_ID ? _fbb.CreateString(SET_PUBLISHER_PEER_ID) : 0;
   return CreateSLO(
       _fbb,
       LOADOUT_ID__,
@@ -492,7 +524,9 @@ inline ::flatbuffers::Offset<SLO> CreateSLODirect(
       UPDATED_AT__,
       PROVENANCE__,
       CITATION__,
-      NOTES__);
+      NOTES__,
+      CONFIG_PUBLISHER_PEER_ID__,
+      SET_PUBLISHER_PEER_ID__);
 }
 
 inline const SLO *GetSLO(const void *buf) {

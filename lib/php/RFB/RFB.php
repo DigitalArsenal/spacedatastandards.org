@@ -20,12 +20,17 @@ use \Google\FlatBuffers\FlatBufferBuilder;
 /// one DOWNLINK — sharing ID_TRANSMITTER, each carrying its own MODE,
 /// FREQ_MIN, FREQ_MAX and CENTER_FREQ.
 ///
-/// Records with NORAD_CAT_ID 0 are a DEFINITION: one radio configuration,
-/// published once, that any number of hosts carry. The definition is every
-/// unbound record sharing one ID_TRANSMITTER. A $SLO (Sensor Loadout) binds it to a
-/// host or to a set of hosts by CONFIG_STANDARD '$RFB' and CONFIG_ID =
-/// ID_TRANSMITTER, and carries what differs per host (dates, count, position,
-/// serial number, mounting, status).
+/// DEFINITION. A record is a definition record when NORAD_CAT_ID is 0 and
+/// ID_ENTITY is absent or empty; every other record is bound to its host (a
+/// record with only ID_ENTITY, as an upstream transmitter database writes for
+/// an object with no catalogue number, is bound to that entity). A radio
+/// definition is one radio configuration, published once, that any number of
+/// hosts carry: the current definition records sharing one ID_TRANSMITTER. A
+/// $SLO (Sensor Loadout) binds it to a host or to a set of hosts by
+/// CONFIG_STANDARD '$RFB' and CONFIG_ID = ID_TRANSMITTER, and carries what
+/// differs per host (dates, count, position, serial number, mounting, status).
+/// A corrected record is republished with the same ID and a later UPDATED_AT;
+/// the latest version from a publisher is current ($SLO READING RULE, step 1).
 class RFB extends Table
 {
     /**
@@ -216,10 +221,11 @@ class RFB extends Table
         return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
     }
 
-    /// Identifier of the physical transmitter, transceiver or transponder this
-    /// record describes (e.g. an upstream transmitter database's UUID). Uplink
-    /// and downlink
-    /// records of the same device share this value.
+    /// Identifier of the transmitter, transceiver or transponder this record
+    /// describes (e.g. an upstream transmitter database's UUID). Uplink and
+    /// downlink records of the same device share this value. On a bound record
+    /// it names one physical device; on a definition record it names the radio
+    /// configuration, and $SLO.CONFIG_ID carries it.
     public function getID_TRANSMITTER()
     {
         $o = $this->__offset(38);
@@ -288,22 +294,32 @@ class RFB extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// RFC 3339 UTC timestamp of this version of the record, exactly
+    /// YYYY-MM-DDTHH:mm:ss.sssZ. Of two records with one ID from one publisher,
+    /// the later UPDATED_AT is current; a record without one is older than any
+    /// record with one.
+    public function getUPDATED_AT()
+    {
+        $o = $this->__offset(54);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startRFB(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(25);
+        $builder->StartObject(26);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return RFB
      */
-    public static function createRFB(FlatBufferBuilder $builder, $ID, $ID_ENTITY, $NAME, $BAND, $MODE, $PURPOSE, $FREQ_MIN, $FREQ_MAX, $CENTER_FREQ, $BANDWIDTH, $PEAK_GAIN, $EDGE_GAIN, $BEAMWIDTH, $POLARIZATION, $ERP, $EIRP, $NORAD_CAT_ID, $ID_TRANSMITTER, $LINK_DIRECTION, $BAUD, $SERVICE, $XMT_STATUS, $INVERT, $IARU_COORDINATION, $CITATION)
+    public static function createRFB(FlatBufferBuilder $builder, $ID, $ID_ENTITY, $NAME, $BAND, $MODE, $PURPOSE, $FREQ_MIN, $FREQ_MAX, $CENTER_FREQ, $BANDWIDTH, $PEAK_GAIN, $EDGE_GAIN, $BEAMWIDTH, $POLARIZATION, $ERP, $EIRP, $NORAD_CAT_ID, $ID_TRANSMITTER, $LINK_DIRECTION, $BAUD, $SERVICE, $XMT_STATUS, $INVERT, $IARU_COORDINATION, $CITATION, $UPDATED_AT)
     {
-        $builder->startObject(25);
+        $builder->startObject(26);
         self::addID($builder, $ID);
         self::addID_ENTITY($builder, $ID_ENTITY);
         self::addNAME($builder, $NAME);
@@ -329,6 +345,7 @@ class RFB extends Table
         self::addINVERT($builder, $INVERT);
         self::addIARU_COORDINATION($builder, $IARU_COORDINATION);
         self::addCITATION($builder, $CITATION);
+        self::addUPDATED_AT($builder, $UPDATED_AT);
         $o = $builder->endObject();
         return $o;
     }
@@ -581,6 +598,16 @@ class RFB extends Table
     public static function addCITATION(FlatBufferBuilder $builder, $CITATION)
     {
         $builder->addOffsetX(24, $CITATION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addUPDATED_AT(FlatBufferBuilder $builder, $UPDATED_AT)
+    {
+        $builder->addOffsetX(25, $UPDATED_AT, 0);
     }
 
     /**

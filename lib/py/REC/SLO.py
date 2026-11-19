@@ -29,8 +29,8 @@ class SLO(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
-    # Publisher-stable identifier of this loadout. Together with the publishing key it is the
-    # loadout's identity across versions. Recommended form: "<CONFIG_ID>@<host field value>".
+    # Publisher-stable identifier of this loadout. Together with the publisher it is the loadout's
+    # identity across versions. Recommended form: "<CONFIG_ID>@<host field value>".
     # SLO
     def LOADOUT_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -38,8 +38,8 @@ class SLO(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Four-character standard code of the definition, `$` included: "$SNR" or "$RFB". Never the
-    # union ordinal.
+    # Four-character standard code of the definition, `$` included: "$SNR" or "$RFB" today. Never
+    # the union ordinal. A reader skips a value it does not implement (READING RULE, step 1).
     # SLO
     def CONFIG_STANDARD(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -55,7 +55,9 @@ class SLO(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Optional content identifier pinning the exact definition bytes.
+    # "$SNR" only: raw CIDv1 (sha2-256, base32 lowercase) of one exact version of the definition,
+    # over its size-prefixed bytes as published. A reader that finds no version with this CID does
+    # not resolve the loadout.
     # SLO
     def CONFIG_CID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
@@ -119,8 +121,8 @@ class SLO(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # RFC 3339 UTC fixed-millisecond timestamp the host starts carrying the configuration,
-    # inclusive. Absent = open.
+    # When the host starts carrying the configuration, inclusive, exactly YYYY-MM-DDTHH:mm:ss.sssZ.
+    # Absent = open.
     # SLO
     def VALID_FROM(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
@@ -128,7 +130,7 @@ class SLO(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # RFC 3339 UTC fixed-millisecond timestamp the host stops carrying it, exclusive. Absent = open.
+    # When the host stops carrying it, exclusive, in the same form, after VALID_FROM. Absent = open.
     # SLO
     def VALID_TO(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
@@ -145,7 +147,8 @@ class SLO(object):
         return 0
 
     # Where the unit sits on the host, as the source names it (a slot, a face, a panel). Two units
-    # of one configuration on one host differ by POSITION.
+    # of one configuration on one host differ by POSITION. Absent: the loadout speaks for every unit
+    # of the configuration on the host (READING RULE, step 6).
     # SLO
     def POSITION(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
@@ -161,7 +164,7 @@ class SLO(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # How this unit sits and points, over the definition's MOUNTING (READING RULE, step 5).
+    # How this unit sits and points, over the definition's MOUNTING (READING RULE, step 9).
     # SLO
     def MOUNTING(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
@@ -180,7 +183,7 @@ class SLO(object):
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 0
 
-    # RFC 3339 UTC fixed-millisecond timestamp of this version of the loadout.
+    # This version of the loadout, exactly YYYY-MM-DDTHH:mm:ss.sssZ.
     # SLO
     def UPDATED_AT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
@@ -231,8 +234,25 @@ class SLO(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # $DPM.PROVIDER_PEER_ID of the publisher of the definition. Absent: the loadout's own publisher.
+    # SLO
+    def CONFIG_PUBLISHER_PEER_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # $DPM.PROVIDER_PEER_ID of the publisher of the $EGP, $CMR or $CAT a GROUP, CONSTELLATION or BUS
+    # scope reads. Absent: the loadout's own publisher.
+    # SLO
+    def SET_PUBLISHER_PEER_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def SLOStart(builder):
-    builder.StartObject(22)
+    builder.StartObject(24)
 
 def Start(builder):
     SLOStart(builder)
@@ -381,6 +401,18 @@ def SLOAddNOTES(builder, NOTES):
 def AddNOTES(builder, NOTES):
     SLOAddNOTES(builder, NOTES)
 
+def SLOAddCONFIG_PUBLISHER_PEER_ID(builder, CONFIG_PUBLISHER_PEER_ID):
+    builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(CONFIG_PUBLISHER_PEER_ID), 0)
+
+def AddCONFIG_PUBLISHER_PEER_ID(builder, CONFIG_PUBLISHER_PEER_ID):
+    SLOAddCONFIG_PUBLISHER_PEER_ID(builder, CONFIG_PUBLISHER_PEER_ID)
+
+def SLOAddSET_PUBLISHER_PEER_ID(builder, SET_PUBLISHER_PEER_ID):
+    builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(SET_PUBLISHER_PEER_ID), 0)
+
+def AddSET_PUBLISHER_PEER_ID(builder, SET_PUBLISHER_PEER_ID):
+    SLOAddSET_PUBLISHER_PEER_ID(builder, SET_PUBLISHER_PEER_ID)
+
 def SLOEnd(builder):
     return builder.EndObject()
 
@@ -421,6 +453,8 @@ class SLOT(object):
         PROVENANCE = None,
         CITATION = None,
         NOTES = None,
+        CONFIG_PUBLISHER_PEER_ID = None,
+        SET_PUBLISHER_PEER_ID = None,
     ):
         self.LOADOUT_ID = LOADOUT_ID  # type: Optional[str]
         self.CONFIG_STANDARD = CONFIG_STANDARD  # type: Optional[str]
@@ -444,6 +478,8 @@ class SLOT(object):
         self.PROVENANCE = PROVENANCE  # type: Optional[List[OPPProvenance.OPPProvenanceT]]
         self.CITATION = CITATION  # type: Optional[str]
         self.NOTES = NOTES  # type: Optional[str]
+        self.CONFIG_PUBLISHER_PEER_ID = CONFIG_PUBLISHER_PEER_ID  # type: Optional[str]
+        self.SET_PUBLISHER_PEER_ID = SET_PUBLISHER_PEER_ID  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -496,6 +532,8 @@ class SLOT(object):
                     self.PROVENANCE.append(oPPProvenance_)
         self.CITATION = SLO.CITATION()
         self.NOTES = SLO.NOTES()
+        self.CONFIG_PUBLISHER_PEER_ID = SLO.CONFIG_PUBLISHER_PEER_ID()
+        self.SET_PUBLISHER_PEER_ID = SLO.SET_PUBLISHER_PEER_ID()
 
     # SLOT
     def Pack(self, builder):
@@ -541,6 +579,10 @@ class SLOT(object):
             CITATION = builder.CreateString(self.CITATION)
         if self.NOTES is not None:
             NOTES = builder.CreateString(self.NOTES)
+        if self.CONFIG_PUBLISHER_PEER_ID is not None:
+            CONFIG_PUBLISHER_PEER_ID = builder.CreateString(self.CONFIG_PUBLISHER_PEER_ID)
+        if self.SET_PUBLISHER_PEER_ID is not None:
+            SET_PUBLISHER_PEER_ID = builder.CreateString(self.SET_PUBLISHER_PEER_ID)
         SLOStart(builder)
         if self.LOADOUT_ID is not None:
             SLOAddLOADOUT_ID(builder, LOADOUT_ID)
@@ -582,5 +624,9 @@ class SLOT(object):
             SLOAddCITATION(builder, CITATION)
         if self.NOTES is not None:
             SLOAddNOTES(builder, NOTES)
+        if self.CONFIG_PUBLISHER_PEER_ID is not None:
+            SLOAddCONFIG_PUBLISHER_PEER_ID(builder, CONFIG_PUBLISHER_PEER_ID)
+        if self.SET_PUBLISHER_PEER_ID is not None:
+            SLOAddSET_PUBLISHER_PEER_ID(builder, SET_PUBLISHER_PEER_ID)
         SLO = SLOEnd(builder)
         return SLO

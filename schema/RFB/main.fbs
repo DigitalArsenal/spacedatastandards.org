@@ -1,5 +1,5 @@
-// Hash: 82291cccdc0e6ef66c967e72835656a1daedff73d8f659386baa6416533073ad
-// Version: 0.0.7
+// Hash: d3913b1107f74363ce1e49ef67cca98fe13ef0996644f8e7cf82391cb88be414
+// Version: 0.0.8
 // -----------------------------------END_HEADER
 include "../LKS/main.fbs";
 
@@ -78,12 +78,17 @@ enum rfTransmitterState : byte {
 /// one DOWNLINK — sharing ID_TRANSMITTER, each carrying its own MODE,
 /// FREQ_MIN, FREQ_MAX and CENTER_FREQ.
 ///
-/// Records with NORAD_CAT_ID 0 are a DEFINITION: one radio configuration,
-/// published once, that any number of hosts carry. The definition is every
-/// unbound record sharing one ID_TRANSMITTER. A $SLO (Sensor Loadout) binds it to a
-/// host or to a set of hosts by CONFIG_STANDARD "$RFB" and CONFIG_ID =
-/// ID_TRANSMITTER, and carries what differs per host (dates, count, position,
-/// serial number, mounting, status).
+/// DEFINITION. A record is a definition record when NORAD_CAT_ID is 0 and
+/// ID_ENTITY is absent or empty; every other record is bound to its host (a
+/// record with only ID_ENTITY, as an upstream transmitter database writes for
+/// an object with no catalogue number, is bound to that entity). A radio
+/// definition is one radio configuration, published once, that any number of
+/// hosts carry: the current definition records sharing one ID_TRANSMITTER. A
+/// $SLO (Sensor Loadout) binds it to a host or to a set of hosts by
+/// CONFIG_STANDARD "$RFB" and CONFIG_ID = ID_TRANSMITTER, and carries what
+/// differs per host (dates, count, position, serial number, mounting, status).
+/// A corrected record is republished with the same ID and a later UPDATED_AT;
+/// the latest version from a publisher is current ($SLO READING RULE, step 1).
 table RFB {
   /// Unique identifier
   ID:string;
@@ -120,10 +125,11 @@ table RFB {
   /// NORAD catalog number of the spacecraft carrying this emitter. Joins to
   /// CAT.NORAD_CAT_ID. 0 when unbound.
   NORAD_CAT_ID:uint;
-  /// Identifier of the physical transmitter, transceiver or transponder this
-  /// record describes (e.g. an upstream transmitter database's UUID). Uplink
-  /// and downlink
-  /// records of the same device share this value.
+  /// Identifier of the transmitter, transceiver or transponder this record
+  /// describes (e.g. an upstream transmitter database's UUID). Uplink and
+  /// downlink records of the same device share this value. On a bound record
+  /// it names one physical device; on a definition record it names the radio
+  /// configuration, and $SLO.CONFIG_ID carries it.
   ID_TRANSMITTER:string;
   /// Direction of this emission relative to the spacecraft.
   LINK_DIRECTION:linkCategory;
@@ -140,6 +146,11 @@ table RFB {
   /// Attribution/citation string the source license requires this record to
   /// carry downstream.
   CITATION:string;
+  /// RFC 3339 UTC timestamp of this version of the record, exactly
+  /// YYYY-MM-DDTHH:mm:ss.sssZ. Of two records with one ID from one publisher,
+  /// the later UPDATED_AT is current; a record without one is older than any
+  /// record with one.
+  UPDATED_AT:string;
 }
 
 root_type RFB;

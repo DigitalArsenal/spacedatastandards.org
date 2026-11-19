@@ -19,12 +19,17 @@ import { snrEmissionMode } from './snrEmissionMode.js';
  * Platform: NORAD_CAT_ID and OBJECT_ID join to $CAT, SITE_ID to $SIT.ID,
  * SENSOR_ID to $SEN.ID. A sensor not attached to a platform has none of them.
  *
- * A record with none of the platform fields is a DEFINITION: one sensor
- * configuration, published once, that any number of hosts carry. A $SLO
- * (Sensor Loadout) binds it to a host or to a set of hosts by CONFIG_STANDARD "$SNR"
- * and CONFIG_ID = SENSOR_ID, and carries what differs per host (dates, count,
- * position, serial number, mounting, status). A definition's SENSOR_ID names
- * the configuration, not one physical sensor, so it has no $SEN.
+ * DEFINITION. A record is a definition when NORAD_CAT_ID is 0 and OBJECT_ID,
+ * SITE_ID and ENTITY_ID are all absent or empty. It is one sensor
+ * configuration, published once, that any number of hosts carry; every other
+ * record is bound to its platform. A $SLO (Sensor Loadout) binds a definition
+ * to a host or to a set of hosts by CONFIG_STANDARD "$SNR" and CONFIG_ID =
+ * SENSOR_ID, and carries what differs per host (dates, count, position,
+ * serial number, mounting, status). A definition's SENSOR_ID names the
+ * configuration, not one physical sensor, so it has no $SEN. A corrected
+ * definition is republished with the same SENSOR_ID and a later UPDATED_AT;
+ * the latest version from a publisher is the definition ($SLO READING RULE,
+ * step 1).
  */
 export declare class SNR implements flatbuffers.IUnpackableObject<SNRT> {
     bb: flatbuffers.ByteBuffer | null;
@@ -89,6 +94,14 @@ export declare class SNR implements flatbuffers.IUnpackableObject<SNRT> {
     PROVENANCE(obj?: OPPProvenance): OPPProvenance | null;
     NOTES(): string | null;
     NOTES(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * RFC 3339 UTC timestamp of this version of the record, exactly
+     * YYYY-MM-DDTHH:mm:ss.sssZ. Of two records with one SENSOR_ID from one
+     * publisher, the later UPDATED_AT is current; a record without one is older
+     * than any record with one.
+     */
+    UPDATED_AT(): string | null;
+    UPDATED_AT(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     static startSNR(builder: flatbuffers.Builder): void;
     static addSensorId(builder: flatbuffers.Builder, SENSOR_IDOffset: flatbuffers.Offset): void;
     static addName(builder: flatbuffers.Builder, NAMEOffset: flatbuffers.Offset): void;
@@ -108,6 +121,7 @@ export declare class SNR implements flatbuffers.IUnpackableObject<SNRT> {
     static addOptical(builder: flatbuffers.Builder, OPTICALOffset: flatbuffers.Offset): void;
     static addProvenance(builder: flatbuffers.Builder, PROVENANCEOffset: flatbuffers.Offset): void;
     static addNotes(builder: flatbuffers.Builder, NOTESOffset: flatbuffers.Offset): void;
+    static addUpdatedAt(builder: flatbuffers.Builder, UPDATED_ATOffset: flatbuffers.Offset): void;
     static endSNR(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishSNRBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedSNRBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
@@ -131,7 +145,8 @@ export declare class SNRT implements flatbuffers.IGeneratedObject {
     OPTICAL: SNROpticalParametersT | null;
     PROVENANCE: OPPProvenanceT | null;
     NOTES: string | Uint8Array | null;
-    constructor(SENSOR_ID?: string | Uint8Array | null, NAME?: string | Uint8Array | null, NORAD_CAT_ID?: number, OBJECT_ID?: string | Uint8Array | null, SITE_ID?: string | Uint8Array | null, ENTITY_ID?: string | Uint8Array | null, TYPE?: SensorType, EMISSION?: snrEmissionMode, SPECTRAL_BANDS?: (SNRSpectralBandT)[], FIELD_OF_VIEW?: SCVSensorShapeContractT | null, FIELD_OF_VIEW_PROVENANCE?: OPPProvenanceT | null, MOUNTING?: SNRMountingT | null, RF?: SNRRfParametersT | null, OPTICAL?: SNROpticalParametersT | null, PROVENANCE?: OPPProvenanceT | null, NOTES?: string | Uint8Array | null);
+    UPDATED_AT: string | Uint8Array | null;
+    constructor(SENSOR_ID?: string | Uint8Array | null, NAME?: string | Uint8Array | null, NORAD_CAT_ID?: number, OBJECT_ID?: string | Uint8Array | null, SITE_ID?: string | Uint8Array | null, ENTITY_ID?: string | Uint8Array | null, TYPE?: SensorType, EMISSION?: snrEmissionMode, SPECTRAL_BANDS?: (SNRSpectralBandT)[], FIELD_OF_VIEW?: SCVSensorShapeContractT | null, FIELD_OF_VIEW_PROVENANCE?: OPPProvenanceT | null, MOUNTING?: SNRMountingT | null, RF?: SNRRfParametersT | null, OPTICAL?: SNROpticalParametersT | null, PROVENANCE?: OPPProvenanceT | null, NOTES?: string | Uint8Array | null, UPDATED_AT?: string | Uint8Array | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=SNR.d.ts.map

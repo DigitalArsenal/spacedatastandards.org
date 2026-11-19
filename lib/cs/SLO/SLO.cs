@@ -19,8 +19,8 @@ public struct SLO : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public SLO __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  /// Publisher-stable identifier of this loadout. Together with the publishing key it is the
-  /// loadout's identity across versions. Recommended form: "<CONFIG_ID>@<host field value>".
+  /// Publisher-stable identifier of this loadout. Together with the publisher it is the loadout's
+  /// identity across versions. Recommended form: "<CONFIG_ID>@<host field value>".
   public string LOADOUT_ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetLOADOUT_IDBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -28,8 +28,8 @@ public struct SLO : IFlatbufferObject
   public ArraySegment<byte>? GetLOADOUT_IDBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetLOADOUT_IDArray() { return __p.__vector_as_array<byte>(4); }
-  /// Four-character standard code of the definition, `$` included: "$SNR" or "$RFB". Never the
-  /// union ordinal.
+  /// Four-character standard code of the definition, `$` included: "$SNR" or "$RFB" today. Never
+  /// the union ordinal. A reader skips a value it does not implement (READING RULE, step 1).
   public string CONFIG_STANDARD { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetCONFIG_STANDARDBytes() { return __p.__vector_as_span<byte>(6, 1); }
@@ -45,7 +45,9 @@ public struct SLO : IFlatbufferObject
   public ArraySegment<byte>? GetCONFIG_IDBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
   public byte[] GetCONFIG_IDArray() { return __p.__vector_as_array<byte>(8); }
-  /// Optional content identifier pinning the exact definition bytes.
+  /// "$SNR" only: raw CIDv1 (sha2-256, base32 lowercase) of one exact version of the definition,
+  /// over its size-prefixed bytes as published. A reader that finds no version with this CID does
+  /// not resolve the loadout.
   public string CONFIG_CID { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetCONFIG_CIDBytes() { return __p.__vector_as_span<byte>(10, 1); }
@@ -97,8 +99,8 @@ public struct SLO : IFlatbufferObject
   public ArraySegment<byte>? GetBUS_IDBytes() { return __p.__vector_as_arraysegment(24); }
 #endif
   public byte[] GetBUS_IDArray() { return __p.__vector_as_array<byte>(24); }
-  /// RFC 3339 UTC fixed-millisecond timestamp the host starts carrying the configuration,
-  /// inclusive. Absent = open.
+  /// When the host starts carrying the configuration, inclusive, exactly YYYY-MM-DDTHH:mm:ss.sssZ.
+  /// Absent = open.
   public string VALID_FROM { get { int o = __p.__offset(26); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetVALID_FROMBytes() { return __p.__vector_as_span<byte>(26, 1); }
@@ -106,7 +108,7 @@ public struct SLO : IFlatbufferObject
   public ArraySegment<byte>? GetVALID_FROMBytes() { return __p.__vector_as_arraysegment(26); }
 #endif
   public byte[] GetVALID_FROMArray() { return __p.__vector_as_array<byte>(26); }
-  /// RFC 3339 UTC fixed-millisecond timestamp the host stops carrying it, exclusive. Absent = open.
+  /// When the host stops carrying it, exclusive, in the same form, after VALID_FROM. Absent = open.
   public string VALID_TO { get { int o = __p.__offset(28); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetVALID_TOBytes() { return __p.__vector_as_span<byte>(28, 1); }
@@ -117,7 +119,8 @@ public struct SLO : IFlatbufferObject
   /// Units of this configuration on each host. 0 = not stated.
   public uint COUNT { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
   /// Where the unit sits on the host, as the source names it (a slot, a face, a panel). Two units
-  /// of one configuration on one host differ by POSITION.
+  /// of one configuration on one host differ by POSITION. Absent: the loadout speaks for every unit
+  /// of the configuration on the host (READING RULE, step 6).
   public string POSITION { get { int o = __p.__offset(32); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetPOSITIONBytes() { return __p.__vector_as_span<byte>(32, 1); }
@@ -133,10 +136,10 @@ public struct SLO : IFlatbufferObject
   public ArraySegment<byte>? GetSERIAL_NUMBERBytes() { return __p.__vector_as_arraysegment(34); }
 #endif
   public byte[] GetSERIAL_NUMBERArray() { return __p.__vector_as_array<byte>(34); }
-  /// How this unit sits and points, over the definition's MOUNTING (READING RULE, step 5).
+  /// How this unit sits and points, over the definition's MOUNTING (READING RULE, step 9).
   public SNRMounting? MOUNTING { get { int o = __p.__offset(36); return o != 0 ? (SNRMounting?)(new SNRMounting()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   public sloUnitState STATUS { get { int o = __p.__offset(38); return o != 0 ? (sloUnitState)__p.bb.GetSbyte(o + __p.bb_pos) : sloUnitState.UNKNOWN; } }
-  /// RFC 3339 UTC fixed-millisecond timestamp of this version of the loadout.
+  /// This version of the loadout, exactly YYYY-MM-DDTHH:mm:ss.sssZ.
   public string UPDATED_AT { get { int o = __p.__offset(40); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetUPDATED_ATBytes() { return __p.__vector_as_span<byte>(40, 1); }
@@ -164,6 +167,23 @@ public struct SLO : IFlatbufferObject
   public ArraySegment<byte>? GetNOTESBytes() { return __p.__vector_as_arraysegment(46); }
 #endif
   public byte[] GetNOTESArray() { return __p.__vector_as_array<byte>(46); }
+  /// $DPM.PROVIDER_PEER_ID of the publisher of the definition. Absent: the loadout's own publisher.
+  public string CONFIG_PUBLISHER_PEER_ID { get { int o = __p.__offset(48); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCONFIG_PUBLISHER_PEER_IDBytes() { return __p.__vector_as_span<byte>(48, 1); }
+#else
+  public ArraySegment<byte>? GetCONFIG_PUBLISHER_PEER_IDBytes() { return __p.__vector_as_arraysegment(48); }
+#endif
+  public byte[] GetCONFIG_PUBLISHER_PEER_IDArray() { return __p.__vector_as_array<byte>(48); }
+  /// $DPM.PROVIDER_PEER_ID of the publisher of the $EGP, $CMR or $CAT a GROUP, CONSTELLATION or BUS
+  /// scope reads. Absent: the loadout's own publisher.
+  public string SET_PUBLISHER_PEER_ID { get { int o = __p.__offset(50); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSET_PUBLISHER_PEER_IDBytes() { return __p.__vector_as_span<byte>(50, 1); }
+#else
+  public ArraySegment<byte>? GetSET_PUBLISHER_PEER_IDBytes() { return __p.__vector_as_arraysegment(50); }
+#endif
+  public byte[] GetSET_PUBLISHER_PEER_IDArray() { return __p.__vector_as_array<byte>(50); }
 
   public static Offset<SLO> CreateSLO(FlatBufferBuilder builder,
       StringOffset LOADOUT_IDOffset = default(StringOffset),
@@ -187,8 +207,12 @@ public struct SLO : IFlatbufferObject
       StringOffset UPDATED_ATOffset = default(StringOffset),
       VectorOffset PROVENANCEOffset = default(VectorOffset),
       StringOffset CITATIONOffset = default(StringOffset),
-      StringOffset NOTESOffset = default(StringOffset)) {
-    builder.StartTable(22);
+      StringOffset NOTESOffset = default(StringOffset),
+      StringOffset CONFIG_PUBLISHER_PEER_IDOffset = default(StringOffset),
+      StringOffset SET_PUBLISHER_PEER_IDOffset = default(StringOffset)) {
+    builder.StartTable(24);
+    SLO.AddSET_PUBLISHER_PEER_ID(builder, SET_PUBLISHER_PEER_IDOffset);
+    SLO.AddCONFIG_PUBLISHER_PEER_ID(builder, CONFIG_PUBLISHER_PEER_IDOffset);
     SLO.AddNOTES(builder, NOTESOffset);
     SLO.AddCITATION(builder, CITATIONOffset);
     SLO.AddPROVENANCE(builder, PROVENANCEOffset);
@@ -214,7 +238,7 @@ public struct SLO : IFlatbufferObject
     return SLO.EndSLO(builder);
   }
 
-  public static void StartSLO(FlatBufferBuilder builder) { builder.StartTable(22); }
+  public static void StartSLO(FlatBufferBuilder builder) { builder.StartTable(24); }
   public static void AddLOADOUT_ID(FlatBufferBuilder builder, StringOffset LOADOUT_IDOffset) { builder.AddOffset(0, LOADOUT_IDOffset.Value, 0); }
   public static void AddCONFIG_STANDARD(FlatBufferBuilder builder, StringOffset CONFIG_STANDARDOffset) { builder.AddOffset(1, CONFIG_STANDARDOffset.Value, 0); }
   public static void AddCONFIG_ID(FlatBufferBuilder builder, StringOffset CONFIG_IDOffset) { builder.AddOffset(2, CONFIG_IDOffset.Value, 0); }
@@ -242,6 +266,8 @@ public struct SLO : IFlatbufferObject
   public static void StartPROVENANCEVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddCITATION(FlatBufferBuilder builder, StringOffset CITATIONOffset) { builder.AddOffset(20, CITATIONOffset.Value, 0); }
   public static void AddNOTES(FlatBufferBuilder builder, StringOffset NOTESOffset) { builder.AddOffset(21, NOTESOffset.Value, 0); }
+  public static void AddCONFIG_PUBLISHER_PEER_ID(FlatBufferBuilder builder, StringOffset CONFIG_PUBLISHER_PEER_IDOffset) { builder.AddOffset(22, CONFIG_PUBLISHER_PEER_IDOffset.Value, 0); }
+  public static void AddSET_PUBLISHER_PEER_ID(FlatBufferBuilder builder, StringOffset SET_PUBLISHER_PEER_IDOffset) { builder.AddOffset(23, SET_PUBLISHER_PEER_IDOffset.Value, 0); }
   public static Offset<SLO> EndSLO(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // LOADOUT_ID
@@ -282,6 +308,8 @@ public struct SLO : IFlatbufferObject
     for (var _j = 0; _j < this.PROVENANCELength; ++_j) {_o.PROVENANCE.Add(this.PROVENANCE(_j).HasValue ? this.PROVENANCE(_j).Value.UnPack() : null);}
     _o.CITATION = this.CITATION;
     _o.NOTES = this.NOTES;
+    _o.CONFIG_PUBLISHER_PEER_ID = this.CONFIG_PUBLISHER_PEER_ID;
+    _o.SET_PUBLISHER_PEER_ID = this.SET_PUBLISHER_PEER_ID;
   }
   public static Offset<SLO> Pack(FlatBufferBuilder builder, SLOT _o) {
     if (_o == null) return default(Offset<SLO>);
@@ -308,6 +336,8 @@ public struct SLO : IFlatbufferObject
     }
     var _CITATION = _o.CITATION == null ? default(StringOffset) : builder.CreateString(_o.CITATION);
     var _NOTES = _o.NOTES == null ? default(StringOffset) : builder.CreateString(_o.NOTES);
+    var _CONFIG_PUBLISHER_PEER_ID = _o.CONFIG_PUBLISHER_PEER_ID == null ? default(StringOffset) : builder.CreateString(_o.CONFIG_PUBLISHER_PEER_ID);
+    var _SET_PUBLISHER_PEER_ID = _o.SET_PUBLISHER_PEER_ID == null ? default(StringOffset) : builder.CreateString(_o.SET_PUBLISHER_PEER_ID);
     return CreateSLO(
       builder,
       _LOADOUT_ID,
@@ -331,7 +361,9 @@ public struct SLO : IFlatbufferObject
       _UPDATED_AT,
       _PROVENANCE,
       _CITATION,
-      _NOTES);
+      _NOTES,
+      _CONFIG_PUBLISHER_PEER_ID,
+      _SET_PUBLISHER_PEER_ID);
   }
 }
 
@@ -359,6 +391,8 @@ public class SLOT
   public List<OPPProvenanceT> PROVENANCE { get; set; }
   public string CITATION { get; set; }
   public string NOTES { get; set; }
+  public string CONFIG_PUBLISHER_PEER_ID { get; set; }
+  public string SET_PUBLISHER_PEER_ID { get; set; }
 
   public SLOT() {
     this.LOADOUT_ID = null;
@@ -383,6 +417,8 @@ public class SLOT
     this.PROVENANCE = null;
     this.CITATION = null;
     this.NOTES = null;
+    this.CONFIG_PUBLISHER_PEER_ID = null;
+    this.SET_PUBLISHER_PEER_ID = null;
   }
   public static SLOT DeserializeFromBinary(byte[] fbBuffer) {
     return SLO.GetRootAsSLO(new ByteBuffer(fbBuffer)).UnPack();
@@ -422,6 +458,8 @@ static public class SLOVerify
       && verifier.VerifyVectorOfTables(tablePos, 42 /*PROVENANCE*/, OPPProvenanceVerify.Verify, true)
       && verifier.VerifyString(tablePos, 44 /*CITATION*/, false)
       && verifier.VerifyString(tablePos, 46 /*NOTES*/, false)
+      && verifier.VerifyString(tablePos, 48 /*CONFIG_PUBLISHER_PEER_ID*/, false)
+      && verifier.VerifyString(tablePos, 50 /*SET_PUBLISHER_PEER_ID*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

@@ -990,12 +990,17 @@ class SNROpticalParametersObjectBuilder extends fb.ObjectBuilder {
 ///  Platform: NORAD_CAT_ID and OBJECT_ID join to $CAT, SITE_ID to $SIT.ID,
 ///  SENSOR_ID to $SEN.ID. A sensor not attached to a platform has none of them.
 ///
-///  A record with none of the platform fields is a DEFINITION: one sensor
-///  configuration, published once, that any number of hosts carry. A $SLO
-///  (Sensor Loadout) binds it to a host or to a set of hosts by CONFIG_STANDARD "$SNR"
-///  and CONFIG_ID = SENSOR_ID, and carries what differs per host (dates, count,
-///  position, serial number, mounting, status). A definition's SENSOR_ID names
-///  the configuration, not one physical sensor, so it has no $SEN.
+///  DEFINITION. A record is a definition when NORAD_CAT_ID is 0 and OBJECT_ID,
+///  SITE_ID and ENTITY_ID are all absent or empty. It is one sensor
+///  configuration, published once, that any number of hosts carry; every other
+///  record is bound to its platform. A $SLO (Sensor Loadout) binds a definition
+///  to a host or to a set of hosts by CONFIG_STANDARD "$SNR" and CONFIG_ID =
+///  SENSOR_ID, and carries what differs per host (dates, count, position,
+///  serial number, mounting, status). A definition's SENSOR_ID names the
+///  configuration, not one physical sensor, so it has no $SEN. A corrected
+///  definition is republished with the same SENSOR_ID and a later UPDATED_AT;
+///  the latest version from a publisher is the definition ($SLO READING RULE,
+///  step 1).
 class SNR {
   SNR._(this._bc, this._bcOffset);
   factory SNR(List<int> bytes) {
@@ -1047,10 +1052,16 @@ class SNR {
   ///  for that section.
   OPPProvenance? get PROVENANCE => OPPProvenance.reader.vTableGetNullable(_bc, _bcOffset, 32);
   String? get NOTES => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
+  ///  RFC 3339 UTC timestamp of this version of the record, exactly
+  ///  YYYY-MM-DDTHH:mm:ss.sssZ. Of two records with one SENSOR_ID from one
+  ///  publisher, the later UPDATED_AT is current; a record without one is older
+  ///  than any record with one.
+  String? get UPDATED_AT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
+  String? get updatedAt => UPDATED_AT;
 
   @override
   String toString() {
-    return 'SNR{sensorId: ${sensorId}, NAME: ${NAME}, noradCatId: ${noradCatId}, objectId: ${objectId}, siteId: ${siteId}, entityId: ${entityId}, TYPE: ${TYPE}, EMISSION: ${EMISSION}, spectralBands: ${spectralBands}, fieldOfView: ${fieldOfView}, fieldOfViewProvenance: ${fieldOfViewProvenance}, MOUNTING: ${MOUNTING}, RF: ${RF}, OPTICAL: ${OPTICAL}, PROVENANCE: ${PROVENANCE}, NOTES: ${NOTES}}';
+    return 'SNR{sensorId: ${sensorId}, NAME: ${NAME}, noradCatId: ${noradCatId}, objectId: ${objectId}, siteId: ${siteId}, entityId: ${entityId}, TYPE: ${TYPE}, EMISSION: ${EMISSION}, spectralBands: ${spectralBands}, fieldOfView: ${fieldOfView}, fieldOfViewProvenance: ${fieldOfViewProvenance}, MOUNTING: ${MOUNTING}, RF: ${RF}, OPTICAL: ${OPTICAL}, PROVENANCE: ${PROVENANCE}, NOTES: ${NOTES}, updatedAt: ${updatedAt}}';
   }
 }
 
@@ -1068,7 +1079,7 @@ class SNRBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(16);
+    fbBuilder.startTable(17);
   }
 
   int addSensorIdOffset(int? offset) {
@@ -1135,6 +1146,10 @@ class SNRBuilder {
     fbBuilder.addOffset(15, offset);
     return fbBuilder.offset;
   }
+  int addUpdatedAtOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1158,6 +1173,7 @@ class SNRObjectBuilder extends fb.ObjectBuilder {
   final SNROpticalParametersObjectBuilder? _OPTICAL;
   final OPPProvenanceObjectBuilder? _PROVENANCE;
   final String? _NOTES;
+  final String? _UPDATED_AT;
 
   SNRObjectBuilder({
     String? SENSOR_ID,
@@ -1184,6 +1200,8 @@ class SNRObjectBuilder extends fb.ObjectBuilder {
     SNROpticalParametersObjectBuilder? OPTICAL,
     OPPProvenanceObjectBuilder? PROVENANCE,
     String? NOTES,
+    String? UPDATED_AT,
+    String? updatedAt,
   })
       : _SENSOR_ID = sensorId ?? SENSOR_ID,
         _NAME = NAME,
@@ -1200,7 +1218,8 @@ class SNRObjectBuilder extends fb.ObjectBuilder {
         _RF = RF,
         _OPTICAL = OPTICAL,
         _PROVENANCE = PROVENANCE,
-        _NOTES = NOTES;
+        _NOTES = NOTES,
+        _UPDATED_AT = updatedAt ?? UPDATED_AT;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1225,7 +1244,9 @@ class SNRObjectBuilder extends fb.ObjectBuilder {
     final int? PROVENANCEOffset = _PROVENANCE?.getOrCreateOffset(fbBuilder);
     final int? NOTESOffset = _NOTES == null ? null
         : fbBuilder.writeString(_NOTES!);
-    fbBuilder.startTable(16);
+    final int? UPDATED_ATOffset = _UPDATED_AT == null ? null
+        : fbBuilder.writeString(_UPDATED_AT!);
+    fbBuilder.startTable(17);
     fbBuilder.addOffset(0, SENSOR_IDOffset);
     fbBuilder.addOffset(1, NAMEOffset);
     fbBuilder.addUint32(2, _NORAD_CAT_ID);
@@ -1242,6 +1263,7 @@ class SNRObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(13, OPTICALOffset);
     fbBuilder.addOffset(14, PROVENANCEOffset);
     fbBuilder.addOffset(15, NOTESOffset);
+    fbBuilder.addOffset(16, UPDATED_ATOffset);
     return fbBuilder.endTable();
   }
 

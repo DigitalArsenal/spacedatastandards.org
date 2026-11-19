@@ -28,12 +28,17 @@ import java.nio.ByteOrder;
  * Platform: NORAD_CAT_ID and OBJECT_ID join to $CAT, SITE_ID to $SIT.ID,
  * SENSOR_ID to $SEN.ID. A sensor not attached to a platform has none of them.
  *
- * A record with none of the platform fields is a DEFINITION: one sensor
- * configuration, published once, that any number of hosts carry. A $SLO
- * (Sensor Loadout) binds it to a host or to a set of hosts by CONFIG_STANDARD "$SNR"
- * and CONFIG_ID = SENSOR_ID, and carries what differs per host (dates, count,
- * position, serial number, mounting, status). A definition's SENSOR_ID names
- * the configuration, not one physical sensor, so it has no $SEN.
+ * DEFINITION. A record is a definition when NORAD_CAT_ID is 0 and OBJECT_ID,
+ * SITE_ID and ENTITY_ID are all absent or empty. It is one sensor
+ * configuration, published once, that any number of hosts carry; every other
+ * record is bound to its platform. A $SLO (Sensor Loadout) binds a definition
+ * to a host or to a set of hosts by CONFIG_STANDARD "$SNR" and CONFIG_ID =
+ * SENSOR_ID, and carries what differs per host (dates, count, position,
+ * serial number, mounting, status). A definition's SENSOR_ID names the
+ * configuration, not one physical sensor, so it has no $SEN. A corrected
+ * definition is republished with the same SENSOR_ID and a later UPDATED_AT;
+ * the latest version from a publisher is the definition ($SLO READING RULE,
+ * step 1).
  */
 @SuppressWarnings("unused")
 public final class SNR extends com.google.flatbuffers.Table {
@@ -115,6 +120,15 @@ public final class SNR extends com.google.flatbuffers.Table {
   public String NOTES() { int o = __offset(34); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer NOTESAsByteBuffer() { return __vector_as_bytebuffer(34, 1); }
   public ByteBuffer NOTESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 34, 1); }
+  /**
+   * RFC 3339 UTC timestamp of this version of the record, exactly
+   * YYYY-MM-DDTHH:mm:ss.sssZ. Of two records with one SENSOR_ID from one
+   * publisher, the later UPDATED_AT is current; a record without one is older
+   * than any record with one.
+   */
+  public String UPDATED_AT() { int o = __offset(36); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer UPDATED_ATAsByteBuffer() { return __vector_as_bytebuffer(36, 1); }
+  public ByteBuffer UPDATED_ATInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 36, 1); }
 
   public static int createSNR(FlatBufferBuilder builder,
       int SENSOR_IDOffset,
@@ -132,8 +146,10 @@ public final class SNR extends com.google.flatbuffers.Table {
       int RFOffset,
       int OPTICALOffset,
       int PROVENANCEOffset,
-      int NOTESOffset) {
-    builder.startTable(16);
+      int NOTESOffset,
+      int UPDATED_ATOffset) {
+    builder.startTable(17);
+    SNR.addUpdatedAt(builder, UPDATED_ATOffset);
     SNR.addNotes(builder, NOTESOffset);
     SNR.addProvenance(builder, PROVENANCEOffset);
     SNR.addOptical(builder, OPTICALOffset);
@@ -153,7 +169,7 @@ public final class SNR extends com.google.flatbuffers.Table {
     return SNR.endSNR(builder);
   }
 
-  public static void startSNR(FlatBufferBuilder builder) { builder.startTable(16); }
+  public static void startSNR(FlatBufferBuilder builder) { builder.startTable(17); }
   public static void addSensorId(FlatBufferBuilder builder, int SENSOR_IDOffset) { builder.addOffset(0, SENSOR_IDOffset, 0); }
   public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(1, NAMEOffset, 0); }
   public static void addNoradCatId(FlatBufferBuilder builder, long NORAD_CAT_ID) { builder.addInt(2, (int) NORAD_CAT_ID, (int) 0L); }
@@ -172,6 +188,7 @@ public final class SNR extends com.google.flatbuffers.Table {
   public static void addOptical(FlatBufferBuilder builder, int OPTICALOffset) { builder.addOffset(13, OPTICALOffset, 0); }
   public static void addProvenance(FlatBufferBuilder builder, int PROVENANCEOffset) { builder.addOffset(14, PROVENANCEOffset, 0); }
   public static void addNotes(FlatBufferBuilder builder, int NOTESOffset) { builder.addOffset(15, NOTESOffset, 0); }
+  public static void addUpdatedAt(FlatBufferBuilder builder, int UPDATED_ATOffset) { builder.addOffset(16, UPDATED_ATOffset, 0); }
   public static int endSNR(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // SENSOR_ID

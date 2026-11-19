@@ -27,11 +27,11 @@ class sloUnitState private constructor() {
          */
         const val STANDBY: Byte = 4
         /**
-         * Carried and not working.
+         * Carried and not working. A failed unit is still on board and stays in the answer.
          */
         const val FAILED: Byte = 5
         /**
-         * No longer carried or no longer used. A winning RETIRED loadout removes the unit.
+         * No longer carried. A winning RETIRED loadout takes the unit out of the answer.
          */
         const val RETIRED: Byte = 6
     }

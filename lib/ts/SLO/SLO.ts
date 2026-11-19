@@ -36,8 +36,8 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
 }
 
 /**
- * Publisher-stable identifier of this loadout. Together with the publishing key it is the
- * loadout's identity across versions. Recommended form: "<CONFIG_ID>@<host field value>".
+ * Publisher-stable identifier of this loadout. Together with the publisher it is the loadout's
+ * identity across versions. Recommended form: "<CONFIG_ID>@<host field value>".
  */
 LOADOUT_ID():string
 LOADOUT_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array
@@ -47,8 +47,8 @@ LOADOUT_ID(optionalEncoding?:any):string|Uint8Array {
 }
 
 /**
- * Four-character standard code of the definition, `$` included: "$SNR" or "$RFB". Never the
- * union ordinal.
+ * Four-character standard code of the definition, `$` included: "$SNR" or "$RFB" today. Never
+ * the union ordinal. A reader skips a value it does not implement (READING RULE, step 1).
  */
 CONFIG_STANDARD():string
 CONFIG_STANDARD(optionalEncoding:flatbuffers.Encoding):string|Uint8Array
@@ -68,7 +68,9 @@ CONFIG_ID(optionalEncoding?:any):string|Uint8Array {
 }
 
 /**
- * Optional content identifier pinning the exact definition bytes.
+ * "$SNR" only: raw CIDv1 (sha2-256, base32 lowercase) of one exact version of the definition,
+ * over its size-prefixed bytes as published. A reader that finds no version with this CID does
+ * not resolve the loadout.
  */
 CONFIG_CID():string|null
 CONFIG_CID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -144,8 +146,8 @@ BUS_ID(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * RFC 3339 UTC fixed-millisecond timestamp the host starts carrying the configuration,
- * inclusive. Absent = open.
+ * When the host starts carrying the configuration, inclusive, exactly YYYY-MM-DDTHH:mm:ss.sssZ.
+ * Absent = open.
  */
 VALID_FROM():string|null
 VALID_FROM(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -155,7 +157,7 @@ VALID_FROM(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * RFC 3339 UTC fixed-millisecond timestamp the host stops carrying it, exclusive. Absent = open.
+ * When the host stops carrying it, exclusive, in the same form, after VALID_FROM. Absent = open.
  */
 VALID_TO():string|null
 VALID_TO(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -174,7 +176,8 @@ COUNT():number {
 
 /**
  * Where the unit sits on the host, as the source names it (a slot, a face, a panel). Two units
- * of one configuration on one host differ by POSITION.
+ * of one configuration on one host differ by POSITION. Absent: the loadout speaks for every unit
+ * of the configuration on the host (READING RULE, step 6).
  */
 POSITION():string|null
 POSITION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -194,7 +197,7 @@ SERIAL_NUMBER(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * How this unit sits and points, over the definition's MOUNTING (READING RULE, step 5).
+ * How this unit sits and points, over the definition's MOUNTING (READING RULE, step 9).
  */
 MOUNTING(obj?:SNRMounting):SNRMounting|null {
   const offset = this.bb!.__offset(this.bb_pos, 36);
@@ -207,7 +210,7 @@ STATUS():sloUnitState {
 }
 
 /**
- * RFC 3339 UTC fixed-millisecond timestamp of this version of the loadout.
+ * This version of the loadout, exactly YYYY-MM-DDTHH:mm:ss.sssZ.
  */
 UPDATED_AT():string
 UPDATED_AT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array
@@ -250,8 +253,29 @@ NOTES(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * $DPM.PROVIDER_PEER_ID of the publisher of the definition. Absent: the loadout's own publisher.
+ */
+CONFIG_PUBLISHER_PEER_ID():string|null
+CONFIG_PUBLISHER_PEER_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+CONFIG_PUBLISHER_PEER_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 48);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * $DPM.PROVIDER_PEER_ID of the publisher of the $EGP, $CMR or $CAT a GROUP, CONSTELLATION or BUS
+ * scope reads. Absent: the loadout's own publisher.
+ */
+SET_PUBLISHER_PEER_ID():string|null
+SET_PUBLISHER_PEER_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SET_PUBLISHER_PEER_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 50);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startSLO(builder:flatbuffers.Builder) {
-  builder.startObject(22);
+  builder.startObject(24);
 }
 
 static addLoadoutId(builder:flatbuffers.Builder, LOADOUT_IDOffset:flatbuffers.Offset) {
@@ -354,6 +378,14 @@ static addNotes(builder:flatbuffers.Builder, NOTESOffset:flatbuffers.Offset) {
   builder.addFieldOffset(21, NOTESOffset, 0);
 }
 
+static addConfigPublisherPeerId(builder:flatbuffers.Builder, CONFIG_PUBLISHER_PEER_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(22, CONFIG_PUBLISHER_PEER_IDOffset, 0);
+}
+
+static addSetPublisherPeerId(builder:flatbuffers.Builder, SET_PUBLISHER_PEER_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(23, SET_PUBLISHER_PEER_IDOffset, 0);
+}
+
 static endSLO(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // LOADOUT_ID
@@ -396,7 +428,9 @@ unpack(): SLOT {
     this.UPDATED_AT(),
     this.bb!.createObjList<OPPProvenance, OPPProvenanceT>(this.PROVENANCE.bind(this), this.provenanceLength()),
     this.CITATION(),
-    this.NOTES()
+    this.NOTES(),
+    this.CONFIG_PUBLISHER_PEER_ID(),
+    this.SET_PUBLISHER_PEER_ID()
   );
 }
 
@@ -424,6 +458,8 @@ unpackTo(_o: SLOT): void {
   _o.PROVENANCE = this.bb!.createObjList<OPPProvenance, OPPProvenanceT>(this.PROVENANCE.bind(this), this.provenanceLength());
   _o.CITATION = this.CITATION();
   _o.NOTES = this.NOTES();
+  _o.CONFIG_PUBLISHER_PEER_ID = this.CONFIG_PUBLISHER_PEER_ID();
+  _o.SET_PUBLISHER_PEER_ID = this.SET_PUBLISHER_PEER_ID();
 }
 }
 
@@ -450,7 +486,9 @@ constructor(
   public UPDATED_AT: string|Uint8Array|null = null,
   public PROVENANCE: (OPPProvenanceT)[] = [],
   public CITATION: string|Uint8Array|null = null,
-  public NOTES: string|Uint8Array|null = null
+  public NOTES: string|Uint8Array|null = null,
+  public CONFIG_PUBLISHER_PEER_ID: string|Uint8Array|null = null,
+  public SET_PUBLISHER_PEER_ID: string|Uint8Array|null = null
 ){}
 
 
@@ -473,6 +511,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const PROVENANCE = SLO.createProvenanceVector(builder, builder.createObjectOffsetList(this.PROVENANCE));
   const CITATION = (this.CITATION !== null ? builder.createString(this.CITATION!) : 0);
   const NOTES = (this.NOTES !== null ? builder.createString(this.NOTES!) : 0);
+  const CONFIG_PUBLISHER_PEER_ID = (this.CONFIG_PUBLISHER_PEER_ID !== null ? builder.createString(this.CONFIG_PUBLISHER_PEER_ID!) : 0);
+  const SET_PUBLISHER_PEER_ID = (this.SET_PUBLISHER_PEER_ID !== null ? builder.createString(this.SET_PUBLISHER_PEER_ID!) : 0);
 
   SLO.startSLO(builder);
   SLO.addLoadoutId(builder, LOADOUT_ID);
@@ -497,6 +537,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   SLO.addProvenance(builder, PROVENANCE);
   SLO.addCitation(builder, CITATION);
   SLO.addNotes(builder, NOTES);
+  SLO.addConfigPublisherPeerId(builder, CONFIG_PUBLISHER_PEER_ID);
+  SLO.addSetPublisherPeerId(builder, SET_PUBLISHER_PEER_ID);
 
   return SLO.endSLO(builder);
 }

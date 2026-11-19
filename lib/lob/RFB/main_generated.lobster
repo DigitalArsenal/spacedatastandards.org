@@ -76,12 +76,17 @@ class RFB
 /// one DOWNLINK — sharing ID_TRANSMITTER, each carrying its own MODE,
 /// FREQ_MIN, FREQ_MAX and CENTER_FREQ.
 ///
-/// Records with NORAD_CAT_ID 0 are a DEFINITION: one radio configuration,
-/// published once, that any number of hosts carry. The definition is every
-/// unbound record sharing one ID_TRANSMITTER. A $SLO (Sensor Loadout) binds it to a
-/// host or to a set of hosts by CONFIG_STANDARD "$RFB" and CONFIG_ID =
-/// ID_TRANSMITTER, and carries what differs per host (dates, count, position,
-/// serial number, mounting, status).
+/// DEFINITION. A record is a definition record when NORAD_CAT_ID is 0 and
+/// ID_ENTITY is absent or empty; every other record is bound to its host (a
+/// record with only ID_ENTITY, as an upstream transmitter database writes for
+/// an object with no catalogue number, is bound to that entity). A radio
+/// definition is one radio configuration, published once, that any number of
+/// hosts carry: the current definition records sharing one ID_TRANSMITTER. A
+/// $SLO (Sensor Loadout) binds it to a host or to a set of hosts by
+/// CONFIG_STANDARD "$RFB" and CONFIG_ID = ID_TRANSMITTER, and carries what
+/// differs per host (dates, count, position, serial number, mounting, status).
+/// A corrected record is republished with the same ID and a later UPDATED_AT;
+/// the latest version from a publisher is current ($SLO READING RULE, step 1).
 class RFB : flatbuffers.handle
     /// Unique identifier
     def ID() -> string:
@@ -135,10 +140,11 @@ class RFB : flatbuffers.handle
     /// CAT.NORAD_CAT_ID. 0 when unbound.
     def NORAD_CAT_ID() -> int:
         return flatbuffers.field_uint32(buf_, pos_, 36, 0)
-    /// Identifier of the physical transmitter, transceiver or transponder this
-    /// record describes (e.g. an upstream transmitter database's UUID). Uplink
-    /// and downlink
-    /// records of the same device share this value.
+    /// Identifier of the transmitter, transceiver or transponder this record
+    /// describes (e.g. an upstream transmitter database's UUID). Uplink and
+    /// downlink records of the same device share this value. On a bound record
+    /// it names one physical device; on a definition record it names the radio
+    /// configuration, and $SLO.CONFIG_ID carries it.
     def ID_TRANSMITTER() -> string:
         return flatbuffers.field_string(buf_, pos_, 38)
     /// Direction of this emission relative to the spacecraft.
@@ -163,13 +169,19 @@ class RFB : flatbuffers.handle
     /// carry downstream.
     def CITATION() -> string:
         return flatbuffers.field_string(buf_, pos_, 52)
+    /// RFC 3339 UTC timestamp of this version of the record, exactly
+    /// YYYY-MM-DDTHH:mm:ss.sssZ. Of two records with one ID from one publisher,
+    /// the later UPDATED_AT is current; a record without one is older than any
+    /// record with one.
+    def UPDATED_AT() -> string:
+        return flatbuffers.field_string(buf_, pos_, 54)
 
 def GetRootAsRFB(buf:string): return RFB { buf, flatbuffers.indirect(buf, 0) }
 
 struct RFBBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(25)
+        b_.StartObject(26)
         return this
     def add_ID(ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, ID)
@@ -245,6 +257,9 @@ struct RFBBuilder:
         return this
     def add_CITATION(CITATION:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(24, CITATION)
+        return this
+    def add_UPDATED_AT(UPDATED_AT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(25, UPDATED_AT)
         return this
     def end():
         return b_.EndObject()

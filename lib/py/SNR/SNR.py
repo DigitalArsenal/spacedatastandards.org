@@ -17,12 +17,17 @@ np = import_numpy()
 # Platform: NORAD_CAT_ID and OBJECT_ID join to $CAT, SITE_ID to $SIT.ID,
 # SENSOR_ID to $SEN.ID. A sensor not attached to a platform has none of them.
 #
-# A record with none of the platform fields is a DEFINITION: one sensor
-# configuration, published once, that any number of hosts carry. A $SLO
-# (Sensor Loadout) binds it to a host or to a set of hosts by CONFIG_STANDARD "$SNR"
-# and CONFIG_ID = SENSOR_ID, and carries what differs per host (dates, count,
-# position, serial number, mounting, status). A definition's SENSOR_ID names
-# the configuration, not one physical sensor, so it has no $SEN.
+# DEFINITION. A record is a definition when NORAD_CAT_ID is 0 and OBJECT_ID,
+# SITE_ID and ENTITY_ID are all absent or empty. It is one sensor
+# configuration, published once, that any number of hosts carry; every other
+# record is bound to its platform. A $SLO (Sensor Loadout) binds a definition
+# to a host or to a set of hosts by CONFIG_STANDARD "$SNR" and CONFIG_ID =
+# SENSOR_ID, and carries what differs per host (dates, count, position,
+# serial number, mounting, status). A definition's SENSOR_ID names the
+# configuration, not one physical sensor, so it has no $SEN. A corrected
+# definition is republished with the same SENSOR_ID and a later UPDATED_AT;
+# the latest version from a publisher is the definition ($SLO READING RULE,
+# step 1).
 class SNR(object):
     __slots__ = ['_tab']
 
@@ -214,8 +219,19 @@ class SNR(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # RFC 3339 UTC timestamp of this version of the record, exactly
+    # YYYY-MM-DDTHH:mm:ss.sssZ. Of two records with one SENSOR_ID from one
+    # publisher, the later UPDATED_AT is current; a record without one is older
+    # than any record with one.
+    # SNR
+    def UPDATED_AT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def SNRStart(builder):
-    builder.StartObject(16)
+    builder.StartObject(17)
 
 def Start(builder):
     SNRStart(builder)
@@ -328,6 +344,12 @@ def SNRAddNOTES(builder, NOTES):
 def AddNOTES(builder, NOTES):
     SNRAddNOTES(builder, NOTES)
 
+def SNRAddUPDATED_AT(builder, UPDATED_AT):
+    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(UPDATED_AT), 0)
+
+def AddUPDATED_AT(builder, UPDATED_AT):
+    SNRAddUPDATED_AT(builder, UPDATED_AT)
+
 def SNREnd(builder):
     return builder.EndObject()
 
@@ -366,6 +388,7 @@ class SNRT(object):
         OPTICAL = None,
         PROVENANCE = None,
         NOTES = None,
+        UPDATED_AT = None,
     ):
         self.SENSOR_ID = SENSOR_ID  # type: Optional[str]
         self.NAME = NAME  # type: Optional[str]
@@ -383,6 +406,7 @@ class SNRT(object):
         self.OPTICAL = OPTICAL  # type: Optional[SNROpticalParameters.SNROpticalParametersT]
         self.PROVENANCE = PROVENANCE  # type: Optional[OPPProvenance.OPPProvenanceT]
         self.NOTES = NOTES  # type: Optional[str]
+        self.UPDATED_AT = UPDATED_AT  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -434,6 +458,7 @@ class SNRT(object):
         if SNR.PROVENANCE() is not None:
             self.PROVENANCE = OPPProvenance.OPPProvenanceT.InitFromObj(SNR.PROVENANCE())
         self.NOTES = SNR.NOTES()
+        self.UPDATED_AT = SNR.UPDATED_AT()
 
     # SNRT
     def Pack(self, builder):
@@ -469,6 +494,8 @@ class SNRT(object):
             PROVENANCE = self.PROVENANCE.Pack(builder)
         if self.NOTES is not None:
             NOTES = builder.CreateString(self.NOTES)
+        if self.UPDATED_AT is not None:
+            UPDATED_AT = builder.CreateString(self.UPDATED_AT)
         SNRStart(builder)
         if self.SENSOR_ID is not None:
             SNRAddSENSOR_ID(builder, SENSOR_ID)
@@ -499,5 +526,7 @@ class SNRT(object):
             SNRAddPROVENANCE(builder, PROVENANCE)
         if self.NOTES is not None:
             SNRAddNOTES(builder, NOTES)
+        if self.UPDATED_AT is not None:
+            SNRAddUPDATED_AT(builder, UPDATED_AT)
         SNR = SNREnd(builder)
         return SNR

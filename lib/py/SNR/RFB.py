@@ -20,12 +20,17 @@ np = import_numpy()
 # one DOWNLINK — sharing ID_TRANSMITTER, each carrying its own MODE,
 # FREQ_MIN, FREQ_MAX and CENTER_FREQ.
 #
-# Records with NORAD_CAT_ID 0 are a DEFINITION: one radio configuration,
-# published once, that any number of hosts carry. The definition is every
-# unbound record sharing one ID_TRANSMITTER. A $SLO (Sensor Loadout) binds it to a
-# host or to a set of hosts by CONFIG_STANDARD "$RFB" and CONFIG_ID =
-# ID_TRANSMITTER, and carries what differs per host (dates, count, position,
-# serial number, mounting, status).
+# DEFINITION. A record is a definition record when NORAD_CAT_ID is 0 and
+# ID_ENTITY is absent or empty; every other record is bound to its host (a
+# record with only ID_ENTITY, as an upstream transmitter database writes for
+# an object with no catalogue number, is bound to that entity). A radio
+# definition is one radio configuration, published once, that any number of
+# hosts carry: the current definition records sharing one ID_TRANSMITTER. A
+# $SLO (Sensor Loadout) binds it to a host or to a set of hosts by
+# CONFIG_STANDARD "$RFB" and CONFIG_ID = ID_TRANSMITTER, and carries what
+# differs per host (dates, count, position, serial number, mounting, status).
+# A corrected record is republished with the same ID and a later UPDATED_AT;
+# the latest version from a publisher is current ($SLO READING RULE, step 1).
 class RFB(object):
     __slots__ = ['_tab']
 
@@ -185,10 +190,11 @@ class RFB(object):
             return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
         return 0
 
-    # Identifier of the physical transmitter, transceiver or transponder this
-    # record describes (e.g. an upstream transmitter database's UUID). Uplink
-    # and downlink
-    # records of the same device share this value.
+    # Identifier of the transmitter, transceiver or transponder this record
+    # describes (e.g. an upstream transmitter database's UUID). Uplink and
+    # downlink records of the same device share this value. On a bound record
+    # it names one physical device; on a definition record it names the radio
+    # configuration, and $SLO.CONFIG_ID carries it.
     # RFB
     def ID_TRANSMITTER(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
@@ -253,8 +259,19 @@ class RFB(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # RFC 3339 UTC timestamp of this version of the record, exactly
+    # YYYY-MM-DDTHH:mm:ss.sssZ. Of two records with one ID from one publisher,
+    # the later UPDATED_AT is current; a record without one is older than any
+    # record with one.
+    # RFB
+    def UPDATED_AT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def RFBStart(builder):
-    builder.StartObject(25)
+    builder.StartObject(26)
 
 def Start(builder):
     RFBStart(builder)
@@ -409,6 +426,12 @@ def RFBAddCITATION(builder, CITATION):
 def AddCITATION(builder, CITATION):
     RFBAddCITATION(builder, CITATION)
 
+def RFBAddUPDATED_AT(builder, UPDATED_AT):
+    builder.PrependUOffsetTRelativeSlot(25, flatbuffers.number_types.UOffsetTFlags.py_type(UPDATED_AT), 0)
+
+def AddUPDATED_AT(builder, UPDATED_AT):
+    RFBAddUPDATED_AT(builder, UPDATED_AT)
+
 def RFBEnd(builder):
     return builder.EndObject()
 
@@ -446,6 +469,7 @@ class RFBT(object):
         INVERT = False,
         IARU_COORDINATION = None,
         CITATION = None,
+        UPDATED_AT = None,
     ):
         self.ID = ID  # type: Optional[str]
         self.ID_ENTITY = ID_ENTITY  # type: Optional[str]
@@ -472,6 +496,7 @@ class RFBT(object):
         self.INVERT = INVERT  # type: bool
         self.IARU_COORDINATION = IARU_COORDINATION  # type: Optional[str]
         self.CITATION = CITATION  # type: Optional[str]
+        self.UPDATED_AT = UPDATED_AT  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -519,6 +544,7 @@ class RFBT(object):
         self.INVERT = RFB.INVERT()
         self.IARU_COORDINATION = RFB.IARU_COORDINATION()
         self.CITATION = RFB.CITATION()
+        self.UPDATED_AT = RFB.UPDATED_AT()
 
     # RFBT
     def Pack(self, builder):
@@ -540,6 +566,8 @@ class RFBT(object):
             IARU_COORDINATION = builder.CreateString(self.IARU_COORDINATION)
         if self.CITATION is not None:
             CITATION = builder.CreateString(self.CITATION)
+        if self.UPDATED_AT is not None:
+            UPDATED_AT = builder.CreateString(self.UPDATED_AT)
         RFBStart(builder)
         if self.ID is not None:
             RFBAddID(builder, ID)
@@ -575,5 +603,7 @@ class RFBT(object):
             RFBAddIARU_COORDINATION(builder, IARU_COORDINATION)
         if self.CITATION is not None:
             RFBAddCITATION(builder, CITATION)
+        if self.UPDATED_AT is not None:
+            RFBAddUPDATED_AT(builder, UPDATED_AT)
         RFB = RFBEnd(builder)
         return RFB

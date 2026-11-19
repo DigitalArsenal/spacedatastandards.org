@@ -953,12 +953,17 @@ inline ::flatbuffers::Offset<SNROpticalParameters> CreateSNROpticalParametersDir
 /// Platform: NORAD_CAT_ID and OBJECT_ID join to $CAT, SITE_ID to $SIT.ID,
 /// SENSOR_ID to $SEN.ID. A sensor not attached to a platform has none of them.
 ///
-/// A record with none of the platform fields is a DEFINITION: one sensor
-/// configuration, published once, that any number of hosts carry. A $SLO
-/// (Sensor Loadout) binds it to a host or to a set of hosts by CONFIG_STANDARD "$SNR"
-/// and CONFIG_ID = SENSOR_ID, and carries what differs per host (dates, count,
-/// position, serial number, mounting, status). A definition's SENSOR_ID names
-/// the configuration, not one physical sensor, so it has no $SEN.
+/// DEFINITION. A record is a definition when NORAD_CAT_ID is 0 and OBJECT_ID,
+/// SITE_ID and ENTITY_ID are all absent or empty. It is one sensor
+/// configuration, published once, that any number of hosts carry; every other
+/// record is bound to its platform. A $SLO (Sensor Loadout) binds a definition
+/// to a host or to a set of hosts by CONFIG_STANDARD "$SNR" and CONFIG_ID =
+/// SENSOR_ID, and carries what differs per host (dates, count, position,
+/// serial number, mounting, status). A definition's SENSOR_ID names the
+/// configuration, not one physical sensor, so it has no $SEN. A corrected
+/// definition is republished with the same SENSOR_ID and a later UPDATED_AT;
+/// the latest version from a publisher is the definition ($SLO READING RULE,
+/// step 1).
 struct SNR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef SNRBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -977,7 +982,8 @@ struct SNR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_RF = 28,
     VT_OPTICAL = 30,
     VT_PROVENANCE = 32,
-    VT_NOTES = 34
+    VT_NOTES = 34,
+    VT_UPDATED_AT = 36
   };
   /// Stable identifier of this sensor, or of the configuration when the record
   /// is a definition. $SEN.ID of the same sensor when the record has a platform.
@@ -1042,6 +1048,13 @@ struct SNR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *NOTES() const {
     return GetPointer<const ::flatbuffers::String *>(VT_NOTES);
   }
+  /// RFC 3339 UTC timestamp of this version of the record, exactly
+  /// YYYY-MM-DDTHH:mm:ss.sssZ. Of two records with one SENSOR_ID from one
+  /// publisher, the later UPDATED_AT is current; a record without one is older
+  /// than any record with one.
+  const ::flatbuffers::String *UPDATED_AT() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_UPDATED_AT);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -1075,6 +1088,8 @@ struct SNR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyTable(PROVENANCE()) &&
            VerifyOffset(verifier, VT_NOTES) &&
            verifier.VerifyString(NOTES()) &&
+           VerifyOffset(verifier, VT_UPDATED_AT) &&
+           verifier.VerifyString(UPDATED_AT()) &&
            verifier.EndTable();
   }
 };
@@ -1131,6 +1146,9 @@ struct SNRBuilder {
   void add_NOTES(::flatbuffers::Offset<::flatbuffers::String> NOTES) {
     fbb_.AddOffset(SNR::VT_NOTES, NOTES);
   }
+  void add_UPDATED_AT(::flatbuffers::Offset<::flatbuffers::String> UPDATED_AT) {
+    fbb_.AddOffset(SNR::VT_UPDATED_AT, UPDATED_AT);
+  }
   explicit SNRBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1160,8 +1178,10 @@ inline ::flatbuffers::Offset<SNR> CreateSNR(
     ::flatbuffers::Offset<SNRRfParameters> RF = 0,
     ::flatbuffers::Offset<SNROpticalParameters> OPTICAL = 0,
     ::flatbuffers::Offset<OPPProvenance> PROVENANCE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> NOTES = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> NOTES = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> UPDATED_AT = 0) {
   SNRBuilder builder_(_fbb);
+  builder_.add_UPDATED_AT(UPDATED_AT);
   builder_.add_NOTES(NOTES);
   builder_.add_PROVENANCE(PROVENANCE);
   builder_.add_OPTICAL(OPTICAL);
@@ -1198,7 +1218,8 @@ inline ::flatbuffers::Offset<SNR> CreateSNRDirect(
     ::flatbuffers::Offset<SNRRfParameters> RF = 0,
     ::flatbuffers::Offset<SNROpticalParameters> OPTICAL = 0,
     ::flatbuffers::Offset<OPPProvenance> PROVENANCE = 0,
-    const char *NOTES = nullptr) {
+    const char *NOTES = nullptr,
+    const char *UPDATED_AT = nullptr) {
   auto SENSOR_ID__ = SENSOR_ID ? _fbb.CreateString(SENSOR_ID) : 0;
   auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
   auto OBJECT_ID__ = OBJECT_ID ? _fbb.CreateString(OBJECT_ID) : 0;
@@ -1206,6 +1227,7 @@ inline ::flatbuffers::Offset<SNR> CreateSNRDirect(
   auto ENTITY_ID__ = ENTITY_ID ? _fbb.CreateString(ENTITY_ID) : 0;
   auto SPECTRAL_BANDS__ = SPECTRAL_BANDS ? _fbb.CreateVector<::flatbuffers::Offset<SNRSpectralBand>>(*SPECTRAL_BANDS) : 0;
   auto NOTES__ = NOTES ? _fbb.CreateString(NOTES) : 0;
+  auto UPDATED_AT__ = UPDATED_AT ? _fbb.CreateString(UPDATED_AT) : 0;
   return CreateSNR(
       _fbb,
       SENSOR_ID__,
@@ -1223,7 +1245,8 @@ inline ::flatbuffers::Offset<SNR> CreateSNRDirect(
       RF,
       OPTICAL,
       PROVENANCE,
-      NOTES__);
+      NOTES__,
+      UPDATED_AT__);
 }
 
 inline const SNR *GetSNR(const void *buf) {

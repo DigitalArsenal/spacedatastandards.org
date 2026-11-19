@@ -41,16 +41,16 @@ class SLO extends Table
         return $this;
     }
 
-    /// Publisher-stable identifier of this loadout. Together with the publishing key it is the
-    /// loadout's identity across versions. Recommended form: "<CONFIG_ID>@<host field value>".
+    /// Publisher-stable identifier of this loadout. Together with the publisher it is the loadout's
+    /// identity across versions. Recommended form: "<CONFIG_ID>@<host field value>".
     public function getLOADOUT_ID()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Four-character standard code of the definition, `$` included: '$SNR' or '$RFB'. Never the
-    /// union ordinal.
+    /// Four-character standard code of the definition, `$` included: '$SNR' or '$RFB' today. Never
+    /// the union ordinal. A reader skips a value it does not implement (READING RULE, step 1).
     public function getCONFIG_STANDARD()
     {
         $o = $this->__offset(6);
@@ -64,7 +64,9 @@ class SLO extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Optional content identifier pinning the exact definition bytes.
+    /// '$SNR' only: raw CIDv1 (sha2-256, base32 lowercase) of one exact version of the definition,
+    /// over its size-prefixed bytes as published. A reader that finds no version with this CID does
+    /// not resolve the loadout.
     public function getCONFIG_CID()
     {
         $o = $this->__offset(10);
@@ -126,15 +128,15 @@ class SLO extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// RFC 3339 UTC fixed-millisecond timestamp the host starts carrying the configuration,
-    /// inclusive. Absent = open.
+    /// When the host starts carrying the configuration, inclusive, exactly YYYY-MM-DDTHH:mm:ss.sssZ.
+    /// Absent = open.
     public function getVALID_FROM()
     {
         $o = $this->__offset(26);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// RFC 3339 UTC fixed-millisecond timestamp the host stops carrying it, exclusive. Absent = open.
+    /// When the host stops carrying it, exclusive, in the same form, after VALID_FROM. Absent = open.
     public function getVALID_TO()
     {
         $o = $this->__offset(28);
@@ -152,7 +154,8 @@ class SLO extends Table
     }
 
     /// Where the unit sits on the host, as the source names it (a slot, a face, a panel). Two units
-    /// of one configuration on one host differ by POSITION.
+    /// of one configuration on one host differ by POSITION. Absent: the loadout speaks for every unit
+    /// of the configuration on the host (READING RULE, step 6).
     public function getPOSITION()
     {
         $o = $this->__offset(32);
@@ -166,7 +169,7 @@ class SLO extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// How this unit sits and points, over the definition's MOUNTING (READING RULE, step 5).
+    /// How this unit sits and points, over the definition's MOUNTING (READING RULE, step 9).
     public function getMOUNTING()
     {
         $obj = new SNRMounting();
@@ -183,7 +186,7 @@ class SLO extends Table
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \sloUnitState::UNKNOWN;
     }
 
-    /// RFC 3339 UTC fixed-millisecond timestamp of this version of the loadout.
+    /// This version of the loadout, exactly YYYY-MM-DDTHH:mm:ss.sssZ.
     public function getUPDATED_AT()
     {
         $o = $this->__offset(40);
@@ -225,22 +228,37 @@ class SLO extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// $DPM.PROVIDER_PEER_ID of the publisher of the definition. Absent: the loadout's own publisher.
+    public function getCONFIG_PUBLISHER_PEER_ID()
+    {
+        $o = $this->__offset(48);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// $DPM.PROVIDER_PEER_ID of the publisher of the $EGP, $CMR or $CAT a GROUP, CONSTELLATION or BUS
+    /// scope reads. Absent: the loadout's own publisher.
+    public function getSET_PUBLISHER_PEER_ID()
+    {
+        $o = $this->__offset(50);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startSLO(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(22);
+        $builder->StartObject(24);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return SLO
      */
-    public static function createSLO(FlatBufferBuilder $builder, $LOADOUT_ID, $CONFIG_STANDARD, $CONFIG_ID, $CONFIG_CID, $HOST_SCOPE, $NORAD_CAT_ID, $SITE_ID, $ENTITY_ID, $CONSTELLATION_ID, $GROUP_ID, $BUS_ID, $VALID_FROM, $VALID_TO, $COUNT, $POSITION, $SERIAL_NUMBER, $MOUNTING, $STATUS, $UPDATED_AT, $PROVENANCE, $CITATION, $NOTES)
+    public static function createSLO(FlatBufferBuilder $builder, $LOADOUT_ID, $CONFIG_STANDARD, $CONFIG_ID, $CONFIG_CID, $HOST_SCOPE, $NORAD_CAT_ID, $SITE_ID, $ENTITY_ID, $CONSTELLATION_ID, $GROUP_ID, $BUS_ID, $VALID_FROM, $VALID_TO, $COUNT, $POSITION, $SERIAL_NUMBER, $MOUNTING, $STATUS, $UPDATED_AT, $PROVENANCE, $CITATION, $NOTES, $CONFIG_PUBLISHER_PEER_ID, $SET_PUBLISHER_PEER_ID)
     {
-        $builder->startObject(22);
+        $builder->startObject(24);
         self::addLOADOUT_ID($builder, $LOADOUT_ID);
         self::addCONFIG_STANDARD($builder, $CONFIG_STANDARD);
         self::addCONFIG_ID($builder, $CONFIG_ID);
@@ -263,6 +281,8 @@ class SLO extends Table
         self::addPROVENANCE($builder, $PROVENANCE);
         self::addCITATION($builder, $CITATION);
         self::addNOTES($builder, $NOTES);
+        self::addCONFIG_PUBLISHER_PEER_ID($builder, $CONFIG_PUBLISHER_PEER_ID);
+        self::addSET_PUBLISHER_PEER_ID($builder, $SET_PUBLISHER_PEER_ID);
         $o = $builder->endObject();
         $builder->required($o, 4);  // LOADOUT_ID
         $builder->required($o, 6);  // CONFIG_STANDARD
@@ -514,6 +534,26 @@ class SLO extends Table
     public static function addNOTES(FlatBufferBuilder $builder, $NOTES)
     {
         $builder->addOffsetX(21, $NOTES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCONFIG_PUBLISHER_PEER_ID(FlatBufferBuilder $builder, $CONFIG_PUBLISHER_PEER_ID)
+    {
+        $builder->addOffsetX(22, $CONFIG_PUBLISHER_PEER_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSET_PUBLISHER_PEER_ID(FlatBufferBuilder $builder, $SET_PUBLISHER_PEER_ID)
+    {
+        $builder->addOffsetX(23, $SET_PUBLISHER_PEER_ID, 0);
     }
 
     /**

@@ -31,12 +31,17 @@ import kotlin.math.sign
  * one DOWNLINK — sharing ID_TRANSMITTER, each carrying its own MODE,
  * FREQ_MIN, FREQ_MAX and CENTER_FREQ.
  *
- * Records with NORAD_CAT_ID 0 are a DEFINITION: one radio configuration,
- * published once, that any number of hosts carry. The definition is every
- * unbound record sharing one ID_TRANSMITTER. A $SLO (Sensor Loadout) binds it to a
- * host or to a set of hosts by CONFIG_STANDARD "\$RFB" and CONFIG_ID =
- * ID_TRANSMITTER, and carries what differs per host (dates, count, position,
- * serial number, mounting, status).
+ * DEFINITION. A record is a definition record when NORAD_CAT_ID is 0 and
+ * ID_ENTITY is absent or empty; every other record is bound to its host (a
+ * record with only ID_ENTITY, as an upstream transmitter database writes for
+ * an object with no catalogue number, is bound to that entity). A radio
+ * definition is one radio configuration, published once, that any number of
+ * hosts carry: the current definition records sharing one ID_TRANSMITTER. A
+ * $SLO (Sensor Loadout) binds it to a host or to a set of hosts by
+ * CONFIG_STANDARD "\$RFB" and CONFIG_ID = ID_TRANSMITTER, and carries what
+ * differs per host (dates, count, position, serial number, mounting, status).
+ * A corrected record is republished with the same ID and a later UPDATED_AT;
+ * the latest version from a publisher is current ($SLO READING RULE, step 1).
  */
 @Suppress("unused")
 class RFB : Table() {
@@ -216,10 +221,11 @@ class RFB : Table() {
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
     /**
-     * Identifier of the physical transmitter, transceiver or transponder this
-     * record describes (e.g. an upstream transmitter database's UUID). Uplink
-     * and downlink
-     * records of the same device share this value.
+     * Identifier of the transmitter, transceiver or transponder this record
+     * describes (e.g. an upstream transmitter database's UUID). Uplink and
+     * downlink records of the same device share this value. On a bound record
+     * it names one physical device; on a definition record it names the radio
+     * configuration, and $SLO.CONFIG_ID carries it.
      */
     val idTransmitter : String?
         get() {
@@ -307,6 +313,23 @@ class RFB : Table() {
         }
     val citationAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(52, 1)
     fun citationInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 52, 1)
+    /**
+     * RFC 3339 UTC timestamp of this version of the record, exactly
+     * YYYY-MM-DDTHH:mm:ss.sssZ. Of two records with one ID from one publisher,
+     * the later UPDATED_AT is current; a record without one is older than any
+     * record with one.
+     */
+    val updatedAt : String?
+        get() {
+            val o = __offset(54)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val updatedAtAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(54, 1)
+    fun updatedAtInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 54, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsRFB(_bb: ByteBuffer): RFB = getRootAsRFB(_bb, RFB())
@@ -315,8 +338,8 @@ class RFB : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun RFBBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$RFB")
-        fun createRFB(builder: FlatBufferBuilder, idOffset: Int, idEntityOffset: Int, nameOffset: Int, band: Byte, modeOffset: Int, purposeOffset: Int, freqMin: Double, freqMax: Double, centerFreq: Double, bandwidth: Double, peakGain: Double, edgeGain: Double, beamwidth: Double, polarization: Byte, erp: Double, eirp: Double, noradCatId: UInt, idTransmitterOffset: Int, linkDirection: Byte, baud: Double, serviceOffset: Int, xmtStatus: Byte, invert: Boolean, iaruCoordinationOffset: Int, citationOffset: Int) : Int {
-            builder.startTable(25)
+        fun createRFB(builder: FlatBufferBuilder, idOffset: Int, idEntityOffset: Int, nameOffset: Int, band: Byte, modeOffset: Int, purposeOffset: Int, freqMin: Double, freqMax: Double, centerFreq: Double, bandwidth: Double, peakGain: Double, edgeGain: Double, beamwidth: Double, polarization: Byte, erp: Double, eirp: Double, noradCatId: UInt, idTransmitterOffset: Int, linkDirection: Byte, baud: Double, serviceOffset: Int, xmtStatus: Byte, invert: Boolean, iaruCoordinationOffset: Int, citationOffset: Int, updatedAtOffset: Int) : Int {
+            builder.startTable(26)
             addBAUD(builder, baud)
             addEIRP(builder, eirp)
             addERP(builder, erp)
@@ -327,6 +350,7 @@ class RFB : Table() {
             addCENTERFREQ(builder, centerFreq)
             addFREQMAX(builder, freqMax)
             addFREQMIN(builder, freqMin)
+            addUPDATEDAT(builder, updatedAtOffset)
             addCITATION(builder, citationOffset)
             addIARUCOORDINATION(builder, iaruCoordinationOffset)
             addSERVICE(builder, serviceOffset)
@@ -344,7 +368,7 @@ class RFB : Table() {
             addBAND(builder, band)
             return endRFB(builder)
         }
-        fun startRFB(builder: FlatBufferBuilder) = builder.startTable(25)
+        fun startRFB(builder: FlatBufferBuilder) = builder.startTable(26)
         fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
         fun addIDENTITY(builder: FlatBufferBuilder, idEntity: Int) = builder.addOffset(1, idEntity, 0)
         fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(2, name, 0)
@@ -370,6 +394,7 @@ class RFB : Table() {
         fun addINVERT(builder: FlatBufferBuilder, invert: Boolean) = builder.addBoolean(22, invert, false)
         fun addIARUCOORDINATION(builder: FlatBufferBuilder, iaruCoordination: Int) = builder.addOffset(23, iaruCoordination, 0)
         fun addCITATION(builder: FlatBufferBuilder, citation: Int) = builder.addOffset(24, citation, 0)
+        fun addUPDATEDAT(builder: FlatBufferBuilder, updatedAt: Int) = builder.addOffset(25, updatedAt, 0)
         fun endRFB(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

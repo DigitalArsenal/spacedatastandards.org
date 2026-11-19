@@ -20,12 +20,17 @@ import (
 /// one DOWNLINK — sharing ID_TRANSMITTER, each carrying its own MODE,
 /// FREQ_MIN, FREQ_MAX and CENTER_FREQ.
 ///
-/// Records with NORAD_CAT_ID 0 are a DEFINITION: one radio configuration,
-/// published once, that any number of hosts carry. The definition is every
-/// unbound record sharing one ID_TRANSMITTER. A $SLO (Sensor Loadout) binds it to a
-/// host or to a set of hosts by CONFIG_STANDARD "$RFB" and CONFIG_ID =
-/// ID_TRANSMITTER, and carries what differs per host (dates, count, position,
-/// serial number, mounting, status).
+/// DEFINITION. A record is a definition record when NORAD_CAT_ID is 0 and
+/// ID_ENTITY is absent or empty; every other record is bound to its host (a
+/// record with only ID_ENTITY, as an upstream transmitter database writes for
+/// an object with no catalogue number, is bound to that entity). A radio
+/// definition is one radio configuration, published once, that any number of
+/// hosts carry: the current definition records sharing one ID_TRANSMITTER. A
+/// $SLO (Sensor Loadout) binds it to a host or to a set of hosts by
+/// CONFIG_STANDARD "$RFB" and CONFIG_ID = ID_TRANSMITTER, and carries what
+/// differs per host (dates, count, position, serial number, mounting, status).
+/// A corrected record is republished with the same ID and a later UPDATED_AT;
+/// the latest version from a publisher is current ($SLO READING RULE, step 1).
 type RFB struct {
 	_tab flatbuffers.Table
 }
@@ -409,10 +414,11 @@ func (rcv *RFB) MutateNoradCatId(n uint32) bool {
 	return rcv.MutateNORAD_CAT_ID(n)
 }
 
-/// Identifier of the physical transmitter, transceiver or transponder this
-/// record describes (e.g. an upstream transmitter database's UUID). Uplink
-/// and downlink
-/// records of the same device share this value.
+/// Identifier of the transmitter, transceiver or transponder this record
+/// describes (e.g. an upstream transmitter database's UUID). Uplink and
+/// downlink records of the same device share this value. On a bound record
+/// it names one physical device; on a definition record it names the radio
+/// configuration, and $SLO.CONFIG_ID carries it.
 func (rcv *RFB) ID_TRANSMITTER() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
 	if o != 0 {
@@ -425,10 +431,11 @@ func (rcv *RFB) IdTransmitter() []byte {
 	return rcv.ID_TRANSMITTER()
 }
 
-/// Identifier of the physical transmitter, transceiver or transponder this
-/// record describes (e.g. an upstream transmitter database's UUID). Uplink
-/// and downlink
-/// records of the same device share this value.
+/// Identifier of the transmitter, transceiver or transponder this record
+/// describes (e.g. an upstream transmitter database's UUID). Uplink and
+/// downlink records of the same device share this value. On a bound record
+/// it names one physical device; on a definition record it names the radio
+/// configuration, and $SLO.CONFIG_ID carries it.
 /// Direction of this emission relative to the spacecraft.
 func (rcv *RFB) LINK_DIRECTION() linkCategory {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
@@ -561,8 +568,28 @@ func (rcv *RFB) Citation() []byte {
 
 /// Attribution/citation string the source license requires this record to
 /// carry downstream.
+/// RFC 3339 UTC timestamp of this version of the record, exactly
+/// YYYY-MM-DDTHH:mm:ss.sssZ. Of two records with one ID from one publisher,
+/// the later UPDATED_AT is current; a record without one is older than any
+/// record with one.
+func (rcv *RFB) UPDATED_AT() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *RFB) UpdatedAt() []byte {
+	return rcv.UPDATED_AT()
+}
+
+/// RFC 3339 UTC timestamp of this version of the record, exactly
+/// YYYY-MM-DDTHH:mm:ss.sssZ. Of two records with one ID from one publisher,
+/// the later UPDATED_AT is current; a record without one is older than any
+/// record with one.
 func RFBStart(builder *flatbuffers.Builder) {
-	builder.StartObject(25)
+	builder.StartObject(26)
 }
 func RFBAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
@@ -713,6 +740,12 @@ func RFBAddCITATION(builder *flatbuffers.Builder, CITATION flatbuffers.UOffsetT)
 }
 func RFBAddCitation(builder *flatbuffers.Builder, CITATION flatbuffers.UOffsetT) {
 	RFBAddCITATION(builder, CITATION)
+}
+func RFBAddUPDATED_AT(builder *flatbuffers.Builder, UPDATED_AT flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(25, flatbuffers.UOffsetT(UPDATED_AT), 0)
+}
+func RFBAddUpdatedAt(builder *flatbuffers.Builder, UPDATED_AT flatbuffers.UOffsetT) {
+	RFBAddUPDATED_AT(builder, UPDATED_AT)
 }
 func RFBEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

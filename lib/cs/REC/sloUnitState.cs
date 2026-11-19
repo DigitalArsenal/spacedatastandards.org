@@ -15,8 +15,8 @@ public enum sloUnitState : sbyte
   DEGRADED = 3,
   /// Carried and working, held out of service.
   STANDBY = 4,
-  /// Carried and not working.
+  /// Carried and not working. A failed unit is still on board and stays in the answer.
   FAILED = 5,
-  /// No longer carried or no longer used. A winning RETIRED loadout removes the unit.
+  /// No longer carried. A winning RETIRED loadout takes the unit out of the answer.
   RETIRED = 6,
 };
