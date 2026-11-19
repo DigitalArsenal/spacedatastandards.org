@@ -243,6 +243,7 @@ import SKI.main_generated
 import SKQ.main_generated
 import SKR.main_generated
 import SKT.main_generated
+import SLO.main_generated
 import SLP.main_generated
 import SNR.main_generated
 import SNW.main_generated
@@ -1002,6 +1003,7 @@ enum RecordTypeExtended:
     RecordTypeExtended_MOR = 296
     RecordTypeExtended_DRB = 297
     RecordTypeExtended_COA = 298
+    RecordTypeExtended_SLO = 299
 
 class Record
 

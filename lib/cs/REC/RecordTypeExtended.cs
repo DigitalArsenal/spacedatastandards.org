@@ -55,4 +55,5 @@ public enum RecordTypeExtended : ushort
   MOR = 296,
   DRB = 297,
   COA = 298,
+  SLO = 299,
 };

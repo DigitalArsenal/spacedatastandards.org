@@ -30,6 +30,13 @@ import java.nio.ByteOrder;
  * transponder is therefore represented as TWO RFB records — one UPLINK and
  * one DOWNLINK — sharing ID_TRANSMITTER, each carrying its own MODE,
  * FREQ_MIN, FREQ_MAX and CENTER_FREQ.
+ *
+ * Records with NORAD_CAT_ID 0 are a DEFINITION: one radio configuration,
+ * published once, that any number of hosts carry. The definition is every
+ * unbound record sharing one ID_TRANSMITTER. A $SLO (Sensor Loadout) binds it to a
+ * host or to a set of hosts by CONFIG_STANDARD "$RFB" and CONFIG_ID =
+ * ID_TRANSMITTER, and carries what differs per host (dates, count, position,
+ * serial number, mounting, status).
  */
 @SuppressWarnings("unused")
 public final class RFB extends com.google.flatbuffers.Table {

@@ -401,3 +401,36 @@ events on sampled ephemerides.
 `scripts/e2e/pcf-config.mjs` round-trips a fully populated `$PCF` and a `$PRW`
 execution request through the generated JS, C++ and Go; it derives its fixture
 from the schema, so a field added later is covered by the next run.
+
+### What a host carries lives in SDS ($SLO, 1.290.0)
+
+A sensor or radio that many hosts carry is published ONCE as a definition: an
+`$SNR` with no platform field, or the `$RFB` records with `NORAD_CAT_ID` 0 that
+share one `ID_TRANSMITTER`. A `$SLO` (Sensor Loadout) says that a host, or a
+set of hosts, carries it, by `CONFIG_STANDARD` + `CONFIG_ID`, and carries only
+what differs per host: `VALID_FROM`/`VALID_TO`, `COUNT`, `POSITION`,
+`SERIAL_NUMBER`, a `MOUNTING` override (the `SNRMounting` table) and `STATUS`.
+A loadout never copies the definition's values.
+
+Exactly one host field is set and `HOST_SCOPE` names it: one object
+(`NORAD_CAT_ID`), one site (`SITE_ID`), one entity (`ENTITY_ID`), or a set: a
+constellation (`$CMR.CONSTELLATION_ID`, members with `STATE` ACTIVE), a group
+(`$EGP.GROUP_ID`, its latest version) or a bus (`$BUS.ID`, matched on
+`$CAT.BUS_ID`). A reader rejects a loadout with no host field or with two.
+
+To answer "what does host H carry at time T": collect the definitions bound
+to H directly and every loadout that reaches H through its own scope; drop
+loadouts whose dates exclude T; for each (`CONFIG_STANDARD`, `CONFIG_ID`,
+`POSITION`) keep the most specific scope (one host, then group, then bus,
+then constellation; a loadout beats a direct binding; a tie goes to the later
+`UPDATED_AT`, then the lower `LOADOUT_ID`); a winner with `STATUS` RETIRED
+removes the unit; lay the winner's `MOUNTING` over the definition's field by
+field. The full rule is the header of `schema/SLO/main.fbs`.
+
+The code is `SLO`, not `LDO`: `$SLO` includes `$SNR`, six standards have a
+field named `SNR`, and flatc refuses a field named like a table it has
+already read, so a standard that includes `$SNR` sorts after `$SDR`.
+
+`scripts/e2e/loadout.mjs` writes definitions, hosts, groups, memberships and
+loadouts to one `$REC` file, reads it back and checks the rule's answers for
+one object, a group, a bus and a constellation at two times.

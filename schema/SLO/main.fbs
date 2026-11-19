@@ -1,0 +1,157 @@
+// Hash: 0aee208891e1e7bd1788e24f641bb1f41121f0103c0cf24793e2d2218487cffd
+// Version: 1.289.0
+// -----------------------------------END_HEADER
+// Sensor Loadout (SLO)
+// Description
+// One statement that a host, or a set of hosts, carries one published configuration: a sensor
+// definition ($SNR with no platform) or a radio definition ($RFB records with NORAD_CAT_ID 0 that
+// share one ID_TRANSMITTER). The definition is published once; a loadout names it by id and carries
+// only what differs per host. A loadout never copies the definition's values.
+//
+// Configuration. CONFIG_STANDARD is "$SNR" or "$RFB". CONFIG_ID is the definition's SENSOR_ID for
+// "$SNR", or its ID_TRANSMITTER for "$RFB" (every unbound $RFB record with that ID_TRANSMITTER is
+// part of the configuration). A loadout names definitions only: a CONFIG_ID found only on a record
+// that has a host does not resolve.
+//
+// Host. Exactly one host field is set, and HOST_SCOPE names it:
+//   OBJECT         NORAD_CAT_ID      one catalogued object ($CAT)
+//   SITE           SITE_ID           one ground site ($SIT.ID)
+//   ENTITY         ENTITY_ID         one platform with neither a catalogue number nor a $SIT
+//   CONSTELLATION  CONSTELLATION_ID  every object a $CMR places in that constellation with STATE ACTIVE
+//   GROUP          GROUP_ID          every member of that $EGP (the latest UPDATED_AT of the group)
+//   BUS            BUS_ID            every object whose $CAT.BUS_ID is that $BUS.ID
+// A reader rejects a record whose HOST_SCOPE is UNSPECIFIED, whose named field is empty, or that
+// sets any other host field. An object with no catalogue number is an ENTITY.
+//
+// Versions. A loadout is versioned like an $EGP: each publication is a full record keyed LOADOUT_ID +
+// UPDATED_AT, and the latest UPDATED_AT from a given publisher wins. A unit taken out of service is a
+// new version with VALID_TO or STATUS RETIRED, never a deleted record.
+//
+// READING RULE: what host H carries at time T.
+//   1. Collect the candidate bindings:
+//      a. every $SNR or $RFB bound to H directly (an $SNR whose NORAD_CAT_ID, SITE_ID or ENTITY_ID is
+//         H; the $RFB records whose NORAD_CAT_ID is H, one binding per ID_TRANSMITTER). It ranks as
+//         a single-host binding with no per-host fields;
+//      b. every loadout with scope OBJECT, SITE or ENTITY whose host field is H;
+//      c. every loadout with scope GROUP whose $EGP has H as a member (for an object: a member whose
+//         NORAD_CAT_ID is H; for a site: STANDARD "$SIT" and RECORD_ID = SITE_ID; for an entity:
+//         RECORD_ID = ENTITY_ID);
+//      d. every loadout with scope BUS whose BUS_ID equals H's $CAT.BUS_ID;
+//      e. every loadout with scope CONSTELLATION for which a $CMR of H with STATE ACTIVE carries that
+//         CONSTELLATION_ID.
+//   2. Drop every loadout whose dates exclude T. VALID_FROM is inclusive, VALID_TO is exclusive, and
+//      an absent date is open.
+//   3. Group what is left by (CONFIG_STANDARD, CONFIG_ID, POSITION). In each group the most specific
+//      scope wins: a single host (OBJECT, SITE, ENTITY, or a direct binding) before GROUP, GROUP before
+//      BUS, BUS before CONSTELLATION. A loadout beats a direct binding of the same key. Two winners of
+//      the same scope: the later UPDATED_AT wins; on a tie the reader reports a conflict and keeps the
+//      lower LOADOUT_ID in byte order, so every reader gives the same answer.
+//   4. A winner with STATUS RETIRED removes that unit from the answer. Every other winner is one unit
+//      in the answer, with its COUNT, POSITION, SERIAL_NUMBER, STATUS and dates.
+//   5. Look up the definition. Lay MOUNTING over the definition's MOUNTING field by field: a stated
+//      field of the loadout (an angle that is not NaN, an enum that is not UNSPECIFIED, a PROVENANCE
+//      that is present) replaces the definition's; every other field is the definition's. A publisher
+//      that changes FRAME states every angle it means in the new frame. An $RFB definition has no
+//      MOUNTING, so the loadout's MOUNTING is the whole mounting of that radio.
+//
+// UNKNOWN IS ABSENT, as in $SNR: COUNT 0 is not stated, an unset enum is its UNSPECIFIED or UNKNOWN
+// member, an unset string or table is absent.
+//
+// The code is SLO and not LDO on purpose. $SLO includes $SNR for SNRMounting, and $DOA, $IRO, $RDO,
+// $RFO, $SAR and $SDR each have a field named SNR. flatc refuses a field named like a table it has
+// already read, and $REC includes every standard in code order, so a standard that includes $SNR
+// must sort after $SDR.
+
+include "../SNR/main.fbs";
+
+/// Which host field of a $SLO is set. Exactly one host field per record. Ordinals are wire values:
+/// append only.
+enum sloHostScope : byte {
+  /// Not stated. A reader rejects the record.
+  UNSPECIFIED = 0,
+  /// One catalogued object: NORAD_CAT_ID.
+  OBJECT = 1,
+  /// One ground site: SITE_ID.
+  SITE = 2,
+  /// One platform with neither a catalogue number nor a $SIT: ENTITY_ID.
+  ENTITY = 3,
+  /// Every current member of a constellation: CONSTELLATION_ID.
+  CONSTELLATION = 4,
+  /// Every member of an entity group: GROUP_ID.
+  GROUP = 5,
+  /// Every object built on a bus design: BUS_ID.
+  BUS = 6
+}
+
+/// The state of the carried unit. Ordinals are wire values: append only.
+enum sloUnitState : byte {
+  /// Not stated.
+  UNKNOWN = 0,
+  /// Announced or filed, not yet in service.
+  PLANNED = 1,
+  /// In service.
+  OPERATIONAL = 2,
+  /// In service with reduced performance.
+  DEGRADED = 3,
+  /// Carried and working, held out of service.
+  STANDBY = 4,
+  /// Carried and not working.
+  FAILED = 5,
+  /// No longer carried or no longer used. A winning RETIRED loadout removes the unit.
+  RETIRED = 6
+}
+
+/// Loadout: one host, or one set of hosts, carries one published configuration.
+table SLO {
+  /// Publisher-stable identifier of this loadout. Together with the publishing key it is the
+  /// loadout's identity across versions. Recommended form: "<CONFIG_ID>@<host field value>".
+  LOADOUT_ID:string (required);
+  /// Four-character standard code of the definition, `$` included: "$SNR" or "$RFB". Never the
+  /// union ordinal.
+  CONFIG_STANDARD:string (required);
+  /// The definition's id, verbatim: $SNR.SENSOR_ID, or $RFB.ID_TRANSMITTER.
+  CONFIG_ID:string (required);
+  /// Optional content identifier pinning the exact definition bytes.
+  CONFIG_CID:string;
+  /// Which host field is set.
+  HOST_SCOPE:sloHostScope = UNSPECIFIED;
+  /// OBJECT: $CAT.NORAD_CAT_ID of the host. 0 = not this scope.
+  NORAD_CAT_ID:uint;
+  /// SITE: $SIT.ID of the host.
+  SITE_ID:string;
+  /// ENTITY: stable non-catalogue entity key of the host, as $SNR.ENTITY_ID.
+  ENTITY_ID:string;
+  /// CONSTELLATION: $CMR.CONSTELLATION_ID of the host set.
+  CONSTELLATION_ID:string;
+  /// GROUP: $EGP.GROUP_ID of the host set.
+  GROUP_ID:string;
+  /// BUS: $BUS.ID of the host set, matched against $CAT.BUS_ID.
+  BUS_ID:string;
+  /// RFC 3339 UTC fixed-millisecond timestamp the host starts carrying the configuration,
+  /// inclusive. Absent = open.
+  VALID_FROM:string;
+  /// RFC 3339 UTC fixed-millisecond timestamp the host stops carrying it, exclusive. Absent = open.
+  VALID_TO:string;
+  /// Units of this configuration on each host. 0 = not stated.
+  COUNT:uint;
+  /// Where the unit sits on the host, as the source names it (a slot, a face, a panel). Two units
+  /// of one configuration on one host differ by POSITION.
+  POSITION:string;
+  /// Serial number of the unit, for a single-host loadout.
+  SERIAL_NUMBER:string;
+  /// How this unit sits and points, over the definition's MOUNTING (READING RULE, step 5).
+  MOUNTING:SNRMounting;
+  STATUS:sloUnitState = UNKNOWN;
+  /// RFC 3339 UTC fixed-millisecond timestamp of this version of the loadout.
+  UPDATED_AT:string (required);
+  /// Where the binding was read, one entry per source: a filing, the operator, a catalogue. A
+  /// user-made loadout carries METHOD USER_DEFINED.
+  PROVENANCE:[OPPProvenance] (required);
+  /// Attribution or citation string the source license requires this record to carry downstream.
+  CITATION:string;
+  /// Publisher note; never a substitute for a field.
+  NOTES:string;
+}
+
+root_type SLO;
+file_identifier "$SLO";
