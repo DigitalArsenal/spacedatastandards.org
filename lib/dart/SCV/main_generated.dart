@@ -241,7 +241,8 @@ class _scvSensorAxisConventionReader extends fb.Reader<scvSensorAxisConvention> 
 
 enum scvSensorRangeBoundaryKind {
   RADIAL_SPHERICAL(0),
-  LOCAL_Z_PLANE(1);
+  LOCAL_Z_PLANE(1),
+  ALTITUDE_SHELL(2);
 
   final int value;
   const scvSensorRangeBoundaryKind(this.value);
@@ -250,6 +251,7 @@ enum scvSensorRangeBoundaryKind {
     switch (value) {
       case 0: return scvSensorRangeBoundaryKind.RADIAL_SPHERICAL;
       case 1: return scvSensorRangeBoundaryKind.LOCAL_Z_PLANE;
+      case 2: return scvSensorRangeBoundaryKind.ALTITUDE_SHELL;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -258,7 +260,7 @@ enum scvSensorRangeBoundaryKind {
       value == null ? null : scvSensorRangeBoundaryKind.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 1;
+  static const int maxValue = 2;
   static const fb.Reader<scvSensorRangeBoundaryKind> reader = _scvSensorRangeBoundaryKindReader();
 }
 
@@ -1080,10 +1082,19 @@ class SCVSensorShapeContract {
   ///  Clips the shape: a direction below the mask is outside the field of view.
   List<SCVAzElMaskPoint>? get AZ_EL_MASK => const fb.ListReader<SCVAzElMaskPoint>(SCVAzElMaskPoint.reader).vTableGetNullable(_bc, _bcOffset, 36);
   List<SCVAzElMaskPoint>? get azElMask => AZ_EL_MASK;
+  ///  For RANGE_BOUNDARY ALTITUDE_SHELL: the altitude ceiling, meters above ALTITUDE_REFERENCE. The ceiling surface is
+  ///  the reference ellipsoid with every semi-axis made MAX_ALTITUDE_M longer, centered on the body and in its fixed
+  ///  frame: on a sphere exactly MAX_ALTITUDE_M above it; on WGS84 within 3 m of the geodetic height up to 2,000 km.
+  double get MAX_ALTITUDE_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
+  double get maxAltitudeM => MAX_ALTITUDE_M;
+  ///  The surface MAX_ALTITUDE_M is measured from. Absent: the standard ellipsoid of the body the sensor is on (WGS84
+  ///  on the Earth). SEMI_INTERMEDIATE_M 0 is SEMI_MAJOR_M (an ellipsoid of revolution); a sphere has equal semi-axes.
+  SCVEllipsoid? get ALTITUDE_REFERENCE => SCVEllipsoid.reader.vTableGetNullable(_bc, _bcOffset, 40);
+  SCVEllipsoid? get altitudeReference => ALTITUDE_REFERENCE;
 
   @override
   String toString() {
-    return 'SCVSensorShapeContract{shapeKind: ${shapeKind}, axisConvention: ${axisConvention}, rangeBoundary: ${rangeBoundary}, outerHalfAngleDeg: ${outerHalfAngleDeg}, innerHalfAngleDeg: ${innerHalfAngleDeg}, minClockAngleDeg: ${minClockAngleDeg}, maxClockAngleDeg: ${maxClockAngleDeg}, xHalfAngleDeg: ${xHalfAngleDeg}, yHalfAngleDeg: ${yHalfAngleDeg}, innerLookAngleDeg: ${innerLookAngleDeg}, outerLookAngleDeg: ${outerLookAngleDeg}, sarSamplingDensity: ${sarSamplingDensity}, minRangeM: ${minRangeM}, maxRangeM: ${maxRangeM}, polygonVertices: ${polygonVertices}, polygonFrame: ${polygonFrame}, azElMask: ${azElMask}}';
+    return 'SCVSensorShapeContract{shapeKind: ${shapeKind}, axisConvention: ${axisConvention}, rangeBoundary: ${rangeBoundary}, outerHalfAngleDeg: ${outerHalfAngleDeg}, innerHalfAngleDeg: ${innerHalfAngleDeg}, minClockAngleDeg: ${minClockAngleDeg}, maxClockAngleDeg: ${maxClockAngleDeg}, xHalfAngleDeg: ${xHalfAngleDeg}, yHalfAngleDeg: ${yHalfAngleDeg}, innerLookAngleDeg: ${innerLookAngleDeg}, outerLookAngleDeg: ${outerLookAngleDeg}, sarSamplingDensity: ${sarSamplingDensity}, minRangeM: ${minRangeM}, maxRangeM: ${maxRangeM}, polygonVertices: ${polygonVertices}, polygonFrame: ${polygonFrame}, azElMask: ${azElMask}, maxAltitudeM: ${maxAltitudeM}, altitudeReference: ${altitudeReference}}';
   }
 }
 
@@ -1101,7 +1112,7 @@ class SCVSensorShapeContractBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(17);
+    fbBuilder.startTable(19);
   }
 
   int addShapeKind(scvSensorShapeKind? SHAPE_KIND) {
@@ -1172,6 +1183,14 @@ class SCVSensorShapeContractBuilder {
     fbBuilder.addOffset(16, offset);
     return fbBuilder.offset;
   }
+  int addMaxAltitudeM(double? MAX_ALTITUDE_M) {
+    fbBuilder.addFloat64(17, MAX_ALTITUDE_M);
+    return fbBuilder.offset;
+  }
+  int addAltitudeReferenceOffset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1196,6 +1215,8 @@ class SCVSensorShapeContractObjectBuilder extends fb.ObjectBuilder {
   final List<SCVVec3ObjectBuilder>? _POLYGON_VERTICES;
   final scvCoordinateFrame? _POLYGON_FRAME;
   final List<SCVAzElMaskPointObjectBuilder>? _AZ_EL_MASK;
+  final double? _MAX_ALTITUDE_M;
+  final SCVEllipsoidObjectBuilder? _ALTITUDE_REFERENCE;
 
   SCVSensorShapeContractObjectBuilder({
     scvSensorShapeKind? SHAPE_KIND,
@@ -1232,6 +1253,10 @@ class SCVSensorShapeContractObjectBuilder extends fb.ObjectBuilder {
     scvCoordinateFrame? polygonFrame,
     List<SCVAzElMaskPointObjectBuilder>? AZ_EL_MASK,
     List<SCVAzElMaskPointObjectBuilder>? azElMask,
+    double? MAX_ALTITUDE_M,
+    double? maxAltitudeM,
+    SCVEllipsoidObjectBuilder? ALTITUDE_REFERENCE,
+    SCVEllipsoidObjectBuilder? altitudeReference,
   })
       : _SHAPE_KIND = shapeKind ?? SHAPE_KIND,
         _AXIS_CONVENTION = axisConvention ?? AXIS_CONVENTION,
@@ -1249,7 +1274,9 @@ class SCVSensorShapeContractObjectBuilder extends fb.ObjectBuilder {
         _MAX_RANGE_M = maxRangeM ?? MAX_RANGE_M,
         _POLYGON_VERTICES = polygonVertices ?? POLYGON_VERTICES,
         _POLYGON_FRAME = polygonFrame ?? POLYGON_FRAME,
-        _AZ_EL_MASK = azElMask ?? AZ_EL_MASK;
+        _AZ_EL_MASK = azElMask ?? AZ_EL_MASK,
+        _MAX_ALTITUDE_M = maxAltitudeM ?? MAX_ALTITUDE_M,
+        _ALTITUDE_REFERENCE = altitudeReference ?? ALTITUDE_REFERENCE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1258,7 +1285,8 @@ class SCVSensorShapeContractObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeList(_POLYGON_VERTICES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? AZ_EL_MASKOffset = _AZ_EL_MASK == null ? null
         : fbBuilder.writeList(_AZ_EL_MASK!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(17);
+    final int? ALTITUDE_REFERENCEOffset = _ALTITUDE_REFERENCE?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(19);
     fbBuilder.addUint8(0, _SHAPE_KIND?.value);
     fbBuilder.addUint8(1, _AXIS_CONVENTION?.value);
     fbBuilder.addUint8(2, _RANGE_BOUNDARY?.value);
@@ -1276,6 +1304,8 @@ class SCVSensorShapeContractObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(14, POLYGON_VERTICESOffset);
     fbBuilder.addUint8(15, _POLYGON_FRAME?.value);
     fbBuilder.addOffset(16, AZ_EL_MASKOffset);
+    fbBuilder.addFloat64(17, _MAX_ALTITUDE_M);
+    fbBuilder.addOffset(18, ALTITUDE_REFERENCEOffset);
     return fbBuilder.endTable();
   }
 

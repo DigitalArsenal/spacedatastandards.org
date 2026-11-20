@@ -1,5 +1,6 @@
 import * as flatbuffers from 'flatbuffers';
 import { SCVAzElMaskPoint, SCVAzElMaskPointT } from './SCVAzElMaskPoint.js';
+import { SCVEllipsoid, SCVEllipsoidT } from './SCVEllipsoid.js';
 import { SCVVec3, SCVVec3T } from './SCVVec3.js';
 import { scvCoordinateFrame } from './scvCoordinateFrame.js';
 import { scvSensorAxisConvention } from './scvSensorAxisConvention.js';
@@ -39,6 +40,17 @@ export declare class SCVSensorShapeContract implements flatbuffers.IUnpackableOb
      */
     AZ_EL_MASK(index: number, obj?: SCVAzElMaskPoint): SCVAzElMaskPoint | null;
     azElMaskLength(): number;
+    /**
+     * For RANGE_BOUNDARY ALTITUDE_SHELL: the altitude ceiling, meters above ALTITUDE_REFERENCE. The ceiling surface is
+     * the reference ellipsoid with every semi-axis made MAX_ALTITUDE_M longer, centered on the body and in its fixed
+     * frame: on a sphere exactly MAX_ALTITUDE_M above it; on WGS84 within 3 m of the geodetic height up to 2,000 km.
+     */
+    MAX_ALTITUDE_M(): number;
+    /**
+     * The surface MAX_ALTITUDE_M is measured from. Absent: the standard ellipsoid of the body the sensor is on (WGS84
+     * on the Earth). SEMI_INTERMEDIATE_M 0 is SEMI_MAJOR_M (an ellipsoid of revolution); a sphere has equal semi-axes.
+     */
+    ALTITUDE_REFERENCE(obj?: SCVEllipsoid): SCVEllipsoid | null;
     static startSCVSensorShapeContract(builder: flatbuffers.Builder): void;
     static addShapeKind(builder: flatbuffers.Builder, SHAPE_KIND: scvSensorShapeKind): void;
     static addAxisConvention(builder: flatbuffers.Builder, AXIS_CONVENTION: scvSensorAxisConvention): void;
@@ -61,8 +73,9 @@ export declare class SCVSensorShapeContract implements flatbuffers.IUnpackableOb
     static addAzElMask(builder: flatbuffers.Builder, AZ_EL_MASKOffset: flatbuffers.Offset): void;
     static createAzElMaskVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startAzElMaskVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addMaxAltitudeM(builder: flatbuffers.Builder, MAX_ALTITUDE_M: number): void;
+    static addAltitudeReference(builder: flatbuffers.Builder, ALTITUDE_REFERENCEOffset: flatbuffers.Offset): void;
     static endSCVSensorShapeContract(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createSCVSensorShapeContract(builder: flatbuffers.Builder, SHAPE_KIND: scvSensorShapeKind, AXIS_CONVENTION: scvSensorAxisConvention, RANGE_BOUNDARY: scvSensorRangeBoundaryKind, OUTER_HALF_ANGLE_DEG: number, INNER_HALF_ANGLE_DEG: number, MIN_CLOCK_ANGLE_DEG: number, MAX_CLOCK_ANGLE_DEG: number, X_HALF_ANGLE_DEG: number, Y_HALF_ANGLE_DEG: number, INNER_LOOK_ANGLE_DEG: number, OUTER_LOOK_ANGLE_DEG: number, SAR_SAMPLING_DENSITY: number, MIN_RANGE_M: number, MAX_RANGE_M: number, POLYGON_VERTICESOffset: flatbuffers.Offset, POLYGON_FRAME: scvCoordinateFrame, AZ_EL_MASKOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): SCVSensorShapeContractT;
     unpackTo(_o: SCVSensorShapeContractT): void;
 }
@@ -84,7 +97,9 @@ export declare class SCVSensorShapeContractT implements flatbuffers.IGeneratedOb
     POLYGON_VERTICES: (SCVVec3T)[];
     POLYGON_FRAME: scvCoordinateFrame;
     AZ_EL_MASK: (SCVAzElMaskPointT)[];
-    constructor(SHAPE_KIND?: scvSensorShapeKind, AXIS_CONVENTION?: scvSensorAxisConvention, RANGE_BOUNDARY?: scvSensorRangeBoundaryKind, OUTER_HALF_ANGLE_DEG?: number, INNER_HALF_ANGLE_DEG?: number, MIN_CLOCK_ANGLE_DEG?: number, MAX_CLOCK_ANGLE_DEG?: number, X_HALF_ANGLE_DEG?: number, Y_HALF_ANGLE_DEG?: number, INNER_LOOK_ANGLE_DEG?: number, OUTER_LOOK_ANGLE_DEG?: number, SAR_SAMPLING_DENSITY?: number, MIN_RANGE_M?: number, MAX_RANGE_M?: number, POLYGON_VERTICES?: (SCVVec3T)[], POLYGON_FRAME?: scvCoordinateFrame, AZ_EL_MASK?: (SCVAzElMaskPointT)[]);
+    MAX_ALTITUDE_M: number;
+    ALTITUDE_REFERENCE: SCVEllipsoidT | null;
+    constructor(SHAPE_KIND?: scvSensorShapeKind, AXIS_CONVENTION?: scvSensorAxisConvention, RANGE_BOUNDARY?: scvSensorRangeBoundaryKind, OUTER_HALF_ANGLE_DEG?: number, INNER_HALF_ANGLE_DEG?: number, MIN_CLOCK_ANGLE_DEG?: number, MAX_CLOCK_ANGLE_DEG?: number, X_HALF_ANGLE_DEG?: number, Y_HALF_ANGLE_DEG?: number, INNER_LOOK_ANGLE_DEG?: number, OUTER_LOOK_ANGLE_DEG?: number, SAR_SAMPLING_DENSITY?: number, MIN_RANGE_M?: number, MAX_RANGE_M?: number, POLYGON_VERTICES?: (SCVVec3T)[], POLYGON_FRAME?: scvCoordinateFrame, AZ_EL_MASK?: (SCVAzElMaskPointT)[], MAX_ALTITUDE_M?: number, ALTITUDE_REFERENCE?: SCVEllipsoidT | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=SCVSensorShapeContract.d.ts.map

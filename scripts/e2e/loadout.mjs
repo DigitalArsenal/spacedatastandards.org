@@ -49,12 +49,14 @@ try {
   assert.equal(ordinals.extended_ordinals.SLO, 299, '$SLO is wide record type 299');
   assert.deepEqual(Object.entries(ordinals.extended_ordinals).filter(([, v]) => v === 299).map(([k]) => k), ['SLO'], 'no other standard holds 299');
   assert.equal(ordinals.ordinals.SLO, undefined, '$SLO is not in the full union');
-  // $SNR and $RFB: comment-only. [number of types, first 16 hex of the digest over their signatures] at 1.289.0.
-  for (const [code, want] of Object.entries({ SNR: [69, '720f97426e63080b'], RFB: [7, '4b08c1b6b2f3e74f'] })) {
+  // $SNR and $RFB: comment-only. [number of types, first 16 hex of the digest over their signatures] at 1.289.0 (SNR
+  // '720f97426e63080b'), SNR refreshed for 1.291.0 after appends only: $SCV's scvSensorRangeBoundaryKind ALTITUDE_SHELL = 2
+  // and SCVSensorShapeContract MAX_ALTITUDE_M, ALTITUDE_REFERENCE (scv-altitude-ceiling.mjs checks them against 1.290.0).
+  for (const [code, want] of Object.entries({ SNR: [69, 'bab258039c62b920'], RFB: [7, '4b08c1b6b2f3e74f'] })) {
     const m = parseIdl(schemaRoot, code);
     const sigs = [...[...m.tables].map(([n, t]) => `T${n}:${t.fields.map(fieldSig).join(';')}`),
       ...[...m.enums].map(([n, e]) => `E${n}:${e.base}|${e.members.map((x) => `${x.name}=${x.value}`).join(';')}`)].sort();
-    assert.deepEqual([sigs.length, sha(sigs.join('\n')).slice(0, 16)], want, `${code}: every type, field and member as in 1.289.0`);
+    assert.deepEqual([sigs.length, sha(sigs.join('\n')).slice(0, 16)], want, `${code}: every type, field and member as in 1.289.0, with the appends noted above`);
   }
   // flatc refuses a field named like a table it has already read, and $REC includes in code order.
   const withSnrField = fs.readdirSync(schemaRoot).filter((c) => fs.existsSync(path.join(schemaRoot, c, 'main.fbs'))

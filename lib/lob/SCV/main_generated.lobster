@@ -44,6 +44,11 @@ enum scvSensorAxisConvention:
 enum scvSensorRangeBoundaryKind:
     scvSensorRangeBoundaryKind_RADIAL_SPHERICAL = 0
     scvSensorRangeBoundaryKind_LOCAL_Z_PLANE = 1
+    /// The volume ends at an altitude ceiling: each direction of the shape reaches as far as the ceiling surface of
+    /// SCVSensorShapeContract.MAX_ALTITUDE_M, so each direction ends at its own distance from the sensor, and the volume's
+    /// top is that surface. MAX_RANGE_M, when more than 0, still bounds every direction as well. A sensor at or above its
+    /// ceiling has no volume.
+    scvSensorRangeBoundaryKind_ALTITUDE_SHELL = 2
 
 enum scvGeometryDomain:
     scvGeometryDomain_SURFACE = 0
@@ -346,13 +351,23 @@ class SCVSensorShapeContract : flatbuffers.handle
         return SCVAzElMaskPoint { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 36) + i * 4) }
     def AZ_EL_MASK_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 36)
+    /// For RANGE_BOUNDARY ALTITUDE_SHELL: the altitude ceiling, meters above ALTITUDE_REFERENCE. The ceiling surface is
+    /// the reference ellipsoid with every semi-axis made MAX_ALTITUDE_M longer, centered on the body and in its fixed
+    /// frame: on a sphere exactly MAX_ALTITUDE_M above it; on WGS84 within 3 m of the geodetic height up to 2,000 km.
+    def MAX_ALTITUDE_M() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 38, 0.0)
+    /// The surface MAX_ALTITUDE_M is measured from. Absent: the standard ellipsoid of the body the sensor is on (WGS84
+    /// on the Earth). SEMI_INTERMEDIATE_M 0 is SEMI_MAJOR_M (an ellipsoid of revolution); a sphere has equal semi-axes.
+    def ALTITUDE_REFERENCE() -> SCVEllipsoid?:
+        let o = flatbuffers.field_table(buf_, pos_, 40)
+        return if o: SCVEllipsoid { buf_, o } else: nil
 
 def GetRootAsSCVSensorShapeContract(buf:string): return SCVSensorShapeContract { buf, flatbuffers.indirect(buf, 0) }
 
 struct SCVSensorShapeContractBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(17)
+        b_.StartObject(19)
         return this
     def add_SHAPE_KIND(SHAPE_KIND:scvSensorShapeKind):
         b_.PrependUint8Slot(0, SHAPE_KIND, 0)
@@ -404,6 +419,12 @@ struct SCVSensorShapeContractBuilder:
         return this
     def add_AZ_EL_MASK(AZ_EL_MASK:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(16, AZ_EL_MASK)
+        return this
+    def add_MAX_ALTITUDE_M(MAX_ALTITUDE_M:float):
+        b_.PrependFloat64Slot(17, MAX_ALTITUDE_M, 0.0)
+        return this
+    def add_ALTITUDE_REFERENCE(ALTITUDE_REFERENCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(18, ALTITUDE_REFERENCE)
         return this
     def end():
         return b_.EndObject()

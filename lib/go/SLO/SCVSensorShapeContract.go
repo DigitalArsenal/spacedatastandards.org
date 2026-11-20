@@ -410,8 +410,55 @@ func (rcv *SCVSensorShapeContract) AzElMaskLength() int {
 
 /// Azimuth/elevation mask of a ground sensor, empty when the sensor has none.
 /// Clips the shape: a direction below the mask is outside the field of view.
+/// For RANGE_BOUNDARY ALTITUDE_SHELL: the altitude ceiling, meters above ALTITUDE_REFERENCE. The ceiling surface is
+/// the reference ellipsoid with every semi-axis made MAX_ALTITUDE_M longer, centered on the body and in its fixed
+/// frame: on a sphere exactly MAX_ALTITUDE_M above it; on WGS84 within 3 m of the geodetic height up to 2,000 km.
+func (rcv *SCVSensorShapeContract) MAX_ALTITUDE_M() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *SCVSensorShapeContract) MaxAltitudeM() float64 {
+	return rcv.MAX_ALTITUDE_M()
+}
+
+/// For RANGE_BOUNDARY ALTITUDE_SHELL: the altitude ceiling, meters above ALTITUDE_REFERENCE. The ceiling surface is
+/// the reference ellipsoid with every semi-axis made MAX_ALTITUDE_M longer, centered on the body and in its fixed
+/// frame: on a sphere exactly MAX_ALTITUDE_M above it; on WGS84 within 3 m of the geodetic height up to 2,000 km.
+func (rcv *SCVSensorShapeContract) MutateMAX_ALTITUDE_M(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(38, n)
+}
+
+func (rcv *SCVSensorShapeContract) MutateMaxAltitudeM(n float64) bool {
+	return rcv.MutateMAX_ALTITUDE_M(n)
+}
+
+/// The surface MAX_ALTITUDE_M is measured from. Absent: the standard ellipsoid of the body the sensor is on (WGS84
+/// on the Earth). SEMI_INTERMEDIATE_M 0 is SEMI_MAJOR_M (an ellipsoid of revolution); a sphere has equal semi-axes.
+func (rcv *SCVSensorShapeContract) ALTITUDE_REFERENCE(obj *SCVEllipsoid) *SCVEllipsoid {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(SCVEllipsoid)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *SCVSensorShapeContract) AltitudeReference(obj *SCVEllipsoid) *SCVEllipsoid {
+	return rcv.ALTITUDE_REFERENCE(obj)
+}
+
+/// The surface MAX_ALTITUDE_M is measured from. Absent: the standard ellipsoid of the body the sensor is on (WGS84
+/// on the Earth). SEMI_INTERMEDIATE_M 0 is SEMI_MAJOR_M (an ellipsoid of revolution); a sphere has equal semi-axes.
 func SCVSensorShapeContractStart(builder *flatbuffers.Builder) {
-	builder.StartObject(17)
+	builder.StartObject(19)
 }
 func SCVSensorShapeContractAddSHAPE_KIND(builder *flatbuffers.Builder, SHAPE_KIND scvSensorShapeKind) {
 	builder.PrependByteSlot(0, byte(SHAPE_KIND), 0)
@@ -526,6 +573,18 @@ func SCVSensorShapeContractStartAZ_EL_MASKVector(builder *flatbuffers.Builder, n
 }
 func SCVSensorShapeContractStartAzElMaskVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return SCVSensorShapeContractStartAZ_EL_MASKVector(builder, numElems)
+}
+func SCVSensorShapeContractAddMAX_ALTITUDE_M(builder *flatbuffers.Builder, MAX_ALTITUDE_M float64) {
+	builder.PrependFloat64Slot(17, MAX_ALTITUDE_M, 0.0)
+}
+func SCVSensorShapeContractAddMaxAltitudeM(builder *flatbuffers.Builder, MAX_ALTITUDE_M float64) {
+	SCVSensorShapeContractAddMAX_ALTITUDE_M(builder, MAX_ALTITUDE_M)
+}
+func SCVSensorShapeContractAddALTITUDE_REFERENCE(builder *flatbuffers.Builder, ALTITUDE_REFERENCE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(ALTITUDE_REFERENCE), 0)
+}
+func SCVSensorShapeContractAddAltitudeReference(builder *flatbuffers.Builder, ALTITUDE_REFERENCE flatbuffers.UOffsetT) {
+	SCVSensorShapeContractAddALTITUDE_REFERENCE(builder, ALTITUDE_REFERENCE)
 }
 func SCVSensorShapeContractEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

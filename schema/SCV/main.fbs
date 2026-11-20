@@ -1,5 +1,5 @@
-// Hash: 63b30ae792ef43ea30c63e625212670f333422c2669b4acd9d1036952692eb7d
-// Version: 1.101.6
+// Hash: ce9e2e29d0be63fbbe42ee859424ffdea031564c60279f0d025bc908b4be2072
+// Version: 1.101.7
 // -----------------------------------END_HEADER
 /// Sensor Coverage Analytics — canonical request/result/progress ABI for
 /// access, coverage, swath, and coverage-geometry products produced by SDN
@@ -50,7 +50,12 @@ enum scvSensorAxisConvention : ubyte {
 
 enum scvSensorRangeBoundaryKind : ubyte {
   RADIAL_SPHERICAL,
-  LOCAL_Z_PLANE
+  LOCAL_Z_PLANE,
+  /// The volume ends at an altitude ceiling: each direction of the shape reaches as far as the ceiling surface of
+  /// SCVSensorShapeContract.MAX_ALTITUDE_M, so each direction ends at its own distance from the sensor, and the volume's
+  /// top is that surface. MAX_RANGE_M, when more than 0, still bounds every direction as well. A sensor at or above its
+  /// ceiling has no volume.
+  ALTITUDE_SHELL
 }
 
 enum scvGeometryDomain : ubyte {
@@ -184,6 +189,13 @@ table SCVSensorShapeContract {
   /// Azimuth/elevation mask of a ground sensor, empty when the sensor has none.
   /// Clips the shape: a direction below the mask is outside the field of view.
   AZ_EL_MASK:[SCVAzElMaskPoint];
+  /// For RANGE_BOUNDARY ALTITUDE_SHELL: the altitude ceiling, meters above ALTITUDE_REFERENCE. The ceiling surface is
+  /// the reference ellipsoid with every semi-axis made MAX_ALTITUDE_M longer, centered on the body and in its fixed
+  /// frame: on a sphere exactly MAX_ALTITUDE_M above it; on WGS84 within 3 m of the geodetic height up to 2,000 km.
+  MAX_ALTITUDE_M:double;
+  /// The surface MAX_ALTITUDE_M is measured from. Absent: the standard ellipsoid of the body the sensor is on (WGS84
+  /// on the Earth). SEMI_INTERMEDIATE_M 0 is SEMI_MAJOR_M (an ellipsoid of revolution); a sphere has equal semi-axes.
+  ALTITUDE_REFERENCE:SCVEllipsoid;
 }
 
 table SCVSensor {

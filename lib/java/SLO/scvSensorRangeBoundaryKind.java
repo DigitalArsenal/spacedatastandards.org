@@ -5,8 +5,15 @@ public final class scvSensorRangeBoundaryKind {
   private scvSensorRangeBoundaryKind() { }
   public static final int RADIAL_SPHERICAL = 0;
   public static final int LOCAL_Z_PLANE = 1;
+  /**
+   * The volume ends at an altitude ceiling: each direction of the shape reaches as far as the ceiling surface of
+   * SCVSensorShapeContract.MAX_ALTITUDE_M, so each direction ends at its own distance from the sensor, and the volume's
+   * top is that surface. MAX_RANGE_M, when more than 0, still bounds every direction as well. A sensor at or above its
+   * ceiling has no volume.
+   */
+  public static final int ALTITUDE_SHELL = 2;
 
-  public static final String[] names = { "RADIAL_SPHERICAL", "LOCAL_Z_PLANE", };
+  public static final String[] names = { "RADIAL_SPHERICAL", "LOCAL_Z_PLANE", "ALTITUDE_SHELL", };
 
   public static String name(int e) { return names[e]; }
 }

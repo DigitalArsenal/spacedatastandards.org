@@ -5,5 +5,12 @@ class scvSensorRangeBoundaryKind private constructor() {
     companion object {
         const val RADIAL_SPHERICAL: UByte = 0u
         const val LOCAL_Z_PLANE: UByte = 1u
+        /**
+         * The volume ends at an altitude ceiling: each direction of the shape reaches as far as the ceiling surface of
+         * SCVSensorShapeContract.MAX_ALTITUDE_M, so each direction ends at its own distance from the sensor, and the volume's
+         * top is that surface. MAX_RANGE_M, when more than 0, still bounds every direction as well. A sensor at or above its
+         * ceiling has no volume.
+         */
+        const val ALTITUDE_SHELL: UByte = 2u
     }
 }

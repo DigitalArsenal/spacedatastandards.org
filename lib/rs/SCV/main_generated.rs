@@ -631,13 +631,14 @@ impl ::flatbuffers::SimpleToVerifyInSlice for scvSensorAxisConvention {}
 pub const ENUM_MIN_SCV_SENSOR_RANGE_BOUNDARY_KIND: u8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_SCV_SENSOR_RANGE_BOUNDARY_KIND: u8 = 1;
+pub const ENUM_MAX_SCV_SENSOR_RANGE_BOUNDARY_KIND: u8 = 2;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_SCV_SENSOR_RANGE_BOUNDARY_KIND: [scvSensorRangeBoundaryKind; 2] = [
+pub const ENUM_VALUES_SCV_SENSOR_RANGE_BOUNDARY_KIND: [scvSensorRangeBoundaryKind; 3] = [
     scvSensorRangeBoundaryKind::RADIAL_SPHERICAL,
     scvSensorRangeBoundaryKind::LOCAL_Z_PLANE,
+    scvSensorRangeBoundaryKind::ALTITUDE_SHELL,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
@@ -648,12 +649,18 @@ pub struct scvSensorRangeBoundaryKind(pub u8);
 impl scvSensorRangeBoundaryKind {
     pub const RADIAL_SPHERICAL: Self = Self(0);
     pub const LOCAL_Z_PLANE: Self = Self(1);
+    /// The volume ends at an altitude ceiling: each direction of the shape reaches as far as the ceiling surface of
+    /// SCVSensorShapeContract.MAX_ALTITUDE_M, so each direction ends at its own distance from the sensor, and the volume's
+    /// top is that surface. MAX_RANGE_M, when more than 0, still bounds every direction as well. A sensor at or above its
+    /// ceiling has no volume.
+    pub const ALTITUDE_SHELL: Self = Self(2);
 
     pub const ENUM_MIN: u8 = 0;
-    pub const ENUM_MAX: u8 = 1;
+    pub const ENUM_MAX: u8 = 2;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::RADIAL_SPHERICAL,
         Self::LOCAL_Z_PLANE,
+        Self::ALTITUDE_SHELL,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -661,6 +668,7 @@ impl scvSensorRangeBoundaryKind {
         match self {
             Self::RADIAL_SPHERICAL => Some("RADIAL_SPHERICAL"),
             Self::LOCAL_Z_PLANE => Some("LOCAL_Z_PLANE"),
+            Self::ALTITUDE_SHELL => Some("ALTITUDE_SHELL"),
             _ => None,
         }
     }
@@ -2480,6 +2488,8 @@ impl<'a> SCVSensorShapeContract<'a> {
     pub const VT_POLYGON_VERTICES: ::flatbuffers::VOffsetT = 32;
     pub const VT_POLYGON_FRAME: ::flatbuffers::VOffsetT = 34;
     pub const VT_AZ_EL_MASK: ::flatbuffers::VOffsetT = 36;
+    pub const VT_MAX_ALTITUDE_M: ::flatbuffers::VOffsetT = 38;
+    pub const VT_ALTITUDE_REFERENCE: ::flatbuffers::VOffsetT = 40;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -2492,6 +2502,7 @@ impl<'a> SCVSensorShapeContract<'a> {
         args: &'args SCVSensorShapeContractArgs<'args>
     ) -> ::flatbuffers::WIPOffset<SCVSensorShapeContract<'bldr>> {
         let mut builder = SCVSensorShapeContractBuilder::new(_fbb);
+        builder.add_MAX_ALTITUDE_M(args.MAX_ALTITUDE_M);
         builder.add_MAX_RANGE_M(args.MAX_RANGE_M);
         builder.add_MIN_RANGE_M(args.MIN_RANGE_M);
         builder.add_SAR_SAMPLING_DENSITY(args.SAR_SAMPLING_DENSITY);
@@ -2503,6 +2514,7 @@ impl<'a> SCVSensorShapeContract<'a> {
         builder.add_MIN_CLOCK_ANGLE_DEG(args.MIN_CLOCK_ANGLE_DEG);
         builder.add_INNER_HALF_ANGLE_DEG(args.INNER_HALF_ANGLE_DEG);
         builder.add_OUTER_HALF_ANGLE_DEG(args.OUTER_HALF_ANGLE_DEG);
+        if let Some(x) = args.ALTITUDE_REFERENCE { builder.add_ALTITUDE_REFERENCE(x); }
         if let Some(x) = args.AZ_EL_MASK { builder.add_AZ_EL_MASK(x); }
         if let Some(x) = args.POLYGON_VERTICES { builder.add_POLYGON_VERTICES(x); }
         builder.add_POLYGON_FRAME(args.POLYGON_FRAME);
@@ -2534,6 +2546,10 @@ impl<'a> SCVSensorShapeContract<'a> {
         let AZ_EL_MASK = self.AZ_EL_MASK().map(|x| {
             x.iter().map(|t| t.unpack()).collect()
         });
+        let MAX_ALTITUDE_M = self.MAX_ALTITUDE_M();
+        let ALTITUDE_REFERENCE = self.ALTITUDE_REFERENCE().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
         SCVSensorShapeContractT {
             SHAPE_KIND,
             AXIS_CONVENTION,
@@ -2552,6 +2568,8 @@ impl<'a> SCVSensorShapeContract<'a> {
             POLYGON_VERTICES,
             POLYGON_FRAME,
             AZ_EL_MASK,
+            MAX_ALTITUDE_M,
+            ALTITUDE_REFERENCE,
         }
     }
 
@@ -2692,6 +2710,27 @@ impl<'a> SCVSensorShapeContract<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVAzElMaskPoint>>>>(SCVSensorShapeContract::VT_AZ_EL_MASK, None)}
     }
+
+    /// For RANGE_BOUNDARY ALTITUDE_SHELL: the altitude ceiling, meters above ALTITUDE_REFERENCE. The ceiling surface is
+    /// the reference ellipsoid with every semi-axis made MAX_ALTITUDE_M longer, centered on the body and in its fixed
+    /// frame: on a sphere exactly MAX_ALTITUDE_M above it; on WGS84 within 3 m of the geodetic height up to 2,000 km.
+    #[inline]
+    pub fn MAX_ALTITUDE_M(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(SCVSensorShapeContract::VT_MAX_ALTITUDE_M, Some(0.0)).unwrap()}
+    }
+
+    /// The surface MAX_ALTITUDE_M is measured from. Absent: the standard ellipsoid of the body the sensor is on (WGS84
+    /// on the Earth). SEMI_INTERMEDIATE_M 0 is SEMI_MAJOR_M (an ellipsoid of revolution); a sphere has equal semi-axes.
+    #[inline]
+    pub fn ALTITUDE_REFERENCE(&self) -> Option<SCVEllipsoid<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<SCVEllipsoid>>(SCVSensorShapeContract::VT_ALTITUDE_REFERENCE, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for SCVSensorShapeContract<'_> {
@@ -2717,6 +2756,8 @@ impl ::flatbuffers::Verifiable for SCVSensorShapeContract<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<SCVVec3>>>>("POLYGON_VERTICES", Self::VT_POLYGON_VERTICES, false)?
             .visit_field::<scvCoordinateFrame>("POLYGON_FRAME", Self::VT_POLYGON_FRAME, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<SCVAzElMaskPoint>>>>("AZ_EL_MASK", Self::VT_AZ_EL_MASK, false)?
+            .visit_field::<f64>("MAX_ALTITUDE_M", Self::VT_MAX_ALTITUDE_M, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<SCVEllipsoid>>("ALTITUDE_REFERENCE", Self::VT_ALTITUDE_REFERENCE, false)?
             .finish();
         Ok(())
     }
@@ -2740,6 +2781,8 @@ pub struct SCVSensorShapeContractArgs<'a> {
     pub POLYGON_VERTICES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVVec3<'a>>>>>,
     pub POLYGON_FRAME: scvCoordinateFrame,
     pub AZ_EL_MASK: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVAzElMaskPoint<'a>>>>>,
+    pub MAX_ALTITUDE_M: f64,
+    pub ALTITUDE_REFERENCE: Option<::flatbuffers::WIPOffset<SCVEllipsoid<'a>>>,
 }
 
 impl<'a> Default for SCVSensorShapeContractArgs<'a> {
@@ -2763,6 +2806,8 @@ impl<'a> Default for SCVSensorShapeContractArgs<'a> {
             POLYGON_VERTICES: None,
             POLYGON_FRAME: scvCoordinateFrame::UNKNOWN,
             AZ_EL_MASK: None,
+            MAX_ALTITUDE_M: 0.0,
+            ALTITUDE_REFERENCE: None,
         }
     }
 }
@@ -2859,6 +2904,16 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCVSensorShapeContractBuilder
     }
 
     #[inline]
+    pub fn add_MAX_ALTITUDE_M(&mut self, MAX_ALTITUDE_M: f64) {
+        self.fbb_.push_slot::<f64>(SCVSensorShapeContract::VT_MAX_ALTITUDE_M, MAX_ALTITUDE_M, 0.0);
+    }
+
+    #[inline]
+    pub fn add_ALTITUDE_REFERENCE(&mut self, ALTITUDE_REFERENCE: ::flatbuffers::WIPOffset<SCVEllipsoid<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<SCVEllipsoid>>(SCVSensorShapeContract::VT_ALTITUDE_REFERENCE, ALTITUDE_REFERENCE);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SCVSensorShapeContractBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         SCVSensorShapeContractBuilder {
@@ -2894,6 +2949,8 @@ impl ::core::fmt::Debug for SCVSensorShapeContract<'_> {
         ds.field("POLYGON_VERTICES", &self.POLYGON_VERTICES());
         ds.field("POLYGON_FRAME", &self.POLYGON_FRAME());
         ds.field("AZ_EL_MASK", &self.AZ_EL_MASK());
+        ds.field("MAX_ALTITUDE_M", &self.MAX_ALTITUDE_M());
+        ds.field("ALTITUDE_REFERENCE", &self.ALTITUDE_REFERENCE());
         ds.finish()
     }
 }
@@ -2918,6 +2975,8 @@ pub struct SCVSensorShapeContractT {
     pub POLYGON_VERTICES: Option<alloc::vec::Vec<SCVVec3T>>,
     pub POLYGON_FRAME: scvCoordinateFrame,
     pub AZ_EL_MASK: Option<alloc::vec::Vec<SCVAzElMaskPointT>>,
+    pub MAX_ALTITUDE_M: f64,
+    pub ALTITUDE_REFERENCE: Option<alloc::boxed::Box<SCVEllipsoidT>>,
 }
 
 impl Default for SCVSensorShapeContractT {
@@ -2940,6 +2999,8 @@ impl Default for SCVSensorShapeContractT {
             POLYGON_VERTICES: None,
             POLYGON_FRAME: scvCoordinateFrame::UNKNOWN,
             AZ_EL_MASK: None,
+            MAX_ALTITUDE_M: 0.0,
+            ALTITUDE_REFERENCE: None,
         }
     }
 }
@@ -2970,6 +3031,10 @@ impl SCVSensorShapeContractT {
         let AZ_EL_MASK = self.AZ_EL_MASK.as_ref().map(|x|{
             let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
         });
+        let MAX_ALTITUDE_M = self.MAX_ALTITUDE_M;
+        let ALTITUDE_REFERENCE = self.ALTITUDE_REFERENCE.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
         SCVSensorShapeContract::create(_fbb, &SCVSensorShapeContractArgs{
             SHAPE_KIND,
             AXIS_CONVENTION,
@@ -2988,6 +3053,8 @@ impl SCVSensorShapeContractT {
             POLYGON_VERTICES,
             POLYGON_FRAME,
             AZ_EL_MASK,
+            MAX_ALTITUDE_M,
+            ALTITUDE_REFERENCE,
         })
     }
 }

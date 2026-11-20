@@ -218,22 +218,43 @@ class SCVSensorShapeContract extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// For RANGE_BOUNDARY ALTITUDE_SHELL: the altitude ceiling, meters above ALTITUDE_REFERENCE. The ceiling surface is
+    /// the reference ellipsoid with every semi-axis made MAX_ALTITUDE_M longer, centered on the body and in its fixed
+    /// frame: on a sphere exactly MAX_ALTITUDE_M above it; on WGS84 within 3 m of the geodetic height up to 2,000 km.
+    /**
+     * @return double
+     */
+    public function getMAX_ALTITUDE_M()
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// The surface MAX_ALTITUDE_M is measured from. Absent: the standard ellipsoid of the body the sensor is on (WGS84
+    /// on the Earth). SEMI_INTERMEDIATE_M 0 is SEMI_MAJOR_M (an ellipsoid of revolution); a sphere has equal semi-axes.
+    public function getALTITUDE_REFERENCE()
+    {
+        $obj = new SCVEllipsoid();
+        $o = $this->__offset(40);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startSCVSensorShapeContract(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(17);
+        $builder->StartObject(19);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return SCVSensorShapeContract
      */
-    public static function createSCVSensorShapeContract(FlatBufferBuilder $builder, $SHAPE_KIND, $AXIS_CONVENTION, $RANGE_BOUNDARY, $OUTER_HALF_ANGLE_DEG, $INNER_HALF_ANGLE_DEG, $MIN_CLOCK_ANGLE_DEG, $MAX_CLOCK_ANGLE_DEG, $X_HALF_ANGLE_DEG, $Y_HALF_ANGLE_DEG, $INNER_LOOK_ANGLE_DEG, $OUTER_LOOK_ANGLE_DEG, $SAR_SAMPLING_DENSITY, $MIN_RANGE_M, $MAX_RANGE_M, $POLYGON_VERTICES, $POLYGON_FRAME, $AZ_EL_MASK)
+    public static function createSCVSensorShapeContract(FlatBufferBuilder $builder, $SHAPE_KIND, $AXIS_CONVENTION, $RANGE_BOUNDARY, $OUTER_HALF_ANGLE_DEG, $INNER_HALF_ANGLE_DEG, $MIN_CLOCK_ANGLE_DEG, $MAX_CLOCK_ANGLE_DEG, $X_HALF_ANGLE_DEG, $Y_HALF_ANGLE_DEG, $INNER_LOOK_ANGLE_DEG, $OUTER_LOOK_ANGLE_DEG, $SAR_SAMPLING_DENSITY, $MIN_RANGE_M, $MAX_RANGE_M, $POLYGON_VERTICES, $POLYGON_FRAME, $AZ_EL_MASK, $MAX_ALTITUDE_M, $ALTITUDE_REFERENCE)
     {
-        $builder->startObject(17);
+        $builder->startObject(19);
         self::addSHAPE_KIND($builder, $SHAPE_KIND);
         self::addAXIS_CONVENTION($builder, $AXIS_CONVENTION);
         self::addRANGE_BOUNDARY($builder, $RANGE_BOUNDARY);
@@ -251,6 +272,8 @@ class SCVSensorShapeContract extends Table
         self::addPOLYGON_VERTICES($builder, $POLYGON_VERTICES);
         self::addPOLYGON_FRAME($builder, $POLYGON_FRAME);
         self::addAZ_EL_MASK($builder, $AZ_EL_MASK);
+        self::addMAX_ALTITUDE_M($builder, $MAX_ALTITUDE_M);
+        self::addALTITUDE_REFERENCE($builder, $ALTITUDE_REFERENCE);
         $o = $builder->endObject();
         return $o;
     }
@@ -471,6 +494,26 @@ class SCVSensorShapeContract extends Table
     public static function startAZ_EL_MASKVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addMAX_ALTITUDE_M(FlatBufferBuilder $builder, $MAX_ALTITUDE_M)
+    {
+        $builder->addDoubleX(17, $MAX_ALTITUDE_M, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addALTITUDE_REFERENCE(FlatBufferBuilder $builder, $ALTITUDE_REFERENCE)
+    {
+        $builder->addOffsetX(18, $ALTITUDE_REFERENCE, 0);
     }
 
     /**

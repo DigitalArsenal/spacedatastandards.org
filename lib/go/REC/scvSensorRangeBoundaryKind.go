@@ -9,16 +9,23 @@ type scvSensorRangeBoundaryKind byte
 const (
 	scvSensorRangeBoundaryKindRADIAL_SPHERICAL scvSensorRangeBoundaryKind = 0
 	scvSensorRangeBoundaryKindLOCAL_Z_PLANE    scvSensorRangeBoundaryKind = 1
+	/// The volume ends at an altitude ceiling: each direction of the shape reaches as far as the ceiling surface of
+	/// SCVSensorShapeContract.MAX_ALTITUDE_M, so each direction ends at its own distance from the sensor, and the volume's
+	/// top is that surface. MAX_RANGE_M, when more than 0, still bounds every direction as well. A sensor at or above its
+	/// ceiling has no volume.
+	scvSensorRangeBoundaryKindALTITUDE_SHELL   scvSensorRangeBoundaryKind = 2
 )
 
 var EnumNamesscvSensorRangeBoundaryKind = map[scvSensorRangeBoundaryKind]string{
 	scvSensorRangeBoundaryKindRADIAL_SPHERICAL: "RADIAL_SPHERICAL",
 	scvSensorRangeBoundaryKindLOCAL_Z_PLANE:    "LOCAL_Z_PLANE",
+	scvSensorRangeBoundaryKindALTITUDE_SHELL:   "ALTITUDE_SHELL",
 }
 
 var EnumValuesscvSensorRangeBoundaryKind = map[string]scvSensorRangeBoundaryKind{
 	"RADIAL_SPHERICAL": scvSensorRangeBoundaryKindRADIAL_SPHERICAL,
 	"LOCAL_Z_PLANE":    scvSensorRangeBoundaryKindLOCAL_Z_PLANE,
+	"ALTITUDE_SHELL":   scvSensorRangeBoundaryKindALTITUDE_SHELL,
 }
 
 func (v scvSensorRangeBoundaryKind) String() string {

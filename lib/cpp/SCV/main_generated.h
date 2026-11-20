@@ -310,29 +310,36 @@ inline const char *EnumNamescvSensorAxisConvention(scvSensorAxisConvention e) {
 enum scvSensorRangeBoundaryKind : uint8_t {
   scvSensorRangeBoundaryKind_RADIAL_SPHERICAL = 0,
   scvSensorRangeBoundaryKind_LOCAL_Z_PLANE = 1,
+  /// The volume ends at an altitude ceiling: each direction of the shape reaches as far as the ceiling surface of
+  /// SCVSensorShapeContract.MAX_ALTITUDE_M, so each direction ends at its own distance from the sensor, and the volume's
+  /// top is that surface. MAX_RANGE_M, when more than 0, still bounds every direction as well. A sensor at or above its
+  /// ceiling has no volume.
+  scvSensorRangeBoundaryKind_ALTITUDE_SHELL = 2,
   scvSensorRangeBoundaryKind_MIN = scvSensorRangeBoundaryKind_RADIAL_SPHERICAL,
-  scvSensorRangeBoundaryKind_MAX = scvSensorRangeBoundaryKind_LOCAL_Z_PLANE
+  scvSensorRangeBoundaryKind_MAX = scvSensorRangeBoundaryKind_ALTITUDE_SHELL
 };
 
-inline const scvSensorRangeBoundaryKind (&EnumValuesscvSensorRangeBoundaryKind())[2] {
+inline const scvSensorRangeBoundaryKind (&EnumValuesscvSensorRangeBoundaryKind())[3] {
   static const scvSensorRangeBoundaryKind values[] = {
     scvSensorRangeBoundaryKind_RADIAL_SPHERICAL,
-    scvSensorRangeBoundaryKind_LOCAL_Z_PLANE
+    scvSensorRangeBoundaryKind_LOCAL_Z_PLANE,
+    scvSensorRangeBoundaryKind_ALTITUDE_SHELL
   };
   return values;
 }
 
 inline const char * const *EnumNamesscvSensorRangeBoundaryKind() {
-  static const char * const names[3] = {
+  static const char * const names[4] = {
     "RADIAL_SPHERICAL",
     "LOCAL_Z_PLANE",
+    "ALTITUDE_SHELL",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamescvSensorRangeBoundaryKind(scvSensorRangeBoundaryKind e) {
-  if (::flatbuffers::IsOutRange(e, scvSensorRangeBoundaryKind_RADIAL_SPHERICAL, scvSensorRangeBoundaryKind_LOCAL_Z_PLANE)) return "";
+  if (::flatbuffers::IsOutRange(e, scvSensorRangeBoundaryKind_RADIAL_SPHERICAL, scvSensorRangeBoundaryKind_ALTITUDE_SHELL)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesscvSensorRangeBoundaryKind()[index];
 }
@@ -1036,7 +1043,9 @@ struct SCVSensorShapeContract FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::T
     VT_MAX_RANGE_M = 30,
     VT_POLYGON_VERTICES = 32,
     VT_POLYGON_FRAME = 34,
-    VT_AZ_EL_MASK = 36
+    VT_AZ_EL_MASK = 36,
+    VT_MAX_ALTITUDE_M = 38,
+    VT_ALTITUDE_REFERENCE = 40
   };
   scvSensorShapeKind SHAPE_KIND() const {
     return static_cast<scvSensorShapeKind>(GetField<uint8_t>(VT_SHAPE_KIND, 0));
@@ -1091,6 +1100,17 @@ struct SCVSensorShapeContract FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::T
   const ::flatbuffers::Vector<::flatbuffers::Offset<SCVAzElMaskPoint>> *AZ_EL_MASK() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<SCVAzElMaskPoint>> *>(VT_AZ_EL_MASK);
   }
+  /// For RANGE_BOUNDARY ALTITUDE_SHELL: the altitude ceiling, meters above ALTITUDE_REFERENCE. The ceiling surface is
+  /// the reference ellipsoid with every semi-axis made MAX_ALTITUDE_M longer, centered on the body and in its fixed
+  /// frame: on a sphere exactly MAX_ALTITUDE_M above it; on WGS84 within 3 m of the geodetic height up to 2,000 km.
+  double MAX_ALTITUDE_M() const {
+    return GetField<double>(VT_MAX_ALTITUDE_M, 0.0);
+  }
+  /// The surface MAX_ALTITUDE_M is measured from. Absent: the standard ellipsoid of the body the sensor is on (WGS84
+  /// on the Earth). SEMI_INTERMEDIATE_M 0 is SEMI_MAJOR_M (an ellipsoid of revolution); a sphere has equal semi-axes.
+  const SCVEllipsoid *ALTITUDE_REFERENCE() const {
+    return GetPointer<const SCVEllipsoid *>(VT_ALTITUDE_REFERENCE);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -1115,6 +1135,9 @@ struct SCVSensorShapeContract FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::T
            VerifyOffset(verifier, VT_AZ_EL_MASK) &&
            verifier.VerifyVector(AZ_EL_MASK()) &&
            verifier.VerifyVectorOfTables(AZ_EL_MASK()) &&
+           VerifyField<double>(verifier, VT_MAX_ALTITUDE_M, 8) &&
+           VerifyOffset(verifier, VT_ALTITUDE_REFERENCE) &&
+           verifier.VerifyTable(ALTITUDE_REFERENCE()) &&
            verifier.EndTable();
   }
 };
@@ -1174,6 +1197,12 @@ struct SCVSensorShapeContractBuilder {
   void add_AZ_EL_MASK(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<SCVAzElMaskPoint>>> AZ_EL_MASK) {
     fbb_.AddOffset(SCVSensorShapeContract::VT_AZ_EL_MASK, AZ_EL_MASK);
   }
+  void add_MAX_ALTITUDE_M(double MAX_ALTITUDE_M) {
+    fbb_.AddElement<double>(SCVSensorShapeContract::VT_MAX_ALTITUDE_M, MAX_ALTITUDE_M, 0.0);
+  }
+  void add_ALTITUDE_REFERENCE(::flatbuffers::Offset<SCVEllipsoid> ALTITUDE_REFERENCE) {
+    fbb_.AddOffset(SCVSensorShapeContract::VT_ALTITUDE_REFERENCE, ALTITUDE_REFERENCE);
+  }
   explicit SCVSensorShapeContractBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1203,8 +1232,11 @@ inline ::flatbuffers::Offset<SCVSensorShapeContract> CreateSCVSensorShapeContrac
     double MAX_RANGE_M = 0.0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<SCVVec3>>> POLYGON_VERTICES = 0,
     scvCoordinateFrame POLYGON_FRAME = scvCoordinateFrame_UNKNOWN,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<SCVAzElMaskPoint>>> AZ_EL_MASK = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<SCVAzElMaskPoint>>> AZ_EL_MASK = 0,
+    double MAX_ALTITUDE_M = 0.0,
+    ::flatbuffers::Offset<SCVEllipsoid> ALTITUDE_REFERENCE = 0) {
   SCVSensorShapeContractBuilder builder_(_fbb);
+  builder_.add_MAX_ALTITUDE_M(MAX_ALTITUDE_M);
   builder_.add_MAX_RANGE_M(MAX_RANGE_M);
   builder_.add_MIN_RANGE_M(MIN_RANGE_M);
   builder_.add_SAR_SAMPLING_DENSITY(SAR_SAMPLING_DENSITY);
@@ -1216,6 +1248,7 @@ inline ::flatbuffers::Offset<SCVSensorShapeContract> CreateSCVSensorShapeContrac
   builder_.add_MIN_CLOCK_ANGLE_DEG(MIN_CLOCK_ANGLE_DEG);
   builder_.add_INNER_HALF_ANGLE_DEG(INNER_HALF_ANGLE_DEG);
   builder_.add_OUTER_HALF_ANGLE_DEG(OUTER_HALF_ANGLE_DEG);
+  builder_.add_ALTITUDE_REFERENCE(ALTITUDE_REFERENCE);
   builder_.add_AZ_EL_MASK(AZ_EL_MASK);
   builder_.add_POLYGON_VERTICES(POLYGON_VERTICES);
   builder_.add_POLYGON_FRAME(POLYGON_FRAME);
@@ -1243,7 +1276,9 @@ inline ::flatbuffers::Offset<SCVSensorShapeContract> CreateSCVSensorShapeContrac
     double MAX_RANGE_M = 0.0,
     const std::vector<::flatbuffers::Offset<SCVVec3>> *POLYGON_VERTICES = nullptr,
     scvCoordinateFrame POLYGON_FRAME = scvCoordinateFrame_UNKNOWN,
-    const std::vector<::flatbuffers::Offset<SCVAzElMaskPoint>> *AZ_EL_MASK = nullptr) {
+    const std::vector<::flatbuffers::Offset<SCVAzElMaskPoint>> *AZ_EL_MASK = nullptr,
+    double MAX_ALTITUDE_M = 0.0,
+    ::flatbuffers::Offset<SCVEllipsoid> ALTITUDE_REFERENCE = 0) {
   auto POLYGON_VERTICES__ = POLYGON_VERTICES ? _fbb.CreateVector<::flatbuffers::Offset<SCVVec3>>(*POLYGON_VERTICES) : 0;
   auto AZ_EL_MASK__ = AZ_EL_MASK ? _fbb.CreateVector<::flatbuffers::Offset<SCVAzElMaskPoint>>(*AZ_EL_MASK) : 0;
   return CreateSCVSensorShapeContract(
@@ -1264,7 +1299,9 @@ inline ::flatbuffers::Offset<SCVSensorShapeContract> CreateSCVSensorShapeContrac
       MAX_RANGE_M,
       POLYGON_VERTICES__,
       POLYGON_FRAME,
-      AZ_EL_MASK__);
+      AZ_EL_MASK__,
+      MAX_ALTITUDE_M,
+      ALTITUDE_REFERENCE);
 }
 
 struct SCVSensor FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {

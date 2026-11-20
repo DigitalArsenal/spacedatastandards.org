@@ -5,6 +5,7 @@
 import * as flatbuffers from 'flatbuffers';
 
 import { SCVAzElMaskPoint, SCVAzElMaskPointT } from './SCVAzElMaskPoint.js';
+import { SCVEllipsoid, SCVEllipsoidT } from './SCVEllipsoid.js';
 import { SCVVec3, SCVVec3T } from './SCVVec3.js';
 import { scvCoordinateFrame } from './scvCoordinateFrame.js';
 import { scvSensorAxisConvention } from './scvSensorAxisConvention.js';
@@ -134,8 +135,27 @@ azElMaskLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * For RANGE_BOUNDARY ALTITUDE_SHELL: the altitude ceiling, meters above ALTITUDE_REFERENCE. The ceiling surface is
+ * the reference ellipsoid with every semi-axis made MAX_ALTITUDE_M longer, centered on the body and in its fixed
+ * frame: on a sphere exactly MAX_ALTITUDE_M above it; on WGS84 within 3 m of the geodetic height up to 2,000 km.
+ */
+MAX_ALTITUDE_M():number {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * The surface MAX_ALTITUDE_M is measured from. Absent: the standard ellipsoid of the body the sensor is on (WGS84
+ * on the Earth). SEMI_INTERMEDIATE_M 0 is SEMI_MAJOR_M (an ellipsoid of revolution); a sphere has equal semi-axes.
+ */
+ALTITUDE_REFERENCE(obj?:SCVEllipsoid):SCVEllipsoid|null {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? (obj || new SCVEllipsoid()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startSCVSensorShapeContract(builder:flatbuffers.Builder) {
-  builder.startObject(17);
+  builder.startObject(19);
 }
 
 static addShapeKind(builder:flatbuffers.Builder, SHAPE_KIND:scvSensorShapeKind) {
@@ -230,32 +250,19 @@ static startAzElMaskVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
+static addMaxAltitudeM(builder:flatbuffers.Builder, MAX_ALTITUDE_M:number) {
+  builder.addFieldFloat64(17, MAX_ALTITUDE_M, 0.0);
+}
+
+static addAltitudeReference(builder:flatbuffers.Builder, ALTITUDE_REFERENCEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(18, ALTITUDE_REFERENCEOffset, 0);
+}
+
 static endSCVSensorShapeContract(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createSCVSensorShapeContract(builder:flatbuffers.Builder, SHAPE_KIND:scvSensorShapeKind, AXIS_CONVENTION:scvSensorAxisConvention, RANGE_BOUNDARY:scvSensorRangeBoundaryKind, OUTER_HALF_ANGLE_DEG:number, INNER_HALF_ANGLE_DEG:number, MIN_CLOCK_ANGLE_DEG:number, MAX_CLOCK_ANGLE_DEG:number, X_HALF_ANGLE_DEG:number, Y_HALF_ANGLE_DEG:number, INNER_LOOK_ANGLE_DEG:number, OUTER_LOOK_ANGLE_DEG:number, SAR_SAMPLING_DENSITY:number, MIN_RANGE_M:number, MAX_RANGE_M:number, POLYGON_VERTICESOffset:flatbuffers.Offset, POLYGON_FRAME:scvCoordinateFrame, AZ_EL_MASKOffset:flatbuffers.Offset):flatbuffers.Offset {
-  SCVSensorShapeContract.startSCVSensorShapeContract(builder);
-  SCVSensorShapeContract.addShapeKind(builder, SHAPE_KIND);
-  SCVSensorShapeContract.addAxisConvention(builder, AXIS_CONVENTION);
-  SCVSensorShapeContract.addRangeBoundary(builder, RANGE_BOUNDARY);
-  SCVSensorShapeContract.addOuterHalfAngleDeg(builder, OUTER_HALF_ANGLE_DEG);
-  SCVSensorShapeContract.addInnerHalfAngleDeg(builder, INNER_HALF_ANGLE_DEG);
-  SCVSensorShapeContract.addMinClockAngleDeg(builder, MIN_CLOCK_ANGLE_DEG);
-  SCVSensorShapeContract.addMaxClockAngleDeg(builder, MAX_CLOCK_ANGLE_DEG);
-  SCVSensorShapeContract.addXHalfAngleDeg(builder, X_HALF_ANGLE_DEG);
-  SCVSensorShapeContract.addYHalfAngleDeg(builder, Y_HALF_ANGLE_DEG);
-  SCVSensorShapeContract.addInnerLookAngleDeg(builder, INNER_LOOK_ANGLE_DEG);
-  SCVSensorShapeContract.addOuterLookAngleDeg(builder, OUTER_LOOK_ANGLE_DEG);
-  SCVSensorShapeContract.addSarSamplingDensity(builder, SAR_SAMPLING_DENSITY);
-  SCVSensorShapeContract.addMinRangeM(builder, MIN_RANGE_M);
-  SCVSensorShapeContract.addMaxRangeM(builder, MAX_RANGE_M);
-  SCVSensorShapeContract.addPolygonVertices(builder, POLYGON_VERTICESOffset);
-  SCVSensorShapeContract.addPolygonFrame(builder, POLYGON_FRAME);
-  SCVSensorShapeContract.addAzElMask(builder, AZ_EL_MASKOffset);
-  return SCVSensorShapeContract.endSCVSensorShapeContract(builder);
-}
 
 unpack(): SCVSensorShapeContractT {
   return new SCVSensorShapeContractT(
@@ -275,7 +282,9 @@ unpack(): SCVSensorShapeContractT {
     this.MAX_RANGE_M(),
     this.bb!.createObjList<SCVVec3, SCVVec3T>(this.POLYGON_VERTICES.bind(this), this.polygonVerticesLength()),
     this.POLYGON_FRAME(),
-    this.bb!.createObjList<SCVAzElMaskPoint, SCVAzElMaskPointT>(this.AZ_EL_MASK.bind(this), this.azElMaskLength())
+    this.bb!.createObjList<SCVAzElMaskPoint, SCVAzElMaskPointT>(this.AZ_EL_MASK.bind(this), this.azElMaskLength()),
+    this.MAX_ALTITUDE_M(),
+    (this.ALTITUDE_REFERENCE() !== null ? this.ALTITUDE_REFERENCE()!.unpack() : null)
   );
 }
 
@@ -298,6 +307,8 @@ unpackTo(_o: SCVSensorShapeContractT): void {
   _o.POLYGON_VERTICES = this.bb!.createObjList<SCVVec3, SCVVec3T>(this.POLYGON_VERTICES.bind(this), this.polygonVerticesLength());
   _o.POLYGON_FRAME = this.POLYGON_FRAME();
   _o.AZ_EL_MASK = this.bb!.createObjList<SCVAzElMaskPoint, SCVAzElMaskPointT>(this.AZ_EL_MASK.bind(this), this.azElMaskLength());
+  _o.MAX_ALTITUDE_M = this.MAX_ALTITUDE_M();
+  _o.ALTITUDE_REFERENCE = (this.ALTITUDE_REFERENCE() !== null ? this.ALTITUDE_REFERENCE()!.unpack() : null);
 }
 }
 
@@ -319,32 +330,38 @@ constructor(
   public MAX_RANGE_M: number = 0.0,
   public POLYGON_VERTICES: (SCVVec3T)[] = [],
   public POLYGON_FRAME: scvCoordinateFrame = scvCoordinateFrame.UNKNOWN,
-  public AZ_EL_MASK: (SCVAzElMaskPointT)[] = []
+  public AZ_EL_MASK: (SCVAzElMaskPointT)[] = [],
+  public MAX_ALTITUDE_M: number = 0.0,
+  public ALTITUDE_REFERENCE: SCVEllipsoidT|null = null
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const POLYGON_VERTICES = SCVSensorShapeContract.createPolygonVerticesVector(builder, builder.createObjectOffsetList(this.POLYGON_VERTICES));
   const AZ_EL_MASK = SCVSensorShapeContract.createAzElMaskVector(builder, builder.createObjectOffsetList(this.AZ_EL_MASK));
+  const ALTITUDE_REFERENCE = (this.ALTITUDE_REFERENCE !== null ? this.ALTITUDE_REFERENCE!.pack(builder) : 0);
 
-  return SCVSensorShapeContract.createSCVSensorShapeContract(builder,
-    this.SHAPE_KIND,
-    this.AXIS_CONVENTION,
-    this.RANGE_BOUNDARY,
-    this.OUTER_HALF_ANGLE_DEG,
-    this.INNER_HALF_ANGLE_DEG,
-    this.MIN_CLOCK_ANGLE_DEG,
-    this.MAX_CLOCK_ANGLE_DEG,
-    this.X_HALF_ANGLE_DEG,
-    this.Y_HALF_ANGLE_DEG,
-    this.INNER_LOOK_ANGLE_DEG,
-    this.OUTER_LOOK_ANGLE_DEG,
-    this.SAR_SAMPLING_DENSITY,
-    this.MIN_RANGE_M,
-    this.MAX_RANGE_M,
-    POLYGON_VERTICES,
-    this.POLYGON_FRAME,
-    AZ_EL_MASK
-  );
+  SCVSensorShapeContract.startSCVSensorShapeContract(builder);
+  SCVSensorShapeContract.addShapeKind(builder, this.SHAPE_KIND);
+  SCVSensorShapeContract.addAxisConvention(builder, this.AXIS_CONVENTION);
+  SCVSensorShapeContract.addRangeBoundary(builder, this.RANGE_BOUNDARY);
+  SCVSensorShapeContract.addOuterHalfAngleDeg(builder, this.OUTER_HALF_ANGLE_DEG);
+  SCVSensorShapeContract.addInnerHalfAngleDeg(builder, this.INNER_HALF_ANGLE_DEG);
+  SCVSensorShapeContract.addMinClockAngleDeg(builder, this.MIN_CLOCK_ANGLE_DEG);
+  SCVSensorShapeContract.addMaxClockAngleDeg(builder, this.MAX_CLOCK_ANGLE_DEG);
+  SCVSensorShapeContract.addXHalfAngleDeg(builder, this.X_HALF_ANGLE_DEG);
+  SCVSensorShapeContract.addYHalfAngleDeg(builder, this.Y_HALF_ANGLE_DEG);
+  SCVSensorShapeContract.addInnerLookAngleDeg(builder, this.INNER_LOOK_ANGLE_DEG);
+  SCVSensorShapeContract.addOuterLookAngleDeg(builder, this.OUTER_LOOK_ANGLE_DEG);
+  SCVSensorShapeContract.addSarSamplingDensity(builder, this.SAR_SAMPLING_DENSITY);
+  SCVSensorShapeContract.addMinRangeM(builder, this.MIN_RANGE_M);
+  SCVSensorShapeContract.addMaxRangeM(builder, this.MAX_RANGE_M);
+  SCVSensorShapeContract.addPolygonVertices(builder, POLYGON_VERTICES);
+  SCVSensorShapeContract.addPolygonFrame(builder, this.POLYGON_FRAME);
+  SCVSensorShapeContract.addAzElMask(builder, AZ_EL_MASK);
+  SCVSensorShapeContract.addMaxAltitudeM(builder, this.MAX_ALTITUDE_M);
+  SCVSensorShapeContract.addAltitudeReference(builder, ALTITUDE_REFERENCE);
+
+  return SCVSensorShapeContract.endSCVSensorShapeContract(builder);
 }
 }

@@ -31,8 +31,8 @@ assert.equal(snr.tables.get('SNR').fields.find((f) => f.name === 'FIELD_OF_VIEW'
 assert.equal(scv.tables.get('SCVSensor').fields.find((f) => f.name === 'SHAPE_CONTRACT').elem, 'SCVSensorShapeContract');
 assert.deepEqual([...snr.tables.keys()].filter((t) => /Shape|Fov|FieldOfView/i.test(t) && t !== 'SCVSensorShapeContract'), [], 'no second shape type');
 const shape = scv.tables.get('SCVSensorShapeContract').fields.map((f) => f.name);
-assert.equal(shape.length, 17, 'SCVSensorShapeContract: 16 fields and one added');
-assert.equal(shape[16], 'AZ_EL_MASK', 'AZ_EL_MASK is last');
+assert.equal(shape.length, 19, 'SCVSensorShapeContract: 16 fields, AZ_EL_MASK, and the altitude ceiling (scv-altitude-ceiling.mjs)');
+assert.equal(shape[16], 'AZ_EL_MASK', 'AZ_EL_MASK follows the 16');
 assert.equal(scv.tables.get('SCVAzElMaskPoint').fields.map((f) => f.name).join(), 'AZIMUTH_DEG,MIN_ELEVATION_DEG');
 assert.deepEqual(members(scv, 'scvSensorShapeKind'), ['CONIC=0', 'RECTANGULAR=1', 'CUSTOM_POLYGON=2', 'SAR_ANNULAR_SECTOR=3'], 'scvSensorShapeKind is unchanged');
 assert.deepEqual(members(snr, 'oppDeterminationMethod').slice(5), ['MODEL_DERIVED=5', 'INFERRED_FROM_FAMILY=6', 'USER_DEFINED=7'], 'USER_DEFINED appended');
