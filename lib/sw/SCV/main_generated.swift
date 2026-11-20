@@ -102,8 +102,13 @@ public enum scvSensorRangeBoundaryKind: UInt8, FlatbuffersVectorInitializable, E
   public var value: UInt8 { return self.rawValue }
   case radialSpherical = 0
   case localZPlane = 1
+  ///  The volume ends at an altitude ceiling: each direction of the shape reaches as far as the ceiling surface of
+  ///  SCVSensorShapeContract.MAX_ALTITUDE_M, so each direction ends at its own distance from the sensor, and the volume's
+  ///  top is that surface. MAX_RANGE_M, when more than 0, still bounds every direction as well. A sensor at or above its
+  ///  ceiling has no volume.
+  case altitudeShell = 2
 
-  public static var max: scvSensorRangeBoundaryKind { return .localZPlane }
+  public static var max: scvSensorRangeBoundaryKind { return .altitudeShell }
   public static var min: scvSensorRangeBoundaryKind { return .radialSpherical }
 }
 
@@ -493,6 +498,8 @@ public struct SCVSensorShapeContract: FlatBufferVerifiableTable, FlatbuffersVect
     static let POLYGON_VERTICES: VOffset = 32
     static let POLYGON_FRAME: VOffset = 34
     static let AZ_EL_MASK: VOffset = 36
+    static let MAX_ALTITUDE_M: VOffset = 38
+    static let ALTITUDE_REFERENCE: VOffset = 40
   }
 
   public var SHAPE_KIND: scvSensorShapeKind { let o = _accessor.offset(VT.SHAPE_KIND); return o == 0 ? .conic : scvSensorShapeKind(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .conic }
@@ -514,7 +521,14 @@ public struct SCVSensorShapeContract: FlatBufferVerifiableTable, FlatbuffersVect
   ///  Azimuth/elevation mask of a ground sensor, empty when the sensor has none.
   ///  Clips the shape: a direction below the mask is outside the field of view.
   public var AZ_EL_MASK: FlatbufferVector<SCVAzElMaskPoint> { return _accessor.vector(at: VT.AZ_EL_MASK, byteSize: 4) }
-  public static func startSCVSensorShapeContract(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 17) }
+  ///  For RANGE_BOUNDARY ALTITUDE_SHELL: the altitude ceiling, meters above ALTITUDE_REFERENCE. The ceiling surface is
+  ///  the reference ellipsoid with every semi-axis made MAX_ALTITUDE_M longer, centered on the body and in its fixed
+  ///  frame: on a sphere exactly MAX_ALTITUDE_M above it; on WGS84 within 3 m of the geodetic height up to 2,000 km.
+  public var MAX_ALTITUDE_M: Double { let o = _accessor.offset(VT.MAX_ALTITUDE_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  The surface MAX_ALTITUDE_M is measured from. Absent: the standard ellipsoid of the body the sensor is on (WGS84
+  ///  on the Earth). SEMI_INTERMEDIATE_M 0 is SEMI_MAJOR_M (an ellipsoid of revolution); a sphere has equal semi-axes.
+  public var ALTITUDE_REFERENCE: SCVEllipsoid? { let o = _accessor.offset(VT.ALTITUDE_REFERENCE); return o == 0 ? nil : SCVEllipsoid(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startSCVSensorShapeContract(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 19) }
   public static func add(SHAPE_KIND: scvSensorShapeKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHAPE_KIND.rawValue, def: 0, at: VT.SHAPE_KIND) }
   public static func add(AXIS_CONVENTION: scvSensorAxisConvention, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AXIS_CONVENTION.rawValue, def: 0, at: VT.AXIS_CONVENTION) }
   public static func add(RANGE_BOUNDARY: scvSensorRangeBoundaryKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RANGE_BOUNDARY.rawValue, def: 0, at: VT.RANGE_BOUNDARY) }
@@ -532,6 +546,8 @@ public struct SCVSensorShapeContract: FlatBufferVerifiableTable, FlatbuffersVect
   public static func addVectorOf(POLYGON_VERTICES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POLYGON_VERTICES, at: VT.POLYGON_VERTICES) }
   public static func add(POLYGON_FRAME: scvCoordinateFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POLYGON_FRAME.rawValue, def: 0, at: VT.POLYGON_FRAME) }
   public static func addVectorOf(AZ_EL_MASK: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AZ_EL_MASK, at: VT.AZ_EL_MASK) }
+  public static func add(MAX_ALTITUDE_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_ALTITUDE_M, def: 0.0, at: VT.MAX_ALTITUDE_M) }
+  public static func add(ALTITUDE_REFERENCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALTITUDE_REFERENCE, at: VT.ALTITUDE_REFERENCE) }
   public static func endSCVSensorShapeContract(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSCVSensorShapeContract(
     _ fbb: inout FlatBufferBuilder,
@@ -551,7 +567,9 @@ public struct SCVSensorShapeContract: FlatBufferVerifiableTable, FlatbuffersVect
     MAX_RANGE_M: Double = 0.0,
     POLYGON_VERTICESVectorOffset POLYGON_VERTICES: Offset = Offset(),
     POLYGON_FRAME: scvCoordinateFrame = .unknown,
-    AZ_EL_MASKVectorOffset AZ_EL_MASK: Offset = Offset()
+    AZ_EL_MASKVectorOffset AZ_EL_MASK: Offset = Offset(),
+    MAX_ALTITUDE_M: Double = 0.0,
+    ALTITUDE_REFERENCEOffset ALTITUDE_REFERENCE: Offset = Offset()
   ) -> Offset {
     let __start = SCVSensorShapeContract.startSCVSensorShapeContract(&fbb)
     SCVSensorShapeContract.add(SHAPE_KIND: SHAPE_KIND, &fbb)
@@ -571,6 +589,8 @@ public struct SCVSensorShapeContract: FlatBufferVerifiableTable, FlatbuffersVect
     SCVSensorShapeContract.addVectorOf(POLYGON_VERTICES: POLYGON_VERTICES, &fbb)
     SCVSensorShapeContract.add(POLYGON_FRAME: POLYGON_FRAME, &fbb)
     SCVSensorShapeContract.addVectorOf(AZ_EL_MASK: AZ_EL_MASK, &fbb)
+    SCVSensorShapeContract.add(MAX_ALTITUDE_M: MAX_ALTITUDE_M, &fbb)
+    SCVSensorShapeContract.add(ALTITUDE_REFERENCE: ALTITUDE_REFERENCE, &fbb)
     return SCVSensorShapeContract.endSCVSensorShapeContract(&fbb, start: __start)
   }
 
@@ -593,6 +613,8 @@ public struct SCVSensorShapeContract: FlatBufferVerifiableTable, FlatbuffersVect
     try _v.visit(field: VT.POLYGON_VERTICES, fieldName: "POLYGON_VERTICES", required: false, type: ForwardOffset<Vector<ForwardOffset<SCVVec3>, SCVVec3>>.self)
     try _v.visit(field: VT.POLYGON_FRAME, fieldName: "POLYGON_FRAME", required: false, type: scvCoordinateFrame.self)
     try _v.visit(field: VT.AZ_EL_MASK, fieldName: "AZ_EL_MASK", required: false, type: ForwardOffset<Vector<ForwardOffset<SCVAzElMaskPoint>, SCVAzElMaskPoint>>.self)
+    try _v.visit(field: VT.MAX_ALTITUDE_M, fieldName: "MAX_ALTITUDE_M", required: false, type: Double.self)
+    try _v.visit(field: VT.ALTITUDE_REFERENCE, fieldName: "ALTITUDE_REFERENCE", required: false, type: ForwardOffset<SCVEllipsoid>.self)
     _v.finish()
   }
 }

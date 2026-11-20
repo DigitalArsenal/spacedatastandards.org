@@ -5,10 +5,16 @@ class scvSensorRangeBoundaryKind
 {
     const RADIAL_SPHERICAL = 0;
     const LOCAL_Z_PLANE = 1;
+    /// The volume ends at an altitude ceiling: each direction of the shape reaches as far as the ceiling surface of
+    /// SCVSensorShapeContract.MAX_ALTITUDE_M, so each direction ends at its own distance from the sensor, and the volume's
+    /// top is that surface. MAX_RANGE_M, when more than 0, still bounds every direction as well. A sensor at or above its
+    /// ceiling has no volume.
+    const ALTITUDE_SHELL = 2;
 
     private static $names = array(
         scvSensorRangeBoundaryKind::RADIAL_SPHERICAL=>"RADIAL_SPHERICAL",
         scvSensorRangeBoundaryKind::LOCAL_Z_PLANE=>"LOCAL_Z_PLANE",
+        scvSensorRangeBoundaryKind::ALTITUDE_SHELL=>"ALTITUDE_SHELL",
     );
 
     public static function Name($e)

@@ -58,6 +58,18 @@ public final class SCVSensorShapeContract extends com.google.flatbuffers.Table {
   public int AZ_EL_MASKLength() { int o = __offset(36); return o != 0 ? __vector_len(o) : 0; }
   public SCVAzElMaskPoint.Vector azElMaskVector() { return azElMaskVector(new SCVAzElMaskPoint.Vector()); }
   public SCVAzElMaskPoint.Vector azElMaskVector(SCVAzElMaskPoint.Vector obj) { int o = __offset(36); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * For RANGE_BOUNDARY ALTITUDE_SHELL: the altitude ceiling, meters above ALTITUDE_REFERENCE. The ceiling surface is
+   * the reference ellipsoid with every semi-axis made MAX_ALTITUDE_M longer, centered on the body and in its fixed
+   * frame: on a sphere exactly MAX_ALTITUDE_M above it; on WGS84 within 3 m of the geodetic height up to 2,000 km.
+   */
+  public double MAX_ALTITUDE_M() { int o = __offset(38); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * The surface MAX_ALTITUDE_M is measured from. Absent: the standard ellipsoid of the body the sensor is on (WGS84
+   * on the Earth). SEMI_INTERMEDIATE_M 0 is SEMI_MAJOR_M (an ellipsoid of revolution); a sphere has equal semi-axes.
+   */
+  public SCVEllipsoid ALTITUDE_REFERENCE() { return ALTITUDE_REFERENCE(new SCVEllipsoid()); }
+  public SCVEllipsoid ALTITUDE_REFERENCE(SCVEllipsoid obj) { int o = __offset(40); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createSCVSensorShapeContract(FlatBufferBuilder builder,
       int SHAPE_KIND,
@@ -76,8 +88,11 @@ public final class SCVSensorShapeContract extends com.google.flatbuffers.Table {
       double MAX_RANGE_M,
       int POLYGON_VERTICESOffset,
       int POLYGON_FRAME,
-      int AZ_EL_MASKOffset) {
-    builder.startTable(17);
+      int AZ_EL_MASKOffset,
+      double MAX_ALTITUDE_M,
+      int ALTITUDE_REFERENCEOffset) {
+    builder.startTable(19);
+    SCVSensorShapeContract.addMaxAltitudeM(builder, MAX_ALTITUDE_M);
     SCVSensorShapeContract.addMaxRangeM(builder, MAX_RANGE_M);
     SCVSensorShapeContract.addMinRangeM(builder, MIN_RANGE_M);
     SCVSensorShapeContract.addSarSamplingDensity(builder, SAR_SAMPLING_DENSITY);
@@ -89,6 +104,7 @@ public final class SCVSensorShapeContract extends com.google.flatbuffers.Table {
     SCVSensorShapeContract.addMinClockAngleDeg(builder, MIN_CLOCK_ANGLE_DEG);
     SCVSensorShapeContract.addInnerHalfAngleDeg(builder, INNER_HALF_ANGLE_DEG);
     SCVSensorShapeContract.addOuterHalfAngleDeg(builder, OUTER_HALF_ANGLE_DEG);
+    SCVSensorShapeContract.addAltitudeReference(builder, ALTITUDE_REFERENCEOffset);
     SCVSensorShapeContract.addAzElMask(builder, AZ_EL_MASKOffset);
     SCVSensorShapeContract.addPolygonVertices(builder, POLYGON_VERTICESOffset);
     SCVSensorShapeContract.addPolygonFrame(builder, POLYGON_FRAME);
@@ -98,7 +114,7 @@ public final class SCVSensorShapeContract extends com.google.flatbuffers.Table {
     return SCVSensorShapeContract.endSCVSensorShapeContract(builder);
   }
 
-  public static void startSCVSensorShapeContract(FlatBufferBuilder builder) { builder.startTable(17); }
+  public static void startSCVSensorShapeContract(FlatBufferBuilder builder) { builder.startTable(19); }
   public static void addShapeKind(FlatBufferBuilder builder, int SHAPE_KIND) { builder.addByte(0, (byte) SHAPE_KIND, (byte) 0); }
   public static void addAxisConvention(FlatBufferBuilder builder, int AXIS_CONVENTION) { builder.addByte(1, (byte) AXIS_CONVENTION, (byte) 0); }
   public static void addRangeBoundary(FlatBufferBuilder builder, int RANGE_BOUNDARY) { builder.addByte(2, (byte) RANGE_BOUNDARY, (byte) 0); }
@@ -120,6 +136,8 @@ public final class SCVSensorShapeContract extends com.google.flatbuffers.Table {
   public static void addAzElMask(FlatBufferBuilder builder, int AZ_EL_MASKOffset) { builder.addOffset(16, AZ_EL_MASKOffset, 0); }
   public static int createAzElMaskVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startAzElMaskVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addMaxAltitudeM(FlatBufferBuilder builder, double MAX_ALTITUDE_M) { builder.addDouble(17, MAX_ALTITUDE_M, 0.0); }
+  public static void addAltitudeReference(FlatBufferBuilder builder, int ALTITUDE_REFERENCEOffset) { builder.addOffset(18, ALTITUDE_REFERENCEOffset, 0); }
   public static int endSCVSensorShapeContract(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

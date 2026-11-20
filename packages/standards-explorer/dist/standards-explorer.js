@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.290.0+1795124342256",
+  version: "1.291.0+1795184488795",
   STANDARDS: {
     PCF: {
       IDL: `// Hash: e259db0e1e4887f3ca3d15f7819bd8fbac894d2e251c81328b3c79a61b9e4060
@@ -28465,8 +28465,8 @@ file_identifier "$RPC";`,
       ]
     },
     SCV: {
-      IDL: `// Hash: 63b30ae792ef43ea30c63e625212670f333422c2669b4acd9d1036952692eb7d
-// Version: 1.101.6
+      IDL: `// Hash: ce9e2e29d0be63fbbe42ee859424ffdea031564c60279f0d025bc908b4be2072
+// Version: 1.101.7
 // -----------------------------------END_HEADER
 /// Sensor Coverage Analytics \u2014 canonical request/result/progress ABI for
 /// access, coverage, swath, and coverage-geometry products produced by SDN
@@ -28517,7 +28517,12 @@ enum scvSensorAxisConvention : ubyte {
 
 enum scvSensorRangeBoundaryKind : ubyte {
   RADIAL_SPHERICAL,
-  LOCAL_Z_PLANE
+  LOCAL_Z_PLANE,
+  /// The volume ends at an altitude ceiling: each direction of the shape reaches as far as the ceiling surface of
+  /// SCVSensorShapeContract.MAX_ALTITUDE_M, so each direction ends at its own distance from the sensor, and the volume's
+  /// top is that surface. MAX_RANGE_M, when more than 0, still bounds every direction as well. A sensor at or above its
+  /// ceiling has no volume.
+  ALTITUDE_SHELL
 }
 
 enum scvGeometryDomain : ubyte {
@@ -28651,6 +28656,13 @@ table SCVSensorShapeContract {
   /// Azimuth/elevation mask of a ground sensor, empty when the sensor has none.
   /// Clips the shape: a direction below the mask is outside the field of view.
   AZ_EL_MASK:[SCVAzElMaskPoint];
+  /// For RANGE_BOUNDARY ALTITUDE_SHELL: the altitude ceiling, meters above ALTITUDE_REFERENCE. The ceiling surface is
+  /// the reference ellipsoid with every semi-axis made MAX_ALTITUDE_M longer, centered on the body and in its fixed
+  /// frame: on a sphere exactly MAX_ALTITUDE_M above it; on WGS84 within 3 m of the geodetic height up to 2,000 km.
+  MAX_ALTITUDE_M:double;
+  /// The surface MAX_ALTITUDE_M is measured from. Absent: the standard ellipsoid of the body the sensor is on (WGS84
+  /// on the Earth). SEMI_INTERMEDIATE_M 0 is SEMI_MAJOR_M (an ellipsoid of revolution); a sphere has equal semi-axes.
+  ALTITUDE_REFERENCE:SCVEllipsoid;
 }
 
 table SCVSensor {
@@ -95984,7 +95996,8 @@ rotation rate (rad/s; 0 = 7.292115e-5).`
           type: "string",
           enum: [
             "RADIAL_SPHERICAL",
-            "LOCAL_Z_PLANE"
+            "LOCAL_Z_PLANE",
+            "ALTITUDE_SHELL"
           ]
         },
         scvGeometryDomain: {
@@ -96993,6 +97006,14 @@ turned into a number.`
                 $ref: "#/definitions/SCVAzElMaskPoint"
               },
               description: "Azimuth/elevation mask of a ground sensor, empty when the sensor has none.\nClips the shape: a direction below the mask is outside the field of view."
+            },
+            MAX_ALTITUDE_M: {
+              type: "number",
+              description: "For RANGE_BOUNDARY ALTITUDE_SHELL: the altitude ceiling, meters above ALTITUDE_REFERENCE. The ceiling surface is\nthe reference ellipsoid with every semi-axis made MAX_ALTITUDE_M longer, centered on the body and in its fixed\nframe: on a sphere exactly MAX_ALTITUDE_M above it; on WGS84 within 3 m of the geodetic height up to 2,000 km."
+            },
+            ALTITUDE_REFERENCE: {
+              $ref: "#/definitions/SCVEllipsoid",
+              description: "The surface MAX_ALTITUDE_M is measured from. Absent: the standard ellipsoid of the body the sensor is on (WGS84\non the Earth). SEMI_INTERMEDIATE_M 0 is SEMI_MAJOR_M (an ellipsoid of revolution); a sphere has equal semi-axes."
             }
           },
           additionalProperties: false
@@ -170957,7 +170978,8 @@ stated.`
           type: "string",
           enum: [
             "RADIAL_SPHERICAL",
-            "LOCAL_Z_PLANE"
+            "LOCAL_Z_PLANE",
+            "ALTITUDE_SHELL"
           ]
         },
         scvGeometryDomain: {
@@ -233088,6 +233110,14 @@ zero. The record's CID is computed over the signed bytes.`
                 $ref: "#/definitions/SCVAzElMaskPoint"
               },
               description: "Azimuth/elevation mask of a ground sensor, empty when the sensor has none.\nClips the shape: a direction below the mask is outside the field of view."
+            },
+            MAX_ALTITUDE_M: {
+              type: "number",
+              description: "For RANGE_BOUNDARY ALTITUDE_SHELL: the altitude ceiling, meters above ALTITUDE_REFERENCE. The ceiling surface is\nthe reference ellipsoid with every semi-axis made MAX_ALTITUDE_M longer, centered on the body and in its fixed\nframe: on a sphere exactly MAX_ALTITUDE_M above it; on WGS84 within 3 m of the geodetic height up to 2,000 km."
+            },
+            ALTITUDE_REFERENCE: {
+              $ref: "#/definitions/SCVEllipsoid",
+              description: "The surface MAX_ALTITUDE_M is measured from. Absent: the standard ellipsoid of the body the sensor is on (WGS84\non the Earth). SEMI_INTERMEDIATE_M 0 is SEMI_MAJOR_M (an ellipsoid of revolution); a sphere has equal semi-axes."
             }
           },
           additionalProperties: false
@@ -295738,7 +295768,8 @@ compressed). Nothing hashes the payload before the protocol hash.`
           type: "string",
           enum: [
             "RADIAL_SPHERICAL",
-            "LOCAL_Z_PLANE"
+            "LOCAL_Z_PLANE",
+            "ALTITUDE_SHELL"
           ]
         },
         scvGeometryDomain: {
@@ -296771,6 +296802,14 @@ turned into a number.`
                 $ref: "#/definitions/SCVAzElMaskPoint"
               },
               description: "Azimuth/elevation mask of a ground sensor, empty when the sensor has none.\nClips the shape: a direction below the mask is outside the field of view."
+            },
+            MAX_ALTITUDE_M: {
+              type: "number",
+              description: "For RANGE_BOUNDARY ALTITUDE_SHELL: the altitude ceiling, meters above ALTITUDE_REFERENCE. The ceiling surface is\nthe reference ellipsoid with every semi-axis made MAX_ALTITUDE_M longer, centered on the body and in its fixed\nframe: on a sphere exactly MAX_ALTITUDE_M above it; on WGS84 within 3 m of the geodetic height up to 2,000 km."
+            },
+            ALTITUDE_REFERENCE: {
+              $ref: "#/definitions/SCVEllipsoid",
+              description: "The surface MAX_ALTITUDE_M is measured from. Absent: the standard ellipsoid of the body the sensor is on (WGS84\non the Earth). SEMI_INTERMEDIATE_M 0 is SEMI_MAJOR_M (an ellipsoid of revolution); a sphere has equal semi-axes."
             }
           },
           additionalProperties: false
@@ -329393,7 +329432,8 @@ zero. The record's CID is computed over the signed bytes.`
           type: "string",
           enum: [
             "RADIAL_SPHERICAL",
-            "LOCAL_Z_PLANE"
+            "LOCAL_Z_PLANE",
+            "ALTITUDE_SHELL"
           ]
         },
         scvGeometryDomain: {
@@ -329628,6 +329668,14 @@ zero. The record's CID is computed over the signed bytes.`
                 $ref: "#/definitions/SCVAzElMaskPoint"
               },
               description: "Azimuth/elevation mask of a ground sensor, empty when the sensor has none.\nClips the shape: a direction below the mask is outside the field of view."
+            },
+            MAX_ALTITUDE_M: {
+              type: "number",
+              description: "For RANGE_BOUNDARY ALTITUDE_SHELL: the altitude ceiling, meters above ALTITUDE_REFERENCE. The ceiling surface is\nthe reference ellipsoid with every semi-axis made MAX_ALTITUDE_M longer, centered on the body and in its fixed\nframe: on a sphere exactly MAX_ALTITUDE_M above it; on WGS84 within 3 m of the geodetic height up to 2,000 km."
+            },
+            ALTITUDE_REFERENCE: {
+              $ref: "#/definitions/SCVEllipsoid",
+              description: "The surface MAX_ALTITUDE_M is measured from. Absent: the standard ellipsoid of the body the sensor is on (WGS84\non the Earth). SEMI_INTERMEDIATE_M 0 is SEMI_MAJOR_M (an ellipsoid of revolution); a sphere has equal semi-axes."
             }
           },
           additionalProperties: false
@@ -526599,7 +526647,8 @@ rotation rate (rad/s; 0 = 7.292115e-5).`,
           type: "string",
           enum: [
             "RADIAL_SPHERICAL",
-            "LOCAL_Z_PLANE"
+            "LOCAL_Z_PLANE",
+            "ALTITUDE_SHELL"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
@@ -526609,6 +526658,10 @@ rotation rate (rad/s; 0 = 7.292115e-5).`,
             },
             LOCAL_Z_PLANE: {
               value: 1
+            },
+            ALTITUDE_SHELL: {
+              value: 2,
+              description: "The volume ends at an altitude ceiling: each direction of the shape reaches as far as the ceiling surface of SCVSensorShapeContract.MAX_ALTITUDE_M, so each direction ends at its own distance from the sensor, and the volume's top is that surface. MAX_RANGE_M, when more than 0, still bounds every direction as well. A sensor at or above its ceiling has no volume."
             }
           }
         },
@@ -528543,6 +528596,10 @@ turned into a number.`,
                 },
                 LOCAL_Z_PLANE: {
                   value: 1
+                },
+                ALTITUDE_SHELL: {
+                  value: 2,
+                  description: "The volume ends at an altitude ceiling: each direction of the shape reaches as far as the ceiling surface of SCVSensorShapeContract.MAX_ALTITUDE_M, so each direction ends at its own distance from the sensor, and the volume's top is that surface. MAX_RANGE_M, when more than 0, still bounds every direction as well. A sensor at or above its ceiling has no volume."
                 }
               }
             },
@@ -528633,6 +528690,16 @@ turned into a number.`,
               },
               description: "Azimuth/elevation mask of a ground sensor, empty when the sensor has none.\nClips the shape: a direction below the mask is outside the field of view.",
               "x-flatbuffer-type": "[SCVAzElMaskPoint]"
+            },
+            MAX_ALTITUDE_M: {
+              type: "number",
+              description: "For RANGE_BOUNDARY ALTITUDE_SHELL: the altitude ceiling, meters above ALTITUDE_REFERENCE. The ceiling surface is\nthe reference ellipsoid with every semi-axis made MAX_ALTITUDE_M longer, centered on the body and in its fixed\nframe: on a sphere exactly MAX_ALTITUDE_M above it; on WGS84 within 3 m of the geodetic height up to 2,000 km.",
+              "x-flatbuffer-type": "double"
+            },
+            ALTITUDE_REFERENCE: {
+              $ref: "#/definitions/SCVEllipsoid",
+              description: "The surface MAX_ALTITUDE_M is measured from. Absent: the standard ellipsoid of the body the sensor is on (WGS84\non the Earth). SEMI_INTERMEDIATE_M 0 is SEMI_MAJOR_M (an ellipsoid of revolution); a sphere has equal semi-axes.",
+              "x-flatbuffer-type": "SCVEllipsoid"
             }
           },
           additionalProperties: false
@@ -711327,7 +711394,8 @@ stated.`,
           type: "string",
           enum: [
             "RADIAL_SPHERICAL",
-            "LOCAL_Z_PLANE"
+            "LOCAL_Z_PLANE",
+            "ALTITUDE_SHELL"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
@@ -711337,6 +711405,10 @@ stated.`,
             },
             LOCAL_Z_PLANE: {
               value: 1
+            },
+            ALTITUDE_SHELL: {
+              value: 2,
+              description: "The volume ends at an altitude ceiling: each direction of the shape reaches as far as the ceiling surface of SCVSensorShapeContract.MAX_ALTITUDE_M, so each direction ends at its own distance from the sensor, and the volume's top is that surface. MAX_RANGE_M, when more than 0, still bounds every direction as well. A sensor at or above its ceiling has no volume."
             }
           }
         },
@@ -815796,6 +815868,10 @@ zero. The record's CID is computed over the signed bytes.`,
                 },
                 LOCAL_Z_PLANE: {
                   value: 1
+                },
+                ALTITUDE_SHELL: {
+                  value: 2,
+                  description: "The volume ends at an altitude ceiling: each direction of the shape reaches as far as the ceiling surface of SCVSensorShapeContract.MAX_ALTITUDE_M, so each direction ends at its own distance from the sensor, and the volume's top is that surface. MAX_RANGE_M, when more than 0, still bounds every direction as well. A sensor at or above its ceiling has no volume."
                 }
               }
             },
@@ -815886,6 +815962,16 @@ zero. The record's CID is computed over the signed bytes.`,
               },
               description: "Azimuth/elevation mask of a ground sensor, empty when the sensor has none.\nClips the shape: a direction below the mask is outside the field of view.",
               "x-flatbuffer-type": "[SCVAzElMaskPoint]"
+            },
+            MAX_ALTITUDE_M: {
+              type: "number",
+              description: "For RANGE_BOUNDARY ALTITUDE_SHELL: the altitude ceiling, meters above ALTITUDE_REFERENCE. The ceiling surface is\nthe reference ellipsoid with every semi-axis made MAX_ALTITUDE_M longer, centered on the body and in its fixed\nframe: on a sphere exactly MAX_ALTITUDE_M above it; on WGS84 within 3 m of the geodetic height up to 2,000 km.",
+              "x-flatbuffer-type": "double"
+            },
+            ALTITUDE_REFERENCE: {
+              $ref: "#/definitions/SCVEllipsoid",
+              description: "The surface MAX_ALTITUDE_M is measured from. Absent: the standard ellipsoid of the body the sensor is on (WGS84\non the Earth). SEMI_INTERMEDIATE_M 0 is SEMI_MAJOR_M (an ellipsoid of revolution); a sphere has equal semi-axes.",
+              "x-flatbuffer-type": "SCVEllipsoid"
             }
           },
           additionalProperties: false
@@ -954333,7 +954419,8 @@ compressed). Nothing hashes the payload before the protocol hash.`,
           type: "string",
           enum: [
             "RADIAL_SPHERICAL",
-            "LOCAL_Z_PLANE"
+            "LOCAL_Z_PLANE",
+            "ALTITUDE_SHELL"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
@@ -954343,6 +954430,10 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             },
             LOCAL_Z_PLANE: {
               value: 1
+            },
+            ALTITUDE_SHELL: {
+              value: 2,
+              description: "The volume ends at an altitude ceiling: each direction of the shape reaches as far as the ceiling surface of SCVSensorShapeContract.MAX_ALTITUDE_M, so each direction ends at its own distance from the sensor, and the volume's top is that surface. MAX_RANGE_M, when more than 0, still bounds every direction as well. A sensor at or above its ceiling has no volume."
             }
           }
         },
@@ -956365,6 +956456,10 @@ turned into a number.`,
                 },
                 LOCAL_Z_PLANE: {
                   value: 1
+                },
+                ALTITUDE_SHELL: {
+                  value: 2,
+                  description: "The volume ends at an altitude ceiling: each direction of the shape reaches as far as the ceiling surface of SCVSensorShapeContract.MAX_ALTITUDE_M, so each direction ends at its own distance from the sensor, and the volume's top is that surface. MAX_RANGE_M, when more than 0, still bounds every direction as well. A sensor at or above its ceiling has no volume."
                 }
               }
             },
@@ -956455,6 +956550,16 @@ turned into a number.`,
               },
               description: "Azimuth/elevation mask of a ground sensor, empty when the sensor has none.\nClips the shape: a direction below the mask is outside the field of view.",
               "x-flatbuffer-type": "[SCVAzElMaskPoint]"
+            },
+            MAX_ALTITUDE_M: {
+              type: "number",
+              description: "For RANGE_BOUNDARY ALTITUDE_SHELL: the altitude ceiling, meters above ALTITUDE_REFERENCE. The ceiling surface is\nthe reference ellipsoid with every semi-axis made MAX_ALTITUDE_M longer, centered on the body and in its fixed\nframe: on a sphere exactly MAX_ALTITUDE_M above it; on WGS84 within 3 m of the geodetic height up to 2,000 km.",
+              "x-flatbuffer-type": "double"
+            },
+            ALTITUDE_REFERENCE: {
+              $ref: "#/definitions/SCVEllipsoid",
+              description: "The surface MAX_ALTITUDE_M is measured from. Absent: the standard ellipsoid of the body the sensor is on (WGS84\non the Earth). SEMI_INTERMEDIATE_M 0 is SEMI_MAJOR_M (an ellipsoid of revolution); a sphere has equal semi-axes.",
+              "x-flatbuffer-type": "SCVEllipsoid"
             }
           },
           additionalProperties: false
@@ -1028239,7 +1028344,8 @@ zero. The record's CID is computed over the signed bytes.`,
           type: "string",
           enum: [
             "RADIAL_SPHERICAL",
-            "LOCAL_Z_PLANE"
+            "LOCAL_Z_PLANE",
+            "ALTITUDE_SHELL"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
@@ -1028249,6 +1028355,10 @@ zero. The record's CID is computed over the signed bytes.`,
             },
             LOCAL_Z_PLANE: {
               value: 1
+            },
+            ALTITUDE_SHELL: {
+              value: 2,
+              description: "The volume ends at an altitude ceiling: each direction of the shape reaches as far as the ceiling surface of SCVSensorShapeContract.MAX_ALTITUDE_M, so each direction ends at its own distance from the sensor, and the volume's top is that surface. MAX_RANGE_M, when more than 0, still bounds every direction as well. A sensor at or above its ceiling has no volume."
             }
           }
         },
@@ -1028704,6 +1028814,10 @@ zero. The record's CID is computed over the signed bytes.`,
                 },
                 LOCAL_Z_PLANE: {
                   value: 1
+                },
+                ALTITUDE_SHELL: {
+                  value: 2,
+                  description: "The volume ends at an altitude ceiling: each direction of the shape reaches as far as the ceiling surface of SCVSensorShapeContract.MAX_ALTITUDE_M, so each direction ends at its own distance from the sensor, and the volume's top is that surface. MAX_RANGE_M, when more than 0, still bounds every direction as well. A sensor at or above its ceiling has no volume."
                 }
               }
             },
@@ -1028794,6 +1028908,16 @@ zero. The record's CID is computed over the signed bytes.`,
               },
               description: "Azimuth/elevation mask of a ground sensor, empty when the sensor has none.\nClips the shape: a direction below the mask is outside the field of view.",
               "x-flatbuffer-type": "[SCVAzElMaskPoint]"
+            },
+            MAX_ALTITUDE_M: {
+              type: "number",
+              description: "For RANGE_BOUNDARY ALTITUDE_SHELL: the altitude ceiling, meters above ALTITUDE_REFERENCE. The ceiling surface is\nthe reference ellipsoid with every semi-axis made MAX_ALTITUDE_M longer, centered on the body and in its fixed\nframe: on a sphere exactly MAX_ALTITUDE_M above it; on WGS84 within 3 m of the geodetic height up to 2,000 km.",
+              "x-flatbuffer-type": "double"
+            },
+            ALTITUDE_REFERENCE: {
+              $ref: "#/definitions/SCVEllipsoid",
+              description: "The surface MAX_ALTITUDE_M is measured from. Absent: the standard ellipsoid of the body the sensor is on (WGS84\non the Earth). SEMI_INTERMEDIATE_M 0 is SEMI_MAJOR_M (an ellipsoid of revolution); a sphere has equal semi-axes.",
+              "x-flatbuffer-type": "SCVEllipsoid"
             }
           },
           additionalProperties: false

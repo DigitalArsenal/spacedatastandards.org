@@ -188,8 +188,31 @@ class SCVSensorShapeContract(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
         return o == 0
 
+    # For RANGE_BOUNDARY ALTITUDE_SHELL: the altitude ceiling, meters above ALTITUDE_REFERENCE. The ceiling surface is
+    # the reference ellipsoid with every semi-axis made MAX_ALTITUDE_M longer, centered on the body and in its fixed
+    # frame: on a sphere exactly MAX_ALTITUDE_M above it; on WGS84 within 3 m of the geodetic height up to 2,000 km.
+    # SCVSensorShapeContract
+    def MAX_ALTITUDE_M(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # The surface MAX_ALTITUDE_M is measured from. Absent: the standard ellipsoid of the body the sensor is on (WGS84
+    # on the Earth). SEMI_INTERMEDIATE_M 0 is SEMI_MAJOR_M (an ellipsoid of revolution); a sphere has equal semi-axes.
+    # SCVSensorShapeContract
+    def ALTITUDE_REFERENCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from SCVEllipsoid import SCVEllipsoid
+            obj = SCVEllipsoid()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def SCVSensorShapeContractStart(builder):
-    builder.StartObject(17)
+    builder.StartObject(19)
 
 def Start(builder):
     SCVSensorShapeContractStart(builder)
@@ -320,6 +343,18 @@ def SCVSensorShapeContractCreateAZ_EL_MASKVector(builder, data):
 def CreateAZ_EL_MASKVector(builder, data):
     return SCVSensorShapeContractCreateAZ_EL_MASKVector(builder, data)
 
+def SCVSensorShapeContractAddMAX_ALTITUDE_M(builder, MAX_ALTITUDE_M):
+    builder.PrependFloat64Slot(17, MAX_ALTITUDE_M, 0.0)
+
+def AddMAX_ALTITUDE_M(builder, MAX_ALTITUDE_M):
+    SCVSensorShapeContractAddMAX_ALTITUDE_M(builder, MAX_ALTITUDE_M)
+
+def SCVSensorShapeContractAddALTITUDE_REFERENCE(builder, ALTITUDE_REFERENCE):
+    builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(ALTITUDE_REFERENCE), 0)
+
+def AddALTITUDE_REFERENCE(builder, ALTITUDE_REFERENCE):
+    SCVSensorShapeContractAddALTITUDE_REFERENCE(builder, ALTITUDE_REFERENCE)
+
 def SCVSensorShapeContractEnd(builder):
     return builder.EndObject()
 
@@ -327,9 +362,10 @@ def End(builder):
     return SCVSensorShapeContractEnd(builder)
 
 import SCVAzElMaskPoint
+import SCVEllipsoid
 import SCVVec3
 try:
-    from typing import List
+    from typing import List, Optional
 except:
     pass
 
@@ -355,6 +391,8 @@ class SCVSensorShapeContractT(object):
         POLYGON_VERTICES = None,
         POLYGON_FRAME = 0,
         AZ_EL_MASK = None,
+        MAX_ALTITUDE_M = 0.0,
+        ALTITUDE_REFERENCE = None,
     ):
         self.SHAPE_KIND = SHAPE_KIND  # type: int
         self.AXIS_CONVENTION = AXIS_CONVENTION  # type: int
@@ -373,6 +411,8 @@ class SCVSensorShapeContractT(object):
         self.POLYGON_VERTICES = POLYGON_VERTICES  # type: Optional[List[SCVVec3.SCVVec3T]]
         self.POLYGON_FRAME = POLYGON_FRAME  # type: int
         self.AZ_EL_MASK = AZ_EL_MASK  # type: Optional[List[SCVAzElMaskPoint.SCVAzElMaskPointT]]
+        self.MAX_ALTITUDE_M = MAX_ALTITUDE_M  # type: float
+        self.ALTITUDE_REFERENCE = ALTITUDE_REFERENCE  # type: Optional[SCVEllipsoid.SCVEllipsoidT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -426,6 +466,9 @@ class SCVSensorShapeContractT(object):
                 else:
                     sCVAzElMaskPoint_ = SCVAzElMaskPoint.SCVAzElMaskPointT.InitFromObj(SCVSensorShapeContract.AZ_EL_MASK(i))
                     self.AZ_EL_MASK.append(sCVAzElMaskPoint_)
+        self.MAX_ALTITUDE_M = SCVSensorShapeContract.MAX_ALTITUDE_M()
+        if SCVSensorShapeContract.ALTITUDE_REFERENCE() is not None:
+            self.ALTITUDE_REFERENCE = SCVEllipsoid.SCVEllipsoidT.InitFromObj(SCVSensorShapeContract.ALTITUDE_REFERENCE())
 
     # SCVSensorShapeContractT
     def Pack(self, builder):
@@ -445,6 +488,8 @@ class SCVSensorShapeContractT(object):
             for i in reversed(range(len(self.AZ_EL_MASK))):
                 builder.PrependUOffsetTRelative(AZ_EL_MASKlist[i])
             AZ_EL_MASK = builder.EndVector()
+        if self.ALTITUDE_REFERENCE is not None:
+            ALTITUDE_REFERENCE = self.ALTITUDE_REFERENCE.Pack(builder)
         SCVSensorShapeContractStart(builder)
         SCVSensorShapeContractAddSHAPE_KIND(builder, self.SHAPE_KIND)
         SCVSensorShapeContractAddAXIS_CONVENTION(builder, self.AXIS_CONVENTION)
@@ -465,5 +510,8 @@ class SCVSensorShapeContractT(object):
         SCVSensorShapeContractAddPOLYGON_FRAME(builder, self.POLYGON_FRAME)
         if self.AZ_EL_MASK is not None:
             SCVSensorShapeContractAddAZ_EL_MASK(builder, AZ_EL_MASK)
+        SCVSensorShapeContractAddMAX_ALTITUDE_M(builder, self.MAX_ALTITUDE_M)
+        if self.ALTITUDE_REFERENCE is not None:
+            SCVSensorShapeContractAddALTITUDE_REFERENCE(builder, ALTITUDE_REFERENCE)
         SCVSensorShapeContract = SCVSensorShapeContractEnd(builder)
         return SCVSensorShapeContract
