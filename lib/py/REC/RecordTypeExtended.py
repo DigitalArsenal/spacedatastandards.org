@@ -55,3 +55,4 @@ class RecordTypeExtended(object):
     DRB = 297
     COA = 298
     SLO = 299
+    UST = 300

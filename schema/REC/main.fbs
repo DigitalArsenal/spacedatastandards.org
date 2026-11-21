@@ -1,5 +1,5 @@
-// Hash: 041f4d4622a5ec31e575b99178070b9dc47a97859ae6a57c593ea242164f82c8
-// Version: 1.44.92
+// Hash: bb038784b6facb2badc2d78fb27a13108a142028d8c60807128334fd84ac8c22
+// Version: 1.44.93
 // -----------------------------------END_HEADER
 include "../ABA/main.fbs";
 include "../ACI/main.fbs";
@@ -288,6 +288,7 @@ include "../TRP/main.fbs";
 include "../TRS/main.fbs";
 include "../TRV/main.fbs";
 include "../TXS/main.fbs";
+include "../UST/main.fbs";
 include "../VAM/main.fbs";
 include "../VCF/main.fbs";
 include "../VCM/main.fbs";
@@ -434,7 +435,8 @@ enum RecordTypeExtended : ushort {
   MOR = 296,
   DRB = 297,
   COA = 298,
-  SLO = 299
+  SLO = 299,
+  UST = 300
 }  // Wide record types
 
 /// Individual record wrapper for any standard type

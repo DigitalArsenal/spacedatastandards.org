@@ -287,6 +287,7 @@ export * as TRP from './TRP/main.js';
 export * as TRS from './TRS/main.js';
 export * as TRV from './TRV/main.js';
 export * as TXS from './TXS/main.js';
+export * as UST from './UST/main.js';
 export * as VAM from './VAM/main.js';
 export * as VCF from './VCF/main.js';
 export * as VCM from './VCM/main.js';

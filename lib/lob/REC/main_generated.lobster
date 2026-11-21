@@ -287,6 +287,7 @@ import TRP.main_generated
 import TRS.main_generated
 import TRV.main_generated
 import TXS.main_generated
+import UST.main_generated
 import VAM.main_generated
 import VCF.main_generated
 import VCM.main_generated
@@ -1004,6 +1005,7 @@ enum RecordTypeExtended:
     RecordTypeExtended_DRB = 297
     RecordTypeExtended_COA = 298
     RecordTypeExtended_SLO = 299
+    RecordTypeExtended_UST = 300
 
 class Record
 

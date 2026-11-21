@@ -299,6 +299,7 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 pub mod flatbuffers_encryption {
 //! Field-encryption format 3: encrypts or decrypts, in place, every
@@ -8803,11 +8804,11 @@ impl RecordTypeT {
 pub const ENUM_MIN_RECORD_TYPE_EXTENDED: u16 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RECORD_TYPE_EXTENDED: u16 = 299;
+pub const ENUM_MAX_RECORD_TYPE_EXTENDED: u16 = 300;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RECORD_TYPE_EXTENDED: [RecordTypeExtended; 45] = [
+pub const ENUM_VALUES_RECORD_TYPE_EXTENDED: [RecordTypeExtended; 46] = [
     RecordTypeExtended::NONE,
     RecordTypeExtended::ABA,
     RecordTypeExtended::CVR,
@@ -8853,6 +8854,7 @@ pub const ENUM_VALUES_RECORD_TYPE_EXTENDED: [RecordTypeExtended; 45] = [
     RecordTypeExtended::DRB,
     RecordTypeExtended::COA,
     RecordTypeExtended::SLO,
+    RecordTypeExtended::UST,
 ];
 
 /// WIDE RECORD TYPES -- APPEND ONLY, FOREVER.
@@ -8913,9 +8915,10 @@ impl RecordTypeExtended {
     pub const DRB: Self = Self(297);
     pub const COA: Self = Self(298);
     pub const SLO: Self = Self(299);
+    pub const UST: Self = Self(300);
 
     pub const ENUM_MIN: u16 = 0;
-    pub const ENUM_MAX: u16 = 299;
+    pub const ENUM_MAX: u16 = 300;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::NONE,
         Self::ABA,
@@ -8962,6 +8965,7 @@ impl RecordTypeExtended {
         Self::DRB,
         Self::COA,
         Self::SLO,
+        Self::UST,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -9012,6 +9016,7 @@ impl RecordTypeExtended {
             Self::DRB => Some("DRB"),
             Self::COA => Some("COA"),
             Self::SLO => Some("SLO"),
+            Self::UST => Some("UST"),
             _ => None,
         }
     }

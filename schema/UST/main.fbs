@@ -1,0 +1,83 @@
+// Hash: 768c0556fba431e6fd96a677e44f8df23ca1c48202cfef7d1ed0a6195bdb5550
+// Version: 1.291.0
+// -----------------------------------END_HEADER
+// Update Status (UST)
+// Description
+// The message a node publishes about its own update state on the update topic of its release
+// channel. The node signs it with its own peer key (gossipsub strict signing), and a receiver
+// accepts it only when PEER_ID is the message's author: a fleet view shows what each node says
+// about itself, read from its own deploy ledger, never an inference by the viewer.
+//
+// STATE is current, pending or failed. PENDING is set exactly when STATE is pending (an update the
+// node has accepted and not yet acted on); FAILED is set exactly when STATE is failed (an update the
+// node installed and that failed its health gate or trial). ACKNOWLEDGED is the newest update signal
+// the node accepted. A reader rejects a record whose STATE is outside that list, whose block does not
+// match its STATE, or whose REASON_CODE is not one of: not-ready-by-deadline, stopped-during-trial,
+// trial-record-unreadable, health-failed, revert-refused. The ledger's own text (gate errors,
+// rollback errors, paths) stays on the node; only the reason code leaves it.
+//
+// Every string is printed by other nodes, so a reader also checks each against a character set and a
+// length: PEER_ID [0-9A-Za-z]{16,128}; VERSION [0-9A-Za-z][0-9A-Za-z.+_-]{0,63}; UPDATE_ID
+// [0-9A-Za-z][0-9A-Za-z.+_:-]{0,127}; times RFC 3339, at most 40 characters. A whole record is at
+// most 2 KiB.
+
+/// An update the node has accepted and not yet acted on.
+table USTPendingUpdate {
+  /// Release update identifier the signal carried.
+  UPDATE_ID:string;
+  /// Version the update installs.
+  VERSION:string;
+  /// Sequence number of the update signal.
+  SEQUENCE:long;
+  /// When the node will act on it (RFC 3339, UTC).
+  DUE_AT:string;
+}
+
+/// An update the node installed and that failed its health gate or trial.
+table USTFailure {
+  /// Release update identifier.
+  UPDATE_ID:string;
+  /// Version that failed.
+  VERSION:string;
+  /// Sequence number of the update signal.
+  SEQUENCE:long;
+  /// When it failed (RFC 3339, UTC).
+  AT:string;
+  /// Why, as one of the fixed reason codes (see the header).
+  REASON_CODE:string;
+  /// False when the revert was refused and the failed build keeps running.
+  ROLLED_BACK:bool;
+}
+
+/// The newest update signal the node accepted.
+table USTAcknowledgement {
+  /// Release update identifier.
+  UPDATE_ID:string;
+  /// Sequence number of the update signal.
+  SEQUENCE:long;
+}
+
+/// Update Status
+table UST {
+  /// The publishing node's libp2p peer id; must equal the message's author.
+  PEER_ID:string (required);
+  /// The version the node runs.
+  VERSION:string (required);
+  /// The node's status sequence; a receiver keeps the highest per peer.
+  SEQUENCE:long;
+  /// Release update identifier the status is about, when there is one.
+  UPDATE_ID:string;
+  /// current, pending or failed.
+  STATE:string (required);
+  /// Set exactly when STATE is pending.
+  PENDING:USTPendingUpdate;
+  /// Set exactly when STATE is failed.
+  FAILED:USTFailure;
+  /// The newest update signal the node accepted.
+  ACKNOWLEDGED:USTAcknowledgement;
+  /// When the node stated this (RFC 3339, UTC).
+  AT:string (required);
+}
+
+root_type UST;
+file_identifier "$UST";

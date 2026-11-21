@@ -57,4 +57,5 @@ public final class RecordTypeExtended {
   public static final int DRB = 297;
   public static final int COA = 298;
   public static final int SLO = 299;
+  public static final int UST = 300;
 }

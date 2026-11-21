@@ -1,0 +1,159 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "USTPendingUpdate": {
+      "type": "object",
+      "description": "An update the node has accepted and not yet acted on.",
+      "properties": {
+        "UPDATE_ID": {
+          "type": "string",
+          "description": "Release update identifier the signal carried.",
+          "x-flatbuffer-type": "string"
+        },
+        "VERSION": {
+          "type": "string",
+          "description": "Version the update installs.",
+          "x-flatbuffer-type": "string"
+        },
+        "SEQUENCE": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Sequence number of the update signal.",
+          "x-flatbuffer-type": "long"
+        },
+        "DUE_AT": {
+          "type": "string",
+          "description": "When the node will act on it (RFC 3339, UTC).",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "USTFailure": {
+      "type": "object",
+      "description": "An update the node installed and that failed its health gate or trial.",
+      "properties": {
+        "UPDATE_ID": {
+          "type": "string",
+          "description": "Release update identifier.",
+          "x-flatbuffer-type": "string"
+        },
+        "VERSION": {
+          "type": "string",
+          "description": "Version that failed.",
+          "x-flatbuffer-type": "string"
+        },
+        "SEQUENCE": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Sequence number of the update signal.",
+          "x-flatbuffer-type": "long"
+        },
+        "AT": {
+          "type": "string",
+          "description": "When it failed (RFC 3339, UTC).",
+          "x-flatbuffer-type": "string"
+        },
+        "REASON_CODE": {
+          "type": "string",
+          "description": "Why, as one of the fixed reason codes (see the header).",
+          "x-flatbuffer-type": "string"
+        },
+        "ROLLED_BACK": {
+          "type": "boolean",
+          "description": "False when the revert was refused and the failed build keeps running.",
+          "x-flatbuffer-type": "bool"
+        }
+      },
+      "additionalProperties": false
+    },
+    "USTAcknowledgement": {
+      "type": "object",
+      "description": "The newest update signal the node accepted.",
+      "properties": {
+        "UPDATE_ID": {
+          "type": "string",
+          "description": "Release update identifier.",
+          "x-flatbuffer-type": "string"
+        },
+        "SEQUENCE": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Sequence number of the update signal.",
+          "x-flatbuffer-type": "long"
+        }
+      },
+      "additionalProperties": false
+    },
+    "UST": {
+      "type": "object",
+      "description": "Update Status",
+      "properties": {
+        "PEER_ID": {
+          "type": "string",
+          "description": "The publishing node's libp2p peer id; must equal the message's author.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "VERSION": {
+          "type": "string",
+          "description": "The version the node runs.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "SEQUENCE": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "The node's status sequence; a receiver keeps the highest per peer.",
+          "x-flatbuffer-type": "long"
+        },
+        "UPDATE_ID": {
+          "type": "string",
+          "description": "Release update identifier the status is about, when there is one.",
+          "x-flatbuffer-type": "string"
+        },
+        "STATE": {
+          "type": "string",
+          "description": "current, pending or failed.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "PENDING": {
+          "$ref": "#/definitions/USTPendingUpdate",
+          "description": "Set exactly when STATE is pending.",
+          "x-flatbuffer-type": "USTPendingUpdate"
+        },
+        "FAILED": {
+          "$ref": "#/definitions/USTFailure",
+          "description": "Set exactly when STATE is failed.",
+          "x-flatbuffer-type": "USTFailure"
+        },
+        "ACKNOWLEDGED": {
+          "$ref": "#/definitions/USTAcknowledgement",
+          "description": "The newest update signal the node accepted.",
+          "x-flatbuffer-type": "USTAcknowledgement"
+        },
+        "AT": {
+          "type": "string",
+          "description": "When the node stated this (RFC 3339, UTC).",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        }
+      },
+      "required": [
+        "PEER_ID",
+        "VERSION",
+        "STATE",
+        "AT"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/UST",
+  "x-flatbuffer-root-type": "UST",
+  "x-flatbuffer-file-identifier": "$UST"
+}

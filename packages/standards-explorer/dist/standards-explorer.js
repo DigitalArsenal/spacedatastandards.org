@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.291.0+1795184488795",
+  version: "1.292.0+1795222252037",
   STANDARDS: {
     PCF: {
       IDL: `// Hash: e259db0e1e4887f3ca3d15f7819bd8fbac894d2e251c81328b3c79a61b9e4060
@@ -1828,6 +1828,107 @@ file_identifier "$DTT";`,
         "./dist/DTT/DTT.cpp.tar.gz",
         "./dist/DTT/DTT.kt.tar.gz",
         "./dist/DTT/DTT.ts.tar.gz"
+      ]
+    },
+    UST: {
+      IDL: `// Hash: 768c0556fba431e6fd96a677e44f8df23ca1c48202cfef7d1ed0a6195bdb5550
+// Version: 1.291.0
+// -----------------------------------END_HEADER
+// Update Status (UST)
+// Description
+// The message a node publishes about its own update state on the update topic of its release
+// channel. The node signs it with its own peer key (gossipsub strict signing), and a receiver
+// accepts it only when PEER_ID is the message's author: a fleet view shows what each node says
+// about itself, read from its own deploy ledger, never an inference by the viewer.
+//
+// STATE is current, pending or failed. PENDING is set exactly when STATE is pending (an update the
+// node has accepted and not yet acted on); FAILED is set exactly when STATE is failed (an update the
+// node installed and that failed its health gate or trial). ACKNOWLEDGED is the newest update signal
+// the node accepted. A reader rejects a record whose STATE is outside that list, whose block does not
+// match its STATE, or whose REASON_CODE is not one of: not-ready-by-deadline, stopped-during-trial,
+// trial-record-unreadable, health-failed, revert-refused. The ledger's own text (gate errors,
+// rollback errors, paths) stays on the node; only the reason code leaves it.
+//
+// Every string is printed by other nodes, so a reader also checks each against a character set and a
+// length: PEER_ID [0-9A-Za-z]{16,128}; VERSION [0-9A-Za-z][0-9A-Za-z.+_-]{0,63}; UPDATE_ID
+// [0-9A-Za-z][0-9A-Za-z.+_:-]{0,127}; times RFC 3339, at most 40 characters. A whole record is at
+// most 2 KiB.
+
+/// An update the node has accepted and not yet acted on.
+table USTPendingUpdate {
+  /// Release update identifier the signal carried.
+  UPDATE_ID:string;
+  /// Version the update installs.
+  VERSION:string;
+  /// Sequence number of the update signal.
+  SEQUENCE:long;
+  /// When the node will act on it (RFC 3339, UTC).
+  DUE_AT:string;
+}
+
+/// An update the node installed and that failed its health gate or trial.
+table USTFailure {
+  /// Release update identifier.
+  UPDATE_ID:string;
+  /// Version that failed.
+  VERSION:string;
+  /// Sequence number of the update signal.
+  SEQUENCE:long;
+  /// When it failed (RFC 3339, UTC).
+  AT:string;
+  /// Why, as one of the fixed reason codes (see the header).
+  REASON_CODE:string;
+  /// False when the revert was refused and the failed build keeps running.
+  ROLLED_BACK:bool;
+}
+
+/// The newest update signal the node accepted.
+table USTAcknowledgement {
+  /// Release update identifier.
+  UPDATE_ID:string;
+  /// Sequence number of the update signal.
+  SEQUENCE:long;
+}
+
+/// Update Status
+table UST {
+  /// The publishing node's libp2p peer id; must equal the message's author.
+  PEER_ID:string (required);
+  /// The version the node runs.
+  VERSION:string (required);
+  /// The node's status sequence; a receiver keeps the highest per peer.
+  SEQUENCE:long;
+  /// Release update identifier the status is about, when there is one.
+  UPDATE_ID:string;
+  /// current, pending or failed.
+  STATE:string (required);
+  /// Set exactly when STATE is pending.
+  PENDING:USTPendingUpdate;
+  /// Set exactly when STATE is failed.
+  FAILED:USTFailure;
+  /// The newest update signal the node accepted.
+  ACKNOWLEDGED:USTAcknowledgement;
+  /// When the node stated this (RFC 3339, UTC).
+  AT:string (required);
+}
+
+root_type UST;
+file_identifier "$UST";`,
+      files: [
+        "./dist/UST/UST.sw.tar.gz",
+        "./dist/UST/UST.py.tar.gz",
+        "./dist/UST/UST.lob.tar.gz",
+        "./dist/UST/UST.go.tar.gz",
+        "./dist/UST/UST.js.tar.gz",
+        "./dist/UST/UST.dart.tar.gz",
+        "./dist/UST/UST.cs.tar.gz",
+        "./dist/UST/UST.java.tar.gz",
+        "./dist/UST/UST.rs.tar.gz",
+        "./dist/UST/UST.php.tar.gz",
+        "./dist/UST/UST.json.tar.gz",
+        "./dist/UST/UST.cpp.tar.gz",
+        "./dist/UST/UST.kt.tar.gz",
+        "./dist/UST/UST.ts.tar.gz"
       ]
     },
     AGR: {
@@ -15801,8 +15902,8 @@ file_identifier "$RND";`,
       ]
     },
     REC: {
-      IDL: `// Hash: 041f4d4622a5ec31e575b99178070b9dc47a97859ae6a57c593ea242164f82c8
-// Version: 1.44.92
+      IDL: `// Hash: bb038784b6facb2badc2d78fb27a13108a142028d8c60807128334fd84ac8c22
+// Version: 1.44.93
 // -----------------------------------END_HEADER
 include "../ABA/main.fbs";
 include "../ACI/main.fbs";
@@ -16091,6 +16192,7 @@ include "../TRP/main.fbs";
 include "../TRS/main.fbs";
 include "../TRV/main.fbs";
 include "../TXS/main.fbs";
+include "../UST/main.fbs";
 include "../VAM/main.fbs";
 include "../VCF/main.fbs";
 include "../VCM/main.fbs";
@@ -16237,7 +16339,8 @@ enum RecordTypeExtended : ushort {
   MOR = 296,
   DRB = 297,
   COA = 298,
-  SLO = 299
+  SLO = 299,
+  UST = 300
 }  // Wide record types
 
 /// Individual record wrapper for any standard type
@@ -45751,6 +45854,138 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
         }
       },
       $ref: "#/definitions/DTT"
+    },
+    UST: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        USTPendingUpdate: {
+          type: "object",
+          description: "An update the node has accepted and not yet acted on.",
+          properties: {
+            UPDATE_ID: {
+              type: "string",
+              description: "Release update identifier the signal carried."
+            },
+            VERSION: {
+              type: "string",
+              description: "Version the update installs."
+            },
+            SEQUENCE: {
+              type: "integer",
+              minimum: -9223372036854776e3,
+              maximum: 9223372036854776e3,
+              description: "Sequence number of the update signal."
+            },
+            DUE_AT: {
+              type: "string",
+              description: "When the node will act on it (RFC 3339, UTC)."
+            }
+          },
+          additionalProperties: false
+        },
+        USTFailure: {
+          type: "object",
+          description: "An update the node installed and that failed its health gate or trial.",
+          properties: {
+            UPDATE_ID: {
+              type: "string",
+              description: "Release update identifier."
+            },
+            VERSION: {
+              type: "string",
+              description: "Version that failed."
+            },
+            SEQUENCE: {
+              type: "integer",
+              minimum: -9223372036854776e3,
+              maximum: 9223372036854776e3,
+              description: "Sequence number of the update signal."
+            },
+            AT: {
+              type: "string",
+              description: "When it failed (RFC 3339, UTC)."
+            },
+            REASON_CODE: {
+              type: "string",
+              description: "Why, as one of the fixed reason codes (see the header)."
+            },
+            ROLLED_BACK: {
+              type: "boolean",
+              description: "False when the revert was refused and the failed build keeps running."
+            }
+          },
+          additionalProperties: false
+        },
+        USTAcknowledgement: {
+          type: "object",
+          description: "The newest update signal the node accepted.",
+          properties: {
+            UPDATE_ID: {
+              type: "string",
+              description: "Release update identifier."
+            },
+            SEQUENCE: {
+              type: "integer",
+              minimum: -9223372036854776e3,
+              maximum: 9223372036854776e3,
+              description: "Sequence number of the update signal."
+            }
+          },
+          additionalProperties: false
+        },
+        UST: {
+          type: "object",
+          description: "Update Status",
+          properties: {
+            PEER_ID: {
+              type: "string",
+              description: "The publishing node's libp2p peer id; must equal the message's author."
+            },
+            VERSION: {
+              type: "string",
+              description: "The version the node runs."
+            },
+            SEQUENCE: {
+              type: "integer",
+              minimum: -9223372036854776e3,
+              maximum: 9223372036854776e3,
+              description: "The node's status sequence; a receiver keeps the highest per peer."
+            },
+            UPDATE_ID: {
+              type: "string",
+              description: "Release update identifier the status is about, when there is one."
+            },
+            STATE: {
+              type: "string",
+              description: "current, pending or failed."
+            },
+            PENDING: {
+              $ref: "#/definitions/USTPendingUpdate",
+              description: "Set exactly when STATE is pending."
+            },
+            FAILED: {
+              $ref: "#/definitions/USTFailure",
+              description: "Set exactly when STATE is failed."
+            },
+            ACKNOWLEDGED: {
+              $ref: "#/definitions/USTAcknowledgement",
+              description: "The newest update signal the node accepted."
+            },
+            AT: {
+              type: "string",
+              description: "When the node stated this (RFC 3339, UTC)."
+            }
+          },
+          required: [
+            "PEER_ID",
+            "VERSION",
+            "STATE",
+            "AT"
+          ],
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/UST"
     },
     AGR: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
@@ -173383,7 +173618,8 @@ stated.`
             "MOR",
             "DRB",
             "COA",
-            "SLO"
+            "SLO",
+            "UST"
           ]
         },
         ABA: {
@@ -244044,6 +244280,132 @@ no provider, dataset, or site.`,
             "VERDICT_ID",
             "POLICY_ID",
             "SUBJECT_ID"
+          ],
+          additionalProperties: false
+        },
+        USTPendingUpdate: {
+          type: "object",
+          description: "An update the node has accepted and not yet acted on.",
+          properties: {
+            UPDATE_ID: {
+              type: "string",
+              description: "Release update identifier the signal carried."
+            },
+            VERSION: {
+              type: "string",
+              description: "Version the update installs."
+            },
+            SEQUENCE: {
+              type: "integer",
+              minimum: -9223372036854776e3,
+              maximum: 9223372036854776e3,
+              description: "Sequence number of the update signal."
+            },
+            DUE_AT: {
+              type: "string",
+              description: "When the node will act on it (RFC 3339, UTC)."
+            }
+          },
+          additionalProperties: false
+        },
+        USTFailure: {
+          type: "object",
+          description: "An update the node installed and that failed its health gate or trial.",
+          properties: {
+            UPDATE_ID: {
+              type: "string",
+              description: "Release update identifier."
+            },
+            VERSION: {
+              type: "string",
+              description: "Version that failed."
+            },
+            SEQUENCE: {
+              type: "integer",
+              minimum: -9223372036854776e3,
+              maximum: 9223372036854776e3,
+              description: "Sequence number of the update signal."
+            },
+            AT: {
+              type: "string",
+              description: "When it failed (RFC 3339, UTC)."
+            },
+            REASON_CODE: {
+              type: "string",
+              description: "Why, as one of the fixed reason codes (see the header)."
+            },
+            ROLLED_BACK: {
+              type: "boolean",
+              description: "False when the revert was refused and the failed build keeps running."
+            }
+          },
+          additionalProperties: false
+        },
+        USTAcknowledgement: {
+          type: "object",
+          description: "The newest update signal the node accepted.",
+          properties: {
+            UPDATE_ID: {
+              type: "string",
+              description: "Release update identifier."
+            },
+            SEQUENCE: {
+              type: "integer",
+              minimum: -9223372036854776e3,
+              maximum: 9223372036854776e3,
+              description: "Sequence number of the update signal."
+            }
+          },
+          additionalProperties: false
+        },
+        UST: {
+          type: "object",
+          description: "Update Status",
+          properties: {
+            PEER_ID: {
+              type: "string",
+              description: "The publishing node's libp2p peer id; must equal the message's author."
+            },
+            VERSION: {
+              type: "string",
+              description: "The version the node runs."
+            },
+            SEQUENCE: {
+              type: "integer",
+              minimum: -9223372036854776e3,
+              maximum: 9223372036854776e3,
+              description: "The node's status sequence; a receiver keeps the highest per peer."
+            },
+            UPDATE_ID: {
+              type: "string",
+              description: "Release update identifier the status is about, when there is one."
+            },
+            STATE: {
+              type: "string",
+              description: "current, pending or failed."
+            },
+            PENDING: {
+              $ref: "#/definitions/USTPendingUpdate",
+              description: "Set exactly when STATE is pending."
+            },
+            FAILED: {
+              $ref: "#/definitions/USTFailure",
+              description: "Set exactly when STATE is failed."
+            },
+            ACKNOWLEDGED: {
+              $ref: "#/definitions/USTAcknowledgement",
+              description: "The newest update signal the node accepted."
+            },
+            AT: {
+              type: "string",
+              description: "When the node stated this (RFC 3339, UTC)."
+            }
+          },
+          required: [
+            "PEER_ID",
+            "VERSION",
+            "STATE",
+            "AT"
           ],
           additionalProperties: false
         },
@@ -404465,6 +404827,165 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
       $ref: "#/definitions/DTT",
       "x-flatbuffer-root-type": "DTT",
       "x-flatbuffer-file-identifier": "$DTT"
+    },
+    UST: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        USTPendingUpdate: {
+          type: "object",
+          description: "An update the node has accepted and not yet acted on.",
+          properties: {
+            UPDATE_ID: {
+              type: "string",
+              description: "Release update identifier the signal carried.",
+              "x-flatbuffer-type": "string"
+            },
+            VERSION: {
+              type: "string",
+              description: "Version the update installs.",
+              "x-flatbuffer-type": "string"
+            },
+            SEQUENCE: {
+              type: "integer",
+              minimum: -9223372036854776e3,
+              maximum: 9223372036854776e3,
+              description: "Sequence number of the update signal.",
+              "x-flatbuffer-type": "long"
+            },
+            DUE_AT: {
+              type: "string",
+              description: "When the node will act on it (RFC 3339, UTC).",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        USTFailure: {
+          type: "object",
+          description: "An update the node installed and that failed its health gate or trial.",
+          properties: {
+            UPDATE_ID: {
+              type: "string",
+              description: "Release update identifier.",
+              "x-flatbuffer-type": "string"
+            },
+            VERSION: {
+              type: "string",
+              description: "Version that failed.",
+              "x-flatbuffer-type": "string"
+            },
+            SEQUENCE: {
+              type: "integer",
+              minimum: -9223372036854776e3,
+              maximum: 9223372036854776e3,
+              description: "Sequence number of the update signal.",
+              "x-flatbuffer-type": "long"
+            },
+            AT: {
+              type: "string",
+              description: "When it failed (RFC 3339, UTC).",
+              "x-flatbuffer-type": "string"
+            },
+            REASON_CODE: {
+              type: "string",
+              description: "Why, as one of the fixed reason codes (see the header).",
+              "x-flatbuffer-type": "string"
+            },
+            ROLLED_BACK: {
+              type: "boolean",
+              description: "False when the revert was refused and the failed build keeps running.",
+              "x-flatbuffer-type": "bool"
+            }
+          },
+          additionalProperties: false
+        },
+        USTAcknowledgement: {
+          type: "object",
+          description: "The newest update signal the node accepted.",
+          properties: {
+            UPDATE_ID: {
+              type: "string",
+              description: "Release update identifier.",
+              "x-flatbuffer-type": "string"
+            },
+            SEQUENCE: {
+              type: "integer",
+              minimum: -9223372036854776e3,
+              maximum: 9223372036854776e3,
+              description: "Sequence number of the update signal.",
+              "x-flatbuffer-type": "long"
+            }
+          },
+          additionalProperties: false
+        },
+        UST: {
+          type: "object",
+          description: "Update Status",
+          properties: {
+            PEER_ID: {
+              type: "string",
+              description: "The publishing node's libp2p peer id; must equal the message's author.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            VERSION: {
+              type: "string",
+              description: "The version the node runs.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            SEQUENCE: {
+              type: "integer",
+              minimum: -9223372036854776e3,
+              maximum: 9223372036854776e3,
+              description: "The node's status sequence; a receiver keeps the highest per peer.",
+              "x-flatbuffer-type": "long"
+            },
+            UPDATE_ID: {
+              type: "string",
+              description: "Release update identifier the status is about, when there is one.",
+              "x-flatbuffer-type": "string"
+            },
+            STATE: {
+              type: "string",
+              description: "current, pending or failed.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            PENDING: {
+              $ref: "#/definitions/USTPendingUpdate",
+              description: "Set exactly when STATE is pending.",
+              "x-flatbuffer-type": "USTPendingUpdate"
+            },
+            FAILED: {
+              $ref: "#/definitions/USTFailure",
+              description: "Set exactly when STATE is failed.",
+              "x-flatbuffer-type": "USTFailure"
+            },
+            ACKNOWLEDGED: {
+              $ref: "#/definitions/USTAcknowledgement",
+              description: "The newest update signal the node accepted.",
+              "x-flatbuffer-type": "USTAcknowledgement"
+            },
+            AT: {
+              type: "string",
+              description: "When the node stated this (RFC 3339, UTC).",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            }
+          },
+          required: [
+            "PEER_ID",
+            "VERSION",
+            "STATE",
+            "AT"
+          ],
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/UST",
+      "x-flatbuffer-root-type": "UST",
+      "x-flatbuffer-file-identifier": "$UST"
     },
     AGR: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
@@ -718442,7 +718963,8 @@ stated.`,
             "MOR",
             "DRB",
             "COA",
-            "SLO"
+            "SLO",
+            "UST"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ushort",
@@ -718581,6 +719103,9 @@ stated.`,
             },
             SLO: {
               value: 299
+            },
+            UST: {
+              value: 300
             }
           }
         },
@@ -836201,6 +836726,157 @@ no provider, dataset, or site.`,
           ],
           additionalProperties: false
         },
+        USTPendingUpdate: {
+          type: "object",
+          description: "An update the node has accepted and not yet acted on.",
+          properties: {
+            UPDATE_ID: {
+              type: "string",
+              description: "Release update identifier the signal carried.",
+              "x-flatbuffer-type": "string"
+            },
+            VERSION: {
+              type: "string",
+              description: "Version the update installs.",
+              "x-flatbuffer-type": "string"
+            },
+            SEQUENCE: {
+              type: "integer",
+              minimum: -9223372036854776e3,
+              maximum: 9223372036854776e3,
+              description: "Sequence number of the update signal.",
+              "x-flatbuffer-type": "long"
+            },
+            DUE_AT: {
+              type: "string",
+              description: "When the node will act on it (RFC 3339, UTC).",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        USTFailure: {
+          type: "object",
+          description: "An update the node installed and that failed its health gate or trial.",
+          properties: {
+            UPDATE_ID: {
+              type: "string",
+              description: "Release update identifier.",
+              "x-flatbuffer-type": "string"
+            },
+            VERSION: {
+              type: "string",
+              description: "Version that failed.",
+              "x-flatbuffer-type": "string"
+            },
+            SEQUENCE: {
+              type: "integer",
+              minimum: -9223372036854776e3,
+              maximum: 9223372036854776e3,
+              description: "Sequence number of the update signal.",
+              "x-flatbuffer-type": "long"
+            },
+            AT: {
+              type: "string",
+              description: "When it failed (RFC 3339, UTC).",
+              "x-flatbuffer-type": "string"
+            },
+            REASON_CODE: {
+              type: "string",
+              description: "Why, as one of the fixed reason codes (see the header).",
+              "x-flatbuffer-type": "string"
+            },
+            ROLLED_BACK: {
+              type: "boolean",
+              description: "False when the revert was refused and the failed build keeps running.",
+              "x-flatbuffer-type": "bool"
+            }
+          },
+          additionalProperties: false
+        },
+        USTAcknowledgement: {
+          type: "object",
+          description: "The newest update signal the node accepted.",
+          properties: {
+            UPDATE_ID: {
+              type: "string",
+              description: "Release update identifier.",
+              "x-flatbuffer-type": "string"
+            },
+            SEQUENCE: {
+              type: "integer",
+              minimum: -9223372036854776e3,
+              maximum: 9223372036854776e3,
+              description: "Sequence number of the update signal.",
+              "x-flatbuffer-type": "long"
+            }
+          },
+          additionalProperties: false
+        },
+        UST: {
+          type: "object",
+          description: "Update Status",
+          properties: {
+            PEER_ID: {
+              type: "string",
+              description: "The publishing node's libp2p peer id; must equal the message's author.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            VERSION: {
+              type: "string",
+              description: "The version the node runs.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            SEQUENCE: {
+              type: "integer",
+              minimum: -9223372036854776e3,
+              maximum: 9223372036854776e3,
+              description: "The node's status sequence; a receiver keeps the highest per peer.",
+              "x-flatbuffer-type": "long"
+            },
+            UPDATE_ID: {
+              type: "string",
+              description: "Release update identifier the status is about, when there is one.",
+              "x-flatbuffer-type": "string"
+            },
+            STATE: {
+              type: "string",
+              description: "current, pending or failed.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            PENDING: {
+              $ref: "#/definitions/USTPendingUpdate",
+              description: "Set exactly when STATE is pending.",
+              "x-flatbuffer-type": "USTPendingUpdate"
+            },
+            FAILED: {
+              $ref: "#/definitions/USTFailure",
+              description: "Set exactly when STATE is failed.",
+              "x-flatbuffer-type": "USTFailure"
+            },
+            ACKNOWLEDGED: {
+              $ref: "#/definitions/USTAcknowledgement",
+              description: "The newest update signal the node accepted.",
+              "x-flatbuffer-type": "USTAcknowledgement"
+            },
+            AT: {
+              type: "string",
+              description: "When the node stated this (RFC 3339, UTC).",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            }
+          },
+          required: [
+            "PEER_ID",
+            "VERSION",
+            "STATE",
+            "AT"
+          ],
+          additionalProperties: false
+        },
         VAMVector3: {
           type: "object",
           description: "Three-dimensional vector.",
@@ -845068,6 +845744,9 @@ balance service's own rate.`,
                 },
                 SLO: {
                   value: 299
+                },
+                UST: {
+                  value: 300
                 }
               },
               "x-flatbuffer-default": "NONE"
