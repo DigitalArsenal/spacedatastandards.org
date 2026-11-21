@@ -55,6 +55,7 @@ class RecordTypeExtended
     const DRB = 297;
     const COA = 298;
     const SLO = 299;
+    const UST = 300;
 
     private static $names = array(
         RecordTypeExtended::NONE=>"NONE",
@@ -102,6 +103,7 @@ class RecordTypeExtended
         RecordTypeExtended::DRB=>"DRB",
         RecordTypeExtended::COA=>"COA",
         RecordTypeExtended::SLO=>"SLO",
+        RecordTypeExtended::UST=>"UST",
     );
 
     public static function Name($e)
