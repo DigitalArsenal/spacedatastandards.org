@@ -207,6 +207,78 @@ public struct CATProduct: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
   }
 }
 
+///  The product the catalog recommends for the object over a span of
+///  prediction lead, chosen by a stated rule from the object's data-source type,
+///  orbit regime and lead.
+public struct CATRecommendation: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$CAT" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CATRecommendation.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let KIND: VOffset = 4
+    static let LEAD_START_HOURS: VOffset = 6
+    static let LEAD_END_HOURS: VOffset = 8
+    static let RULE: VOffset = 10
+    static let MEASURED: VOffset = 12
+  }
+
+  ///  The recommended product's KIND: the entry of PRODUCTS with this KIND.
+  public var KIND: catalogProductKind { let o = _accessor.offset(VT.KIND); return o == 0 ? .unspecified : catalogProductKind(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  Start of the span, hours after PRODUCTS_AS_OF (inclusive).
+  public var LEAD_START_HOURS: Double { let o = _accessor.offset(VT.LEAD_START_HOURS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  End of the span, hours after PRODUCTS_AS_OF (exclusive).
+  public var LEAD_END_HOURS: Double { let o = _accessor.offset(VT.LEAD_END_HOURS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  The rule that chose the product: its name and version, then the rule's
+  ///  cell the object fell in (for example "catalog-serve/2 public/meo").
+  public var RULE: String? { let o = _accessor.offset(VT.RULE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var RULESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RULE) }
+  ///  True when the rule's choice for that cell was measured on held-out tests
+  ///  against a stated truth; false when the rule's stated default was applied
+  ///  without such a measurement.
+  public var MEASURED: Bool { let o = _accessor.offset(VT.MEASURED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startCATRecommendation(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
+  public static func add(KIND: catalogProductKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KIND.rawValue, def: 0, at: VT.KIND) }
+  public static func add(LEAD_START_HOURS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LEAD_START_HOURS, def: 0.0, at: VT.LEAD_START_HOURS) }
+  public static func add(LEAD_END_HOURS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LEAD_END_HOURS, def: 0.0, at: VT.LEAD_END_HOURS) }
+  public static func add(RULE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RULE, at: VT.RULE) }
+  public static func add(MEASURED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEASURED, def: false,
+   at: VT.MEASURED) }
+  public static func endCATRecommendation(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createCATRecommendation(
+    _ fbb: inout FlatBufferBuilder,
+    KIND: catalogProductKind = .unspecified,
+    LEAD_START_HOURS: Double = 0.0,
+    LEAD_END_HOURS: Double = 0.0,
+    RULEOffset RULE: Offset = Offset(),
+    MEASURED: Bool = false
+  ) -> Offset {
+    let __start = CATRecommendation.startCATRecommendation(&fbb)
+    CATRecommendation.add(KIND: KIND, &fbb)
+    CATRecommendation.add(LEAD_START_HOURS: LEAD_START_HOURS, &fbb)
+    CATRecommendation.add(LEAD_END_HOURS: LEAD_END_HOURS, &fbb)
+    CATRecommendation.add(RULE: RULE, &fbb)
+    CATRecommendation.add(MEASURED: MEASURED, &fbb)
+    return CATRecommendation.endCATRecommendation(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.KIND, fieldName: "KIND", required: false, type: catalogProductKind.self)
+    try _v.visit(field: VT.LEAD_START_HOURS, fieldName: "LEAD_START_HOURS", required: false, type: Double.self)
+    try _v.visit(field: VT.LEAD_END_HOURS, fieldName: "LEAD_END_HOURS", required: false, type: Double.self)
+    try _v.visit(field: VT.RULE, fieldName: "RULE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MEASURED, fieldName: "MEASURED", required: false, type: Bool.self)
+    _v.finish()
+  }
+}
+
 ///  Catalog Entity Message
 public struct CAT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
@@ -248,6 +320,7 @@ public struct CAT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let CATALOG_OBJECT_ID: VOffset = 54
     static let PRODUCTS: VOffset = 56
     static let PRODUCTS_AS_OF: VOffset = 58
+    static let RECOMMENDED: VOffset = 60
   }
 
   ///  Satellite Name(s)
@@ -333,7 +406,11 @@ public struct CAT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  ISO 8601 UTC instant the selection in PRODUCTS holds at.
   public var PRODUCTS_AS_OF: String? { let o = _accessor.offset(VT.PRODUCTS_AS_OF); return o == 0 ? nil : _accessor.string(at: o) }
   public var PRODUCTS_AS_OFSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PRODUCTS_AS_OF) }
-  public static func startCAT(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 28) }
+  ///  The recommended product per span of lead, in lead order, the spans not
+  ///  overlapping. Absent: the catalog recommends no product. Past the last
+  ///  span no product is recommended.
+  public var RECOMMENDED: FlatbufferVector<CATRecommendation> { return _accessor.vector(at: VT.RECOMMENDED, byteSize: 4) }
+  public static func startCAT(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 29) }
   public static func add(OBJECT_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_NAME, at: VT.OBJECT_NAME) }
   public static func add(OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_ID, at: VT.OBJECT_ID) }
   public static func add(NORAD_CAT_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORAD_CAT_ID, def: 0, at: VT.NORAD_CAT_ID) }
@@ -363,6 +440,7 @@ public struct CAT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func add(CATALOG_OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CATALOG_OBJECT_ID, at: VT.CATALOG_OBJECT_ID) }
   public static func addVectorOf(PRODUCTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRODUCTS, at: VT.PRODUCTS) }
   public static func add(PRODUCTS_AS_OF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRODUCTS_AS_OF, at: VT.PRODUCTS_AS_OF) }
+  public static func addVectorOf(RECOMMENDED: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECOMMENDED, at: VT.RECOMMENDED) }
   public static func endCAT(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCAT(
     _ fbb: inout FlatBufferBuilder,
@@ -393,7 +471,8 @@ public struct CAT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     CATALOG_URIOffset CATALOG_URI: Offset = Offset(),
     CATALOG_OBJECT_IDOffset CATALOG_OBJECT_ID: Offset = Offset(),
     PRODUCTSVectorOffset PRODUCTS: Offset = Offset(),
-    PRODUCTS_AS_OFOffset PRODUCTS_AS_OF: Offset = Offset()
+    PRODUCTS_AS_OFOffset PRODUCTS_AS_OF: Offset = Offset(),
+    RECOMMENDEDVectorOffset RECOMMENDED: Offset = Offset()
   ) -> Offset {
     let __start = CAT.startCAT(&fbb)
     CAT.add(OBJECT_NAME: OBJECT_NAME, &fbb)
@@ -424,6 +503,7 @@ public struct CAT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     CAT.add(CATALOG_OBJECT_ID: CATALOG_OBJECT_ID, &fbb)
     CAT.addVectorOf(PRODUCTS: PRODUCTS, &fbb)
     CAT.add(PRODUCTS_AS_OF: PRODUCTS_AS_OF, &fbb)
+    CAT.addVectorOf(RECOMMENDED: RECOMMENDED, &fbb)
     return CAT.endCAT(&fbb, start: __start)
   }
 
@@ -457,6 +537,7 @@ public struct CAT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.CATALOG_OBJECT_ID, fieldName: "CATALOG_OBJECT_ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.PRODUCTS, fieldName: "PRODUCTS", required: false, type: ForwardOffset<Vector<ForwardOffset<CATProduct>, CATProduct>>.self)
     try _v.visit(field: VT.PRODUCTS_AS_OF, fieldName: "PRODUCTS_AS_OF", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RECOMMENDED, fieldName: "RECOMMENDED", required: false, type: ForwardOffset<Vector<ForwardOffset<CATRecommendation>, CATRecommendation>>.self)
     _v.finish()
   }
 }

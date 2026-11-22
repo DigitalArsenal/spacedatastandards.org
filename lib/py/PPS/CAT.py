@@ -305,8 +305,36 @@ class CAT(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # The recommended product per span of lead, in lead order, the spans not
+    # overlapping. Absent: the catalog recommends no product. Past the last
+    # span no product is recommended.
+    # CAT
+    def RECOMMENDED(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from CATRecommendation import CATRecommendation
+            obj = CATRecommendation()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # CAT
+    def RECOMMENDEDLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # CAT
+    def RECOMMENDEDIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        return o == 0
+
 def CATStart(builder):
-    builder.StartObject(28)
+    builder.StartObject(29)
 
 def Start(builder):
     CATStart(builder)
@@ -503,6 +531,24 @@ def CATAddPRODUCTS_AS_OF(builder, PRODUCTS_AS_OF):
 def AddPRODUCTS_AS_OF(builder, PRODUCTS_AS_OF):
     CATAddPRODUCTS_AS_OF(builder, PRODUCTS_AS_OF)
 
+def CATAddRECOMMENDED(builder, RECOMMENDED):
+    builder.PrependUOffsetTRelativeSlot(28, flatbuffers.number_types.UOffsetTFlags.py_type(RECOMMENDED), 0)
+
+def AddRECOMMENDED(builder, RECOMMENDED):
+    CATAddRECOMMENDED(builder, RECOMMENDED)
+
+def CATStartRECOMMENDEDVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartRECOMMENDEDVector(builder, numElems):
+    return CATStartRECOMMENDEDVector(builder, numElems)
+
+def CATCreateRECOMMENDEDVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateRECOMMENDEDVector(builder, data):
+    return CATCreateRECOMMENDEDVector(builder, data)
+
 def CATEnd(builder):
     return builder.EndObject()
 
@@ -510,6 +556,7 @@ def End(builder):
     return CATEnd(builder)
 
 import CATProduct
+import CATRecommendation
 import PLD
 try:
     from typing import List
@@ -549,6 +596,7 @@ class CATT(object):
         CATALOG_OBJECT_ID = None,
         PRODUCTS = None,
         PRODUCTS_AS_OF = None,
+        RECOMMENDED = None,
     ):
         self.OBJECT_NAME = OBJECT_NAME  # type: Optional[str]
         self.OBJECT_ID = OBJECT_ID  # type: Optional[str]
@@ -578,6 +626,7 @@ class CATT(object):
         self.CATALOG_OBJECT_ID = CATALOG_OBJECT_ID  # type: Optional[str]
         self.PRODUCTS = PRODUCTS  # type: Optional[List[CATProduct.CATProductT]]
         self.PRODUCTS_AS_OF = PRODUCTS_AS_OF  # type: Optional[str]
+        self.RECOMMENDED = RECOMMENDED  # type: Optional[List[CATRecommendation.CATRecommendationT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -642,6 +691,14 @@ class CATT(object):
                     cATProduct_ = CATProduct.CATProductT.InitFromObj(CAT.PRODUCTS(i))
                     self.PRODUCTS.append(cATProduct_)
         self.PRODUCTS_AS_OF = CAT.PRODUCTS_AS_OF()
+        if not CAT.RECOMMENDEDIsNone():
+            self.RECOMMENDED = []
+            for i in range(CAT.RECOMMENDEDLength()):
+                if CAT.RECOMMENDED(i) is None:
+                    self.RECOMMENDED.append(None)
+                else:
+                    cATRecommendation_ = CATRecommendation.CATRecommendationT.InitFromObj(CAT.RECOMMENDED(i))
+                    self.RECOMMENDED.append(cATRecommendation_)
 
     # CATT
     def Pack(self, builder):
@@ -683,6 +740,14 @@ class CATT(object):
             PRODUCTS = builder.EndVector()
         if self.PRODUCTS_AS_OF is not None:
             PRODUCTS_AS_OF = builder.CreateString(self.PRODUCTS_AS_OF)
+        if self.RECOMMENDED is not None:
+            RECOMMENDEDlist = []
+            for i in range(len(self.RECOMMENDED)):
+                RECOMMENDEDlist.append(self.RECOMMENDED[i].Pack(builder))
+            CATStartRECOMMENDEDVector(builder, len(self.RECOMMENDED))
+            for i in reversed(range(len(self.RECOMMENDED))):
+                builder.PrependUOffsetTRelative(RECOMMENDEDlist[i])
+            RECOMMENDED = builder.EndVector()
         CATStart(builder)
         if self.OBJECT_NAME is not None:
             CATAddOBJECT_NAME(builder, OBJECT_NAME)
@@ -725,5 +790,7 @@ class CATT(object):
             CATAddPRODUCTS(builder, PRODUCTS)
         if self.PRODUCTS_AS_OF is not None:
             CATAddPRODUCTS_AS_OF(builder, PRODUCTS_AS_OF)
+        if self.RECOMMENDED is not None:
+            CATAddRECOMMENDED(builder, RECOMMENDED)
         CAT = CATEnd(builder)
         return CAT

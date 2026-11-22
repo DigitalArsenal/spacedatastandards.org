@@ -1,5 +1,5 @@
-// Hash: 363a86f2a70741118026c0a575bbfaadf0a2e2f1b5e8cc3ed3259cd435563b0e
-// Version: 1.0.7
+// Hash: 8b615ffca20a8074e17669dc4257daeae8a4d44ae7c142fcfc4e284a0de6adde
+// Version: 1.0.8
 // -----------------------------------END_HEADER
 include "../PLD/main.fbs";
 include "../LCC/main.fbs";
@@ -102,6 +102,25 @@ table CATProduct {
   STALE: bool = false;
 }
 
+/// The product the catalog recommends for the object over a span of
+/// prediction lead, chosen by a stated rule from the object's data-source type,
+/// orbit regime and lead.
+table CATRecommendation {
+  /// The recommended product's KIND: the entry of PRODUCTS with this KIND.
+  KIND: catalogProductKind = Unspecified;
+  /// Start of the span, hours after PRODUCTS_AS_OF (inclusive).
+  LEAD_START_HOURS: double;
+  /// End of the span, hours after PRODUCTS_AS_OF (exclusive).
+  LEAD_END_HOURS: double;
+  /// The rule that chose the product: its name and version, then the rule's
+  /// cell the object fell in (for example "catalog-serve/2 public/meo").
+  RULE: string;
+  /// True when the rule's choice for that cell was measured on held-out tests
+  /// against a stated truth; false when the rule's stated default was applied
+  /// without such a measurement.
+  MEASURED: bool = false;
+}
+
 /// Catalog Entity Message
 table CAT {
   /// Satellite Name(s)
@@ -176,6 +195,10 @@ table CAT {
   PRODUCTS: [CATProduct];
   /// ISO 8601 UTC instant the selection in PRODUCTS holds at.
   PRODUCTS_AS_OF: string;
+  /// The recommended product per span of lead, in lead order, the spans not
+  /// overlapping. Absent: the catalog recommends no product. Past the last
+  /// span no product is recommended.
+  RECOMMENDED: [CATRecommendation];
 }
 
 root_type CAT;

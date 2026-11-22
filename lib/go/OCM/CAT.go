@@ -636,8 +636,45 @@ func (rcv *CAT) ProductsAsOf() []byte {
 }
 
 /// ISO 8601 UTC instant the selection in PRODUCTS holds at.
+/// The recommended product per span of lead, in lead order, the spans not
+/// overlapping. Absent: the catalog recommends no product. Past the last
+/// span no product is recommended.
+func (rcv *CAT) RECOMMENDED(obj *CATRecommendation, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(CATRecommendation)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *CAT) Recommended(obj *CATRecommendation, j int) bool {
+	return rcv.RECOMMENDED(obj, j)
+}
+
+func (rcv *CAT) RECOMMENDEDLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *CAT) RecommendedLength() int {
+	return rcv.RECOMMENDEDLength()
+}
+
+/// The recommended product per span of lead, in lead order, the spans not
+/// overlapping. Absent: the catalog recommends no product. Past the last
+/// span no product is recommended.
 func CATStart(builder *flatbuffers.Builder) {
-	builder.StartObject(28)
+	builder.StartObject(29)
 }
 func CATAddOBJECT_NAME(builder *flatbuffers.Builder, OBJECT_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(OBJECT_NAME), 0)
@@ -818,6 +855,18 @@ func CATAddPRODUCTS_AS_OF(builder *flatbuffers.Builder, PRODUCTS_AS_OF flatbuffe
 }
 func CATAddProductsAsOf(builder *flatbuffers.Builder, PRODUCTS_AS_OF flatbuffers.UOffsetT) {
 	CATAddPRODUCTS_AS_OF(builder, PRODUCTS_AS_OF)
+}
+func CATAddRECOMMENDED(builder *flatbuffers.Builder, RECOMMENDED flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(28, flatbuffers.UOffsetT(RECOMMENDED), 0)
+}
+func CATAddRecommended(builder *flatbuffers.Builder, RECOMMENDED flatbuffers.UOffsetT) {
+	CATAddRECOMMENDED(builder, RECOMMENDED)
+}
+func CATStartRECOMMENDEDVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func CATStartRecommendedVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return CATStartRECOMMENDEDVector(builder, numElems)
 }
 func CATEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -39,6 +39,8 @@ const enumSig = (e) => `${e.base}|${e.members.map((m) => `${m.name}=${m.value}`)
 
 // 1.275.0 (278d9ed59b): [field or member count, first 16 hex of sha256 of the signature, additions in order].
 const CHANGED_TABLES = {
+  // 1.293.0: recommendations appended; cat-recommended.mjs checks the new table and wire round trip.
+  CAT: [28, '3827bd7c41efdb0b', ['RECOMMENDED:[CATRecommendation]=']],
   Header: [6, '30657783d0a38360', ['MESSAGE_STATUS:ocmMessageStatus=UNSPECIFIED', 'EXERCISE_NAME:string=']],
   Metadata: [48, '9882df08f0c6fa65', ['NORAD_CAT_ID:uint32=']],
   Perturbations: [38, '29a73d60525ec553', ['MAXIMUM_TESSERAL_DEGREE:ushort=', 'MAXIMUM_ZONAL_DEGREE:ushort=',
@@ -85,7 +87,7 @@ EpcfExpressionOperation EpcfGnssSpacecraftBlock EpcfGravitySelection EpcfIntegra
 EpcfOceanTideModel EpcfOutputFrame EpcfPriorForm EpcfRadiationPressureFamily EpcfRelativityTerms EpcfSolidTideModel
 EpcfWeatherExtension EpolynomialBasisType EppeAnomalyType EpvnLicenseClass EpvnSourceKind ErfmAxisType
 ErfmLibrationPoint ErfmOriginKind ErfmVectorSpecification EsizeShapeProfile EspaceObjectClass EtimCcsdsTimeCodeKind
-EtimConversionStatus EtimEpochRepresentation EtimingStandard EtrajectoryType TATM TBand TCAT TCATProduct
+EtimConversionStatus EtimEpochRepresentation EtimingStandard EtrajectoryType TATM TBand TCATProduct
 TCelestialFrameWrapper TCustomFrameWrapper TEVL TEVLApsidesConfiguration TEVLContactConfiguration
 TEVLEclipseConfiguration TEVLEvent TEVLEventLocationRequest TEVLEventReport TEVLEventSample
 TEVLIntrusionConfiguration TEVLLatitudeExtremumConfiguration TEVLNodeCrossingConfiguration
@@ -98,8 +100,9 @@ TPCFIntegratorSettings TPCFSpaceWeather TPLD TPPEOrbitalElementRecord TPhysicalP
 TRFM TRFMCoordinateSystem TRFMCoordinateSystemWrapper TRFMLocalAlignedConstrainedAxes TRFMObjectReferencedAxes
 TRFMOrigin TSpacecraftFrameWrapper TStateVector TStokesParameters TTIM TTIMCcsdsTimeCode TTIMConversionRequest
 TTIMConversionResult TTIMInstant TUserDefinedParameters`.split(/\s+/);
-// 1.285.0 moved TPPE and TPPEPositionRecord to CHANGED_TABLES (DERIVED_EPHEMERIS); the 143 left digest the same at 1.275.0.
-const UNCHANGED_DIGEST = 'e5b8def274b41b6de22462d4e9337cbd10ecd08478e70726c1e42ae4a6dd23d0';
+// 1.285.0 moved TPPE and TPPEPositionRecord to CHANGED_TABLES (DERIVED_EPHEMERIS); 1.293.0 moves TCAT there
+// (RECOMMENDED). The 141 remaining types still digest the same as at 1.275.0.
+const UNCHANGED_DIGEST = '99c8ceece0fa9afd04edfa74c9abf6e91b0ee2532dd42ab8585d52d270b103c6';
 const NEW_TABLES = {
   OCMHeldOutDay: 'DAY:ushort=;STATES:uint=;RMS_KM:double=nan',
   OCMFitStatistics: 'FIT_STATES:uint=;FIT_RMS_KM:double=nan;FIT_MAX_KM:double=nan;FIT_RADIAL_RMS_KM:double=nan;FIT_IN_TRACK_RMS_KM:double=nan;'

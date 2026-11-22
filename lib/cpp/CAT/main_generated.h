@@ -19,6 +19,9 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 struct CATProduct;
 struct CATProductBuilder;
 
+struct CATRecommendation;
+struct CATRecommendationBuilder;
+
 struct CAT;
 struct CATBuilder;
 
@@ -409,6 +412,117 @@ inline ::flatbuffers::Offset<CATProduct> CreateCATProductDirect(
       STALE);
 }
 
+/// The product the catalog recommends for the object over a span of
+/// prediction lead, chosen by a stated rule from the object's data-source type,
+/// orbit regime and lead.
+struct CATRecommendation FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CATRecommendationBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_KIND = 4,
+    VT_LEAD_START_HOURS = 6,
+    VT_LEAD_END_HOURS = 8,
+    VT_RULE = 10,
+    VT_MEASURED = 12
+  };
+  /// The recommended product's KIND: the entry of PRODUCTS with this KIND.
+  catalogProductKind KIND() const {
+    return static_cast<catalogProductKind>(GetField<int8_t>(VT_KIND, 0));
+  }
+  /// Start of the span, hours after PRODUCTS_AS_OF (inclusive).
+  double LEAD_START_HOURS() const {
+    return GetField<double>(VT_LEAD_START_HOURS, 0.0);
+  }
+  /// End of the span, hours after PRODUCTS_AS_OF (exclusive).
+  double LEAD_END_HOURS() const {
+    return GetField<double>(VT_LEAD_END_HOURS, 0.0);
+  }
+  /// The rule that chose the product: its name and version, then the rule's
+  /// cell the object fell in (for example "catalog-serve/2 public/meo").
+  const ::flatbuffers::String *RULE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_RULE);
+  }
+  /// True when the rule's choice for that cell was measured on held-out tests
+  /// against a stated truth; false when the rule's stated default was applied
+  /// without such a measurement.
+  bool MEASURED() const {
+    return GetField<uint8_t>(VT_MEASURED, 0) != 0;
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<int8_t>(verifier, VT_KIND, 1) &&
+           VerifyField<double>(verifier, VT_LEAD_START_HOURS, 8) &&
+           VerifyField<double>(verifier, VT_LEAD_END_HOURS, 8) &&
+           VerifyOffset(verifier, VT_RULE) &&
+           verifier.VerifyString(RULE()) &&
+           VerifyField<uint8_t>(verifier, VT_MEASURED, 1) &&
+           verifier.EndTable();
+  }
+};
+
+struct CATRecommendationBuilder {
+  typedef CATRecommendation Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_KIND(catalogProductKind KIND) {
+    fbb_.AddElement<int8_t>(CATRecommendation::VT_KIND, static_cast<int8_t>(KIND), 0);
+  }
+  void add_LEAD_START_HOURS(double LEAD_START_HOURS) {
+    fbb_.AddElement<double>(CATRecommendation::VT_LEAD_START_HOURS, LEAD_START_HOURS, 0.0);
+  }
+  void add_LEAD_END_HOURS(double LEAD_END_HOURS) {
+    fbb_.AddElement<double>(CATRecommendation::VT_LEAD_END_HOURS, LEAD_END_HOURS, 0.0);
+  }
+  void add_RULE(::flatbuffers::Offset<::flatbuffers::String> RULE) {
+    fbb_.AddOffset(CATRecommendation::VT_RULE, RULE);
+  }
+  void add_MEASURED(bool MEASURED) {
+    fbb_.AddElement<uint8_t>(CATRecommendation::VT_MEASURED, static_cast<uint8_t>(MEASURED), 0);
+  }
+  explicit CATRecommendationBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<CATRecommendation> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<CATRecommendation>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<CATRecommendation> CreateCATRecommendation(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    catalogProductKind KIND = catalogProductKind_Unspecified,
+    double LEAD_START_HOURS = 0.0,
+    double LEAD_END_HOURS = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> RULE = 0,
+    bool MEASURED = false) {
+  CATRecommendationBuilder builder_(_fbb);
+  builder_.add_LEAD_END_HOURS(LEAD_END_HOURS);
+  builder_.add_LEAD_START_HOURS(LEAD_START_HOURS);
+  builder_.add_RULE(RULE);
+  builder_.add_MEASURED(MEASURED);
+  builder_.add_KIND(KIND);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<CATRecommendation> CreateCATRecommendationDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    catalogProductKind KIND = catalogProductKind_Unspecified,
+    double LEAD_START_HOURS = 0.0,
+    double LEAD_END_HOURS = 0.0,
+    const char *RULE = nullptr,
+    bool MEASURED = false) {
+  auto RULE__ = RULE ? _fbb.CreateString(RULE) : 0;
+  return CreateCATRecommendation(
+      _fbb,
+      KIND,
+      LEAD_START_HOURS,
+      LEAD_END_HOURS,
+      RULE__,
+      MEASURED);
+}
+
 /// Catalog Entity Message
 struct CAT FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef CATBuilder Builder;
@@ -440,7 +554,8 @@ struct CAT FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_CATALOG_URI = 52,
     VT_CATALOG_OBJECT_ID = 54,
     VT_PRODUCTS = 56,
-    VT_PRODUCTS_AS_OF = 58
+    VT_PRODUCTS_AS_OF = 58,
+    VT_RECOMMENDED = 60
   };
   /// Satellite Name(s)
   const ::flatbuffers::String *OBJECT_NAME() const {
@@ -570,6 +685,12 @@ struct CAT FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *PRODUCTS_AS_OF() const {
     return GetPointer<const ::flatbuffers::String *>(VT_PRODUCTS_AS_OF);
   }
+  /// The recommended product per span of lead, in lead order, the spans not
+  /// overlapping. Absent: the catalog recommends no product. Past the last
+  /// span no product is recommended.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<CATRecommendation>> *RECOMMENDED() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<CATRecommendation>> *>(VT_RECOMMENDED);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -616,6 +737,9 @@ struct CAT FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyVectorOfTables(PRODUCTS()) &&
            VerifyOffset(verifier, VT_PRODUCTS_AS_OF) &&
            verifier.VerifyString(PRODUCTS_AS_OF()) &&
+           VerifyOffset(verifier, VT_RECOMMENDED) &&
+           verifier.VerifyVector(RECOMMENDED()) &&
+           verifier.VerifyVectorOfTables(RECOMMENDED()) &&
            verifier.EndTable();
   }
 };
@@ -708,6 +832,9 @@ struct CATBuilder {
   void add_PRODUCTS_AS_OF(::flatbuffers::Offset<::flatbuffers::String> PRODUCTS_AS_OF) {
     fbb_.AddOffset(CAT::VT_PRODUCTS_AS_OF, PRODUCTS_AS_OF);
   }
+  void add_RECOMMENDED(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<CATRecommendation>>> RECOMMENDED) {
+    fbb_.AddOffset(CAT::VT_RECOMMENDED, RECOMMENDED);
+  }
   explicit CATBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -748,7 +875,8 @@ inline ::flatbuffers::Offset<CAT> CreateCAT(
     ::flatbuffers::Offset<::flatbuffers::String> CATALOG_URI = 0,
     ::flatbuffers::Offset<::flatbuffers::String> CATALOG_OBJECT_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<CATProduct>>> PRODUCTS = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> PRODUCTS_AS_OF = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> PRODUCTS_AS_OF = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<CATRecommendation>>> RECOMMENDED = 0) {
   CATBuilder builder_(_fbb);
   builder_.add_MASS(MASS);
   builder_.add_SIZE(SIZE);
@@ -757,6 +885,7 @@ inline ::flatbuffers::Offset<CAT> CreateCAT(
   builder_.add_APOGEE(APOGEE);
   builder_.add_INCLINATION(INCLINATION);
   builder_.add_PERIOD(PERIOD);
+  builder_.add_RECOMMENDED(RECOMMENDED);
   builder_.add_PRODUCTS_AS_OF(PRODUCTS_AS_OF);
   builder_.add_PRODUCTS(PRODUCTS);
   builder_.add_CATALOG_OBJECT_ID(CATALOG_OBJECT_ID);
@@ -810,7 +939,8 @@ inline ::flatbuffers::Offset<CAT> CreateCATDirect(
     const char *CATALOG_URI = nullptr,
     const char *CATALOG_OBJECT_ID = nullptr,
     const std::vector<::flatbuffers::Offset<CATProduct>> *PRODUCTS = nullptr,
-    const char *PRODUCTS_AS_OF = nullptr) {
+    const char *PRODUCTS_AS_OF = nullptr,
+    const std::vector<::flatbuffers::Offset<CATRecommendation>> *RECOMMENDED = nullptr) {
   auto OBJECT_NAME__ = OBJECT_NAME ? _fbb.CreateString(OBJECT_NAME) : 0;
   auto OBJECT_ID__ = OBJECT_ID ? _fbb.CreateString(OBJECT_ID) : 0;
   auto LAUNCH_DATE__ = LAUNCH_DATE ? _fbb.CreateString(LAUNCH_DATE) : 0;
@@ -824,6 +954,7 @@ inline ::flatbuffers::Offset<CAT> CreateCATDirect(
   auto CATALOG_OBJECT_ID__ = CATALOG_OBJECT_ID ? _fbb.CreateString(CATALOG_OBJECT_ID) : 0;
   auto PRODUCTS__ = PRODUCTS ? _fbb.CreateVector<::flatbuffers::Offset<CATProduct>>(*PRODUCTS) : 0;
   auto PRODUCTS_AS_OF__ = PRODUCTS_AS_OF ? _fbb.CreateString(PRODUCTS_AS_OF) : 0;
+  auto RECOMMENDED__ = RECOMMENDED ? _fbb.CreateVector<::flatbuffers::Offset<CATRecommendation>>(*RECOMMENDED) : 0;
   return CreateCAT(
       _fbb,
       OBJECT_NAME__,
@@ -853,7 +984,8 @@ inline ::flatbuffers::Offset<CAT> CreateCATDirect(
       CATALOG_URI__,
       CATALOG_OBJECT_ID__,
       PRODUCTS__,
-      PRODUCTS_AS_OF__);
+      PRODUCTS_AS_OF__,
+      RECOMMENDED__);
 }
 
 inline const CAT *GetCAT(const void *buf) {

@@ -208,6 +208,7 @@ export * from './CAT.js';
 export * from './catalogProductKind.js';
 export * from './catalogQueryKind.js';
 export * from './CATProduct.js';
+export * from './CATRecommendation.js';
 export * from './CCT.js';
 export * from './CCTCategory.js';
 export * from './CCTCategoryRollup.js';
