@@ -324,22 +324,44 @@ class CAT extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// The recommended product per span of lead, in lead order, the spans not
+    /// overlapping. Absent: the catalog recommends no product. Past the last
+    /// span no product is recommended.
+    /**
+     * @returnVectorOffset
+     */
+    public function getRECOMMENDED($j)
+    {
+        $o = $this->__offset(60);
+        $obj = new CATRecommendation();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRECOMMENDEDLength()
+    {
+        $o = $this->__offset(60);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startCAT(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(28);
+        $builder->StartObject(29);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return CAT
      */
-    public static function createCAT(FlatBufferBuilder $builder, $OBJECT_NAME, $OBJECT_ID, $NORAD_CAT_ID, $OBJECT_TYPE, $OPS_STATUS_CODE, $OWNER, $LAUNCH_DATE, $LAUNCH_SITE, $DECAY_DATE, $PERIOD, $INCLINATION, $APOGEE, $PERIGEE, $RCS, $DATA_STATUS_CODE, $ORBIT_CENTER, $ORBIT_TYPE, $DEPLOYMENT_DATE, $MANEUVERABLE, $SIZE, $MASS, $MASS_TYPE, $PAYLOADS, $BUS_ID, $CATALOG_URI, $CATALOG_OBJECT_ID, $PRODUCTS, $PRODUCTS_AS_OF)
+    public static function createCAT(FlatBufferBuilder $builder, $OBJECT_NAME, $OBJECT_ID, $NORAD_CAT_ID, $OBJECT_TYPE, $OPS_STATUS_CODE, $OWNER, $LAUNCH_DATE, $LAUNCH_SITE, $DECAY_DATE, $PERIOD, $INCLINATION, $APOGEE, $PERIGEE, $RCS, $DATA_STATUS_CODE, $ORBIT_CENTER, $ORBIT_TYPE, $DEPLOYMENT_DATE, $MANEUVERABLE, $SIZE, $MASS, $MASS_TYPE, $PAYLOADS, $BUS_ID, $CATALOG_URI, $CATALOG_OBJECT_ID, $PRODUCTS, $PRODUCTS_AS_OF, $RECOMMENDED)
     {
-        $builder->startObject(28);
+        $builder->startObject(29);
         self::addOBJECT_NAME($builder, $OBJECT_NAME);
         self::addOBJECT_ID($builder, $OBJECT_ID);
         self::addNORAD_CAT_ID($builder, $NORAD_CAT_ID);
@@ -368,6 +390,7 @@ class CAT extends Table
         self::addCATALOG_OBJECT_ID($builder, $CATALOG_OBJECT_ID);
         self::addPRODUCTS($builder, $PRODUCTS);
         self::addPRODUCTS_AS_OF($builder, $PRODUCTS_AS_OF);
+        self::addRECOMMENDED($builder, $RECOMMENDED);
         $o = $builder->endObject();
         return $o;
     }
@@ -698,6 +721,40 @@ class CAT extends Table
     public static function addPRODUCTS_AS_OF(FlatBufferBuilder $builder, $PRODUCTS_AS_OF)
     {
         $builder->addOffsetX(27, $PRODUCTS_AS_OF, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addRECOMMENDED(FlatBufferBuilder $builder, $RECOMMENDED)
+    {
+        $builder->addOffsetX(28, $RECOMMENDED, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createRECOMMENDEDVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startRECOMMENDEDVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
     }
 
     /**

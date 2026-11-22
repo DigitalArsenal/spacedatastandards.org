@@ -1,5 +1,6 @@
 import * as flatbuffers from 'flatbuffers';
 import { CATProduct, CATProductT } from './CATProduct.js';
+import { CATRecommendation, CATRecommendationT } from './CATRecommendation.js';
 import { PLD, PLDT } from './PLD.js';
 import { dataAvailability } from './dataAvailability.js';
 import { legacyCountryCode } from './legacyCountryCode.js';
@@ -158,6 +159,13 @@ export declare class CAT implements flatbuffers.IUnpackableObject<CATT> {
      */
     PRODUCTS_AS_OF(): string | null;
     PRODUCTS_AS_OF(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * The recommended product per span of lead, in lead order, the spans not
+     * overlapping. Absent: the catalog recommends no product. Past the last
+     * span no product is recommended.
+     */
+    RECOMMENDED(index: number, obj?: CATRecommendation): CATRecommendation | null;
+    recommendedLength(): number;
     static startCAT(builder: flatbuffers.Builder): void;
     static addObjectName(builder: flatbuffers.Builder, OBJECT_NAMEOffset: flatbuffers.Offset): void;
     static addObjectId(builder: flatbuffers.Builder, OBJECT_IDOffset: flatbuffers.Offset): void;
@@ -191,10 +199,13 @@ export declare class CAT implements flatbuffers.IUnpackableObject<CATT> {
     static createProductsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startProductsVector(builder: flatbuffers.Builder, numElems: number): void;
     static addProductsAsOf(builder: flatbuffers.Builder, PRODUCTS_AS_OFOffset: flatbuffers.Offset): void;
+    static addRecommended(builder: flatbuffers.Builder, RECOMMENDEDOffset: flatbuffers.Offset): void;
+    static createRecommendedVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startRecommendedVector(builder: flatbuffers.Builder, numElems: number): void;
     static endCAT(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishCATBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedCATBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createCAT(builder: flatbuffers.Builder, OBJECT_NAMEOffset: flatbuffers.Offset, OBJECT_IDOffset: flatbuffers.Offset, NORAD_CAT_ID: number, OBJECT_TYPE: spaceObjectClass, OPS_STATUS_CODE: operationalState, OWNER: legacyCountryCode, LAUNCH_DATEOffset: flatbuffers.Offset, LAUNCH_SITEOffset: flatbuffers.Offset, DECAY_DATEOffset: flatbuffers.Offset, PERIOD: number, INCLINATION: number, APOGEE: number, PERIGEE: number, RCS: number, DATA_STATUS_CODE: dataAvailability, ORBIT_CENTEROffset: flatbuffers.Offset, ORBIT_TYPE: orbitRegime, DEPLOYMENT_DATEOffset: flatbuffers.Offset, MANEUVERABLE: boolean, SIZE: number, MASS: number, MASS_TYPE: massCategory, PAYLOADSOffset: flatbuffers.Offset, BUS_IDOffset: flatbuffers.Offset, CATALOG_URIOffset: flatbuffers.Offset, CATALOG_OBJECT_IDOffset: flatbuffers.Offset, PRODUCTSOffset: flatbuffers.Offset, PRODUCTS_AS_OFOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createCAT(builder: flatbuffers.Builder, OBJECT_NAMEOffset: flatbuffers.Offset, OBJECT_IDOffset: flatbuffers.Offset, NORAD_CAT_ID: number, OBJECT_TYPE: spaceObjectClass, OPS_STATUS_CODE: operationalState, OWNER: legacyCountryCode, LAUNCH_DATEOffset: flatbuffers.Offset, LAUNCH_SITEOffset: flatbuffers.Offset, DECAY_DATEOffset: flatbuffers.Offset, PERIOD: number, INCLINATION: number, APOGEE: number, PERIGEE: number, RCS: number, DATA_STATUS_CODE: dataAvailability, ORBIT_CENTEROffset: flatbuffers.Offset, ORBIT_TYPE: orbitRegime, DEPLOYMENT_DATEOffset: flatbuffers.Offset, MANEUVERABLE: boolean, SIZE: number, MASS: number, MASS_TYPE: massCategory, PAYLOADSOffset: flatbuffers.Offset, BUS_IDOffset: flatbuffers.Offset, CATALOG_URIOffset: flatbuffers.Offset, CATALOG_OBJECT_IDOffset: flatbuffers.Offset, PRODUCTSOffset: flatbuffers.Offset, PRODUCTS_AS_OFOffset: flatbuffers.Offset, RECOMMENDEDOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): CATT;
     unpackTo(_o: CATT): void;
 }
@@ -227,7 +238,8 @@ export declare class CATT implements flatbuffers.IGeneratedObject {
     CATALOG_OBJECT_ID: string | Uint8Array | null;
     PRODUCTS: (CATProductT)[];
     PRODUCTS_AS_OF: string | Uint8Array | null;
-    constructor(OBJECT_NAME?: string | Uint8Array | null, OBJECT_ID?: string | Uint8Array | null, NORAD_CAT_ID?: number, OBJECT_TYPE?: spaceObjectClass, OPS_STATUS_CODE?: operationalState, OWNER?: legacyCountryCode, LAUNCH_DATE?: string | Uint8Array | null, LAUNCH_SITE?: string | Uint8Array | null, DECAY_DATE?: string | Uint8Array | null, PERIOD?: number, INCLINATION?: number, APOGEE?: number, PERIGEE?: number, RCS?: number, DATA_STATUS_CODE?: dataAvailability, ORBIT_CENTER?: string | Uint8Array | null, ORBIT_TYPE?: orbitRegime, DEPLOYMENT_DATE?: string | Uint8Array | null, MANEUVERABLE?: boolean, SIZE?: number, MASS?: number, MASS_TYPE?: massCategory, PAYLOADS?: (PLDT)[], BUS_ID?: string | Uint8Array | null, CATALOG_URI?: string | Uint8Array | null, CATALOG_OBJECT_ID?: string | Uint8Array | null, PRODUCTS?: (CATProductT)[], PRODUCTS_AS_OF?: string | Uint8Array | null);
+    RECOMMENDED: (CATRecommendationT)[];
+    constructor(OBJECT_NAME?: string | Uint8Array | null, OBJECT_ID?: string | Uint8Array | null, NORAD_CAT_ID?: number, OBJECT_TYPE?: spaceObjectClass, OPS_STATUS_CODE?: operationalState, OWNER?: legacyCountryCode, LAUNCH_DATE?: string | Uint8Array | null, LAUNCH_SITE?: string | Uint8Array | null, DECAY_DATE?: string | Uint8Array | null, PERIOD?: number, INCLINATION?: number, APOGEE?: number, PERIGEE?: number, RCS?: number, DATA_STATUS_CODE?: dataAvailability, ORBIT_CENTER?: string | Uint8Array | null, ORBIT_TYPE?: orbitRegime, DEPLOYMENT_DATE?: string | Uint8Array | null, MANEUVERABLE?: boolean, SIZE?: number, MASS?: number, MASS_TYPE?: massCategory, PAYLOADS?: (PLDT)[], BUS_ID?: string | Uint8Array | null, CATALOG_URI?: string | Uint8Array | null, CATALOG_OBJECT_ID?: string | Uint8Array | null, PRODUCTS?: (CATProductT)[], PRODUCTS_AS_OF?: string | Uint8Array | null, RECOMMENDED?: (CATRecommendationT)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=CAT.d.ts.map

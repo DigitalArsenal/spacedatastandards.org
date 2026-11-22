@@ -351,6 +351,24 @@ class CAT : Table() {
         }
     val productsAsOfAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(58, 1)
     fun productsAsOfInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 58, 1)
+    /**
+     * The recommended product per span of lead, in lead order, the spans not
+     * overlapping. Absent: the catalog recommends no product. Past the last
+     * span no product is recommended.
+     */
+    fun recommended(j: Int) : CATRecommendation? = recommended(CATRecommendation(), j)
+    fun recommended(obj: CATRecommendation, j: Int) : CATRecommendation? {
+        val o = __offset(60)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val recommendedLength : Int
+        get() {
+            val o = __offset(60); return if (o != 0) __vector_len(o) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCAT(_bb: ByteBuffer): CAT = getRootAsCAT(_bb, CAT())
@@ -359,8 +377,8 @@ class CAT : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun CATBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$CAT")
-        fun createCAT(builder: FlatBufferBuilder, objectNameOffset: Int, objectIdOffset: Int, noradCatId: UInt, objectType: Byte, opsStatusCode: Byte, owner: UByte, launchDateOffset: Int, launchSiteOffset: Int, decayDateOffset: Int, period: Double, inclination: Double, apogee: Double, perigee: Double, rcs: Double, dataStatusCode: Byte, orbitCenterOffset: Int, orbitType: Byte, deploymentDateOffset: Int, maneuverable: Boolean, size: Double, mass: Double, massType: Byte, payloadsOffset: Int, busIdOffset: Int, catalogUriOffset: Int, catalogObjectIdOffset: Int, productsOffset: Int, productsAsOfOffset: Int) : Int {
-            builder.startTable(28)
+        fun createCAT(builder: FlatBufferBuilder, objectNameOffset: Int, objectIdOffset: Int, noradCatId: UInt, objectType: Byte, opsStatusCode: Byte, owner: UByte, launchDateOffset: Int, launchSiteOffset: Int, decayDateOffset: Int, period: Double, inclination: Double, apogee: Double, perigee: Double, rcs: Double, dataStatusCode: Byte, orbitCenterOffset: Int, orbitType: Byte, deploymentDateOffset: Int, maneuverable: Boolean, size: Double, mass: Double, massType: Byte, payloadsOffset: Int, busIdOffset: Int, catalogUriOffset: Int, catalogObjectIdOffset: Int, productsOffset: Int, productsAsOfOffset: Int, recommendedOffset: Int) : Int {
+            builder.startTable(29)
             addMASS(builder, mass)
             addSIZE(builder, size)
             addRCS(builder, rcs)
@@ -368,6 +386,7 @@ class CAT : Table() {
             addAPOGEE(builder, apogee)
             addINCLINATION(builder, inclination)
             addPERIOD(builder, period)
+            addRECOMMENDED(builder, recommendedOffset)
             addPRODUCTSASOF(builder, productsAsOfOffset)
             addPRODUCTS(builder, productsOffset)
             addCATALOGOBJECTID(builder, catalogObjectIdOffset)
@@ -391,7 +410,7 @@ class CAT : Table() {
             addOBJECTTYPE(builder, objectType)
             return endCAT(builder)
         }
-        fun startCAT(builder: FlatBufferBuilder) = builder.startTable(28)
+        fun startCAT(builder: FlatBufferBuilder) = builder.startTable(29)
         fun addOBJECTNAME(builder: FlatBufferBuilder, objectName: Int) = builder.addOffset(0, objectName, 0)
         fun addOBJECTID(builder: FlatBufferBuilder, objectId: Int) = builder.addOffset(1, objectId, 0)
         fun addNORADCATID(builder: FlatBufferBuilder, noradCatId: UInt) = builder.addInt(2, noradCatId.toInt(), 0)
@@ -436,6 +455,15 @@ class CAT : Table() {
         }
         fun startProductsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addPRODUCTSASOF(builder: FlatBufferBuilder, productsAsOf: Int) = builder.addOffset(27, productsAsOf, 0)
+        fun addRECOMMENDED(builder: FlatBufferBuilder, recommended: Int) = builder.addOffset(28, recommended, 0)
+        fun createRecommendedVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startRecommendedVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun endCAT(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

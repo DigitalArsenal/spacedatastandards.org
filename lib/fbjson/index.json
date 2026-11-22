@@ -17509,6 +17509,63 @@
                     },
                     "additionalProperties": false
                 },
+                "CATRecommendation": {
+                    "type": "object",
+                    "description": "The product the catalog recommends for the object over a span of\nprediction lead, chosen by a stated rule from the object's data-source type,\norbit regime and lead.",
+                    "properties": {
+                        "KIND": {
+                            "$ref": "#/definitions/catalogProductKind",
+                            "description": "The recommended product's KIND: the entry of PRODUCTS with this KIND.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "Unspecified": {
+                                    "value": 0,
+                                    "description": "Not stated"
+                                },
+                                "Sgp4Elements": {
+                                    "value": 1,
+                                    "description": "An element set under SGP4: an $OMM with MEAN_ELEMENT_THEORY SGP4, or an $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is SGP4"
+                                },
+                                "Sgp4XpElements": {
+                                    "value": 2,
+                                    "description": "As Sgp4Elements, under SGP4XP"
+                                },
+                                "StateCovariance": {
+                                    "value": 3,
+                                    "description": "$OCM: a state and its covariance"
+                                },
+                                "ApElements": {
+                                    "value": 4,
+                                    "description": "An $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is AP"
+                                }
+                            },
+                            "x-flatbuffer-default": "Unspecified"
+                        },
+                        "LEAD_START_HOURS": {
+                            "type": "number",
+                            "description": "Start of the span, hours after PRODUCTS_AS_OF (inclusive).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "LEAD_END_HOURS": {
+                            "type": "number",
+                            "description": "End of the span, hours after PRODUCTS_AS_OF (exclusive).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "RULE": {
+                            "type": "string",
+                            "description": "The rule that chose the product: its name and version, then the rule's\ncell the object fell in (for example \"catalog-serve/2 public/meo\").",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "MEASURED": {
+                            "type": "boolean",
+                            "description": "True when the rule's choice for that cell was measured on held-out tests\nagainst a stated truth; false when the rule's stated default was applied\nwithout such a measurement.",
+                            "x-flatbuffer-type": "bool",
+                            "x-flatbuffer-default": "false"
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "CAT": {
                     "type": "object",
                     "description": "Catalog Entity Message",
@@ -18335,6 +18392,14 @@
                             "type": "string",
                             "description": "ISO 8601 UTC instant the selection in PRODUCTS holds at.",
                             "x-flatbuffer-type": "string"
+                        },
+                        "RECOMMENDED": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/CATRecommendation"
+                            },
+                            "description": "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended.",
+                            "x-flatbuffer-type": "[CATRecommendation]"
                         }
                     },
                     "additionalProperties": false
@@ -40802,6 +40867,63 @@
                     },
                     "additionalProperties": false
                 },
+                "CATRecommendation": {
+                    "type": "object",
+                    "description": "The product the catalog recommends for the object over a span of\nprediction lead, chosen by a stated rule from the object's data-source type,\norbit regime and lead.",
+                    "properties": {
+                        "KIND": {
+                            "$ref": "#/definitions/catalogProductKind",
+                            "description": "The recommended product's KIND: the entry of PRODUCTS with this KIND.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "Unspecified": {
+                                    "value": 0,
+                                    "description": "Not stated"
+                                },
+                                "Sgp4Elements": {
+                                    "value": 1,
+                                    "description": "An element set under SGP4: an $OMM with MEAN_ELEMENT_THEORY SGP4, or an $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is SGP4"
+                                },
+                                "Sgp4XpElements": {
+                                    "value": 2,
+                                    "description": "As Sgp4Elements, under SGP4XP"
+                                },
+                                "StateCovariance": {
+                                    "value": 3,
+                                    "description": "$OCM: a state and its covariance"
+                                },
+                                "ApElements": {
+                                    "value": 4,
+                                    "description": "An $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is AP"
+                                }
+                            },
+                            "x-flatbuffer-default": "Unspecified"
+                        },
+                        "LEAD_START_HOURS": {
+                            "type": "number",
+                            "description": "Start of the span, hours after PRODUCTS_AS_OF (inclusive).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "LEAD_END_HOURS": {
+                            "type": "number",
+                            "description": "End of the span, hours after PRODUCTS_AS_OF (exclusive).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "RULE": {
+                            "type": "string",
+                            "description": "The rule that chose the product: its name and version, then the rule's\ncell the object fell in (for example \"catalog-serve/2 public/meo\").",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "MEASURED": {
+                            "type": "boolean",
+                            "description": "True when the rule's choice for that cell was measured on held-out tests\nagainst a stated truth; false when the rule's stated default was applied\nwithout such a measurement.",
+                            "x-flatbuffer-type": "bool",
+                            "x-flatbuffer-default": "false"
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "CAT": {
                     "type": "object",
                     "description": "Catalog Entity Message",
@@ -41628,6 +41750,14 @@
                             "type": "string",
                             "description": "ISO 8601 UTC instant the selection in PRODUCTS holds at.",
                             "x-flatbuffer-type": "string"
+                        },
+                        "RECOMMENDED": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/CATRecommendation"
+                            },
+                            "description": "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended.",
+                            "x-flatbuffer-type": "[CATRecommendation]"
                         }
                     },
                     "additionalProperties": false
@@ -68375,6 +68505,63 @@
                     },
                     "additionalProperties": false
                 },
+                "CATRecommendation": {
+                    "type": "object",
+                    "description": "The product the catalog recommends for the object over a span of\nprediction lead, chosen by a stated rule from the object's data-source type,\norbit regime and lead.",
+                    "properties": {
+                        "KIND": {
+                            "$ref": "#/definitions/catalogProductKind",
+                            "description": "The recommended product's KIND: the entry of PRODUCTS with this KIND.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "Unspecified": {
+                                    "value": 0,
+                                    "description": "Not stated"
+                                },
+                                "Sgp4Elements": {
+                                    "value": 1,
+                                    "description": "An element set under SGP4: an $OMM with MEAN_ELEMENT_THEORY SGP4, or an $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is SGP4"
+                                },
+                                "Sgp4XpElements": {
+                                    "value": 2,
+                                    "description": "As Sgp4Elements, under SGP4XP"
+                                },
+                                "StateCovariance": {
+                                    "value": 3,
+                                    "description": "$OCM: a state and its covariance"
+                                },
+                                "ApElements": {
+                                    "value": 4,
+                                    "description": "An $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is AP"
+                                }
+                            },
+                            "x-flatbuffer-default": "Unspecified"
+                        },
+                        "LEAD_START_HOURS": {
+                            "type": "number",
+                            "description": "Start of the span, hours after PRODUCTS_AS_OF (inclusive).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "LEAD_END_HOURS": {
+                            "type": "number",
+                            "description": "End of the span, hours after PRODUCTS_AS_OF (exclusive).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "RULE": {
+                            "type": "string",
+                            "description": "The rule that chose the product: its name and version, then the rule's\ncell the object fell in (for example \"catalog-serve/2 public/meo\").",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "MEASURED": {
+                            "type": "boolean",
+                            "description": "True when the rule's choice for that cell was measured on held-out tests\nagainst a stated truth; false when the rule's stated default was applied\nwithout such a measurement.",
+                            "x-flatbuffer-type": "bool",
+                            "x-flatbuffer-default": "false"
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "CAT": {
                     "type": "object",
                     "description": "Catalog Entity Message",
@@ -69201,6 +69388,14 @@
                             "type": "string",
                             "description": "ISO 8601 UTC instant the selection in PRODUCTS holds at.",
                             "x-flatbuffer-type": "string"
+                        },
+                        "RECOMMENDED": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/CATRecommendation"
+                            },
+                            "description": "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended.",
+                            "x-flatbuffer-type": "[CATRecommendation]"
                         }
                     },
                     "additionalProperties": false
@@ -107822,6 +108017,63 @@
                     },
                     "additionalProperties": false
                 },
+                "CATRecommendation": {
+                    "type": "object",
+                    "description": "The product the catalog recommends for the object over a span of\nprediction lead, chosen by a stated rule from the object's data-source type,\norbit regime and lead.",
+                    "properties": {
+                        "KIND": {
+                            "$ref": "#/definitions/catalogProductKind",
+                            "description": "The recommended product's KIND: the entry of PRODUCTS with this KIND.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "Unspecified": {
+                                    "value": 0,
+                                    "description": "Not stated"
+                                },
+                                "Sgp4Elements": {
+                                    "value": 1,
+                                    "description": "An element set under SGP4: an $OMM with MEAN_ELEMENT_THEORY SGP4, or an $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is SGP4"
+                                },
+                                "Sgp4XpElements": {
+                                    "value": 2,
+                                    "description": "As Sgp4Elements, under SGP4XP"
+                                },
+                                "StateCovariance": {
+                                    "value": 3,
+                                    "description": "$OCM: a state and its covariance"
+                                },
+                                "ApElements": {
+                                    "value": 4,
+                                    "description": "An $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is AP"
+                                }
+                            },
+                            "x-flatbuffer-default": "Unspecified"
+                        },
+                        "LEAD_START_HOURS": {
+                            "type": "number",
+                            "description": "Start of the span, hours after PRODUCTS_AS_OF (inclusive).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "LEAD_END_HOURS": {
+                            "type": "number",
+                            "description": "End of the span, hours after PRODUCTS_AS_OF (exclusive).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "RULE": {
+                            "type": "string",
+                            "description": "The rule that chose the product: its name and version, then the rule's\ncell the object fell in (for example \"catalog-serve/2 public/meo\").",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "MEASURED": {
+                            "type": "boolean",
+                            "description": "True when the rule's choice for that cell was measured on held-out tests\nagainst a stated truth; false when the rule's stated default was applied\nwithout such a measurement.",
+                            "x-flatbuffer-type": "bool",
+                            "x-flatbuffer-default": "false"
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "CAT": {
                     "type": "object",
                     "description": "Catalog Entity Message",
@@ -108648,6 +108900,14 @@
                             "type": "string",
                             "description": "ISO 8601 UTC instant the selection in PRODUCTS holds at.",
                             "x-flatbuffer-type": "string"
+                        },
+                        "RECOMMENDED": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/CATRecommendation"
+                            },
+                            "description": "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended.",
+                            "x-flatbuffer-type": "[CATRecommendation]"
                         }
                     },
                     "additionalProperties": false
@@ -145474,6 +145734,63 @@
                     },
                     "additionalProperties": false
                 },
+                "CATRecommendation": {
+                    "type": "object",
+                    "description": "The product the catalog recommends for the object over a span of\nprediction lead, chosen by a stated rule from the object's data-source type,\norbit regime and lead.",
+                    "properties": {
+                        "KIND": {
+                            "$ref": "#/definitions/catalogProductKind",
+                            "description": "The recommended product's KIND: the entry of PRODUCTS with this KIND.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "Unspecified": {
+                                    "value": 0,
+                                    "description": "Not stated"
+                                },
+                                "Sgp4Elements": {
+                                    "value": 1,
+                                    "description": "An element set under SGP4: an $OMM with MEAN_ELEMENT_THEORY SGP4, or an $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is SGP4"
+                                },
+                                "Sgp4XpElements": {
+                                    "value": 2,
+                                    "description": "As Sgp4Elements, under SGP4XP"
+                                },
+                                "StateCovariance": {
+                                    "value": 3,
+                                    "description": "$OCM: a state and its covariance"
+                                },
+                                "ApElements": {
+                                    "value": 4,
+                                    "description": "An $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is AP"
+                                }
+                            },
+                            "x-flatbuffer-default": "Unspecified"
+                        },
+                        "LEAD_START_HOURS": {
+                            "type": "number",
+                            "description": "Start of the span, hours after PRODUCTS_AS_OF (inclusive).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "LEAD_END_HOURS": {
+                            "type": "number",
+                            "description": "End of the span, hours after PRODUCTS_AS_OF (exclusive).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "RULE": {
+                            "type": "string",
+                            "description": "The rule that chose the product: its name and version, then the rule's\ncell the object fell in (for example \"catalog-serve/2 public/meo\").",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "MEASURED": {
+                            "type": "boolean",
+                            "description": "True when the rule's choice for that cell was measured on held-out tests\nagainst a stated truth; false when the rule's stated default was applied\nwithout such a measurement.",
+                            "x-flatbuffer-type": "bool",
+                            "x-flatbuffer-default": "false"
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "CAT": {
                     "type": "object",
                     "description": "Catalog Entity Message",
@@ -146300,6 +146617,14 @@
                             "type": "string",
                             "description": "ISO 8601 UTC instant the selection in PRODUCTS holds at.",
                             "x-flatbuffer-type": "string"
+                        },
+                        "RECOMMENDED": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/CATRecommendation"
+                            },
+                            "description": "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended.",
+                            "x-flatbuffer-type": "[CATRecommendation]"
                         }
                     },
                     "additionalProperties": false
@@ -167796,6 +168121,63 @@
                     },
                     "additionalProperties": false
                 },
+                "CATRecommendation": {
+                    "type": "object",
+                    "description": "The product the catalog recommends for the object over a span of\nprediction lead, chosen by a stated rule from the object's data-source type,\norbit regime and lead.",
+                    "properties": {
+                        "KIND": {
+                            "$ref": "#/definitions/catalogProductKind",
+                            "description": "The recommended product's KIND: the entry of PRODUCTS with this KIND.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "Unspecified": {
+                                    "value": 0,
+                                    "description": "Not stated"
+                                },
+                                "Sgp4Elements": {
+                                    "value": 1,
+                                    "description": "An element set under SGP4: an $OMM with MEAN_ELEMENT_THEORY SGP4, or an $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is SGP4"
+                                },
+                                "Sgp4XpElements": {
+                                    "value": 2,
+                                    "description": "As Sgp4Elements, under SGP4XP"
+                                },
+                                "StateCovariance": {
+                                    "value": 3,
+                                    "description": "$OCM: a state and its covariance"
+                                },
+                                "ApElements": {
+                                    "value": 4,
+                                    "description": "An $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is AP"
+                                }
+                            },
+                            "x-flatbuffer-default": "Unspecified"
+                        },
+                        "LEAD_START_HOURS": {
+                            "type": "number",
+                            "description": "Start of the span, hours after PRODUCTS_AS_OF (inclusive).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "LEAD_END_HOURS": {
+                            "type": "number",
+                            "description": "End of the span, hours after PRODUCTS_AS_OF (exclusive).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "RULE": {
+                            "type": "string",
+                            "description": "The rule that chose the product: its name and version, then the rule's\ncell the object fell in (for example \"catalog-serve/2 public/meo\").",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "MEASURED": {
+                            "type": "boolean",
+                            "description": "True when the rule's choice for that cell was measured on held-out tests\nagainst a stated truth; false when the rule's stated default was applied\nwithout such a measurement.",
+                            "x-flatbuffer-type": "bool",
+                            "x-flatbuffer-default": "false"
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "CAT": {
                     "type": "object",
                     "description": "Catalog Entity Message",
@@ -168622,6 +169004,14 @@
                             "type": "string",
                             "description": "ISO 8601 UTC instant the selection in PRODUCTS holds at.",
                             "x-flatbuffer-type": "string"
+                        },
+                        "RECOMMENDED": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/CATRecommendation"
+                            },
+                            "description": "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended.",
+                            "x-flatbuffer-type": "[CATRecommendation]"
                         }
                     },
                     "additionalProperties": false
@@ -195727,6 +196117,63 @@
                     },
                     "additionalProperties": false
                 },
+                "CATRecommendation": {
+                    "type": "object",
+                    "description": "The product the catalog recommends for the object over a span of\nprediction lead, chosen by a stated rule from the object's data-source type,\norbit regime and lead.",
+                    "properties": {
+                        "KIND": {
+                            "$ref": "#/definitions/catalogProductKind",
+                            "description": "The recommended product's KIND: the entry of PRODUCTS with this KIND.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "Unspecified": {
+                                    "value": 0,
+                                    "description": "Not stated"
+                                },
+                                "Sgp4Elements": {
+                                    "value": 1,
+                                    "description": "An element set under SGP4: an $OMM with MEAN_ELEMENT_THEORY SGP4, or an $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is SGP4"
+                                },
+                                "Sgp4XpElements": {
+                                    "value": 2,
+                                    "description": "As Sgp4Elements, under SGP4XP"
+                                },
+                                "StateCovariance": {
+                                    "value": 3,
+                                    "description": "$OCM: a state and its covariance"
+                                },
+                                "ApElements": {
+                                    "value": 4,
+                                    "description": "An $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is AP"
+                                }
+                            },
+                            "x-flatbuffer-default": "Unspecified"
+                        },
+                        "LEAD_START_HOURS": {
+                            "type": "number",
+                            "description": "Start of the span, hours after PRODUCTS_AS_OF (inclusive).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "LEAD_END_HOURS": {
+                            "type": "number",
+                            "description": "End of the span, hours after PRODUCTS_AS_OF (exclusive).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "RULE": {
+                            "type": "string",
+                            "description": "The rule that chose the product: its name and version, then the rule's\ncell the object fell in (for example \"catalog-serve/2 public/meo\").",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "MEASURED": {
+                            "type": "boolean",
+                            "description": "True when the rule's choice for that cell was measured on held-out tests\nagainst a stated truth; false when the rule's stated default was applied\nwithout such a measurement.",
+                            "x-flatbuffer-type": "bool",
+                            "x-flatbuffer-default": "false"
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "CAT": {
                     "type": "object",
                     "description": "Catalog Entity Message",
@@ -196553,6 +197000,14 @@
                             "type": "string",
                             "description": "ISO 8601 UTC instant the selection in PRODUCTS holds at.",
                             "x-flatbuffer-type": "string"
+                        },
+                        "RECOMMENDED": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/CATRecommendation"
+                            },
+                            "description": "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended.",
+                            "x-flatbuffer-type": "[CATRecommendation]"
                         }
                     },
                     "additionalProperties": false
@@ -252350,6 +252805,63 @@
                     },
                     "additionalProperties": false
                 },
+                "CATRecommendation": {
+                    "type": "object",
+                    "description": "The product the catalog recommends for the object over a span of\nprediction lead, chosen by a stated rule from the object's data-source type,\norbit regime and lead.",
+                    "properties": {
+                        "KIND": {
+                            "$ref": "#/definitions/catalogProductKind",
+                            "description": "The recommended product's KIND: the entry of PRODUCTS with this KIND.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "Unspecified": {
+                                    "value": 0,
+                                    "description": "Not stated"
+                                },
+                                "Sgp4Elements": {
+                                    "value": 1,
+                                    "description": "An element set under SGP4: an $OMM with MEAN_ELEMENT_THEORY SGP4, or an $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is SGP4"
+                                },
+                                "Sgp4XpElements": {
+                                    "value": 2,
+                                    "description": "As Sgp4Elements, under SGP4XP"
+                                },
+                                "StateCovariance": {
+                                    "value": 3,
+                                    "description": "$OCM: a state and its covariance"
+                                },
+                                "ApElements": {
+                                    "value": 4,
+                                    "description": "An $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is AP"
+                                }
+                            },
+                            "x-flatbuffer-default": "Unspecified"
+                        },
+                        "LEAD_START_HOURS": {
+                            "type": "number",
+                            "description": "Start of the span, hours after PRODUCTS_AS_OF (inclusive).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "LEAD_END_HOURS": {
+                            "type": "number",
+                            "description": "End of the span, hours after PRODUCTS_AS_OF (exclusive).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "RULE": {
+                            "type": "string",
+                            "description": "The rule that chose the product: its name and version, then the rule's\ncell the object fell in (for example \"catalog-serve/2 public/meo\").",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "MEASURED": {
+                            "type": "boolean",
+                            "description": "True when the rule's choice for that cell was measured on held-out tests\nagainst a stated truth; false when the rule's stated default was applied\nwithout such a measurement.",
+                            "x-flatbuffer-type": "bool",
+                            "x-flatbuffer-default": "false"
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "CAT": {
                     "type": "object",
                     "description": "Catalog Entity Message",
@@ -253176,6 +253688,14 @@
                             "type": "string",
                             "description": "ISO 8601 UTC instant the selection in PRODUCTS holds at.",
                             "x-flatbuffer-type": "string"
+                        },
+                        "RECOMMENDED": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/CATRecommendation"
+                            },
+                            "description": "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended.",
+                            "x-flatbuffer-type": "[CATRecommendation]"
                         }
                     },
                     "additionalProperties": false
@@ -274351,6 +274871,63 @@
                     },
                     "additionalProperties": false
                 },
+                "CATRecommendation": {
+                    "type": "object",
+                    "description": "The product the catalog recommends for the object over a span of\nprediction lead, chosen by a stated rule from the object's data-source type,\norbit regime and lead.",
+                    "properties": {
+                        "KIND": {
+                            "$ref": "#/definitions/catalogProductKind",
+                            "description": "The recommended product's KIND: the entry of PRODUCTS with this KIND.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "Unspecified": {
+                                    "value": 0,
+                                    "description": "Not stated"
+                                },
+                                "Sgp4Elements": {
+                                    "value": 1,
+                                    "description": "An element set under SGP4: an $OMM with MEAN_ELEMENT_THEORY SGP4, or an $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is SGP4"
+                                },
+                                "Sgp4XpElements": {
+                                    "value": 2,
+                                    "description": "As Sgp4Elements, under SGP4XP"
+                                },
+                                "StateCovariance": {
+                                    "value": 3,
+                                    "description": "$OCM: a state and its covariance"
+                                },
+                                "ApElements": {
+                                    "value": 4,
+                                    "description": "An $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is AP"
+                                }
+                            },
+                            "x-flatbuffer-default": "Unspecified"
+                        },
+                        "LEAD_START_HOURS": {
+                            "type": "number",
+                            "description": "Start of the span, hours after PRODUCTS_AS_OF (inclusive).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "LEAD_END_HOURS": {
+                            "type": "number",
+                            "description": "End of the span, hours after PRODUCTS_AS_OF (exclusive).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "RULE": {
+                            "type": "string",
+                            "description": "The rule that chose the product: its name and version, then the rule's\ncell the object fell in (for example \"catalog-serve/2 public/meo\").",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "MEASURED": {
+                            "type": "boolean",
+                            "description": "True when the rule's choice for that cell was measured on held-out tests\nagainst a stated truth; false when the rule's stated default was applied\nwithout such a measurement.",
+                            "x-flatbuffer-type": "bool",
+                            "x-flatbuffer-default": "false"
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "CAT": {
                     "type": "object",
                     "description": "Catalog Entity Message",
@@ -275177,6 +275754,14 @@
                             "type": "string",
                             "description": "ISO 8601 UTC instant the selection in PRODUCTS holds at.",
                             "x-flatbuffer-type": "string"
+                        },
+                        "RECOMMENDED": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/CATRecommendation"
+                            },
+                            "description": "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended.",
+                            "x-flatbuffer-type": "[CATRecommendation]"
                         }
                     },
                     "additionalProperties": false
@@ -291726,6 +292311,63 @@
                     },
                     "additionalProperties": false
                 },
+                "CATRecommendation": {
+                    "type": "object",
+                    "description": "The product the catalog recommends for the object over a span of\nprediction lead, chosen by a stated rule from the object's data-source type,\norbit regime and lead.",
+                    "properties": {
+                        "KIND": {
+                            "$ref": "#/definitions/catalogProductKind",
+                            "description": "The recommended product's KIND: the entry of PRODUCTS with this KIND.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "Unspecified": {
+                                    "value": 0,
+                                    "description": "Not stated"
+                                },
+                                "Sgp4Elements": {
+                                    "value": 1,
+                                    "description": "An element set under SGP4: an $OMM with MEAN_ELEMENT_THEORY SGP4, or an $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is SGP4"
+                                },
+                                "Sgp4XpElements": {
+                                    "value": 2,
+                                    "description": "As Sgp4Elements, under SGP4XP"
+                                },
+                                "StateCovariance": {
+                                    "value": 3,
+                                    "description": "$OCM: a state and its covariance"
+                                },
+                                "ApElements": {
+                                    "value": 4,
+                                    "description": "An $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is AP"
+                                }
+                            },
+                            "x-flatbuffer-default": "Unspecified"
+                        },
+                        "LEAD_START_HOURS": {
+                            "type": "number",
+                            "description": "Start of the span, hours after PRODUCTS_AS_OF (inclusive).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "LEAD_END_HOURS": {
+                            "type": "number",
+                            "description": "End of the span, hours after PRODUCTS_AS_OF (exclusive).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "RULE": {
+                            "type": "string",
+                            "description": "The rule that chose the product: its name and version, then the rule's\ncell the object fell in (for example \"catalog-serve/2 public/meo\").",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "MEASURED": {
+                            "type": "boolean",
+                            "description": "True when the rule's choice for that cell was measured on held-out tests\nagainst a stated truth; false when the rule's stated default was applied\nwithout such a measurement.",
+                            "x-flatbuffer-type": "bool",
+                            "x-flatbuffer-default": "false"
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "CAT": {
                     "type": "object",
                     "description": "Catalog Entity Message",
@@ -292552,6 +293194,14 @@
                             "type": "string",
                             "description": "ISO 8601 UTC instant the selection in PRODUCTS holds at.",
                             "x-flatbuffer-type": "string"
+                        },
+                        "RECOMMENDED": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/CATRecommendation"
+                            },
+                            "description": "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended.",
+                            "x-flatbuffer-type": "[CATRecommendation]"
                         }
                     },
                     "additionalProperties": false
@@ -365114,6 +365764,63 @@
                     },
                     "additionalProperties": false
                 },
+                "CATRecommendation": {
+                    "type": "object",
+                    "description": "The product the catalog recommends for the object over a span of\nprediction lead, chosen by a stated rule from the object's data-source type,\norbit regime and lead.",
+                    "properties": {
+                        "KIND": {
+                            "$ref": "#/definitions/catalogProductKind",
+                            "description": "The recommended product's KIND: the entry of PRODUCTS with this KIND.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "Unspecified": {
+                                    "value": 0,
+                                    "description": "Not stated"
+                                },
+                                "Sgp4Elements": {
+                                    "value": 1,
+                                    "description": "An element set under SGP4: an $OMM with MEAN_ELEMENT_THEORY SGP4, or an $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is SGP4"
+                                },
+                                "Sgp4XpElements": {
+                                    "value": 2,
+                                    "description": "As Sgp4Elements, under SGP4XP"
+                                },
+                                "StateCovariance": {
+                                    "value": 3,
+                                    "description": "$OCM: a state and its covariance"
+                                },
+                                "ApElements": {
+                                    "value": 4,
+                                    "description": "An $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is AP"
+                                }
+                            },
+                            "x-flatbuffer-default": "Unspecified"
+                        },
+                        "LEAD_START_HOURS": {
+                            "type": "number",
+                            "description": "Start of the span, hours after PRODUCTS_AS_OF (inclusive).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "LEAD_END_HOURS": {
+                            "type": "number",
+                            "description": "End of the span, hours after PRODUCTS_AS_OF (exclusive).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "RULE": {
+                            "type": "string",
+                            "description": "The rule that chose the product: its name and version, then the rule's\ncell the object fell in (for example \"catalog-serve/2 public/meo\").",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "MEASURED": {
+                            "type": "boolean",
+                            "description": "True when the rule's choice for that cell was measured on held-out tests\nagainst a stated truth; false when the rule's stated default was applied\nwithout such a measurement.",
+                            "x-flatbuffer-type": "bool",
+                            "x-flatbuffer-default": "false"
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "CAT": {
                     "type": "object",
                     "description": "Catalog Entity Message",
@@ -365940,6 +366647,14 @@
                             "type": "string",
                             "description": "ISO 8601 UTC instant the selection in PRODUCTS holds at.",
                             "x-flatbuffer-type": "string"
+                        },
+                        "RECOMMENDED": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/CATRecommendation"
+                            },
+                            "description": "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended.",
+                            "x-flatbuffer-type": "[CATRecommendation]"
                         }
                     },
                     "additionalProperties": false
@@ -529334,6 +530049,63 @@
                     },
                     "additionalProperties": false
                 },
+                "CATRecommendation": {
+                    "type": "object",
+                    "description": "The product the catalog recommends for the object over a span of\nprediction lead, chosen by a stated rule from the object's data-source type,\norbit regime and lead.",
+                    "properties": {
+                        "KIND": {
+                            "$ref": "#/definitions/catalogProductKind",
+                            "description": "The recommended product's KIND: the entry of PRODUCTS with this KIND.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "Unspecified": {
+                                    "value": 0,
+                                    "description": "Not stated"
+                                },
+                                "Sgp4Elements": {
+                                    "value": 1,
+                                    "description": "An element set under SGP4: an $OMM with MEAN_ELEMENT_THEORY SGP4, or an $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is SGP4"
+                                },
+                                "Sgp4XpElements": {
+                                    "value": 2,
+                                    "description": "As Sgp4Elements, under SGP4XP"
+                                },
+                                "StateCovariance": {
+                                    "value": 3,
+                                    "description": "$OCM: a state and its covariance"
+                                },
+                                "ApElements": {
+                                    "value": 4,
+                                    "description": "An $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is AP"
+                                }
+                            },
+                            "x-flatbuffer-default": "Unspecified"
+                        },
+                        "LEAD_START_HOURS": {
+                            "type": "number",
+                            "description": "Start of the span, hours after PRODUCTS_AS_OF (inclusive).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "LEAD_END_HOURS": {
+                            "type": "number",
+                            "description": "End of the span, hours after PRODUCTS_AS_OF (exclusive).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "RULE": {
+                            "type": "string",
+                            "description": "The rule that chose the product: its name and version, then the rule's\ncell the object fell in (for example \"catalog-serve/2 public/meo\").",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "MEASURED": {
+                            "type": "boolean",
+                            "description": "True when the rule's choice for that cell was measured on held-out tests\nagainst a stated truth; false when the rule's stated default was applied\nwithout such a measurement.",
+                            "x-flatbuffer-type": "bool",
+                            "x-flatbuffer-default": "false"
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "CAT": {
                     "type": "object",
                     "description": "Catalog Entity Message",
@@ -530160,6 +530932,14 @@
                             "type": "string",
                             "description": "ISO 8601 UTC instant the selection in PRODUCTS holds at.",
                             "x-flatbuffer-type": "string"
+                        },
+                        "RECOMMENDED": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/CATRecommendation"
+                            },
+                            "description": "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended.",
+                            "x-flatbuffer-type": "[CATRecommendation]"
                         }
                     },
                     "additionalProperties": false
@@ -539918,6 +540698,63 @@
                     },
                     "additionalProperties": false
                 },
+                "CATRecommendation": {
+                    "type": "object",
+                    "description": "The product the catalog recommends for the object over a span of\nprediction lead, chosen by a stated rule from the object's data-source type,\norbit regime and lead.",
+                    "properties": {
+                        "KIND": {
+                            "$ref": "#/definitions/catalogProductKind",
+                            "description": "The recommended product's KIND: the entry of PRODUCTS with this KIND.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "Unspecified": {
+                                    "value": 0,
+                                    "description": "Not stated"
+                                },
+                                "Sgp4Elements": {
+                                    "value": 1,
+                                    "description": "An element set under SGP4: an $OMM with MEAN_ELEMENT_THEORY SGP4, or an $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is SGP4"
+                                },
+                                "Sgp4XpElements": {
+                                    "value": 2,
+                                    "description": "As Sgp4Elements, under SGP4XP"
+                                },
+                                "StateCovariance": {
+                                    "value": 3,
+                                    "description": "$OCM: a state and its covariance"
+                                },
+                                "ApElements": {
+                                    "value": 4,
+                                    "description": "An $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is AP"
+                                }
+                            },
+                            "x-flatbuffer-default": "Unspecified"
+                        },
+                        "LEAD_START_HOURS": {
+                            "type": "number",
+                            "description": "Start of the span, hours after PRODUCTS_AS_OF (inclusive).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "LEAD_END_HOURS": {
+                            "type": "number",
+                            "description": "End of the span, hours after PRODUCTS_AS_OF (exclusive).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "RULE": {
+                            "type": "string",
+                            "description": "The rule that chose the product: its name and version, then the rule's\ncell the object fell in (for example \"catalog-serve/2 public/meo\").",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "MEASURED": {
+                            "type": "boolean",
+                            "description": "True when the rule's choice for that cell was measured on held-out tests\nagainst a stated truth; false when the rule's stated default was applied\nwithout such a measurement.",
+                            "x-flatbuffer-type": "bool",
+                            "x-flatbuffer-default": "false"
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "CAT": {
                     "type": "object",
                     "description": "Catalog Entity Message",
@@ -540744,6 +541581,14 @@
                             "type": "string",
                             "description": "ISO 8601 UTC instant the selection in PRODUCTS holds at.",
                             "x-flatbuffer-type": "string"
+                        },
+                        "RECOMMENDED": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/CATRecommendation"
+                            },
+                            "description": "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended.",
+                            "x-flatbuffer-type": "[CATRecommendation]"
                         }
                     },
                     "additionalProperties": false
@@ -562441,6 +563286,63 @@
                     },
                     "additionalProperties": false
                 },
+                "CATRecommendation": {
+                    "type": "object",
+                    "description": "The product the catalog recommends for the object over a span of\nprediction lead, chosen by a stated rule from the object's data-source type,\norbit regime and lead.",
+                    "properties": {
+                        "KIND": {
+                            "$ref": "#/definitions/catalogProductKind",
+                            "description": "The recommended product's KIND: the entry of PRODUCTS with this KIND.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "Unspecified": {
+                                    "value": 0,
+                                    "description": "Not stated"
+                                },
+                                "Sgp4Elements": {
+                                    "value": 1,
+                                    "description": "An element set under SGP4: an $OMM with MEAN_ELEMENT_THEORY SGP4, or an $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is SGP4"
+                                },
+                                "Sgp4XpElements": {
+                                    "value": 2,
+                                    "description": "As Sgp4Elements, under SGP4XP"
+                                },
+                                "StateCovariance": {
+                                    "value": 3,
+                                    "description": "$OCM: a state and its covariance"
+                                },
+                                "ApElements": {
+                                    "value": 4,
+                                    "description": "An $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is AP"
+                                }
+                            },
+                            "x-flatbuffer-default": "Unspecified"
+                        },
+                        "LEAD_START_HOURS": {
+                            "type": "number",
+                            "description": "Start of the span, hours after PRODUCTS_AS_OF (inclusive).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "LEAD_END_HOURS": {
+                            "type": "number",
+                            "description": "End of the span, hours after PRODUCTS_AS_OF (exclusive).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "RULE": {
+                            "type": "string",
+                            "description": "The rule that chose the product: its name and version, then the rule's\ncell the object fell in (for example \"catalog-serve/2 public/meo\").",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "MEASURED": {
+                            "type": "boolean",
+                            "description": "True when the rule's choice for that cell was measured on held-out tests\nagainst a stated truth; false when the rule's stated default was applied\nwithout such a measurement.",
+                            "x-flatbuffer-type": "bool",
+                            "x-flatbuffer-default": "false"
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "CAT": {
                     "type": "object",
                     "description": "Catalog Entity Message",
@@ -563267,6 +564169,14 @@
                             "type": "string",
                             "description": "ISO 8601 UTC instant the selection in PRODUCTS holds at.",
                             "x-flatbuffer-type": "string"
+                        },
+                        "RECOMMENDED": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/CATRecommendation"
+                            },
+                            "description": "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended.",
+                            "x-flatbuffer-type": "[CATRecommendation]"
                         }
                     },
                     "additionalProperties": false
@@ -595364,6 +596274,63 @@
                     },
                     "additionalProperties": false
                 },
+                "CATRecommendation": {
+                    "type": "object",
+                    "description": "The product the catalog recommends for the object over a span of\nprediction lead, chosen by a stated rule from the object's data-source type,\norbit regime and lead.",
+                    "properties": {
+                        "KIND": {
+                            "$ref": "#/definitions/catalogProductKind",
+                            "description": "The recommended product's KIND: the entry of PRODUCTS with this KIND.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "Unspecified": {
+                                    "value": 0,
+                                    "description": "Not stated"
+                                },
+                                "Sgp4Elements": {
+                                    "value": 1,
+                                    "description": "An element set under SGP4: an $OMM with MEAN_ELEMENT_THEORY SGP4, or an $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is SGP4"
+                                },
+                                "Sgp4XpElements": {
+                                    "value": 2,
+                                    "description": "As Sgp4Elements, under SGP4XP"
+                                },
+                                "StateCovariance": {
+                                    "value": 3,
+                                    "description": "$OCM: a state and its covariance"
+                                },
+                                "ApElements": {
+                                    "value": 4,
+                                    "description": "An $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is AP"
+                                }
+                            },
+                            "x-flatbuffer-default": "Unspecified"
+                        },
+                        "LEAD_START_HOURS": {
+                            "type": "number",
+                            "description": "Start of the span, hours after PRODUCTS_AS_OF (inclusive).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "LEAD_END_HOURS": {
+                            "type": "number",
+                            "description": "End of the span, hours after PRODUCTS_AS_OF (exclusive).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "RULE": {
+                            "type": "string",
+                            "description": "The rule that chose the product: its name and version, then the rule's\ncell the object fell in (for example \"catalog-serve/2 public/meo\").",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "MEASURED": {
+                            "type": "boolean",
+                            "description": "True when the rule's choice for that cell was measured on held-out tests\nagainst a stated truth; false when the rule's stated default was applied\nwithout such a measurement.",
+                            "x-flatbuffer-type": "bool",
+                            "x-flatbuffer-default": "false"
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "CAT": {
                     "type": "object",
                     "description": "Catalog Entity Message",
@@ -596190,6 +597157,14 @@
                             "type": "string",
                             "description": "ISO 8601 UTC instant the selection in PRODUCTS holds at.",
                             "x-flatbuffer-type": "string"
+                        },
+                        "RECOMMENDED": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/CATRecommendation"
+                            },
+                            "description": "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended.",
+                            "x-flatbuffer-type": "[CATRecommendation]"
                         }
                     },
                     "additionalProperties": false
@@ -609885,6 +610860,63 @@
                     },
                     "additionalProperties": false
                 },
+                "CATRecommendation": {
+                    "type": "object",
+                    "description": "The product the catalog recommends for the object over a span of\nprediction lead, chosen by a stated rule from the object's data-source type,\norbit regime and lead.",
+                    "properties": {
+                        "KIND": {
+                            "$ref": "#/definitions/catalogProductKind",
+                            "description": "The recommended product's KIND: the entry of PRODUCTS with this KIND.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "Unspecified": {
+                                    "value": 0,
+                                    "description": "Not stated"
+                                },
+                                "Sgp4Elements": {
+                                    "value": 1,
+                                    "description": "An element set under SGP4: an $OMM with MEAN_ELEMENT_THEORY SGP4, or an $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is SGP4"
+                                },
+                                "Sgp4XpElements": {
+                                    "value": 2,
+                                    "description": "As Sgp4Elements, under SGP4XP"
+                                },
+                                "StateCovariance": {
+                                    "value": 3,
+                                    "description": "$OCM: a state and its covariance"
+                                },
+                                "ApElements": {
+                                    "value": 4,
+                                    "description": "An $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is AP"
+                                }
+                            },
+                            "x-flatbuffer-default": "Unspecified"
+                        },
+                        "LEAD_START_HOURS": {
+                            "type": "number",
+                            "description": "Start of the span, hours after PRODUCTS_AS_OF (inclusive).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "LEAD_END_HOURS": {
+                            "type": "number",
+                            "description": "End of the span, hours after PRODUCTS_AS_OF (exclusive).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "RULE": {
+                            "type": "string",
+                            "description": "The rule that chose the product: its name and version, then the rule's\ncell the object fell in (for example \"catalog-serve/2 public/meo\").",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "MEASURED": {
+                            "type": "boolean",
+                            "description": "True when the rule's choice for that cell was measured on held-out tests\nagainst a stated truth; false when the rule's stated default was applied\nwithout such a measurement.",
+                            "x-flatbuffer-type": "bool",
+                            "x-flatbuffer-default": "false"
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "CAT": {
                     "type": "object",
                     "description": "Catalog Entity Message",
@@ -610711,6 +611743,14 @@
                             "type": "string",
                             "description": "ISO 8601 UTC instant the selection in PRODUCTS holds at.",
                             "x-flatbuffer-type": "string"
+                        },
+                        "RECOMMENDED": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/CATRecommendation"
+                            },
+                            "description": "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended.",
+                            "x-flatbuffer-type": "[CATRecommendation]"
                         }
                     },
                     "additionalProperties": false
@@ -625551,6 +626591,63 @@
                     },
                     "additionalProperties": false
                 },
+                "CATRecommendation": {
+                    "type": "object",
+                    "description": "The product the catalog recommends for the object over a span of\nprediction lead, chosen by a stated rule from the object's data-source type,\norbit regime and lead.",
+                    "properties": {
+                        "KIND": {
+                            "$ref": "#/definitions/catalogProductKind",
+                            "description": "The recommended product's KIND: the entry of PRODUCTS with this KIND.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "Unspecified": {
+                                    "value": 0,
+                                    "description": "Not stated"
+                                },
+                                "Sgp4Elements": {
+                                    "value": 1,
+                                    "description": "An element set under SGP4: an $OMM with MEAN_ELEMENT_THEORY SGP4, or an $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is SGP4"
+                                },
+                                "Sgp4XpElements": {
+                                    "value": 2,
+                                    "description": "As Sgp4Elements, under SGP4XP"
+                                },
+                                "StateCovariance": {
+                                    "value": 3,
+                                    "description": "$OCM: a state and its covariance"
+                                },
+                                "ApElements": {
+                                    "value": 4,
+                                    "description": "An $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is AP"
+                                }
+                            },
+                            "x-flatbuffer-default": "Unspecified"
+                        },
+                        "LEAD_START_HOURS": {
+                            "type": "number",
+                            "description": "Start of the span, hours after PRODUCTS_AS_OF (inclusive).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "LEAD_END_HOURS": {
+                            "type": "number",
+                            "description": "End of the span, hours after PRODUCTS_AS_OF (exclusive).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "RULE": {
+                            "type": "string",
+                            "description": "The rule that chose the product: its name and version, then the rule's\ncell the object fell in (for example \"catalog-serve/2 public/meo\").",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "MEASURED": {
+                            "type": "boolean",
+                            "description": "True when the rule's choice for that cell was measured on held-out tests\nagainst a stated truth; false when the rule's stated default was applied\nwithout such a measurement.",
+                            "x-flatbuffer-type": "bool",
+                            "x-flatbuffer-default": "false"
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "CAT": {
                     "type": "object",
                     "description": "Catalog Entity Message",
@@ -626377,6 +627474,14 @@
                             "type": "string",
                             "description": "ISO 8601 UTC instant the selection in PRODUCTS holds at.",
                             "x-flatbuffer-type": "string"
+                        },
+                        "RECOMMENDED": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/CATRecommendation"
+                            },
+                            "description": "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended.",
+                            "x-flatbuffer-type": "[CATRecommendation]"
                         }
                     },
                     "additionalProperties": false
@@ -683937,6 +685042,63 @@
                     },
                     "additionalProperties": false
                 },
+                "CATRecommendation": {
+                    "type": "object",
+                    "description": "The product the catalog recommends for the object over a span of\nprediction lead, chosen by a stated rule from the object's data-source type,\norbit regime and lead.",
+                    "properties": {
+                        "KIND": {
+                            "$ref": "#/definitions/catalogProductKind",
+                            "description": "The recommended product's KIND: the entry of PRODUCTS with this KIND.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "Unspecified": {
+                                    "value": 0,
+                                    "description": "Not stated"
+                                },
+                                "Sgp4Elements": {
+                                    "value": 1,
+                                    "description": "An element set under SGP4: an $OMM with MEAN_ELEMENT_THEORY SGP4, or an $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is SGP4"
+                                },
+                                "Sgp4XpElements": {
+                                    "value": 2,
+                                    "description": "As Sgp4Elements, under SGP4XP"
+                                },
+                                "StateCovariance": {
+                                    "value": 3,
+                                    "description": "$OCM: a state and its covariance"
+                                },
+                                "ApElements": {
+                                    "value": 4,
+                                    "description": "An $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is AP"
+                                }
+                            },
+                            "x-flatbuffer-default": "Unspecified"
+                        },
+                        "LEAD_START_HOURS": {
+                            "type": "number",
+                            "description": "Start of the span, hours after PRODUCTS_AS_OF (inclusive).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "LEAD_END_HOURS": {
+                            "type": "number",
+                            "description": "End of the span, hours after PRODUCTS_AS_OF (exclusive).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "RULE": {
+                            "type": "string",
+                            "description": "The rule that chose the product: its name and version, then the rule's\ncell the object fell in (for example \"catalog-serve/2 public/meo\").",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "MEASURED": {
+                            "type": "boolean",
+                            "description": "True when the rule's choice for that cell was measured on held-out tests\nagainst a stated truth; false when the rule's stated default was applied\nwithout such a measurement.",
+                            "x-flatbuffer-type": "bool",
+                            "x-flatbuffer-default": "false"
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "CAT": {
                     "type": "object",
                     "description": "Catalog Entity Message",
@@ -684763,6 +685925,14 @@
                             "type": "string",
                             "description": "ISO 8601 UTC instant the selection in PRODUCTS holds at.",
                             "x-flatbuffer-type": "string"
+                        },
+                        "RECOMMENDED": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/CATRecommendation"
+                            },
+                            "description": "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended.",
+                            "x-flatbuffer-type": "[CATRecommendation]"
                         }
                     },
                     "additionalProperties": false
@@ -739714,6 +740884,63 @@
                     },
                     "additionalProperties": false
                 },
+                "CATRecommendation": {
+                    "type": "object",
+                    "description": "The product the catalog recommends for the object over a span of\nprediction lead, chosen by a stated rule from the object's data-source type,\norbit regime and lead.",
+                    "properties": {
+                        "KIND": {
+                            "$ref": "#/definitions/catalogProductKind",
+                            "description": "The recommended product's KIND: the entry of PRODUCTS with this KIND.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "Unspecified": {
+                                    "value": 0,
+                                    "description": "Not stated"
+                                },
+                                "Sgp4Elements": {
+                                    "value": 1,
+                                    "description": "An element set under SGP4: an $OMM with MEAN_ELEMENT_THEORY SGP4, or an $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is SGP4"
+                                },
+                                "Sgp4XpElements": {
+                                    "value": 2,
+                                    "description": "As Sgp4Elements, under SGP4XP"
+                                },
+                                "StateCovariance": {
+                                    "value": 3,
+                                    "description": "$OCM: a state and its covariance"
+                                },
+                                "ApElements": {
+                                    "value": 4,
+                                    "description": "An $OCM whose MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is AP"
+                                }
+                            },
+                            "x-flatbuffer-default": "Unspecified"
+                        },
+                        "LEAD_START_HOURS": {
+                            "type": "number",
+                            "description": "Start of the span, hours after PRODUCTS_AS_OF (inclusive).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "LEAD_END_HOURS": {
+                            "type": "number",
+                            "description": "End of the span, hours after PRODUCTS_AS_OF (exclusive).",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "RULE": {
+                            "type": "string",
+                            "description": "The rule that chose the product: its name and version, then the rule's\ncell the object fell in (for example \"catalog-serve/2 public/meo\").",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "MEASURED": {
+                            "type": "boolean",
+                            "description": "True when the rule's choice for that cell was measured on held-out tests\nagainst a stated truth; false when the rule's stated default was applied\nwithout such a measurement.",
+                            "x-flatbuffer-type": "bool",
+                            "x-flatbuffer-default": "false"
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "CAT": {
                     "type": "object",
                     "description": "Catalog Entity Message",
@@ -740540,6 +741767,14 @@
                             "type": "string",
                             "description": "ISO 8601 UTC instant the selection in PRODUCTS holds at.",
                             "x-flatbuffer-type": "string"
+                        },
+                        "RECOMMENDED": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/CATRecommendation"
+                            },
+                            "description": "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended.",
+                            "x-flatbuffer-type": "[CATRecommendation]"
                         }
                     },
                     "additionalProperties": false

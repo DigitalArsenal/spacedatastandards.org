@@ -5,6 +5,7 @@
 import * as flatbuffers from 'flatbuffers';
 
 import { CATProduct, CATProductT } from './CATProduct.js';
+import { CATRecommendation, CATRecommendationT } from './CATRecommendation.js';
 import { PLD, PLDT } from './PLD.js';
 import { dataAvailability } from './dataAvailability.js';
 import { legacyCountryCode } from './legacyCountryCode.js';
@@ -311,8 +312,23 @@ PRODUCTS_AS_OF(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * The recommended product per span of lead, in lead order, the spans not
+ * overlapping. Absent: the catalog recommends no product. Past the last
+ * span no product is recommended.
+ */
+RECOMMENDED(index: number, obj?:CATRecommendation):CATRecommendation|null {
+  const offset = this.bb!.__offset(this.bb_pos, 60);
+  return offset ? (obj || new CATRecommendation()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+recommendedLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 60);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
 static startCAT(builder:flatbuffers.Builder) {
-  builder.startObject(28);
+  builder.startObject(29);
 }
 
 static addObjectName(builder:flatbuffers.Builder, OBJECT_NAMEOffset:flatbuffers.Offset) {
@@ -451,6 +467,22 @@ static addProductsAsOf(builder:flatbuffers.Builder, PRODUCTS_AS_OFOffset:flatbuf
   builder.addFieldOffset(27, PRODUCTS_AS_OFOffset, 0);
 }
 
+static addRecommended(builder:flatbuffers.Builder, RECOMMENDEDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(28, RECOMMENDEDOffset, 0);
+}
+
+static createRecommendedVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startRecommendedVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
 static endCAT(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -464,7 +496,7 @@ static finishSizePrefixedCATBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$CAT', true);
 }
 
-static createCAT(builder:flatbuffers.Builder, OBJECT_NAMEOffset:flatbuffers.Offset, OBJECT_IDOffset:flatbuffers.Offset, NORAD_CAT_ID:number, OBJECT_TYPE:spaceObjectClass, OPS_STATUS_CODE:operationalState, OWNER:legacyCountryCode, LAUNCH_DATEOffset:flatbuffers.Offset, LAUNCH_SITEOffset:flatbuffers.Offset, DECAY_DATEOffset:flatbuffers.Offset, PERIOD:number, INCLINATION:number, APOGEE:number, PERIGEE:number, RCS:number, DATA_STATUS_CODE:dataAvailability, ORBIT_CENTEROffset:flatbuffers.Offset, ORBIT_TYPE:orbitRegime, DEPLOYMENT_DATEOffset:flatbuffers.Offset, MANEUVERABLE:boolean, SIZE:number, MASS:number, MASS_TYPE:massCategory, PAYLOADSOffset:flatbuffers.Offset, BUS_IDOffset:flatbuffers.Offset, CATALOG_URIOffset:flatbuffers.Offset, CATALOG_OBJECT_IDOffset:flatbuffers.Offset, PRODUCTSOffset:flatbuffers.Offset, PRODUCTS_AS_OFOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createCAT(builder:flatbuffers.Builder, OBJECT_NAMEOffset:flatbuffers.Offset, OBJECT_IDOffset:flatbuffers.Offset, NORAD_CAT_ID:number, OBJECT_TYPE:spaceObjectClass, OPS_STATUS_CODE:operationalState, OWNER:legacyCountryCode, LAUNCH_DATEOffset:flatbuffers.Offset, LAUNCH_SITEOffset:flatbuffers.Offset, DECAY_DATEOffset:flatbuffers.Offset, PERIOD:number, INCLINATION:number, APOGEE:number, PERIGEE:number, RCS:number, DATA_STATUS_CODE:dataAvailability, ORBIT_CENTEROffset:flatbuffers.Offset, ORBIT_TYPE:orbitRegime, DEPLOYMENT_DATEOffset:flatbuffers.Offset, MANEUVERABLE:boolean, SIZE:number, MASS:number, MASS_TYPE:massCategory, PAYLOADSOffset:flatbuffers.Offset, BUS_IDOffset:flatbuffers.Offset, CATALOG_URIOffset:flatbuffers.Offset, CATALOG_OBJECT_IDOffset:flatbuffers.Offset, PRODUCTSOffset:flatbuffers.Offset, PRODUCTS_AS_OFOffset:flatbuffers.Offset, RECOMMENDEDOffset:flatbuffers.Offset):flatbuffers.Offset {
   CAT.startCAT(builder);
   CAT.addObjectName(builder, OBJECT_NAMEOffset);
   CAT.addObjectId(builder, OBJECT_IDOffset);
@@ -494,6 +526,7 @@ static createCAT(builder:flatbuffers.Builder, OBJECT_NAMEOffset:flatbuffers.Offs
   CAT.addCatalogObjectId(builder, CATALOG_OBJECT_IDOffset);
   CAT.addProducts(builder, PRODUCTSOffset);
   CAT.addProductsAsOf(builder, PRODUCTS_AS_OFOffset);
+  CAT.addRecommended(builder, RECOMMENDEDOffset);
   return CAT.endCAT(builder);
 }
 
@@ -526,7 +559,8 @@ unpack(): CATT {
     this.CATALOG_URI(),
     this.CATALOG_OBJECT_ID(),
     this.bb!.createObjList<CATProduct, CATProductT>(this.PRODUCTS.bind(this), this.productsLength()),
-    this.PRODUCTS_AS_OF()
+    this.PRODUCTS_AS_OF(),
+    this.bb!.createObjList<CATRecommendation, CATRecommendationT>(this.RECOMMENDED.bind(this), this.recommendedLength())
   );
 }
 
@@ -560,6 +594,7 @@ unpackTo(_o: CATT): void {
   _o.CATALOG_OBJECT_ID = this.CATALOG_OBJECT_ID();
   _o.PRODUCTS = this.bb!.createObjList<CATProduct, CATProductT>(this.PRODUCTS.bind(this), this.productsLength());
   _o.PRODUCTS_AS_OF = this.PRODUCTS_AS_OF();
+  _o.RECOMMENDED = this.bb!.createObjList<CATRecommendation, CATRecommendationT>(this.RECOMMENDED.bind(this), this.recommendedLength());
 }
 }
 
@@ -592,7 +627,8 @@ constructor(
   public CATALOG_URI: string|Uint8Array|null = null,
   public CATALOG_OBJECT_ID: string|Uint8Array|null = null,
   public PRODUCTS: (CATProductT)[] = [],
-  public PRODUCTS_AS_OF: string|Uint8Array|null = null
+  public PRODUCTS_AS_OF: string|Uint8Array|null = null,
+  public RECOMMENDED: (CATRecommendationT)[] = []
 ){}
 
 
@@ -610,6 +646,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const CATALOG_OBJECT_ID = (this.CATALOG_OBJECT_ID !== null ? builder.createString(this.CATALOG_OBJECT_ID!) : 0);
   const PRODUCTS = CAT.createProductsVector(builder, builder.createObjectOffsetList(this.PRODUCTS));
   const PRODUCTS_AS_OF = (this.PRODUCTS_AS_OF !== null ? builder.createString(this.PRODUCTS_AS_OF!) : 0);
+  const RECOMMENDED = CAT.createRecommendedVector(builder, builder.createObjectOffsetList(this.RECOMMENDED));
 
   return CAT.createCAT(builder,
     OBJECT_NAME,
@@ -639,7 +676,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     CATALOG_URI,
     CATALOG_OBJECT_ID,
     PRODUCTS,
-    PRODUCTS_AS_OF
+    PRODUCTS_AS_OF,
+    RECOMMENDED
   );
 }
 }

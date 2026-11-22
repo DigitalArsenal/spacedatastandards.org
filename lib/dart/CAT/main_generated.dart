@@ -389,6 +389,130 @@ class CATProductObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
+///  The product the catalog recommends for the object over a span of
+///  prediction lead, chosen by a stated rule from the object's data-source type,
+///  orbit regime and lead.
+class CATRecommendation {
+  CATRecommendation._(this._bc, this._bcOffset);
+  factory CATRecommendation(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CATRecommendation> reader = _CATRecommendationReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  The recommended product's KIND: the entry of PRODUCTS with this KIND.
+  catalogProductKind get KIND => catalogProductKind.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  ///  Start of the span, hours after PRODUCTS_AS_OF (inclusive).
+  double get LEAD_START_HOURS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  double get leadStartHours => LEAD_START_HOURS;
+  ///  End of the span, hours after PRODUCTS_AS_OF (exclusive).
+  double get LEAD_END_HOURS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  double get leadEndHours => LEAD_END_HOURS;
+  ///  The rule that chose the product: its name and version, then the rule's
+  ///  cell the object fell in (for example "catalog-serve/2 public/meo").
+  String? get RULE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  True when the rule's choice for that cell was measured on held-out tests
+  ///  against a stated truth; false when the rule's stated default was applied
+  ///  without such a measurement.
+  bool get MEASURED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 12, false);
+
+  @override
+  String toString() {
+    return 'CATRecommendation{KIND: ${KIND}, leadStartHours: ${leadStartHours}, leadEndHours: ${leadEndHours}, RULE: ${RULE}, MEASURED: ${MEASURED}}';
+  }
+}
+
+class _CATRecommendationReader extends fb.TableReader<CATRecommendation> {
+  const _CATRecommendationReader();
+
+  @override
+  CATRecommendation createObject(fb.BufferContext bc, int offset) =>
+    CATRecommendation._(bc, offset);
+}
+
+class CATRecommendationBuilder {
+  CATRecommendationBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(5);
+  }
+
+  int addKind(catalogProductKind? KIND) {
+    fbBuilder.addInt8(0, KIND?.value);
+    return fbBuilder.offset;
+  }
+  int addLeadStartHours(double? LEAD_START_HOURS) {
+    fbBuilder.addFloat64(1, LEAD_START_HOURS);
+    return fbBuilder.offset;
+  }
+  int addLeadEndHours(double? LEAD_END_HOURS) {
+    fbBuilder.addFloat64(2, LEAD_END_HOURS);
+    return fbBuilder.offset;
+  }
+  int addRuleOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addMeasured(bool? MEASURED) {
+    fbBuilder.addBool(4, MEASURED);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CATRecommendationObjectBuilder extends fb.ObjectBuilder {
+  final catalogProductKind? _KIND;
+  final double? _LEAD_START_HOURS;
+  final double? _LEAD_END_HOURS;
+  final String? _RULE;
+  final bool? _MEASURED;
+
+  CATRecommendationObjectBuilder({
+    catalogProductKind? KIND,
+    double? LEAD_START_HOURS,
+    double? leadStartHours,
+    double? LEAD_END_HOURS,
+    double? leadEndHours,
+    String? RULE,
+    bool? MEASURED,
+  })
+      : _KIND = KIND,
+        _LEAD_START_HOURS = leadStartHours ?? LEAD_START_HOURS,
+        _LEAD_END_HOURS = leadEndHours ?? LEAD_END_HOURS,
+        _RULE = RULE,
+        _MEASURED = MEASURED;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? RULEOffset = _RULE == null ? null
+        : fbBuilder.writeString(_RULE!);
+    fbBuilder.startTable(5);
+    fbBuilder.addInt8(0, _KIND?.value);
+    fbBuilder.addFloat64(1, _LEAD_START_HOURS);
+    fbBuilder.addFloat64(2, _LEAD_END_HOURS);
+    fbBuilder.addOffset(3, RULEOffset);
+    fbBuilder.addBool(4, _MEASURED);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
 ///  Catalog Entity Message
 class CAT {
   CAT._(this._bc, this._bcOffset);
@@ -491,10 +615,14 @@ class CAT {
   ///  ISO 8601 UTC instant the selection in PRODUCTS holds at.
   String? get PRODUCTS_AS_OF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 58);
   String? get productsAsOf => PRODUCTS_AS_OF;
+  ///  The recommended product per span of lead, in lead order, the spans not
+  ///  overlapping. Absent: the catalog recommends no product. Past the last
+  ///  span no product is recommended.
+  List<CATRecommendation>? get RECOMMENDED => const fb.ListReader<CATRecommendation>(CATRecommendation.reader).vTableGetNullable(_bc, _bcOffset, 60);
 
   @override
   String toString() {
-    return 'CAT{objectName: ${objectName}, objectId: ${objectId}, noradCatId: ${noradCatId}, objectType: ${objectType}, opsStatusCode: ${opsStatusCode}, OWNER: ${OWNER}, launchDate: ${launchDate}, launchSite: ${launchSite}, decayDate: ${decayDate}, PERIOD: ${PERIOD}, INCLINATION: ${INCLINATION}, APOGEE: ${APOGEE}, PERIGEE: ${PERIGEE}, RCS: ${RCS}, dataStatusCode: ${dataStatusCode}, orbitCenter: ${orbitCenter}, orbitType: ${orbitType}, deploymentDate: ${deploymentDate}, MANEUVERABLE: ${MANEUVERABLE}, SIZE: ${SIZE}, MASS: ${MASS}, massType: ${massType}, PAYLOADS: ${PAYLOADS}, busId: ${busId}, catalogUri: ${catalogUri}, catalogObjectId: ${catalogObjectId}, PRODUCTS: ${PRODUCTS}, productsAsOf: ${productsAsOf}}';
+    return 'CAT{objectName: ${objectName}, objectId: ${objectId}, noradCatId: ${noradCatId}, objectType: ${objectType}, opsStatusCode: ${opsStatusCode}, OWNER: ${OWNER}, launchDate: ${launchDate}, launchSite: ${launchSite}, decayDate: ${decayDate}, PERIOD: ${PERIOD}, INCLINATION: ${INCLINATION}, APOGEE: ${APOGEE}, PERIGEE: ${PERIGEE}, RCS: ${RCS}, dataStatusCode: ${dataStatusCode}, orbitCenter: ${orbitCenter}, orbitType: ${orbitType}, deploymentDate: ${deploymentDate}, MANEUVERABLE: ${MANEUVERABLE}, SIZE: ${SIZE}, MASS: ${MASS}, massType: ${massType}, PAYLOADS: ${PAYLOADS}, busId: ${busId}, catalogUri: ${catalogUri}, catalogObjectId: ${catalogObjectId}, PRODUCTS: ${PRODUCTS}, productsAsOf: ${productsAsOf}, RECOMMENDED: ${RECOMMENDED}}';
   }
 }
 
@@ -512,7 +640,7 @@ class CATBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(28);
+    fbBuilder.startTable(29);
   }
 
   int addObjectNameOffset(int? offset) {
@@ -627,6 +755,10 @@ class CATBuilder {
     fbBuilder.addOffset(27, offset);
     return fbBuilder.offset;
   }
+  int addRecommendedOffset(int? offset) {
+    fbBuilder.addOffset(28, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -662,6 +794,7 @@ class CATObjectBuilder extends fb.ObjectBuilder {
   final String? _CATALOG_OBJECT_ID;
   final List<CATProductObjectBuilder>? _PRODUCTS;
   final String? _PRODUCTS_AS_OF;
+  final List<CATRecommendationObjectBuilder>? _RECOMMENDED;
 
   CATObjectBuilder({
     String? OBJECT_NAME,
@@ -709,6 +842,7 @@ class CATObjectBuilder extends fb.ObjectBuilder {
     List<CATProductObjectBuilder>? PRODUCTS,
     String? PRODUCTS_AS_OF,
     String? productsAsOf,
+    List<CATRecommendationObjectBuilder>? RECOMMENDED,
   })
       : _OBJECT_NAME = objectName ?? OBJECT_NAME,
         _OBJECT_ID = objectId ?? OBJECT_ID,
@@ -737,7 +871,8 @@ class CATObjectBuilder extends fb.ObjectBuilder {
         _CATALOG_URI = catalogUri ?? CATALOG_URI,
         _CATALOG_OBJECT_ID = catalogObjectId ?? CATALOG_OBJECT_ID,
         _PRODUCTS = PRODUCTS,
-        _PRODUCTS_AS_OF = productsAsOf ?? PRODUCTS_AS_OF;
+        _PRODUCTS_AS_OF = productsAsOf ?? PRODUCTS_AS_OF,
+        _RECOMMENDED = RECOMMENDED;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -768,7 +903,9 @@ class CATObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeList(_PRODUCTS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? PRODUCTS_AS_OFOffset = _PRODUCTS_AS_OF == null ? null
         : fbBuilder.writeString(_PRODUCTS_AS_OF!);
-    fbBuilder.startTable(28);
+    final int? RECOMMENDEDOffset = _RECOMMENDED == null ? null
+        : fbBuilder.writeList(_RECOMMENDED!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(29);
     fbBuilder.addOffset(0, OBJECT_NAMEOffset);
     fbBuilder.addOffset(1, OBJECT_IDOffset);
     fbBuilder.addUint32(2, _NORAD_CAT_ID);
@@ -797,6 +934,7 @@ class CATObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(25, CATALOG_OBJECT_IDOffset);
     fbBuilder.addOffset(26, PRODUCTSOffset);
     fbBuilder.addOffset(27, PRODUCTS_AS_OFOffset);
+    fbBuilder.addOffset(28, RECOMMENDEDOffset);
     return fbBuilder.endTable();
   }
 

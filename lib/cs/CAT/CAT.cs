@@ -159,6 +159,11 @@ public struct CAT : IFlatbufferObject
   public ArraySegment<byte>? GetPRODUCTS_AS_OFBytes() { return __p.__vector_as_arraysegment(58); }
 #endif
   public byte[] GetPRODUCTS_AS_OFArray() { return __p.__vector_as_array<byte>(58); }
+  /// The recommended product per span of lead, in lead order, the spans not
+  /// overlapping. Absent: the catalog recommends no product. Past the last
+  /// span no product is recommended.
+  public CATRecommendation? RECOMMENDED(int j) { int o = __p.__offset(60); return o != 0 ? (CATRecommendation?)(new CATRecommendation()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int RECOMMENDEDLength { get { int o = __p.__offset(60); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<CAT> CreateCAT(FlatBufferBuilder builder,
       StringOffset OBJECT_NAMEOffset = default(StringOffset),
@@ -188,8 +193,9 @@ public struct CAT : IFlatbufferObject
       StringOffset CATALOG_URIOffset = default(StringOffset),
       StringOffset CATALOG_OBJECT_IDOffset = default(StringOffset),
       VectorOffset PRODUCTSOffset = default(VectorOffset),
-      StringOffset PRODUCTS_AS_OFOffset = default(StringOffset)) {
-    builder.StartTable(28);
+      StringOffset PRODUCTS_AS_OFOffset = default(StringOffset),
+      VectorOffset RECOMMENDEDOffset = default(VectorOffset)) {
+    builder.StartTable(29);
     CAT.AddMASS(builder, MASS);
     CAT.AddSIZE(builder, SIZE);
     CAT.AddRCS(builder, RCS);
@@ -197,6 +203,7 @@ public struct CAT : IFlatbufferObject
     CAT.AddAPOGEE(builder, APOGEE);
     CAT.AddINCLINATION(builder, INCLINATION);
     CAT.AddPERIOD(builder, PERIOD);
+    CAT.AddRECOMMENDED(builder, RECOMMENDEDOffset);
     CAT.AddPRODUCTS_AS_OF(builder, PRODUCTS_AS_OFOffset);
     CAT.AddPRODUCTS(builder, PRODUCTSOffset);
     CAT.AddCATALOG_OBJECT_ID(builder, CATALOG_OBJECT_IDOffset);
@@ -221,7 +228,7 @@ public struct CAT : IFlatbufferObject
     return CAT.EndCAT(builder);
   }
 
-  public static void StartCAT(FlatBufferBuilder builder) { builder.StartTable(28); }
+  public static void StartCAT(FlatBufferBuilder builder) { builder.StartTable(29); }
   public static void AddOBJECT_NAME(FlatBufferBuilder builder, StringOffset OBJECT_NAMEOffset) { builder.AddOffset(0, OBJECT_NAMEOffset.Value, 0); }
   public static void AddOBJECT_ID(FlatBufferBuilder builder, StringOffset OBJECT_IDOffset) { builder.AddOffset(1, OBJECT_IDOffset.Value, 0); }
   public static void AddNORAD_CAT_ID(FlatBufferBuilder builder, uint NORAD_CAT_ID) { builder.AddUint(2, NORAD_CAT_ID, 0); }
@@ -260,6 +267,12 @@ public struct CAT : IFlatbufferObject
   public static VectorOffset CreatePRODUCTSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<CATProduct>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartPRODUCTSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddPRODUCTS_AS_OF(FlatBufferBuilder builder, StringOffset PRODUCTS_AS_OFOffset) { builder.AddOffset(27, PRODUCTS_AS_OFOffset.Value, 0); }
+  public static void AddRECOMMENDED(FlatBufferBuilder builder, VectorOffset RECOMMENDEDOffset) { builder.AddOffset(28, RECOMMENDEDOffset.Value, 0); }
+  public static VectorOffset CreateRECOMMENDEDVector(FlatBufferBuilder builder, Offset<CATRecommendation>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateRECOMMENDEDVectorBlock(FlatBufferBuilder builder, Offset<CATRecommendation>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateRECOMMENDEDVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<CATRecommendation>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateRECOMMENDEDVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<CATRecommendation>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartRECOMMENDEDVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static Offset<CAT> EndCAT(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<CAT>(o);
@@ -302,6 +315,8 @@ public struct CAT : IFlatbufferObject
     _o.PRODUCTS = new List<CATProductT>();
     for (var _j = 0; _j < this.PRODUCTSLength; ++_j) {_o.PRODUCTS.Add(this.PRODUCTS(_j).HasValue ? this.PRODUCTS(_j).Value.UnPack() : null);}
     _o.PRODUCTS_AS_OF = this.PRODUCTS_AS_OF;
+    _o.RECOMMENDED = new List<CATRecommendationT>();
+    for (var _j = 0; _j < this.RECOMMENDEDLength; ++_j) {_o.RECOMMENDED.Add(this.RECOMMENDED(_j).HasValue ? this.RECOMMENDED(_j).Value.UnPack() : null);}
   }
   public static Offset<CAT> Pack(FlatBufferBuilder builder, CATT _o) {
     if (_o == null) return default(Offset<CAT>);
@@ -328,6 +343,12 @@ public struct CAT : IFlatbufferObject
       _PRODUCTS = CreatePRODUCTSVector(builder, __PRODUCTS);
     }
     var _PRODUCTS_AS_OF = _o.PRODUCTS_AS_OF == null ? default(StringOffset) : builder.CreateString(_o.PRODUCTS_AS_OF);
+    var _RECOMMENDED = default(VectorOffset);
+    if (_o.RECOMMENDED != null) {
+      var __RECOMMENDED = new Offset<CATRecommendation>[_o.RECOMMENDED.Count];
+      for (var _j = 0; _j < __RECOMMENDED.Length; ++_j) { __RECOMMENDED[_j] = CATRecommendation.Pack(builder, _o.RECOMMENDED[_j]); }
+      _RECOMMENDED = CreateRECOMMENDEDVector(builder, __RECOMMENDED);
+    }
     return CreateCAT(
       builder,
       _OBJECT_NAME,
@@ -357,7 +378,8 @@ public struct CAT : IFlatbufferObject
       _CATALOG_URI,
       _CATALOG_OBJECT_ID,
       _PRODUCTS,
-      _PRODUCTS_AS_OF);
+      _PRODUCTS_AS_OF,
+      _RECOMMENDED);
   }
 }
 
@@ -391,6 +413,7 @@ public class CATT
   public string CATALOG_OBJECT_ID { get; set; }
   public List<CATProductT> PRODUCTS { get; set; }
   public string PRODUCTS_AS_OF { get; set; }
+  public List<CATRecommendationT> RECOMMENDED { get; set; }
 
   public CATT() {
     this.OBJECT_NAME = null;
@@ -421,6 +444,7 @@ public class CATT
     this.CATALOG_OBJECT_ID = null;
     this.PRODUCTS = null;
     this.PRODUCTS_AS_OF = null;
+    this.RECOMMENDED = null;
   }
   public static CATT DeserializeFromBinary(byte[] fbBuffer) {
     return CAT.GetRootAsCAT(new ByteBuffer(fbBuffer)).UnPack();
@@ -466,6 +490,7 @@ static public class CATVerify
       && verifier.VerifyString(tablePos, 54 /*CATALOG_OBJECT_ID*/, false)
       && verifier.VerifyVectorOfTables(tablePos, 56 /*PRODUCTS*/, CATProductVerify.Verify, false)
       && verifier.VerifyString(tablePos, 58 /*PRODUCTS_AS_OF*/, false)
+      && verifier.VerifyVectorOfTables(tablePos, 60 /*RECOMMENDED*/, CATRecommendationVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

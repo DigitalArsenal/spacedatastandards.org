@@ -74,6 +74,8 @@ enum catalogProductKind:
 
 class CATProduct
 
+class CATRecommendation
+
 class CAT
 
 /// One product the catalog selected for the object, by content identifier.
@@ -127,6 +129,54 @@ struct CATProductBuilder:
         return this
     def add_STALE(STALE:bool):
         b_.PrependBoolSlot(5, STALE, 0)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// The product the catalog recommends for the object over a span of
+/// prediction lead, chosen by a stated rule from the object's data-source type,
+/// orbit regime and lead.
+class CATRecommendation : flatbuffers.handle
+    /// The recommended product's KIND: the entry of PRODUCTS with this KIND.
+    def KIND() -> catalogProductKind:
+        return catalogProductKind(flatbuffers.field_int8(buf_, pos_, 4, 0))
+    /// Start of the span, hours after PRODUCTS_AS_OF (inclusive).
+    def LEAD_START_HOURS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
+    /// End of the span, hours after PRODUCTS_AS_OF (exclusive).
+    def LEAD_END_HOURS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
+    /// The rule that chose the product: its name and version, then the rule's
+    /// cell the object fell in (for example "catalog-serve/2 public/meo").
+    def RULE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 10)
+    /// True when the rule's choice for that cell was measured on held-out tests
+    /// against a stated truth; false when the rule's stated default was applied
+    /// without such a measurement.
+    def MEASURED() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 12, 0))
+
+def GetRootAsCATRecommendation(buf:string): return CATRecommendation { buf, flatbuffers.indirect(buf, 0) }
+
+struct CATRecommendationBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(5)
+        return this
+    def add_KIND(KIND:catalogProductKind):
+        b_.PrependInt8Slot(0, KIND, 0)
+        return this
+    def add_LEAD_START_HOURS(LEAD_START_HOURS:float):
+        b_.PrependFloat64Slot(1, LEAD_START_HOURS, 0.0)
+        return this
+    def add_LEAD_END_HOURS(LEAD_END_HOURS:float):
+        b_.PrependFloat64Slot(2, LEAD_END_HOURS, 0.0)
+        return this
+    def add_RULE(RULE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, RULE)
+        return this
+    def add_MEASURED(MEASURED:bool):
+        b_.PrependBoolSlot(4, MEASURED, 0)
         return this
     def end():
         return b_.EndObject()
@@ -237,13 +287,20 @@ class CAT : flatbuffers.handle
     /// ISO 8601 UTC instant the selection in PRODUCTS holds at.
     def PRODUCTS_AS_OF() -> string:
         return flatbuffers.field_string(buf_, pos_, 58)
+    /// The recommended product per span of lead, in lead order, the spans not
+    /// overlapping. Absent: the catalog recommends no product. Past the last
+    /// span no product is recommended.
+    def RECOMMENDED(i:int) -> CATRecommendation:
+        return CATRecommendation { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 60) + i * 4) }
+    def RECOMMENDED_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 60)
 
 def GetRootAsCAT(buf:string): return CAT { buf, flatbuffers.indirect(buf, 0) }
 
 struct CATBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(28)
+        b_.StartObject(29)
         return this
     def add_OBJECT_NAME(OBJECT_NAME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, OBJECT_NAME)
@@ -329,6 +386,9 @@ struct CATBuilder:
     def add_PRODUCTS_AS_OF(PRODUCTS_AS_OF:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(27, PRODUCTS_AS_OF)
         return this
+    def add_RECOMMENDED(RECOMMENDED:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(28, RECOMMENDED)
+        return this
     def end():
         return b_.EndObject()
 
@@ -342,6 +402,13 @@ def CATCreatePAYLOADSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
 def CATStartPRODUCTSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
 def CATCreatePRODUCTSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def CATStartRECOMMENDEDVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def CATCreateRECOMMENDEDVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

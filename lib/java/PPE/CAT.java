@@ -186,6 +186,16 @@ public final class CAT extends com.google.flatbuffers.Table {
   public String PRODUCTS_AS_OF() { int o = __offset(58); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer PRODUCTS_AS_OFAsByteBuffer() { return __vector_as_bytebuffer(58, 1); }
   public ByteBuffer PRODUCTS_AS_OFInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 58, 1); }
+  /**
+   * The recommended product per span of lead, in lead order, the spans not
+   * overlapping. Absent: the catalog recommends no product. Past the last
+   * span no product is recommended.
+   */
+  public CATRecommendation RECOMMENDED(int j) { return RECOMMENDED(new CATRecommendation(), j); }
+  public CATRecommendation RECOMMENDED(CATRecommendation obj, int j) { int o = __offset(60); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int RECOMMENDEDLength() { int o = __offset(60); return o != 0 ? __vector_len(o) : 0; }
+  public CATRecommendation.Vector recommendedVector() { return recommendedVector(new CATRecommendation.Vector()); }
+  public CATRecommendation.Vector recommendedVector(CATRecommendation.Vector obj) { int o = __offset(60); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createCAT(FlatBufferBuilder builder,
       int OBJECT_NAMEOffset,
@@ -215,8 +225,9 @@ public final class CAT extends com.google.flatbuffers.Table {
       int CATALOG_URIOffset,
       int CATALOG_OBJECT_IDOffset,
       int PRODUCTSOffset,
-      int PRODUCTS_AS_OFOffset) {
-    builder.startTable(28);
+      int PRODUCTS_AS_OFOffset,
+      int RECOMMENDEDOffset) {
+    builder.startTable(29);
     CAT.addMass(builder, MASS);
     CAT.addSize(builder, SIZE);
     CAT.addRcs(builder, RCS);
@@ -224,6 +235,7 @@ public final class CAT extends com.google.flatbuffers.Table {
     CAT.addApogee(builder, APOGEE);
     CAT.addInclination(builder, INCLINATION);
     CAT.addPeriod(builder, PERIOD);
+    CAT.addRecommended(builder, RECOMMENDEDOffset);
     CAT.addProductsAsOf(builder, PRODUCTS_AS_OFOffset);
     CAT.addProducts(builder, PRODUCTSOffset);
     CAT.addCatalogObjectId(builder, CATALOG_OBJECT_IDOffset);
@@ -248,7 +260,7 @@ public final class CAT extends com.google.flatbuffers.Table {
     return CAT.endCAT(builder);
   }
 
-  public static void startCAT(FlatBufferBuilder builder) { builder.startTable(28); }
+  public static void startCAT(FlatBufferBuilder builder) { builder.startTable(29); }
   public static void addObjectName(FlatBufferBuilder builder, int OBJECT_NAMEOffset) { builder.addOffset(0, OBJECT_NAMEOffset, 0); }
   public static void addObjectId(FlatBufferBuilder builder, int OBJECT_IDOffset) { builder.addOffset(1, OBJECT_IDOffset, 0); }
   public static void addNoradCatId(FlatBufferBuilder builder, long NORAD_CAT_ID) { builder.addInt(2, (int) NORAD_CAT_ID, (int) 0L); }
@@ -281,6 +293,9 @@ public final class CAT extends com.google.flatbuffers.Table {
   public static int createProductsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startProductsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static void addProductsAsOf(FlatBufferBuilder builder, int PRODUCTS_AS_OFOffset) { builder.addOffset(27, PRODUCTS_AS_OFOffset, 0); }
+  public static void addRecommended(FlatBufferBuilder builder, int RECOMMENDEDOffset) { builder.addOffset(28, RECOMMENDEDOffset, 0); }
+  public static int createRecommendedVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startRecommendedVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endCAT(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

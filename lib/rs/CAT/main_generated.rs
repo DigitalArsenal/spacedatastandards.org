@@ -957,6 +957,257 @@ impl CATProductT {
     }
 }
 
+pub enum CATRecommendationOffset {}
+
+/// The product the catalog recommends for the object over a span of
+/// prediction lead, chosen by a stated rule from the object's data-source type,
+/// orbit regime and lead.
+#[derive(Copy, Clone, PartialEq)]
+pub struct CATRecommendation<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for CATRecommendation<'a> {
+    type Inner = CATRecommendation<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> CATRecommendation<'a> {
+    pub const VT_KIND: ::flatbuffers::VOffsetT = 4;
+    pub const VT_LEAD_START_HOURS: ::flatbuffers::VOffsetT = 6;
+    pub const VT_LEAD_END_HOURS: ::flatbuffers::VOffsetT = 8;
+    pub const VT_RULE: ::flatbuffers::VOffsetT = 10;
+    pub const VT_MEASURED: ::flatbuffers::VOffsetT = 12;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        CATRecommendation { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args CATRecommendationArgs<'args>
+    ) -> ::flatbuffers::WIPOffset<CATRecommendation<'bldr>> {
+        let mut builder = CATRecommendationBuilder::new(_fbb);
+        builder.add_LEAD_END_HOURS(args.LEAD_END_HOURS);
+        builder.add_LEAD_START_HOURS(args.LEAD_START_HOURS);
+        if let Some(x) = args.RULE { builder.add_RULE(x); }
+        builder.add_MEASURED(args.MEASURED);
+        builder.add_KIND(args.KIND);
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> CATRecommendationT {
+        let KIND = self.KIND();
+        let LEAD_START_HOURS = self.LEAD_START_HOURS();
+        let LEAD_END_HOURS = self.LEAD_END_HOURS();
+        let RULE = self.RULE().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let MEASURED = self.MEASURED();
+        CATRecommendationT {
+            KIND,
+            LEAD_START_HOURS,
+            LEAD_END_HOURS,
+            RULE,
+            MEASURED,
+        }
+    }
+
+    /// The recommended product's KIND: the entry of PRODUCTS with this KIND.
+    #[inline]
+    pub fn KIND(&self) -> catalogProductKind {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<catalogProductKind>(CATRecommendation::VT_KIND, Some(catalogProductKind::Unspecified)).unwrap()}
+    }
+
+    /// Start of the span, hours after PRODUCTS_AS_OF (inclusive).
+    #[inline]
+    pub fn LEAD_START_HOURS(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(CATRecommendation::VT_LEAD_START_HOURS, Some(0.0)).unwrap()}
+    }
+
+    /// End of the span, hours after PRODUCTS_AS_OF (exclusive).
+    #[inline]
+    pub fn LEAD_END_HOURS(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(CATRecommendation::VT_LEAD_END_HOURS, Some(0.0)).unwrap()}
+    }
+
+    /// The rule that chose the product: its name and version, then the rule's
+    /// cell the object fell in (for example "catalog-serve/2 public/meo").
+    #[inline]
+    pub fn RULE(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CATRecommendation::VT_RULE, None)}
+    }
+
+    /// True when the rule's choice for that cell was measured on held-out tests
+    /// against a stated truth; false when the rule's stated default was applied
+    /// without such a measurement.
+    #[inline]
+    pub fn MEASURED(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(CATRecommendation::VT_MEASURED, Some(false)).unwrap()}
+    }
+}
+
+impl ::flatbuffers::Verifiable for CATRecommendation<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<catalogProductKind>("KIND", Self::VT_KIND, false)?
+            .visit_field::<f64>("LEAD_START_HOURS", Self::VT_LEAD_START_HOURS, false)?
+            .visit_field::<f64>("LEAD_END_HOURS", Self::VT_LEAD_END_HOURS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("RULE", Self::VT_RULE, false)?
+            .visit_field::<bool>("MEASURED", Self::VT_MEASURED, false)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct CATRecommendationArgs<'a> {
+    pub KIND: catalogProductKind,
+    pub LEAD_START_HOURS: f64,
+    pub LEAD_END_HOURS: f64,
+    pub RULE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MEASURED: bool,
+}
+
+impl<'a> Default for CATRecommendationArgs<'a> {
+    #[inline]
+    fn default() -> Self {
+        CATRecommendationArgs {
+            KIND: catalogProductKind::Unspecified,
+            LEAD_START_HOURS: 0.0,
+            LEAD_END_HOURS: 0.0,
+            RULE: None,
+            MEASURED: false,
+        }
+    }
+}
+
+pub struct CATRecommendationBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> CATRecommendationBuilder<'a, 'b, A> {
+    #[inline]
+    pub fn add_KIND(&mut self, KIND: catalogProductKind) {
+        self.fbb_.push_slot::<catalogProductKind>(CATRecommendation::VT_KIND, KIND, catalogProductKind::Unspecified);
+    }
+
+    #[inline]
+    pub fn add_LEAD_START_HOURS(&mut self, LEAD_START_HOURS: f64) {
+        self.fbb_.push_slot::<f64>(CATRecommendation::VT_LEAD_START_HOURS, LEAD_START_HOURS, 0.0);
+    }
+
+    #[inline]
+    pub fn add_LEAD_END_HOURS(&mut self, LEAD_END_HOURS: f64) {
+        self.fbb_.push_slot::<f64>(CATRecommendation::VT_LEAD_END_HOURS, LEAD_END_HOURS, 0.0);
+    }
+
+    #[inline]
+    pub fn add_RULE(&mut self, RULE: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CATRecommendation::VT_RULE, RULE);
+    }
+
+    #[inline]
+    pub fn add_MEASURED(&mut self, MEASURED: bool) {
+        self.fbb_.push_slot::<bool>(CATRecommendation::VT_MEASURED, MEASURED, false);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> CATRecommendationBuilder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        CATRecommendationBuilder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<CATRecommendation<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for CATRecommendation<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("CATRecommendation");
+        ds.field("KIND", &self.KIND());
+        ds.field("LEAD_START_HOURS", &self.LEAD_START_HOURS());
+        ds.field("LEAD_END_HOURS", &self.LEAD_END_HOURS());
+        ds.field("RULE", &self.RULE());
+        ds.field("MEASURED", &self.MEASURED());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct CATRecommendationT {
+    pub KIND: catalogProductKind,
+    pub LEAD_START_HOURS: f64,
+    pub LEAD_END_HOURS: f64,
+    pub RULE: Option<alloc::string::String>,
+    pub MEASURED: bool,
+}
+
+impl Default for CATRecommendationT {
+    fn default() -> Self {
+        Self {
+            KIND: catalogProductKind::Unspecified,
+            LEAD_START_HOURS: 0.0,
+            LEAD_END_HOURS: 0.0,
+            RULE: None,
+            MEASURED: false,
+        }
+    }
+}
+
+impl CATRecommendationT {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<CATRecommendation<'b>> {
+        let KIND = self.KIND;
+        let LEAD_START_HOURS = self.LEAD_START_HOURS;
+        let LEAD_END_HOURS = self.LEAD_END_HOURS;
+        let RULE = self.RULE.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let MEASURED = self.MEASURED;
+        CATRecommendation::create(_fbb, &CATRecommendationArgs{
+            KIND,
+            LEAD_START_HOURS,
+            LEAD_END_HOURS,
+            RULE,
+            MEASURED,
+        })
+    }
+}
+
 pub enum CATOffset {}
 
 /// Catalog Entity Message
@@ -1003,6 +1254,7 @@ impl<'a> CAT<'a> {
     pub const VT_CATALOG_OBJECT_ID: ::flatbuffers::VOffsetT = 54;
     pub const VT_PRODUCTS: ::flatbuffers::VOffsetT = 56;
     pub const VT_PRODUCTS_AS_OF: ::flatbuffers::VOffsetT = 58;
+    pub const VT_RECOMMENDED: ::flatbuffers::VOffsetT = 60;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1022,6 +1274,7 @@ impl<'a> CAT<'a> {
         builder.add_APOGEE(args.APOGEE);
         builder.add_INCLINATION(args.INCLINATION);
         builder.add_PERIOD(args.PERIOD);
+        if let Some(x) = args.RECOMMENDED { builder.add_RECOMMENDED(x); }
         if let Some(x) = args.PRODUCTS_AS_OF { builder.add_PRODUCTS_AS_OF(x); }
         if let Some(x) = args.PRODUCTS { builder.add_PRODUCTS(x); }
         if let Some(x) = args.CATALOG_OBJECT_ID { builder.add_CATALOG_OBJECT_ID(x); }
@@ -1101,6 +1354,9 @@ impl<'a> CAT<'a> {
         let PRODUCTS_AS_OF = self.PRODUCTS_AS_OF().map(|x| {
             alloc::string::ToString::to_string(x)
         });
+        let RECOMMENDED = self.RECOMMENDED().map(|x| {
+            x.iter().map(|t| t.unpack()).collect()
+        });
         CATT {
             OBJECT_NAME,
             OBJECT_ID,
@@ -1130,6 +1386,7 @@ impl<'a> CAT<'a> {
             CATALOG_OBJECT_ID,
             PRODUCTS,
             PRODUCTS_AS_OF,
+            RECOMMENDED,
         }
     }
 
@@ -1400,6 +1657,17 @@ impl<'a> CAT<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CAT::VT_PRODUCTS_AS_OF, None)}
     }
+
+    /// The recommended product per span of lead, in lead order, the spans not
+    /// overlapping. Absent: the catalog recommends no product. Past the last
+    /// span no product is recommended.
+    #[inline]
+    pub fn RECOMMENDED(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<CATRecommendation<'a>>>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<CATRecommendation>>>>(CAT::VT_RECOMMENDED, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for CAT<'_> {
@@ -1436,6 +1704,7 @@ impl ::flatbuffers::Verifiable for CAT<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CATALOG_OBJECT_ID", Self::VT_CATALOG_OBJECT_ID, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<CATProduct>>>>("PRODUCTS", Self::VT_PRODUCTS, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PRODUCTS_AS_OF", Self::VT_PRODUCTS_AS_OF, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<CATRecommendation>>>>("RECOMMENDED", Self::VT_RECOMMENDED, false)?
             .finish();
         Ok(())
     }
@@ -1470,6 +1739,7 @@ pub struct CATArgs<'a> {
     pub CATALOG_OBJECT_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub PRODUCTS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<CATProduct<'a>>>>>,
     pub PRODUCTS_AS_OF: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub RECOMMENDED: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<CATRecommendation<'a>>>>>,
 }
 
 impl<'a> Default for CATArgs<'a> {
@@ -1504,6 +1774,7 @@ impl<'a> Default for CATArgs<'a> {
             CATALOG_OBJECT_ID: None,
             PRODUCTS: None,
             PRODUCTS_AS_OF: None,
+            RECOMMENDED: None,
         }
     }
 }
@@ -1655,6 +1926,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> CATBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_RECOMMENDED(&mut self, RECOMMENDED: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<CATRecommendation<'b >>>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CAT::VT_RECOMMENDED, RECOMMENDED);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> CATBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         CATBuilder {
@@ -1701,6 +1977,7 @@ impl ::core::fmt::Debug for CAT<'_> {
         ds.field("CATALOG_OBJECT_ID", &self.CATALOG_OBJECT_ID());
         ds.field("PRODUCTS", &self.PRODUCTS());
         ds.field("PRODUCTS_AS_OF", &self.PRODUCTS_AS_OF());
+        ds.field("RECOMMENDED", &self.RECOMMENDED());
         ds.finish()
     }
 }
@@ -1736,6 +2013,7 @@ pub struct CATT {
     pub CATALOG_OBJECT_ID: Option<alloc::string::String>,
     pub PRODUCTS: Option<alloc::vec::Vec<CATProductT>>,
     pub PRODUCTS_AS_OF: Option<alloc::string::String>,
+    pub RECOMMENDED: Option<alloc::vec::Vec<CATRecommendationT>>,
 }
 
 impl Default for CATT {
@@ -1769,6 +2047,7 @@ impl Default for CATT {
             CATALOG_OBJECT_ID: None,
             PRODUCTS: None,
             PRODUCTS_AS_OF: None,
+            RECOMMENDED: None,
         }
     }
 }
@@ -1832,6 +2111,9 @@ impl CATT {
         let PRODUCTS_AS_OF = self.PRODUCTS_AS_OF.as_ref().map(|x|{
             _fbb.create_string(x)
         });
+        let RECOMMENDED = self.RECOMMENDED.as_ref().map(|x|{
+            let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+        });
         CAT::create(_fbb, &CATArgs{
             OBJECT_NAME,
             OBJECT_ID,
@@ -1861,6 +2143,7 @@ impl CATT {
             CATALOG_OBJECT_ID,
             PRODUCTS,
             PRODUCTS_AS_OF,
+            RECOMMENDED,
         })
     }
 }
