@@ -13,12 +13,27 @@ class coaKind
     const RIDE_OUT = 2;
     /// STEPS, in order, restore service after the event.
     const RECOVERY = 3;
+    /// RF countermeasure (frequency hop, null steer, power boost, beam narrow).
+    const RF_COUNTERMEASURE = 4;
+    /// Traffic / TT&C / payload gateway reroute.
+    const GATEWAY_REROUTE = 5;
+    /// Optical / star-tracker / sensor shuttering or slew protection.
+    const SENSOR_PROTECTION = 6;
+    /// Preemptive spacecraft safe-mode entry (e.g. severe SEP/storm).
+    const SAFE_MODE = 7;
+    /// Surge or tasking of tracking / custody sensors.
+    const TRACK_TASKING = 8;
 
     private static $names = array(
         coaKind::UNSPECIFIED=>"UNSPECIFIED",
         coaKind::MANEUVER=>"MANEUVER",
         coaKind::RIDE_OUT=>"RIDE_OUT",
         coaKind::RECOVERY=>"RECOVERY",
+        coaKind::RF_COUNTERMEASURE=>"RF_COUNTERMEASURE",
+        coaKind::GATEWAY_REROUTE=>"GATEWAY_REROUTE",
+        coaKind::SENSOR_PROTECTION=>"SENSOR_PROTECTION",
+        coaKind::SAFE_MODE=>"SAFE_MODE",
+        coaKind::TRACK_TASKING=>"TRACK_TASKING",
     );
 
     public static function Name($e)

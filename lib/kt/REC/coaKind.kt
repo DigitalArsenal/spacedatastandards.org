@@ -23,5 +23,25 @@ class coaKind private constructor() {
          * STEPS, in order, restore service after the event.
          */
         const val RECOVERY: Byte = 3
+        /**
+         * RF countermeasure (frequency hop, null steer, power boost, beam narrow).
+         */
+        const val RF_COUNTERMEASURE: Byte = 4
+        /**
+         * Traffic / TT&C / payload gateway reroute.
+         */
+        const val GATEWAY_REROUTE: Byte = 5
+        /**
+         * Optical / star-tracker / sensor shuttering or slew protection.
+         */
+        const val SENSOR_PROTECTION: Byte = 6
+        /**
+         * Preemptive spacecraft safe-mode entry (e.g. severe SEP/storm).
+         */
+        const val SAFE_MODE: Byte = 7
+        /**
+         * Surge or tasking of tracking / custody sensors.
+         */
+        const val TRACK_TASKING: Byte = 8
     }
 }

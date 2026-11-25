@@ -1,0 +1,1314 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "tmxPhenomenologyKind": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "ORBITAL_KINETIC",
+        "CO_ORBITAL_RPO",
+        "DIRECT_ASCENT_ASAT",
+        "RF_EW_GNSS",
+        "OPTICAL_DIRECTED_ENERGY",
+        "SPACE_ENV_RADIATION",
+        "GROUND_CUSTODY_CYBER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0,
+          "description": "Not stated."
+        },
+        "ORBITAL_KINETIC": {
+          "value": 1,
+          "description": "Orbital kinetic conjunctions."
+        },
+        "CO_ORBITAL_RPO": {
+          "value": 2,
+          "description": "Co-orbital / rendezvous & proximity operations."
+        },
+        "DIRECT_ASCENT_ASAT": {
+          "value": 3,
+          "description": "Direct-ascent anti-satellite reach."
+        },
+        "RF_EW_GNSS": {
+          "value": 4,
+          "description": "RF jamming, electronic warfare, and GNSS denial."
+        },
+        "OPTICAL_DIRECTED_ENERGY": {
+          "value": 5,
+          "description": "Optical / laser directed energy."
+        },
+        "SPACE_ENV_RADIATION": {
+          "value": 6,
+          "description": "Space weather, drag storm, solar flare/SEP, and planetary radiation."
+        },
+        "GROUND_CUSTODY_CYBER": {
+          "value": 7,
+          "description": "Ground custody tracking and cyber/gateway exposure."
+        }
+      }
+    },
+    "tmxSeverityLevel": {
+      "type": "string",
+      "enum": [
+        "UNAVAILABLE",
+        "NOMINAL",
+        "WATCH",
+        "HIGH",
+        "CRITICAL"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNAVAILABLE": {
+          "value": 0,
+          "description": "Phenomenology could not be evaluated."
+        },
+        "NOMINAL": {
+          "value": 1,
+          "description": "Evaluated within nominal thresholds."
+        },
+        "WATCH": {
+          "value": 2,
+          "description": "Elevated threat warranting monitoring."
+        },
+        "HIGH": {
+          "value": 3,
+          "description": "High threat warranting defensive COA preparation."
+        },
+        "CRITICAL": {
+          "value": 4,
+          "description": "Critical threat requiring immediate mitigation."
+        }
+      }
+    },
+    "tmxExecutionHostKind": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "BROWSER_LOCAL",
+        "SDN_COMPUTE_NODE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0,
+          "description": "Not stated."
+        },
+        "BROWSER_LOCAL": {
+          "value": 1,
+          "description": "Executed locally in browser WebAssembly / SharedArrayBuffer workers."
+        },
+        "SDN_COMPUTE_NODE": {
+          "value": 2,
+          "description": "Executed remotely on an SDN WasmEdge compute node."
+        }
+      }
+    },
+    "tmxModuleRunStatus": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "OK",
+        "PARTIAL",
+        "UNAVAILABLE",
+        "NOT_PUBLIC"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0,
+          "description": "Not stated."
+        },
+        "OK": {
+          "value": 1,
+          "description": "Module completed all targets cleanly."
+        },
+        "PARTIAL": {
+          "value": 2,
+          "description": "Module completed a subset of targets or inputs."
+        },
+        "UNAVAILABLE": {
+          "value": 3,
+          "description": "Module unavailable or missing required inputs."
+        },
+        "NOT_PUBLIC": {
+          "value": 4,
+          "description": "Module or lane restricted by access tier / policy."
+        }
+      }
+    },
+    "tmxBucketKind": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "CONSTELLATION",
+        "SHELL",
+        "PLANE",
+        "ASSET",
+        "GATEWAY"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0,
+          "description": "Not stated."
+        },
+        "CONSTELLATION": {
+          "value": 1,
+          "description": "Whole constellation bucket."
+        },
+        "SHELL": {
+          "value": 2,
+          "description": "Orbital shell bucket."
+        },
+        "PLANE": {
+          "value": 3,
+          "description": "Orbital plane bucket."
+        },
+        "ASSET": {
+          "value": 4,
+          "description": "Individual space object / asset bucket."
+        },
+        "GATEWAY": {
+          "value": 5,
+          "description": "Ground gateway or site bucket."
+        }
+      }
+    },
+    "tmxPropagatorKind": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "SDN_AP",
+        "SGP4_XP",
+        "SGP4"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0,
+          "description": "Not stated."
+        },
+        "SDN_AP": {
+          "value": 1,
+          "description": "SDN advanced propagator (propagator/sdn-ap)."
+        },
+        "SGP4_XP": {
+          "value": 2,
+          "description": "SGP4-XP propagator (propagator/sgp4-xp)."
+        },
+        "SGP4": {
+          "value": 3,
+          "description": "Classic SGP4 propagator (propagator/sgp4)."
+        }
+      }
+    },
+    "tmxCertaintyLevel": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "MEASURED",
+        "PUBLISHED",
+        "KINEMATIC_BOUND",
+        "STATED_WHATIF",
+        "NOT_PUBLIC"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0,
+          "description": "Not stated."
+        },
+        "MEASURED": {
+          "value": 1,
+          "description": "Directly measured."
+        },
+        "PUBLISHED": {
+          "value": 2,
+          "description": "Authoritative published data."
+        },
+        "KINEMATIC_BOUND": {
+          "value": 3,
+          "description": "Derived from kinematic bounds."
+        },
+        "STATED_WHATIF": {
+          "value": 4,
+          "description": "Analyst-stated what-if override."
+        },
+        "NOT_PUBLIC": {
+          "value": 5,
+          "description": "Redacted or restricted; not public."
+        }
+      }
+    },
+    "TMXRequest": {
+      "type": "object",
+      "description": "Invocation request payload carried inside $PIV (PIVRequest.INPUTS) or local execution.",
+      "properties": {
+        "REQUEST_ID": {
+          "type": "string",
+          "description": "Unique identifier of this matrix evaluation request.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "TARGET_SCOPE": {
+          "type": "string",
+          "description": "Target scope selector (e.g. constellation name, group, or \"CUSTOM\").",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "TARGET_NORAD_CAT_IDS": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4294967295
+          },
+          "description": "Explicit NORAD catalog numbers requested for screening.",
+          "x-flatbuffer-type": "[uint]"
+        },
+        "GROUP_IDS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Entity group ($EGP) identifiers requested for screening.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "CATALOG_REVISION": {
+          "type": "string",
+          "description": "Catalog revision or snapshot identifier pinned for parity.",
+          "x-flatbuffer-type": "string"
+        },
+        "WINDOW_START": {
+          "type": "string",
+          "description": "Inclusive analysis window start, RFC 3339 UTC.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "WINDOW_END": {
+          "type": "string",
+          "description": "Exclusive analysis window end, RFC 3339 UTC.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "PROPAGATOR": {
+          "$ref": "#/definitions/tmxPropagatorKind",
+          "description": "Selected propagator theory.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "Not stated."
+            },
+            "SDN_AP": {
+              "value": 1,
+              "description": "SDN advanced propagator (propagator/sdn-ap)."
+            },
+            "SGP4_XP": {
+              "value": 2,
+              "description": "SGP4-XP propagator (propagator/sgp4-xp)."
+            },
+            "SGP4": {
+              "value": 3,
+              "description": "Classic SGP4 propagator (propagator/sgp4)."
+            }
+          },
+          "x-flatbuffer-default": "SDN_AP"
+        },
+        "PROPAGATOR_ID": {
+          "type": "string",
+          "description": "Canonical propagator module identifier (e.g. \"propagator/sdn-ap\").",
+          "x-flatbuffer-type": "string"
+        },
+        "EXECUTION_HOST": {
+          "$ref": "#/definitions/tmxExecutionHostKind",
+          "description": "Target execution host kind.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "Not stated."
+            },
+            "BROWSER_LOCAL": {
+              "value": 1,
+              "description": "Executed locally in browser WebAssembly / SharedArrayBuffer workers."
+            },
+            "SDN_COMPUTE_NODE": {
+              "value": 2,
+              "description": "Executed remotely on an SDN WasmEdge compute node."
+            }
+          },
+          "x-flatbuffer-default": "BROWSER_LOCAL"
+        },
+        "PHENOMENOLOGIES_REQUESTED": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/tmxPhenomenologyKind"
+          },
+          "description": "Subset of phenomenologies to evaluate; empty requests all 7.",
+          "x-flatbuffer-type": "[tmxPhenomenologyKind]"
+        },
+        "THP_IDS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Threat profile identifiers ($THP.THP_ID) to include.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "THP_CIDS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Content identifiers pinning exact $THP payloads.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "SCORING_PROFILE_ID": {
+          "type": "string",
+          "description": "Named deterministic scoring profile identifier.",
+          "x-flatbuffer-type": "string"
+        },
+        "INCLUDE_COAS": {
+          "type": "boolean",
+          "description": "True to synthesize and attach defensive COAs alongside matrix output.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "true"
+        },
+        "WHAT_IF_OVERRIDES_JSON": {
+          "type": "string",
+          "description": "Optional serialized parameter overrides for analyst what-if runs.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "REQUEST_ID",
+        "TARGET_SCOPE",
+        "WINDOW_START",
+        "WINDOW_END"
+      ],
+      "additionalProperties": false
+    },
+    "TMXBucket": {
+      "type": "object",
+      "description": "Target aggregation bucket (constellation, shell, plane, asset, or gateway).",
+      "properties": {
+        "BUCKET_ID": {
+          "type": "string",
+          "description": "Stable identifier of this bucket within the matrix run.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "PARENT_BUCKET_ID": {
+          "type": "string",
+          "description": "Optional parent bucket identifier in the hierarchy.",
+          "x-flatbuffer-type": "string"
+        },
+        "BUCKET_KIND": {
+          "$ref": "#/definitions/tmxBucketKind",
+          "description": "Granularity kind of this bucket.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "Not stated."
+            },
+            "CONSTELLATION": {
+              "value": 1,
+              "description": "Whole constellation bucket."
+            },
+            "SHELL": {
+              "value": 2,
+              "description": "Orbital shell bucket."
+            },
+            "PLANE": {
+              "value": 3,
+              "description": "Orbital plane bucket."
+            },
+            "ASSET": {
+              "value": 4,
+              "description": "Individual space object / asset bucket."
+            },
+            "GATEWAY": {
+              "value": 5,
+              "description": "Ground gateway or site bucket."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "LABEL": {
+          "type": "string",
+          "description": "Human-readable bucket label.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "ASSET_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of assets represented by this bucket.",
+          "x-flatbuffer-type": "uint"
+        },
+        "NORAD_CAT_IDS": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4294967295
+          },
+          "description": "Member NORAD catalog numbers when enumerated.",
+          "x-flatbuffer-type": "[uint]"
+        },
+        "ALTITUDE_MIN_KM": {
+          "type": "number",
+          "description": "Minimum shell altitude in km.",
+          "x-flatbuffer-type": "double"
+        },
+        "ALTITUDE_MAX_KM": {
+          "type": "number",
+          "description": "Maximum shell altitude in km.",
+          "x-flatbuffer-type": "double"
+        },
+        "INCLINATION_DEG": {
+          "type": "number",
+          "description": "Representative orbital inclination in degrees.",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "required": [
+        "BUCKET_ID",
+        "LABEL"
+      ],
+      "additionalProperties": false
+    },
+    "TMXPhenomenologyWeight": {
+      "type": "object",
+      "description": "Deterministic weight and severity thresholds for one phenomenology (in basis points 0..10000).",
+      "properties": {
+        "PHENOMENOLOGY": {
+          "$ref": "#/definitions/tmxPhenomenologyKind",
+          "description": "Phenomenology configured by this entry.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "Not stated."
+            },
+            "ORBITAL_KINETIC": {
+              "value": 1,
+              "description": "Orbital kinetic conjunctions."
+            },
+            "CO_ORBITAL_RPO": {
+              "value": 2,
+              "description": "Co-orbital / rendezvous & proximity operations."
+            },
+            "DIRECT_ASCENT_ASAT": {
+              "value": 3,
+              "description": "Direct-ascent anti-satellite reach."
+            },
+            "RF_EW_GNSS": {
+              "value": 4,
+              "description": "RF jamming, electronic warfare, and GNSS denial."
+            },
+            "OPTICAL_DIRECTED_ENERGY": {
+              "value": 5,
+              "description": "Optical / laser directed energy."
+            },
+            "SPACE_ENV_RADIATION": {
+              "value": 6,
+              "description": "Space weather, drag storm, solar flare/SEP, and planetary radiation."
+            },
+            "GROUND_CUSTODY_CYBER": {
+              "value": 7,
+              "description": "Ground custody tracking and cyber/gateway exposure."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "WEIGHT_BPS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Composite rollup weight in basis points (nominal sum across evaluated phenomenologies = 10000).",
+          "x-flatbuffer-type": "uint16"
+        },
+        "CRITICAL_THRESHOLD_BPS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Score threshold in basis points for CRITICAL tier.",
+          "x-flatbuffer-type": "uint16",
+          "x-flatbuffer-default": "8000"
+        },
+        "HIGH_THRESHOLD_BPS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Score threshold in basis points for HIGH tier.",
+          "x-flatbuffer-type": "uint16",
+          "x-flatbuffer-default": "5000"
+        },
+        "WATCH_THRESHOLD_BPS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Score threshold in basis points for WATCH tier.",
+          "x-flatbuffer-type": "uint16",
+          "x-flatbuffer-default": "2000"
+        }
+      },
+      "additionalProperties": false
+    },
+    "TMXCompoundRule": {
+      "type": "object",
+      "description": "Deterministic compound-overlap scoring rule across co-occurring phenomenologies.",
+      "properties": {
+        "RULE_ID": {
+          "type": "string",
+          "description": "Stable rule identifier.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "PHENOMENOLOGIES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/tmxPhenomenologyKind"
+          },
+          "description": "Set of phenomenologies whose temporal/spatial overlap triggers this rule.",
+          "x-flatbuffer-type": "[tmxPhenomenologyKind]"
+        },
+        "BONUS_BPS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Additive bonus in basis points (0..2500).",
+          "x-flatbuffer-type": "uint16"
+        },
+        "MULTIPLIER_BPS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Multiplicative factor in basis points (e.g. 10000 = 1.00x, 12500 = 1.25x).",
+          "x-flatbuffer-type": "uint16"
+        }
+      },
+      "required": [
+        "RULE_ID"
+      ],
+      "additionalProperties": false
+    },
+    "TMXModuleRun": {
+      "type": "object",
+      "description": "Execution telemetry and attribution for one phenomenology analyzer in this run.",
+      "properties": {
+        "PHENOMENOLOGY": {
+          "$ref": "#/definitions/tmxPhenomenologyKind",
+          "description": "Phenomenology axis produced by this module.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "Not stated."
+            },
+            "ORBITAL_KINETIC": {
+              "value": 1,
+              "description": "Orbital kinetic conjunctions."
+            },
+            "CO_ORBITAL_RPO": {
+              "value": 2,
+              "description": "Co-orbital / rendezvous & proximity operations."
+            },
+            "DIRECT_ASCENT_ASAT": {
+              "value": 3,
+              "description": "Direct-ascent anti-satellite reach."
+            },
+            "RF_EW_GNSS": {
+              "value": 4,
+              "description": "RF jamming, electronic warfare, and GNSS denial."
+            },
+            "OPTICAL_DIRECTED_ENERGY": {
+              "value": 5,
+              "description": "Optical / laser directed energy."
+            },
+            "SPACE_ENV_RADIATION": {
+              "value": 6,
+              "description": "Space weather, drag storm, solar flare/SEP, and planetary radiation."
+            },
+            "GROUND_CUSTODY_CYBER": {
+              "value": 7,
+              "description": "Ground custody tracking and cyber/gateway exposure."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "MODULE_ID": {
+          "type": "string",
+          "description": "Canonical module identifier (e.g. \"analysis/asat-reach\").",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "MODULE_VERSION": {
+          "type": "string",
+          "description": "Module semantic version string.",
+          "x-flatbuffer-type": "string"
+        },
+        "WASM_SHA256": {
+          "type": "string",
+          "description": "Lowercase hex SHA-256 of the executed portable WASM artifact.",
+          "x-flatbuffer-type": "string"
+        },
+        "STATUS": {
+          "$ref": "#/definitions/tmxModuleRunStatus",
+          "description": "Outcome status of this module invocation.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "Not stated."
+            },
+            "OK": {
+              "value": 1,
+              "description": "Module completed all targets cleanly."
+            },
+            "PARTIAL": {
+              "value": 2,
+              "description": "Module completed a subset of targets or inputs."
+            },
+            "UNAVAILABLE": {
+              "value": 3,
+              "description": "Module unavailable or missing required inputs."
+            },
+            "NOT_PUBLIC": {
+              "value": 4,
+              "description": "Module or lane restricted by access tier / policy."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "WALL_TIME_MS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Measured execution wall time in milliseconds.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "REFUSAL_REASON": {
+          "type": "string",
+          "description": "Explicit refusal or degradation reason when STATUS is not OK.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "MODULE_ID"
+      ],
+      "additionalProperties": false
+    },
+    "TMXRecordRef": {
+      "type": "object",
+      "description": "Reference to a supporting underlying SDS record without duplicating its payload.",
+      "properties": {
+        "SCHEMA_FILE_ID": {
+          "type": "string",
+          "description": "Four-character SDS file identifier including \"$\", e.g. \"$CDM\", \"$ACW\", \"$RFL\", \"$RDE\", \"$THP\".",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "RECORD_ID": {
+          "type": "string",
+          "description": "Record identifier within the referenced SDS standard.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "NORAD_CAT_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Optional NORAD catalog number associated with the event.",
+          "x-flatbuffer-type": "uint"
+        },
+        "EPOCH": {
+          "type": "string",
+          "description": "Event epoch or peak timestamp, RFC 3339 UTC.",
+          "x-flatbuffer-type": "string"
+        },
+        "METRIC_LABEL": {
+          "type": "string",
+          "description": "Primary metric label (e.g. \"MISS_DISTANCE_KM\", \"DOSE_MSV_H\", \"J_S_DB\").",
+          "x-flatbuffer-type": "string"
+        },
+        "METRIC_VALUE": {
+          "type": "number",
+          "description": "Primary metric numeric value.",
+          "x-flatbuffer-type": "double"
+        },
+        "METRIC_UNITS": {
+          "type": "string",
+          "description": "Physical units string for METRIC_VALUE.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "SCHEMA_FILE_ID",
+        "RECORD_ID"
+      ],
+      "additionalProperties": false
+    },
+    "TMXCell": {
+      "type": "object",
+      "description": "Single (bucket x phenomenology) cell in the threat matrix.",
+      "properties": {
+        "BUCKET_ID": {
+          "type": "string",
+          "description": "Target bucket identifier referencing TMXBucket.BUCKET_ID.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "PHENOMENOLOGY": {
+          "$ref": "#/definitions/tmxPhenomenologyKind",
+          "description": "Phenomenology axis for this cell.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "Not stated."
+            },
+            "ORBITAL_KINETIC": {
+              "value": 1,
+              "description": "Orbital kinetic conjunctions."
+            },
+            "CO_ORBITAL_RPO": {
+              "value": 2,
+              "description": "Co-orbital / rendezvous & proximity operations."
+            },
+            "DIRECT_ASCENT_ASAT": {
+              "value": 3,
+              "description": "Direct-ascent anti-satellite reach."
+            },
+            "RF_EW_GNSS": {
+              "value": 4,
+              "description": "RF jamming, electronic warfare, and GNSS denial."
+            },
+            "OPTICAL_DIRECTED_ENERGY": {
+              "value": 5,
+              "description": "Optical / laser directed energy."
+            },
+            "SPACE_ENV_RADIATION": {
+              "value": 6,
+              "description": "Space weather, drag storm, solar flare/SEP, and planetary radiation."
+            },
+            "GROUND_CUSTODY_CYBER": {
+              "value": 7,
+              "description": "Ground custody tracking and cyber/gateway exposure."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "SEVERITY_TIER": {
+          "$ref": "#/definitions/tmxSeverityLevel",
+          "description": "Categorical severity tier for this cell.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNAVAILABLE": {
+              "value": 0,
+              "description": "Phenomenology could not be evaluated."
+            },
+            "NOMINAL": {
+              "value": 1,
+              "description": "Evaluated within nominal thresholds."
+            },
+            "WATCH": {
+              "value": 2,
+              "description": "Elevated threat warranting monitoring."
+            },
+            "HIGH": {
+              "value": 3,
+              "description": "High threat warranting defensive COA preparation."
+            },
+            "CRITICAL": {
+              "value": 4,
+              "description": "Critical threat requiring immediate mitigation."
+            }
+          },
+          "x-flatbuffer-default": "UNAVAILABLE"
+        },
+        "PHENOMENOLOGY_SCORE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Deterministic fixed-point severity score in basis points (0..10000).",
+          "x-flatbuffer-type": "uint16"
+        },
+        "EXPOSED_ASSET_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Count of unique assets exposed in this cell.",
+          "x-flatbuffer-type": "uint"
+        },
+        "PEAK_SIMULTANEOUS_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Peak simultaneous exposed asset count over the window.",
+          "x-flatbuffer-type": "uint"
+        },
+        "EARLIEST_ONSET_UTC": {
+          "type": "string",
+          "description": "Earliest threat onset timestamp in the window, RFC 3339 UTC.",
+          "x-flatbuffer-type": "string"
+        },
+        "TOTAL_EXPOSURE_MIN": {
+          "type": "number",
+          "description": "Total accumulated exposure duration in minutes.",
+          "x-flatbuffer-type": "double"
+        },
+        "WORST_METRIC_SUMMARY": {
+          "type": "string",
+          "description": "Compact human-readable worst-case metric summary.",
+          "x-flatbuffer-type": "string"
+        },
+        "CERTAINTY_FLOOR": {
+          "$ref": "#/definitions/tmxCertaintyLevel",
+          "description": "Minimum epistemic certainty across contributing threat inputs.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "Not stated."
+            },
+            "MEASURED": {
+              "value": 1,
+              "description": "Directly measured."
+            },
+            "PUBLISHED": {
+              "value": 2,
+              "description": "Authoritative published data."
+            },
+            "KINEMATIC_BOUND": {
+              "value": 3,
+              "description": "Derived from kinematic bounds."
+            },
+            "STATED_WHATIF": {
+              "value": 4,
+              "description": "Analyst-stated what-if override."
+            },
+            "NOT_PUBLIC": {
+              "value": 5,
+              "description": "Redacted or restricted; not public."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "EVENT_REFS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TMXRecordRef"
+          },
+          "description": "Underlying SDS event references supporting this cell.",
+          "x-flatbuffer-type": "[TMXRecordRef]"
+        }
+      },
+      "required": [
+        "BUCKET_ID"
+      ],
+      "additionalProperties": false
+    },
+    "TMXCompoundEvent": {
+      "type": "object",
+      "description": "Overlapping multi-phenomenology compound threat event on an asset, site, or bucket.",
+      "properties": {
+        "COMPOUND_ID": {
+          "type": "string",
+          "description": "Stable identifier of this compound overlap event.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "BUCKET_ID": {
+          "type": "string",
+          "description": "Bucket identifier where the overlap occurs.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "NORAD_CAT_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Optional NORAD catalog number of the affected asset.",
+          "x-flatbuffer-type": "uint"
+        },
+        "SITE_ID": {
+          "type": "string",
+          "description": "Optional ground site or gateway identifier.",
+          "x-flatbuffer-type": "string"
+        },
+        "PHENOMENOLOGIES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/tmxPhenomenologyKind"
+          },
+          "description": "Co-occurring phenomenologies participating in the overlap.",
+          "x-flatbuffer-type": "[tmxPhenomenologyKind]"
+        },
+        "MEMBER_EVENT_REFS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TMXRecordRef"
+          },
+          "description": "Member SDS event references forming this compound event.",
+          "x-flatbuffer-type": "[TMXRecordRef]"
+        },
+        "OVERLAP_START_UTC": {
+          "type": "string",
+          "description": "Inclusive overlap window start, RFC 3339 UTC.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "OVERLAP_END_UTC": {
+          "type": "string",
+          "description": "Exclusive overlap window end, RFC 3339 UTC.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "COMPOUND_MULTIPLIER_BPS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Applied compound multiplier in basis points.",
+          "x-flatbuffer-type": "uint16"
+        },
+        "COMPOUND_BONUS_BPS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Applied compound bonus in basis points.",
+          "x-flatbuffer-type": "uint16"
+        },
+        "COMBINED_SCORE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Final deterministic combined score in basis points (0..10000).",
+          "x-flatbuffer-type": "uint16"
+        },
+        "SEVERITY_TIER": {
+          "$ref": "#/definitions/tmxSeverityLevel",
+          "description": "Resulting categorical severity tier.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNAVAILABLE": {
+              "value": 0,
+              "description": "Phenomenology could not be evaluated."
+            },
+            "NOMINAL": {
+              "value": 1,
+              "description": "Evaluated within nominal thresholds."
+            },
+            "WATCH": {
+              "value": 2,
+              "description": "Elevated threat warranting monitoring."
+            },
+            "HIGH": {
+              "value": 3,
+              "description": "High threat warranting defensive COA preparation."
+            },
+            "CRITICAL": {
+              "value": 4,
+              "description": "Critical threat requiring immediate mitigation."
+            }
+          },
+          "x-flatbuffer-default": "WATCH"
+        }
+      },
+      "required": [
+        "COMPOUND_ID",
+        "BUCKET_ID",
+        "OVERLAP_START_UTC",
+        "OVERLAP_END_UTC"
+      ],
+      "additionalProperties": false
+    },
+    "TMXRollup": {
+      "type": "object",
+      "description": "Deterministic composite rollup across all evaluated phenomenologies for a bucket.",
+      "properties": {
+        "BUCKET_ID": {
+          "type": "string",
+          "description": "Target bucket identifier referencing TMXBucket.BUCKET_ID.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "WORST_TIER": {
+          "$ref": "#/definitions/tmxSeverityLevel",
+          "description": "Worst severity tier observed across evaluated phenomenologies.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNAVAILABLE": {
+              "value": 0,
+              "description": "Phenomenology could not be evaluated."
+            },
+            "NOMINAL": {
+              "value": 1,
+              "description": "Evaluated within nominal thresholds."
+            },
+            "WATCH": {
+              "value": 2,
+              "description": "Elevated threat warranting monitoring."
+            },
+            "HIGH": {
+              "value": 3,
+              "description": "High threat warranting defensive COA preparation."
+            },
+            "CRITICAL": {
+              "value": 4,
+              "description": "Critical threat requiring immediate mitigation."
+            }
+          },
+          "x-flatbuffer-default": "UNAVAILABLE"
+        },
+        "COMPOSITE_SCORE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Final composite score in basis points (0..10000).",
+          "x-flatbuffer-type": "uint16"
+        },
+        "BASE_WEIGHTED_SCORE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Pre-bonus weighted average score in basis points (0..10000).",
+          "x-flatbuffer-type": "uint16"
+        },
+        "COMPOUND_BONUS_APPLIED_BPS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Compound overlap bonus applied in basis points.",
+          "x-flatbuffer-type": "uint16"
+        },
+        "EVALUATED_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Number of phenomenologies successfully evaluated for this bucket.",
+          "x-flatbuffer-type": "ubyte"
+        },
+        "TOTAL_PHENOMENOLOGIES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Total phenomenology axes configured in the matrix.",
+          "x-flatbuffer-type": "ubyte",
+          "x-flatbuffer-default": "7"
+        },
+        "COVERAGE_RATIO": {
+          "type": "string",
+          "description": "Coverage string such as \"7/7\".",
+          "x-flatbuffer-type": "string"
+        },
+        "TOP_THREAT_REFS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TMXRecordRef"
+          },
+          "description": "Highest-severity underlying SDS event references for quick drill-down.",
+          "x-flatbuffer-type": "[TMXRecordRef]"
+        }
+      },
+      "required": [
+        "BUCKET_ID"
+      ],
+      "additionalProperties": false
+    },
+    "TMX": {
+      "type": "object",
+      "description": "Multi-Phenomenology Threat Matrix",
+      "properties": {
+        "RUN_ID": {
+          "type": "string",
+          "description": "Unique run identifier for this threat matrix assessment.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "CREATED_UTC": {
+          "type": "string",
+          "description": "Creation timestamp of this chunk/run, RFC 3339 UTC.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "WINDOW_START": {
+          "type": "string",
+          "description": "Inclusive analysis window start, RFC 3339 UTC.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "WINDOW_END": {
+          "type": "string",
+          "description": "Exclusive analysis window end, RFC 3339 UTC.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "PROPAGATOR": {
+          "$ref": "#/definitions/tmxPropagatorKind",
+          "description": "Ephemeris propagator theory used for this run.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "Not stated."
+            },
+            "SDN_AP": {
+              "value": 1,
+              "description": "SDN advanced propagator (propagator/sdn-ap)."
+            },
+            "SGP4_XP": {
+              "value": 2,
+              "description": "SGP4-XP propagator (propagator/sgp4-xp)."
+            },
+            "SGP4": {
+              "value": 3,
+              "description": "Classic SGP4 propagator (propagator/sgp4)."
+            }
+          },
+          "x-flatbuffer-default": "SDN_AP"
+        },
+        "PROPAGATOR_ID": {
+          "type": "string",
+          "description": "Canonical propagator module identifier.",
+          "x-flatbuffer-type": "string"
+        },
+        "EXECUTION_HOST": {
+          "$ref": "#/definitions/tmxExecutionHostKind",
+          "description": "Execution host that computed this matrix.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "Not stated."
+            },
+            "BROWSER_LOCAL": {
+              "value": 1,
+              "description": "Executed locally in browser WebAssembly / SharedArrayBuffer workers."
+            },
+            "SDN_COMPUTE_NODE": {
+              "value": 2,
+              "description": "Executed remotely on an SDN WasmEdge compute node."
+            }
+          },
+          "x-flatbuffer-default": "BROWSER_LOCAL"
+        },
+        "SCORING_PROFILE_ID": {
+          "type": "string",
+          "description": "Deterministic scoring profile identifier.",
+          "x-flatbuffer-type": "string"
+        },
+        "CHUNK_INDEX": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Zero-based streaming chunk index for progressive delivery.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "IS_FINAL_CHUNK": {
+          "type": "boolean",
+          "description": "True on the final chunk of a streamed matrix run.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "true"
+        },
+        "REQUEST": {
+          "$ref": "#/definitions/TMXRequest",
+          "description": "Originating TMXRequest configuration for reproducibility.",
+          "x-flatbuffer-type": "TMXRequest"
+        },
+        "PHENOMENOLOGY_WEIGHTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TMXPhenomenologyWeight"
+          },
+          "description": "Configured phenomenology weights and severity thresholds.",
+          "x-flatbuffer-type": "[TMXPhenomenologyWeight]"
+        },
+        "COMPOUND_MULTIPLIERS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TMXCompoundRule"
+          },
+          "description": "Configured compound overlap multiplier/bonus rules.",
+          "x-flatbuffer-type": "[TMXCompoundRule]"
+        },
+        "TARGET_BUCKETS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TMXBucket"
+          },
+          "description": "Target aggregation buckets included in this run.",
+          "x-flatbuffer-type": "[TMXBucket]"
+        },
+        "PHENOMENOLOGIES_RUN": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TMXModuleRun"
+          },
+          "description": "Per-phenomenology module execution records.",
+          "x-flatbuffer-type": "[TMXModuleRun]"
+        },
+        "CELLS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TMXCell"
+          },
+          "description": "Evaluated matrix cells (bucket x phenomenology).",
+          "x-flatbuffer-type": "[TMXCell]"
+        },
+        "COMPOUND_EVENTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TMXCompoundEvent"
+          },
+          "description": "Detected multi-phenomenology compound overlap events.",
+          "x-flatbuffer-type": "[TMXCompoundEvent]"
+        },
+        "ROLLUPS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TMXRollup"
+          },
+          "description": "Deterministic composite rollups per bucket.",
+          "x-flatbuffer-type": "[TMXRollup]"
+        }
+      },
+      "required": [
+        "RUN_ID",
+        "CREATED_UTC",
+        "WINDOW_START",
+        "WINDOW_END"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/TMX",
+  "x-flatbuffer-root-type": "TMX",
+  "x-flatbuffer-file-identifier": "$TMX"
+}

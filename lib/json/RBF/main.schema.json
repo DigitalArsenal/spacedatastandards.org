@@ -1,0 +1,285 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "pvnSourceKind" : {
+      "type" : "string",
+      "enum": ["Unspecified", "ElementSet", "Ephemeris", "Observation", "Reference"]
+    },
+    "pvnLicenseClass" : {
+      "type" : "string",
+      "enum": ["Unspecified", "Reproducible", "CiteOnly", "ShareAlike", "NonCommercial"]
+    },
+    "rbfModelKind" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "AE9_AP9_CLASS", "GIRE3_JOSE_CLASS", "SALAMMBO_CLASS", "VOYAGER_EMPIRICAL", "IO_PLASMA_TORUS", "CUSTOM"]
+    },
+    "rbfParticleSpecies" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "ELECTRON", "PROTON", "ALPHA", "HEAVY_ION", "OXYGEN_ION", "SULFUR_ION"]
+    },
+    "rbfFluxKind" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "OMNIDIRECTIONAL_INTEGRAL", "OMNIDIRECTIONAL_DIFFERENTIAL", "UNIDIRECTIONAL_DIFFERENTIAL", "PLASMA_DENSITY"]
+    },
+    "rbfStructureKind" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "IO_TORUS", "MOON_SWEEP_GAP", "RING_ABSORPTION_GAP", "SLOT_REGION"]
+    },
+    "PVN" : {
+      "type" : "object",
+      "description" : "Product Provenance",
+      "properties" : {
+        "SOURCE_ID" : {
+                "type" : "string",
+                "description" : "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+              },
+        "SOURCE_KIND" : {
+                "$ref" : "#/definitions/pvnSourceKind",
+                "description" : "What kind of data the source supplies."
+              },
+        "ORIGINATOR" : {
+                "type" : "string",
+                "description" : "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+              },
+        "PROVIDER_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+              },
+        "PRODUCER" : {
+                "type" : "string",
+                "description" : "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+              },
+        "LICENSE_CLASS" : {
+                "$ref" : "#/definitions/pvnLicenseClass",
+                "description" : "What the source's terms permit for the product."
+              },
+        "LICENSE_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+              },
+        "LINEAGE" : {
+                "type" : "string",
+                "description" : "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+              },
+        "SOURCE_URL" : {
+                "type" : "string",
+                "description" : "Replayable URL or provider query identifying the source material as it\nwas retrieved (the SOURCE_URL of $CMR and $AVL)."
+              },
+        "SOURCE_VERSION" : {
+                "type" : "string",
+                "description" : "Source revision, edition or upstream update marker verbatim: for a file\nits originator stamps, the stamp."
+              },
+        "RETRIEVED_AT" : {
+                "type" : "string",
+                "description" : "RFC 3339 UTC fixed-millisecond time the source material was retrieved."
+              },
+        "SOURCE_SHA256" : {
+                "type" : "string",
+                "description" : "SHA-256 of the exact source payload bytes as retrieved, 64 lowercase\nhexadecimal characters. Empty when the source cannot expose replayable\nbytes."
+              },
+        "SOURCE_BYTES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
+              },
+        "PRODUCER_SHA256" : {
+                "type" : "string",
+                "description" : "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RBFStructureFeature" : {
+      "type" : "object",
+      "description" : "Radial magnetospheric feature (torus, moon sweep gap, ring absorption, or slot region).",
+      "properties" : {
+        "KIND" : {
+                "$ref" : "#/definitions/rbfStructureKind",
+                "description" : "Feature classification."
+              },
+        "FEATURE_NAME" : {
+                "type" : "string",
+                "description" : "Descriptive feature name (e.g. \"IO_TORUS\", \"EUROPA_SWEEP\", \"MAIN_RINGS\")."
+              },
+        "RADIAL_MIN_RB" : {
+                "type" : "number",
+                "description" : "Inner radial boundary in planetary radii (R_b)."
+              },
+        "RADIAL_MAX_RB" : {
+                "type" : "number",
+                "description" : "Outer radial boundary in planetary radii (R_b)."
+              },
+        "ATTENUATION_FACTOR" : {
+                "type" : "number",
+                "description" : "Multiplicative flux attenuation (or enhancement) factor in this feature."
+              }
+      },
+      "required" : ["FEATURE_NAME"],
+      "additionalProperties" : false
+    },
+    "RBFSaaContour" : {
+      "type" : "object",
+      "description" : "Computed South Atlantic Anomaly (or planetary magnetic anomaly) iso-flux contour.",
+      "properties" : {
+        "CONTOUR_ID" : {
+                "type" : "string",
+                "description" : "Stable contour identifier."
+              },
+        "ALTITUDE_KM" : {
+                "type" : "number",
+                "description" : "Reference geodetic/planetodetic altitude in km."
+              },
+        "FLUX_THRESHOLD" : {
+                "type" : "number",
+                "description" : "Flux threshold defining this contour boundary."
+              },
+        "FLUX_UNITS" : {
+                "type" : "string",
+                "description" : "Physical units of FLUX_THRESHOLD and PEAK_FLUX."
+              },
+        "LATITUDES_DEG" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Ordered polygon vertex latitudes in degrees."
+              },
+        "LONGITUDES_DEG" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Ordered polygon vertex longitudes in degrees."
+              },
+        "PEAK_FLUX" : {
+                "type" : "number",
+                "description" : "Peak flux inside the anomaly contour."
+              },
+        "PEAK_LAT_DEG" : {
+                "type" : "number",
+                "description" : "Latitude of peak anomaly flux in degrees."
+              },
+        "PEAK_LON_DEG" : {
+                "type" : "number",
+                "description" : "Longitude of peak anomaly flux in degrees."
+              }
+      },
+      "required" : ["CONTOUR_ID"],
+      "additionalProperties" : false
+    },
+    "RBF" : {
+      "type" : "object",
+      "description" : "Radiation Belt Flux",
+      "properties" : {
+        "RBF_ID" : {
+                "type" : "string",
+                "description" : "Unique identifier of this radiation belt flux record."
+              },
+        "BODY_NAME" : {
+                "type" : "string",
+                "description" : "CCSDS SANA central body name (e.g. \"EARTH\", \"JUPITER\", \"SATURN\", \"URANUS\", \"NEPTUNE\")."
+              },
+        "BODY_NAIF_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "NAIF SPICE body identifier (e.g. 399, 599, 699, 799, 899)."
+              },
+        "MODEL" : {
+                "$ref" : "#/definitions/rbfModelKind",
+                "description" : "Radiation belt model family."
+              },
+        "MODEL_VERSION" : {
+                "type" : "string",
+                "description" : "Model version or edition string."
+              },
+        "MAG_MODEL_ID" : {
+                "type" : "string",
+                "description" : "Underlying planetary magnetic field model identifier."
+              },
+        "REFERENCE_FRAME" : {
+                "type" : "string",
+                "description" : "Body-fixed coordinate frame identifier."
+              },
+        "SPECIES" : {
+                "$ref" : "#/definitions/rbfParticleSpecies",
+                "description" : "Particle species tabulated in FLUX_GRID."
+              },
+        "FLUX_TYPE" : {
+                "$ref" : "#/definitions/rbfFluxKind",
+                "description" : "Flux or plasma density representation kind."
+              },
+        "UNITS" : {
+                "type" : "string",
+                "description" : "Physical units string for FLUX_GRID (e.g. \"cm^-2 s^-1\", \"cm^-2 s^-1 MeV^-1 sr^-1\", \"cm^-3\")."
+              },
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Valid epoch for the model state, RFC 3339 UTC."
+              },
+        "KP" : {
+                "type" : "number",
+                "description" : "Geomagnetic Kp index driving the model state (meaningful when HAS_KP is true)."
+              },
+        "HAS_KP" : {
+                "type" : "boolean",
+                "description" : "True when KP was supplied to the model."
+              },
+        "DST_NT" : {
+                "type" : "number",
+                "description" : "Disturbance storm time index Dst in nT (meaningful when HAS_DST_NT is true)."
+              },
+        "HAS_DST_NT" : {
+                "type" : "boolean",
+                "description" : "True when DST_NT was supplied to the model."
+              },
+        "F107" : {
+                "type" : "number",
+                "description" : "10.7 cm solar radio flux F10.7 in sfu (meaningful when HAS_F107 is true)."
+              },
+        "HAS_F107" : {
+                "type" : "boolean",
+                "description" : "True when F107 was supplied to the model."
+              },
+        "SOLAR_WIND_PRESSURE_NPA" : {
+                "type" : "number",
+                "description" : "Solar wind dynamic pressure in nPa (meaningful when HAS_SOLAR_WIND_PRESSURE is true)."
+              },
+        "HAS_SOLAR_WIND_PRESSURE" : {
+                "type" : "boolean",
+                "description" : "True when SOLAR_WIND_PRESSURE_NPA was supplied to the model."
+              },
+        "QUANTILE_PCT" : {
+                "type" : "number",
+                "description" : "Statistical percentile/quantile for probabilistic belt models (0..100, default median 50.0)."
+              },
+        "L_SHELLS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "McIlwain L-shell grid coordinates in planetary radii."
+              },
+        "ENERGY_MEV" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Particle kinetic energy grid coordinates in MeV."
+              },
+        "B_OVER_B0" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Magnetic field ratio B/B0 grid coordinates along field lines."
+              },
+        "FLUX_GRID" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Flattened row-major flux values indexed by [L, E, B/B0]."
+              },
+        "STRUCTURES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/RBFStructureFeature"},
+                "description" : "Magnetospheric structures (tori, moon sweep gaps, ring absorption, slot region)."
+              },
+        "SAA_CONTOURS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/RBFSaaContour"},
+                "description" : "Computed anomaly contours (e.g. South Atlantic Anomaly at reference altitudes)."
+              },
+        "SPACE_WEATHER_REFS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Referenced $SWS or $SPW space-weather record identifiers."
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/PVN",
+                "description" : "Record-level source and build provenance."
+              }
+      },
+      "required" : ["RBF_ID", "BODY_NAME", "UNITS", "EPOCH", "PROVENANCE"],
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/RBF"
+}

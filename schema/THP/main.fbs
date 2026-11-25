@@ -1,0 +1,156 @@
+// Hash: c314205ddddf74b2d2ebd27fcc731b810b8143f86086e03d29185739bc645fe6
+// Version: 1.293.0
+// -----------------------------------END_HEADER
+// Threat Profile (THP)
+// Description
+// Canonical threat profile defining an adversary, environmental, or interference threat lane
+// referenced by $TMX assessments. Existing SDS platform, emitter, site, or radiation records
+// are referenced by ($SCHEMA_FILE_ID, RECORD_ID) rather than duplicated. Carries explicit
+// provenance ($PVN), certainty level, and access tier for policy-gated distribution.
+
+include "../PVN/main.fbs";
+
+/// Primary threat phenomenology category. Append new values only.
+enum thpThreatCategory : byte {
+  /// Not stated.
+  UNSPECIFIED = 0,
+  /// Co-orbital / rendezvous & proximity operations threat.
+  CO_ORBITAL = 1,
+  /// Direct-ascent anti-satellite threat.
+  DIRECT_ASCENT = 2,
+  /// RF jamming or electronic warfare threat.
+  RF_JAMMER = 3,
+  /// GNSS denial or spoofing threat.
+  GNSS_DENIAL = 4,
+  /// Optical or RF directed-energy threat.
+  DIRECTED_ENERGY = 5,
+  /// Space weather or planetary radiation threat.
+  SPACE_WEATHER = 6,
+  /// ISR / tracking custody threat.
+  ISR_CUSTODY = 7,
+  /// Ground segment or cyber threat.
+  GROUND_CYBER = 8
+}
+
+/// Epistemic certainty of the stated threat parameter or profile. Append new values only.
+enum thpCertaintyLevel : byte {
+  /// Not stated.
+  UNSPECIFIED = 0,
+  /// Directly measured from empirical observations.
+  MEASURED = 1,
+  /// Published in authoritative open or operator sources.
+  PUBLISHED = 2,
+  /// Derived from kinematic or physical bounding limits.
+  KINEMATIC_BOUND = 3,
+  /// Analyst-stated what-if or parametric scenario assumption.
+  STATED_WHATIF = 4,
+  /// Redacted or restricted; not public.
+  NOT_PUBLIC = 5
+}
+
+/// Access policy tier for threat lane distribution. Append new values only.
+enum thpAccessTier : byte {
+  /// Openly accessible without restriction.
+  OPEN = 0,
+  /// Commercial subscription tier.
+  COMMERCIAL = 1,
+  /// Government or restricted authorization tier.
+  GOVERNMENT = 2
+}
+
+/// Value representation kind for a typed threat parameter. Append new values only.
+enum thpParamValueKind : byte {
+  /// Not stated.
+  UNSPECIFIED = 0,
+  /// Numeric scalar in NUMERIC_VALUE.
+  SCALAR_DOUBLE = 1,
+  /// Textual value in TEXT_VALUE.
+  TEXT = 2,
+  /// Boolean value in BOOL_VALUE.
+  BOOLEAN = 3
+}
+
+/// Provenance and classification metadata for a threat parameter.
+table THPProvenance {
+  /// URI or canonical source identifier for this parameter.
+  SOURCE_URI:string (required);
+  /// Publication or revision date, ISO 8601 UTC.
+  PUBLISHED_DATE:string;
+  /// Epistemic certainty level of the parameter value.
+  CERTAINTY:thpCertaintyLevel = UNSPECIFIED;
+  /// Access tier governing visibility of this parameter.
+  ACCESS_TIER:thpAccessTier = OPEN;
+  /// Optional full $PVN provenance block.
+  RECORD_PROVENANCE:PVN;
+  /// Explanatory analyst notes.
+  NOTES:string;
+}
+
+/// Typed reference to an existing SDS record without duplicating its fields.
+table THPReference {
+  /// Four-character SDS file identifier including "$", e.g. "$OMM", "$RFB", "$SIT".
+  SCHEMA_FILE_ID:string (required);
+  /// Canonical identifier of the referenced record within that standard.
+  RECORD_ID:string (required);
+  /// Optional catalog number when the referenced record targets a cataloged object.
+  NORAD_CAT_ID:uint;
+  /// Optional content identifier pinning exact immutable record bytes.
+  CID:string;
+  /// Role of the referenced record in this threat profile (e.g. "PLATFORM", "EMITTER", "SITE").
+  ROLE:string;
+}
+
+/// One typed capability or environmental threshold parameter on a threat profile.
+table THPParameter {
+  /// Canonical parameter key (e.g. "ALTITUDE_CAP_KM", "EIRP_DBW", "LASER_WAVELENGTH_NM").
+  PARAM_KEY:string (required);
+  /// Discriminator naming which value field is populated.
+  VALUE_KIND:thpParamValueKind = SCALAR_DOUBLE;
+  /// Numeric parameter value when VALUE_KIND is SCALAR_DOUBLE.
+  NUMERIC_VALUE:double;
+  /// String parameter value when VALUE_KIND is TEXT.
+  TEXT_VALUE:string;
+  /// Boolean parameter value when VALUE_KIND is BOOLEAN.
+  BOOL_VALUE:bool;
+  /// Physical units string for numeric values (e.g. "km", "dBW", "MHz", "nm").
+  UNITS:string;
+  /// Parameter-level provenance and certainty.
+  PROVENANCE:THPProvenance (required);
+}
+
+/// Threat Profile
+table THP {
+  /// Stable identifier of this threat profile.
+  THP_ID:string (required);
+  /// Human-readable display name of the threat profile.
+  NAME:string (required);
+  /// Summary description of the threat profile and scope.
+  DESCRIPTION:string;
+  /// Threat phenomenology category.
+  CATEGORY:thpThreatCategory = UNSPECIFIED;
+  /// Minimum access tier required to consume this threat profile.
+  ACCESS_TIER:thpAccessTier = OPEN;
+  /// True when the threat profile is active for screening runs.
+  ACTIVE:bool = true;
+  /// Four-character SDS file identifier including "$" of the primary linked record.
+  LINKED_SCHEMA:string;
+  /// Canonical record identifier of the primary linked SDS record.
+  LINKED_RECORD_ID:string;
+  /// Optional NORAD catalog number of the primary linked space object.
+  LINKED_NORAD_CAT_ID:uint;
+  /// Additional linked SDS records referenced by ($SCHEMA_FILE_ID, RECORD_ID).
+  ADDITIONAL_REFS:[THPReference];
+  /// Typed capability and threshold parameters with per-parameter provenance.
+  PARAMETERS:[THPParameter];
+  /// Record-level source and build provenance.
+  PROVENANCE:PVN (required);
+  /// Creation timestamp, RFC 3339 UTC.
+  CREATED_AT:string;
+  /// Last update timestamp, RFC 3339 UTC.
+  UPDATED_AT:string;
+  /// Optional Ed25519 signature bytes over the canonical threat lane payload.
+  SIGNATURE:[ubyte];
+}
+
+root_type THP;
+file_identifier "$THP";

@@ -1,0 +1,175 @@
+// Hash: 1e52b8392c69d911cb5983219ea734ace213675f34b46d61828d0bf7a1bbfb48
+// Version: 1.293.0
+// -----------------------------------END_HEADER
+// Radiation Belt Flux (RBF)
+// Description
+// Multi-body planetary trapped radiation belt flux grid, plasma torus, moon/ring sweep gap
+// features, and computed South Atlantic Anomaly (SAA) contours. Supports Earth (AE9/AP9-class),
+// Jupiter (GIRE3/JOSE-class + Io torus), Saturn (Salammbo-class), Uranus/Neptune (Voyager
+// empirical), and space-weather-driven dynamic updates, with explicit provenance ($PVN).
+// Computes flux only; spacecraft and crew dose/effects live in $RDE.
+
+include "../PVN/main.fbs";
+
+/// Radiation belt empirical or physical model family. Append new values only.
+enum rbfModelKind : byte {
+  /// Not stated.
+  UNSPECIFIED = 0,
+  /// Earth trapped electron/proton AE9/AP9-class model.
+  AE9_AP9_CLASS = 1,
+  /// Jovian GIRE3/JOSE-class radiation belt model.
+  GIRE3_JOSE_CLASS = 2,
+  /// Saturnian Salammbo-class radiation belt model.
+  SALAMMBO_CLASS = 3,
+  /// Ice-giant Voyager empirical trapped radiation model.
+  VOYAGER_EMPIRICAL = 4,
+  /// Io plasma torus density and heavy-ion environment model.
+  IO_PLASMA_TORUS = 5,
+  /// Custom or externally supplied flux table.
+  CUSTOM = 6
+}
+
+/// Trapped particle species. Append new values only.
+enum rbfParticleSpecies : byte {
+  /// Not stated.
+  UNSPECIFIED = 0,
+  /// Trapped electrons.
+  ELECTRON = 1,
+  /// Trapped protons.
+  PROTON = 2,
+  /// Alpha particles (He2+).
+  ALPHA = 3,
+  /// Heavy ions (aggregate Z > 2).
+  HEAVY_ION = 4,
+  /// Oxygen ions (e.g. Jovian/Saturnian magnetosphere).
+  OXYGEN_ION = 5,
+  /// Sulfur ions (e.g. Io plasma torus).
+  SULFUR_ION = 6
+}
+
+/// Physical representation of the tabulated flux or density quantity. Append new values only.
+enum rbfFluxKind : byte {
+  /// Not stated.
+  UNSPECIFIED = 0,
+  /// Omnidirectional integral flux above energy threshold E (cm^-2 s^-1).
+  OMNIDIRECTIONAL_INTEGRAL = 1,
+  /// Omnidirectional differential flux at energy E (cm^-2 s^-1 MeV^-1).
+  OMNIDIRECTIONAL_DIFFERENTIAL = 2,
+  /// Unidirectional differential flux (cm^-2 s^-1 MeV^-1 sr^-1).
+  UNIDIRECTIONAL_DIFFERENTIAL = 3,
+  /// Cold or warm plasma number density (cm^-3).
+  PLASMA_DENSITY = 4
+}
+
+/// Localized magnetospheric structure modifying belt flux. Append new values only.
+enum rbfStructureKind : byte {
+  /// Not stated.
+  UNSPECIFIED = 0,
+  /// Volcanic plasma torus (e.g. Io torus).
+  IO_TORUS = 1,
+  /// Radial depletion gap swept out by a planetary moon.
+  MOON_SWEEP_GAP = 2,
+  /// Particle absorption gap caused by planetary rings.
+  RING_ABSORPTION_GAP = 3,
+  /// Electron slot region between inner and outer belts.
+  SLOT_REGION = 4
+}
+
+/// Radial magnetospheric feature (torus, moon sweep gap, ring absorption, or slot region).
+table RBFStructureFeature {
+  /// Feature classification.
+  KIND:rbfStructureKind = UNSPECIFIED;
+  /// Descriptive feature name (e.g. "IO_TORUS", "EUROPA_SWEEP", "MAIN_RINGS").
+  FEATURE_NAME:string (required);
+  /// Inner radial boundary in planetary radii (R_b).
+  RADIAL_MIN_RB:double;
+  /// Outer radial boundary in planetary radii (R_b).
+  RADIAL_MAX_RB:double;
+  /// Multiplicative flux attenuation (or enhancement) factor in this feature.
+  ATTENUATION_FACTOR:double;
+}
+
+/// Computed South Atlantic Anomaly (or planetary magnetic anomaly) iso-flux contour.
+table RBFSaaContour {
+  /// Stable contour identifier.
+  CONTOUR_ID:string (required);
+  /// Reference geodetic/planetodetic altitude in km.
+  ALTITUDE_KM:double;
+  /// Flux threshold defining this contour boundary.
+  FLUX_THRESHOLD:double;
+  /// Physical units of FLUX_THRESHOLD and PEAK_FLUX.
+  FLUX_UNITS:string;
+  /// Ordered polygon vertex latitudes in degrees.
+  LATITUDES_DEG:[double];
+  /// Ordered polygon vertex longitudes in degrees.
+  LONGITUDES_DEG:[double];
+  /// Peak flux inside the anomaly contour.
+  PEAK_FLUX:double;
+  /// Latitude of peak anomaly flux in degrees.
+  PEAK_LAT_DEG:double;
+  /// Longitude of peak anomaly flux in degrees.
+  PEAK_LON_DEG:double;
+}
+
+/// Radiation Belt Flux
+table RBF {
+  /// Unique identifier of this radiation belt flux record.
+  RBF_ID:string (required);
+  /// CCSDS SANA central body name (e.g. "EARTH", "JUPITER", "SATURN", "URANUS", "NEPTUNE").
+  BODY_NAME:string (required);
+  /// NAIF SPICE body identifier (e.g. 399, 599, 699, 799, 899).
+  BODY_NAIF_ID:int;
+  /// Radiation belt model family.
+  MODEL:rbfModelKind = UNSPECIFIED;
+  /// Model version or edition string.
+  MODEL_VERSION:string;
+  /// Underlying planetary magnetic field model identifier.
+  MAG_MODEL_ID:string;
+  /// Body-fixed coordinate frame identifier.
+  REFERENCE_FRAME:string;
+  /// Particle species tabulated in FLUX_GRID.
+  SPECIES:rbfParticleSpecies = UNSPECIFIED;
+  /// Flux or plasma density representation kind.
+  FLUX_TYPE:rbfFluxKind = UNSPECIFIED;
+  /// Physical units string for FLUX_GRID (e.g. "cm^-2 s^-1", "cm^-2 s^-1 MeV^-1 sr^-1", "cm^-3").
+  UNITS:string (required);
+  /// Valid epoch for the model state, RFC 3339 UTC.
+  EPOCH:string (required);
+  /// Geomagnetic Kp index driving the model state (meaningful when HAS_KP is true).
+  KP:double;
+  /// True when KP was supplied to the model.
+  HAS_KP:bool = false;
+  /// Disturbance storm time index Dst in nT (meaningful when HAS_DST_NT is true).
+  DST_NT:double;
+  /// True when DST_NT was supplied to the model.
+  HAS_DST_NT:bool = false;
+  /// 10.7 cm solar radio flux F10.7 in sfu (meaningful when HAS_F107 is true).
+  F107:double;
+  /// True when F107 was supplied to the model.
+  HAS_F107:bool = false;
+  /// Solar wind dynamic pressure in nPa (meaningful when HAS_SOLAR_WIND_PRESSURE is true).
+  SOLAR_WIND_PRESSURE_NPA:double;
+  /// True when SOLAR_WIND_PRESSURE_NPA was supplied to the model.
+  HAS_SOLAR_WIND_PRESSURE:bool = false;
+  /// Statistical percentile/quantile for probabilistic belt models (0..100, default median 50.0).
+  QUANTILE_PCT:double = 50.0;
+  /// McIlwain L-shell grid coordinates in planetary radii.
+  L_SHELLS:[double];
+  /// Particle kinetic energy grid coordinates in MeV.
+  ENERGY_MEV:[double];
+  /// Magnetic field ratio B/B0 grid coordinates along field lines.
+  B_OVER_B0:[double];
+  /// Flattened row-major flux values indexed by [L, E, B/B0].
+  FLUX_GRID:[double];
+  /// Magnetospheric structures (tori, moon sweep gaps, ring absorption, slot region).
+  STRUCTURES:[RBFStructureFeature];
+  /// Computed anomaly contours (e.g. South Atlantic Anomaly at reference altitudes).
+  SAA_CONTOURS:[RBFSaaContour];
+  /// Referenced $SWS or $SPW space-weather record identifiers.
+  SPACE_WEATHER_REFS:[string];
+  /// Record-level source and build provenance.
+  PROVENANCE:PVN (required);
+}
+
+root_type RBF;
+file_identifier "$RBF";

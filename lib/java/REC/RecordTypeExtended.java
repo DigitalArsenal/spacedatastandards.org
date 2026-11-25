@@ -58,4 +58,9 @@ public final class RecordTypeExtended {
   public static final int COA = 298;
   public static final int SLO = 299;
   public static final int UST = 300;
+  public static final int THP = 301;
+  public static final int TMX = 302;
+  public static final int DCO = 303;
+  public static final int RBF = 304;
+  public static final int RDE = 305;
 }

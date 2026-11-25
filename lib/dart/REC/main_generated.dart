@@ -63,6 +63,7 @@ import '../CVR/main_generated.dart';
 import '../CZM/main_generated.dart';
 import '../DAV/main_generated.dart';
 import '../DCL/main_generated.dart';
+import '../DCO/main_generated.dart';
 import '../DFH/main_generated.dart';
 import '../DMG/main_generated.dart';
 import '../DOA/main_generated.dart';
@@ -206,8 +207,10 @@ import '../PVN/main_generated.dart';
 import '../QEM/main_generated.dart';
 import '../QRP/main_generated.dart';
 import '../RAF/main_generated.dart';
+import '../RBF/main_generated.dart';
 import '../RBK/main_generated.dart';
 import '../RCF/main_generated.dart';
+import '../RDE/main_generated.dart';
 import '../RDM/main_generated.dart';
 import '../RDO/main_generated.dart';
 import '../REM/main_generated.dart';
@@ -277,11 +280,13 @@ import '../TCF/main_generated.dart';
 import '../TCT/main_generated.dart';
 import '../TDM/main_generated.dart';
 import '../TFN/main_generated.dart';
+import '../THP/main_generated.dart';
 import '../TIM/main_generated.dart';
 import '../TKG/main_generated.dart';
 import '../TME/main_generated.dart';
 import '../TMF/main_generated.dart';
 import '../TMS/main_generated.dart';
+import '../TMX/main_generated.dart';
 import '../TNR/main_generated.dart';
 import '../TPN/main_generated.dart';
 import '../TRE/main_generated.dart';
@@ -915,7 +920,12 @@ enum RecordTypeExtended {
   DRB(297),
   COA(298),
   SLO(299),
-  UST(300);
+  UST(300),
+  THP(301),
+  TMX(302),
+  DCO(303),
+  RBF(304),
+  RDE(305);
 
   final int value;
   const RecordTypeExtended(this.value);
@@ -968,6 +978,11 @@ enum RecordTypeExtended {
       case 298: return RecordTypeExtended.COA;
       case 299: return RecordTypeExtended.SLO;
       case 300: return RecordTypeExtended.UST;
+      case 301: return RecordTypeExtended.THP;
+      case 302: return RecordTypeExtended.TMX;
+      case 303: return RecordTypeExtended.DCO;
+      case 304: return RecordTypeExtended.RBF;
+      case 305: return RecordTypeExtended.RDE;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -976,7 +991,7 @@ enum RecordTypeExtended {
       value == null ? null : RecordTypeExtended.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 300;
+  static const int maxValue = 305;
   static const fb.Reader<RecordTypeExtended> reader = _RecordTypeExtendedReader();
 }
 

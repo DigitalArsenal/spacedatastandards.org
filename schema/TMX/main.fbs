@@ -1,0 +1,352 @@
+// Hash: 6586bba00539948a7d9c3643133a815e03f900567a24fccdf552b81b08ab6dba
+// Version: 1.293.0
+// -----------------------------------END_HEADER
+// Multi-Phenomenology Threat Matrix (TMX)
+// Description
+// Canonical multi-phenomenology threat assessment request and output matrix covering orbital
+// kinetic conjunctions, co-orbital RPO, direct-ascent ASAT, RF/EW/GNSS interference, optical
+// directed energy, space environment/radiation, and ground custody/cyber threats. Uses
+// deterministic integer basis-point (0..10000) scoring and fixed compound rules for bit-identical
+// cross-runtime parity across Browser WASM and WasmEdge, while referencing underlying SDS records
+// by ($SCHEMA_FILE_ID, RECORD_ID).
+
+/// Threat phenomenology axis evaluated in the matrix. Append new values only.
+enum tmxPhenomenologyKind : byte {
+  /// Not stated.
+  UNSPECIFIED = 0,
+  /// Orbital kinetic conjunctions.
+  ORBITAL_KINETIC = 1,
+  /// Co-orbital / rendezvous & proximity operations.
+  CO_ORBITAL_RPO = 2,
+  /// Direct-ascent anti-satellite reach.
+  DIRECT_ASCENT_ASAT = 3,
+  /// RF jamming, electronic warfare, and GNSS denial.
+  RF_EW_GNSS = 4,
+  /// Optical / laser directed energy.
+  OPTICAL_DIRECTED_ENERGY = 5,
+  /// Space weather, drag storm, solar flare/SEP, and planetary radiation.
+  SPACE_ENV_RADIATION = 6,
+  /// Ground custody tracking and cyber/gateway exposure.
+  GROUND_CUSTODY_CYBER = 7
+}
+
+/// Deterministic severity tier for matrix cells, compound events, and rollups. Append new values only.
+enum tmxSeverityLevel : byte {
+  /// Phenomenology could not be evaluated.
+  UNAVAILABLE = 0,
+  /// Evaluated within nominal thresholds.
+  NOMINAL = 1,
+  /// Elevated threat warranting monitoring.
+  WATCH = 2,
+  /// High threat warranting defensive COA preparation.
+  HIGH = 3,
+  /// Critical threat requiring immediate mitigation.
+  CRITICAL = 4
+}
+
+/// Compute host that executed the threat matrix assessment. Append new values only.
+enum tmxExecutionHostKind : byte {
+  /// Not stated.
+  UNSPECIFIED = 0,
+  /// Executed locally in browser WebAssembly / SharedArrayBuffer workers.
+  BROWSER_LOCAL = 1,
+  /// Executed remotely on an SDN WasmEdge compute node.
+  SDN_COMPUTE_NODE = 2
+}
+
+/// Execution status of a single phenomenology module within a matrix run. Append new values only.
+enum tmxModuleRunStatus : byte {
+  /// Not stated.
+  UNSPECIFIED = 0,
+  /// Module completed all targets cleanly.
+  OK = 1,
+  /// Module completed a subset of targets or inputs.
+  PARTIAL = 2,
+  /// Module unavailable or missing required inputs.
+  UNAVAILABLE = 3,
+  /// Module or lane restricted by access tier / policy.
+  NOT_PUBLIC = 4
+}
+
+/// Aggregation bucket granularity in the threat matrix. Append new values only.
+enum tmxBucketKind : byte {
+  /// Not stated.
+  UNSPECIFIED = 0,
+  /// Whole constellation bucket.
+  CONSTELLATION = 1,
+  /// Orbital shell bucket.
+  SHELL = 2,
+  /// Orbital plane bucket.
+  PLANE = 3,
+  /// Individual space object / asset bucket.
+  ASSET = 4,
+  /// Ground gateway or site bucket.
+  GATEWAY = 5
+}
+
+/// Ephemeris propagator family used for the run. Append new values only.
+enum tmxPropagatorKind : byte {
+  /// Not stated.
+  UNSPECIFIED = 0,
+  /// SDN advanced propagator (propagator/sdn-ap).
+  SDN_AP = 1,
+  /// SGP4-XP propagator (propagator/sgp4-xp).
+  SGP4_XP = 2,
+  /// Classic SGP4 propagator (propagator/sgp4).
+  SGP4 = 3
+}
+
+/// Epistemic certainty floor across supporting events in a cell. Append new values only.
+enum tmxCertaintyLevel : byte {
+  /// Not stated.
+  UNSPECIFIED = 0,
+  /// Directly measured.
+  MEASURED = 1,
+  /// Authoritative published data.
+  PUBLISHED = 2,
+  /// Derived from kinematic bounds.
+  KINEMATIC_BOUND = 3,
+  /// Analyst-stated what-if override.
+  STATED_WHATIF = 4,
+  /// Redacted or restricted; not public.
+  NOT_PUBLIC = 5
+}
+
+/// Invocation request payload carried inside $PIV (PIVRequest.INPUTS) or local execution.
+table TMXRequest {
+  /// Unique identifier of this matrix evaluation request.
+  REQUEST_ID:string (required);
+  /// Target scope selector (e.g. constellation name, group, or "CUSTOM").
+  TARGET_SCOPE:string (required);
+  /// Explicit NORAD catalog numbers requested for screening.
+  TARGET_NORAD_CAT_IDS:[uint];
+  /// Entity group ($EGP) identifiers requested for screening.
+  GROUP_IDS:[string];
+  /// Catalog revision or snapshot identifier pinned for parity.
+  CATALOG_REVISION:string;
+  /// Inclusive analysis window start, RFC 3339 UTC.
+  WINDOW_START:string (required);
+  /// Exclusive analysis window end, RFC 3339 UTC.
+  WINDOW_END:string (required);
+  /// Selected propagator theory.
+  PROPAGATOR:tmxPropagatorKind = SDN_AP;
+  /// Canonical propagator module identifier (e.g. "propagator/sdn-ap").
+  PROPAGATOR_ID:string;
+  /// Target execution host kind.
+  EXECUTION_HOST:tmxExecutionHostKind = BROWSER_LOCAL;
+  /// Subset of phenomenologies to evaluate; empty requests all 7.
+  PHENOMENOLOGIES_REQUESTED:[tmxPhenomenologyKind];
+  /// Threat profile identifiers ($THP.THP_ID) to include.
+  THP_IDS:[string];
+  /// Content identifiers pinning exact $THP payloads.
+  THP_CIDS:[string];
+  /// Named deterministic scoring profile identifier.
+  SCORING_PROFILE_ID:string;
+  /// True to synthesize and attach defensive COAs alongside matrix output.
+  INCLUDE_COAS:bool = true;
+  /// Optional serialized parameter overrides for analyst what-if runs.
+  WHAT_IF_OVERRIDES_JSON:string;
+}
+
+/// Target aggregation bucket (constellation, shell, plane, asset, or gateway).
+table TMXBucket {
+  /// Stable identifier of this bucket within the matrix run.
+  BUCKET_ID:string (required);
+  /// Optional parent bucket identifier in the hierarchy.
+  PARENT_BUCKET_ID:string;
+  /// Granularity kind of this bucket.
+  BUCKET_KIND:tmxBucketKind = UNSPECIFIED;
+  /// Human-readable bucket label.
+  LABEL:string (required);
+  /// Number of assets represented by this bucket.
+  ASSET_COUNT:uint;
+  /// Member NORAD catalog numbers when enumerated.
+  NORAD_CAT_IDS:[uint];
+  /// Minimum shell altitude in km.
+  ALTITUDE_MIN_KM:double;
+  /// Maximum shell altitude in km.
+  ALTITUDE_MAX_KM:double;
+  /// Representative orbital inclination in degrees.
+  INCLINATION_DEG:double;
+}
+
+/// Deterministic weight and severity thresholds for one phenomenology (in basis points 0..10000).
+table TMXPhenomenologyWeight {
+  /// Phenomenology configured by this entry.
+  PHENOMENOLOGY:tmxPhenomenologyKind = UNSPECIFIED;
+  /// Composite rollup weight in basis points (nominal sum across evaluated phenomenologies = 10000).
+  WEIGHT_BPS:uint16;
+  /// Score threshold in basis points for CRITICAL tier.
+  CRITICAL_THRESHOLD_BPS:uint16 = 8000;
+  /// Score threshold in basis points for HIGH tier.
+  HIGH_THRESHOLD_BPS:uint16 = 5000;
+  /// Score threshold in basis points for WATCH tier.
+  WATCH_THRESHOLD_BPS:uint16 = 2000;
+}
+
+/// Deterministic compound-overlap scoring rule across co-occurring phenomenologies.
+table TMXCompoundRule {
+  /// Stable rule identifier.
+  RULE_ID:string (required);
+  /// Set of phenomenologies whose temporal/spatial overlap triggers this rule.
+  PHENOMENOLOGIES:[tmxPhenomenologyKind];
+  /// Additive bonus in basis points (0..2500).
+  BONUS_BPS:uint16;
+  /// Multiplicative factor in basis points (e.g. 10000 = 1.00x, 12500 = 1.25x).
+  MULTIPLIER_BPS:uint16;
+}
+
+/// Execution telemetry and attribution for one phenomenology analyzer in this run.
+table TMXModuleRun {
+  /// Phenomenology axis produced by this module.
+  PHENOMENOLOGY:tmxPhenomenologyKind = UNSPECIFIED;
+  /// Canonical module identifier (e.g. "analysis/asat-reach").
+  MODULE_ID:string (required);
+  /// Module semantic version string.
+  MODULE_VERSION:string;
+  /// Lowercase hex SHA-256 of the executed portable WASM artifact.
+  WASM_SHA256:string;
+  /// Outcome status of this module invocation.
+  STATUS:tmxModuleRunStatus = UNSPECIFIED;
+  /// Measured execution wall time in milliseconds.
+  WALL_TIME_MS:uint32;
+  /// Explicit refusal or degradation reason when STATUS is not OK.
+  REFUSAL_REASON:string;
+}
+
+/// Reference to a supporting underlying SDS record without duplicating its payload.
+table TMXRecordRef {
+  /// Four-character SDS file identifier including "$", e.g. "$CDM", "$ACW", "$RFL", "$RDE", "$THP".
+  SCHEMA_FILE_ID:string (required);
+  /// Record identifier within the referenced SDS standard.
+  RECORD_ID:string (required);
+  /// Optional NORAD catalog number associated with the event.
+  NORAD_CAT_ID:uint;
+  /// Event epoch or peak timestamp, RFC 3339 UTC.
+  EPOCH:string;
+  /// Primary metric label (e.g. "MISS_DISTANCE_KM", "DOSE_MSV_H", "J_S_DB").
+  METRIC_LABEL:string;
+  /// Primary metric numeric value.
+  METRIC_VALUE:double;
+  /// Physical units string for METRIC_VALUE.
+  METRIC_UNITS:string;
+}
+
+/// Single (bucket x phenomenology) cell in the threat matrix.
+table TMXCell {
+  /// Target bucket identifier referencing TMXBucket.BUCKET_ID.
+  BUCKET_ID:string (required);
+  /// Phenomenology axis for this cell.
+  PHENOMENOLOGY:tmxPhenomenologyKind = UNSPECIFIED;
+  /// Categorical severity tier for this cell.
+  SEVERITY_TIER:tmxSeverityLevel = UNAVAILABLE;
+  /// Deterministic fixed-point severity score in basis points (0..10000).
+  PHENOMENOLOGY_SCORE:uint16;
+  /// Count of unique assets exposed in this cell.
+  EXPOSED_ASSET_COUNT:uint;
+  /// Peak simultaneous exposed asset count over the window.
+  PEAK_SIMULTANEOUS_COUNT:uint;
+  /// Earliest threat onset timestamp in the window, RFC 3339 UTC.
+  EARLIEST_ONSET_UTC:string;
+  /// Total accumulated exposure duration in minutes.
+  TOTAL_EXPOSURE_MIN:double;
+  /// Compact human-readable worst-case metric summary.
+  WORST_METRIC_SUMMARY:string;
+  /// Minimum epistemic certainty across contributing threat inputs.
+  CERTAINTY_FLOOR:tmxCertaintyLevel = UNSPECIFIED;
+  /// Underlying SDS event references supporting this cell.
+  EVENT_REFS:[TMXRecordRef];
+}
+
+/// Overlapping multi-phenomenology compound threat event on an asset, site, or bucket.
+table TMXCompoundEvent {
+  /// Stable identifier of this compound overlap event.
+  COMPOUND_ID:string (required);
+  /// Bucket identifier where the overlap occurs.
+  BUCKET_ID:string (required);
+  /// Optional NORAD catalog number of the affected asset.
+  NORAD_CAT_ID:uint;
+  /// Optional ground site or gateway identifier.
+  SITE_ID:string;
+  /// Co-occurring phenomenologies participating in the overlap.
+  PHENOMENOLOGIES:[tmxPhenomenologyKind];
+  /// Member SDS event references forming this compound event.
+  MEMBER_EVENT_REFS:[TMXRecordRef];
+  /// Inclusive overlap window start, RFC 3339 UTC.
+  OVERLAP_START_UTC:string (required);
+  /// Exclusive overlap window end, RFC 3339 UTC.
+  OVERLAP_END_UTC:string (required);
+  /// Applied compound multiplier in basis points.
+  COMPOUND_MULTIPLIER_BPS:uint16;
+  /// Applied compound bonus in basis points.
+  COMPOUND_BONUS_BPS:uint16;
+  /// Final deterministic combined score in basis points (0..10000).
+  COMBINED_SCORE:uint16;
+  /// Resulting categorical severity tier.
+  SEVERITY_TIER:tmxSeverityLevel = WATCH;
+}
+
+/// Deterministic composite rollup across all evaluated phenomenologies for a bucket.
+table TMXRollup {
+  /// Target bucket identifier referencing TMXBucket.BUCKET_ID.
+  BUCKET_ID:string (required);
+  /// Worst severity tier observed across evaluated phenomenologies.
+  WORST_TIER:tmxSeverityLevel = UNAVAILABLE;
+  /// Final composite score in basis points (0..10000).
+  COMPOSITE_SCORE:uint16;
+  /// Pre-bonus weighted average score in basis points (0..10000).
+  BASE_WEIGHTED_SCORE:uint16;
+  /// Compound overlap bonus applied in basis points.
+  COMPOUND_BONUS_APPLIED_BPS:uint16;
+  /// Number of phenomenologies successfully evaluated for this bucket.
+  EVALUATED_COUNT:ubyte;
+  /// Total phenomenology axes configured in the matrix.
+  TOTAL_PHENOMENOLOGIES:ubyte = 7;
+  /// Coverage string such as "7/7".
+  COVERAGE_RATIO:string;
+  /// Highest-severity underlying SDS event references for quick drill-down.
+  TOP_THREAT_REFS:[TMXRecordRef];
+}
+
+/// Multi-Phenomenology Threat Matrix
+table TMX {
+  /// Unique run identifier for this threat matrix assessment.
+  RUN_ID:string (required);
+  /// Creation timestamp of this chunk/run, RFC 3339 UTC.
+  CREATED_UTC:string (required);
+  /// Inclusive analysis window start, RFC 3339 UTC.
+  WINDOW_START:string (required);
+  /// Exclusive analysis window end, RFC 3339 UTC.
+  WINDOW_END:string (required);
+  /// Ephemeris propagator theory used for this run.
+  PROPAGATOR:tmxPropagatorKind = SDN_AP;
+  /// Canonical propagator module identifier.
+  PROPAGATOR_ID:string;
+  /// Execution host that computed this matrix.
+  EXECUTION_HOST:tmxExecutionHostKind = BROWSER_LOCAL;
+  /// Deterministic scoring profile identifier.
+  SCORING_PROFILE_ID:string;
+  /// Zero-based streaming chunk index for progressive delivery.
+  CHUNK_INDEX:uint32;
+  /// True on the final chunk of a streamed matrix run.
+  IS_FINAL_CHUNK:bool = true;
+  /// Originating TMXRequest configuration for reproducibility.
+  REQUEST:TMXRequest;
+  /// Configured phenomenology weights and severity thresholds.
+  PHENOMENOLOGY_WEIGHTS:[TMXPhenomenologyWeight];
+  /// Configured compound overlap multiplier/bonus rules.
+  COMPOUND_MULTIPLIERS:[TMXCompoundRule];
+  /// Target aggregation buckets included in this run.
+  TARGET_BUCKETS:[TMXBucket];
+  /// Per-phenomenology module execution records.
+  PHENOMENOLOGIES_RUN:[TMXModuleRun];
+  /// Evaluated matrix cells (bucket x phenomenology).
+  CELLS:[TMXCell];
+  /// Detected multi-phenomenology compound overlap events.
+  COMPOUND_EVENTS:[TMXCompoundEvent];
+  /// Deterministic composite rollups per bucket.
+  ROLLUPS:[TMXRollup];
+}
+
+root_type TMX;
+file_identifier "$TMX";

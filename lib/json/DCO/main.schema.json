@@ -1,0 +1,174 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "dcoActionKind" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "MANEUVER_AVOID", "MANEUVER_PHASE_SHIFT", "MANEUVER_ALTITUDE_CHANGE", "RF_FREQ_HOP", "RF_NULL_STEER", "RF_POWER_BOOST", "RF_BEAM_NARROW", "GATEWAY_REROUTE", "SENSOR_SHUTTER_OR_SLEW", "SAFE_MODE_PREEMPT", "TRACK_TASKING_SURGE", "RIDE_OUT"]
+    },
+    "dcoSeverityLevel" : {
+      "type" : "string",
+      "enum": ["UNAVAILABLE", "NOMINAL", "WATCH", "HIGH", "CRITICAL"]
+    },
+    "dcoRecheckOutcome" : {
+      "type" : "string",
+      "enum": ["UNCHECKED", "CLEAR", "CONFLICTS_FOUND", "SECONDARY_THREAT_FOUND", "INFEASIBLE"]
+    },
+    "DCOThreatRef" : {
+      "type" : "object",
+      "description" : "Reference to a threat record, matrix bucket, or compound event addressed or introduced.",
+      "properties" : {
+        "SCHEMA_FILE_ID" : {
+                "type" : "string",
+                "description" : "Four-character SDS file identifier including \"$\", e.g. \"$TMX\", \"$CDM\", \"$RFL\", \"$RDE\"."
+              },
+        "RECORD_ID" : {
+                "type" : "string",
+                "description" : "Record identifier within the referenced standard."
+              },
+        "BUCKET_ID" : {
+                "type" : "string",
+                "description" : "Optional $TMX bucket identifier."
+              },
+        "COMPOUND_ID" : {
+                "type" : "string",
+                "description" : "Optional $TMX compound event identifier."
+              },
+        "NORAD_CAT_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Optional NORAD catalog number of the affected space object."
+              }
+      },
+      "required" : ["SCHEMA_FILE_ID", "RECORD_ID"],
+      "additionalProperties" : false
+    },
+    "DCOModuleAttribution" : {
+      "type" : "object",
+      "description" : "Attribution linking a computed trade metric to the exact WASM module build that produced it.",
+      "properties" : {
+        "METRIC_NAME" : {
+                "type" : "string",
+                "description" : "Name of the computed metric (e.g. \"DELTA_V_MPS\", \"MARGIN_GAIN_DB\", \"RESIDUAL_SCORE\")."
+              },
+        "MODULE_ID" : {
+                "type" : "string",
+                "description" : "Canonical module identifier (e.g. \"analysis/coa-synthesizer\")."
+              },
+        "MODULE_VERSION" : {
+                "type" : "string",
+                "description" : "Module semantic version string."
+              },
+        "WASM_SHA256" : {
+                "type" : "string",
+                "description" : "Lowercase hex SHA-256 of the executed portable WASM artifact."
+              }
+      },
+      "required" : ["METRIC_NAME", "MODULE_ID"],
+      "additionalProperties" : false
+    },
+    "DCO" : {
+      "type" : "object",
+      "description" : "Defensive COA Trade & Conflict-Recheck",
+      "properties" : {
+        "DCO_ID" : {
+                "type" : "string",
+                "description" : "Unique identifier of this defensive COA evaluation record."
+              },
+        "COA_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the input $COA record ($COA.ID)."
+              },
+        "TMX_RUN_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the $TMX assessment run ($TMX.RUN_ID)."
+              },
+        "CREATED_UTC" : {
+                "type" : "string",
+                "description" : "Evaluation timestamp, RFC 3339 UTC."
+              },
+        "THREAT_REF" : {
+                "$ref" : "#/definitions/DCOThreatRef",
+                "description" : "Primary threat or compound event answered by this COA."
+              },
+        "ACTION_KIND" : {
+                "$ref" : "#/definitions/dcoActionKind",
+                "description" : "Specific defensive action modeled in this evaluation."
+              },
+        "NORAD_CAT_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "NORAD catalog number of the defended object (0 when GROUP_ID is used)."
+              },
+        "GROUP_ID" : {
+                "type" : "string",
+                "description" : "Entity group identifier ($EGP.GROUP_ID) when the COA applies to a group."
+              },
+        "DELTA_V_MPS" : {
+                "type" : "number",
+                "description" : "Computed maneuver delta-v cost in m/s."
+              },
+        "PROPELLANT_KG" : {
+                "type" : "number",
+                "description" : "Computed propellant mass consumed in kg."
+              },
+        "MISSION_LIFE_DAYS" : {
+                "type" : "number",
+                "description" : "Estimated mission life impact in days."
+              },
+        "OUTAGE_HOURS" : {
+                "type" : "number",
+                "description" : "Service or payload outage duration in hours."
+              },
+        "COVERAGE_IMPACT_PCT" : {
+                "type" : "number",
+                "description" : "Constellation or regional coverage impact in percent."
+              },
+        "MARGIN_GAIN_DB" : {
+                "type" : "number",
+                "description" : "RF link margin gain achieved in dB."
+              },
+        "EXPOSURE_REDUCED_MIN" : {
+                "type" : "number",
+                "description" : "Threat exposure time reduced in minutes."
+              },
+        "BASELINE_SCORE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Baseline severity score before the COA in basis points (0..10000)."
+              },
+        "RESIDUAL_SCORE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Residual severity score after applying the COA in basis points (0..10000)."
+              },
+        "RESIDUAL_TIER" : {
+                "$ref" : "#/definitions/dcoSeverityLevel",
+                "description" : "Residual severity tier after applying the COA."
+              },
+        "CONFLICTS_WITH_COA_IDS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Identifiers of other $COA records that conflict with this action."
+              },
+        "SECONDARY_THREATS_INTRODUCED" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/DCOThreatRef"},
+                "description" : "Secondary threats introduced by this action (e.g. post-maneuver conjunction or drag)."
+              },
+        "RECHECKED" : {
+                "type" : "boolean",
+                "description" : "True once full multi-phenomenology conflict re-screening has been executed."
+              },
+        "RECHECK_STATUS" : {
+                "$ref" : "#/definitions/dcoRecheckOutcome",
+                "description" : "Outcome status of the multi-phenomenology conflict re-screen."
+              },
+        "RECHECK_NOTES" : {
+                "type" : "string",
+                "description" : "Human-readable diagnostics from conflict re-screening."
+              },
+        "ATTRIBUTIONS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/DCOModuleAttribution"},
+                "description" : "Per-metric module provenance attributions."
+              }
+      },
+      "required" : ["DCO_ID", "COA_ID", "TMX_RUN_ID", "CREATED_UTC", "THREAT_REF"],
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/DCO"
+}

@@ -1,5 +1,5 @@
-// Hash: fe48fdac3de91079d2899f8027fb5ea42a6b1a874fb955a4b63d0b4eb5aa0780
-// Version: 1.287.0
+// Hash: 281d8c6b11e99b9ddafc579a13562085ac5f8b6b622d6221afa6b392fc4e2755
+// Version: 1.287.1
 // -----------------------------------END_HEADER
 // Course of Action (COA)
 // Description
@@ -24,7 +24,17 @@ enum coaKind : byte {
   /// No action: the event is accepted.
   RIDE_OUT = 2,
   /// STEPS, in order, restore service after the event.
-  RECOVERY = 3
+  RECOVERY = 3,
+  /// RF countermeasure (frequency hop, null steer, power boost, beam narrow).
+  RF_COUNTERMEASURE = 4,
+  /// Traffic / TT&C / payload gateway reroute.
+  GATEWAY_REROUTE = 5,
+  /// Optical / star-tracker / sensor shuttering or slew protection.
+  SENSOR_PROTECTION = 6,
+  /// Preemptive spacecraft safe-mode entry (e.g. severe SEP/storm).
+  SAFE_MODE = 7,
+  /// Surge or tasking of tracking / custody sensors.
+  TRACK_TASKING = 8
 }
 
 /// One step of a course of action.

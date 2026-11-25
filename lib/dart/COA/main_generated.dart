@@ -11,7 +11,12 @@ enum coaKind {
   UNSPECIFIED(0),
   MANEUVER(1),
   RIDE_OUT(2),
-  RECOVERY(3);
+  RECOVERY(3),
+  RF_COUNTERMEASURE(4),
+  GATEWAY_REROUTE(5),
+  SENSOR_PROTECTION(6),
+  SAFE_MODE(7),
+  TRACK_TASKING(8);
 
   final int value;
   const coaKind(this.value);
@@ -22,6 +27,11 @@ enum coaKind {
       case 1: return coaKind.MANEUVER;
       case 2: return coaKind.RIDE_OUT;
       case 3: return coaKind.RECOVERY;
+      case 4: return coaKind.RF_COUNTERMEASURE;
+      case 5: return coaKind.GATEWAY_REROUTE;
+      case 6: return coaKind.SENSOR_PROTECTION;
+      case 7: return coaKind.SAFE_MODE;
+      case 8: return coaKind.TRACK_TASKING;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -30,7 +40,7 @@ enum coaKind {
       value == null ? null : coaKind.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 3;
+  static const int maxValue = 8;
   static const fb.Reader<coaKind> reader = _coaKindReader();
 }
 

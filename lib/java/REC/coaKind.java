@@ -23,8 +23,28 @@ public final class coaKind {
    * STEPS, in order, restore service after the event.
    */
   public static final byte RECOVERY = 3;
+  /**
+   * RF countermeasure (frequency hop, null steer, power boost, beam narrow).
+   */
+  public static final byte RF_COUNTERMEASURE = 4;
+  /**
+   * Traffic / TT&C / payload gateway reroute.
+   */
+  public static final byte GATEWAY_REROUTE = 5;
+  /**
+   * Optical / star-tracker / sensor shuttering or slew protection.
+   */
+  public static final byte SENSOR_PROTECTION = 6;
+  /**
+   * Preemptive spacecraft safe-mode entry (e.g. severe SEP/storm).
+   */
+  public static final byte SAFE_MODE = 7;
+  /**
+   * Surge or tasking of tracking / custody sensors.
+   */
+  public static final byte TRACK_TASKING = 8;
 
-  public static final String[] names = { "UNSPECIFIED", "MANEUVER", "RIDE_OUT", "RECOVERY", };
+  public static final String[] names = { "UNSPECIFIED", "MANEUVER", "RIDE_OUT", "RECOVERY", "RF_COUNTERMEASURE", "GATEWAY_REROUTE", "SENSOR_PROTECTION", "SAFE_MODE", "TRACK_TASKING", };
 
   public static String name(int e) { return names[e]; }
 }

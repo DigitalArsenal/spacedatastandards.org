@@ -91740,6 +91740,448 @@
             },
             "$ref": "#/definitions/ION"
         },
+        "RDE": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "pvnSourceKind": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "ElementSet",
+                        "Ephemeris",
+                        "Observation",
+                        "Reference"
+                    ]
+                },
+                "pvnLicenseClass": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "Reproducible",
+                        "CiteOnly",
+                        "ShareAlike",
+                        "NonCommercial"
+                    ]
+                },
+                "rdeShieldMaterial": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "ALUMINUM",
+                        "POLYETHYLENE",
+                        "TANTALUM",
+                        "WATER",
+                        "CARBON_COMPOSITE",
+                        "MULTI_MATERIAL",
+                        "CUSTOM"
+                    ]
+                },
+                "rdeShieldGeometry": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "SOLID_SPHERE",
+                        "HOLLOW_SPHERE",
+                        "SLAB",
+                        "SECTOR_TRACE"
+                    ]
+                },
+                "rdeEffectSeverity": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "NOMINAL",
+                        "ELEVATED",
+                        "WARNING",
+                        "CRITICAL"
+                    ]
+                },
+                "PVN": {
+                    "type": "object",
+                    "description": "Product Provenance",
+                    "properties": {
+                        "SOURCE_ID": {
+                            "type": "string",
+                            "description": "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+                        },
+                        "SOURCE_KIND": {
+                            "$ref": "#/definitions/pvnSourceKind",
+                            "description": "What kind of data the source supplies."
+                        },
+                        "ORIGINATOR": {
+                            "type": "string",
+                            "description": "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+                        },
+                        "PROVIDER_ID": {
+                            "type": "string",
+                            "description": "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+                        },
+                        "PRODUCER": {
+                            "type": "string",
+                            "description": "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+                        },
+                        "LICENSE_CLASS": {
+                            "$ref": "#/definitions/pvnLicenseClass",
+                            "description": "What the source's terms permit for the product."
+                        },
+                        "LICENSE_ID": {
+                            "type": "string",
+                            "description": "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+                        },
+                        "LINEAGE": {
+                            "type": "string",
+                            "description": "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+                        },
+                        "SOURCE_URL": {
+                            "type": "string",
+                            "description": "Replayable URL or provider query identifying the source material as it\nwas retrieved (the SOURCE_URL of $CMR and $AVL)."
+                        },
+                        "SOURCE_VERSION": {
+                            "type": "string",
+                            "description": "Source revision, edition or upstream update marker verbatim: for a file\nits originator stamps, the stamp."
+                        },
+                        "RETRIEVED_AT": {
+                            "type": "string",
+                            "description": "RFC 3339 UTC fixed-millisecond time the source material was retrieved."
+                        },
+                        "SOURCE_SHA256": {
+                            "type": "string",
+                            "description": "SHA-256 of the exact source payload bytes as retrieved, 64 lowercase\nhexadecimal characters. Empty when the source cannot expose replayable\nbytes."
+                        },
+                        "SOURCE_BYTES": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
+                        },
+                        "PRODUCER_SHA256": {
+                            "type": "string",
+                            "description": "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "RDEShielding": {
+                    "type": "object",
+                    "description": "Shielding configuration for dose and TID calculations.",
+                    "properties": {
+                        "MATERIAL": {
+                            "$ref": "#/definitions/rdeShieldMaterial",
+                            "description": "Primary shielding material class."
+                        },
+                        "MATERIAL_NAME": {
+                            "type": "string",
+                            "description": "Descriptive material or layup name when CUSTOM or MULTI_MATERIAL."
+                        },
+                        "GEOMETRY": {
+                            "$ref": "#/definitions/rdeShieldGeometry",
+                            "description": "Transport geometry approximation."
+                        },
+                        "THICKNESS_MM": {
+                            "type": "number",
+                            "description": "Shield thickness in millimeters."
+                        },
+                        "AREAL_DENSITY_G_CM2": {
+                            "type": "number",
+                            "description": "Areal mass density in g/cm^2."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "RDEShieldCurvePoint": {
+                    "type": "object",
+                    "description": "One point on a depth-dose shielding curve.",
+                    "properties": {
+                        "THICKNESS_MM": {
+                            "type": "number",
+                            "description": "Shield thickness in millimeters."
+                        },
+                        "AREAL_DENSITY_G_CM2": {
+                            "type": "number",
+                            "description": "Areal mass density in g/cm^2."
+                        },
+                        "DOSE_RATE_MSV_H": {
+                            "type": "number",
+                            "description": "Computed dose rate behind this thickness in mSv/h."
+                        },
+                        "TID_KRAD_SI": {
+                            "type": "number",
+                            "description": "Computed total ionizing dose over the window in krad(Si)."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "RDEPassDose": {
+                    "type": "object",
+                    "description": "Integrated radiation exposure for a single belt or SAA pass.",
+                    "properties": {
+                        "PASS_ID": {
+                            "type": "string",
+                            "description": "Unique pass identifier within the assessment window."
+                        },
+                        "START_UTC": {
+                            "type": "string",
+                            "description": "Pass entry timestamp, RFC 3339 UTC."
+                        },
+                        "END_UTC": {
+                            "type": "string",
+                            "description": "Pass exit timestamp, RFC 3339 UTC."
+                        },
+                        "IN_SAA": {
+                            "type": "boolean",
+                            "description": "True when the pass traverses the South Atlantic Anomaly."
+                        },
+                        "IN_BELT_CORE": {
+                            "type": "boolean",
+                            "description": "True when the pass traverses a primary trapped radiation belt core."
+                        },
+                        "PEAK_DOSE_RATE_MSV_H": {
+                            "type": "number",
+                            "description": "Peak instantaneous dose rate during the pass in mSv/h."
+                        },
+                        "INTEGRATED_DOSE_MSV": {
+                            "type": "number",
+                            "description": "Total integrated dose accumulated during the pass in mSv."
+                        },
+                        "PEAK_L_SHELL": {
+                            "type": "number",
+                            "description": "Peak McIlwain L-shell reached during the pass."
+                        }
+                    },
+                    "required": [
+                        "PASS_ID",
+                        "START_UTC",
+                        "END_UTC"
+                    ],
+                    "additionalProperties": false
+                },
+                "RDEElectronicsEffect": {
+                    "type": "object",
+                    "description": "Spacecraft electronics single-event effects (SEE) and total ionizing dose (TID) assessment.",
+                    "properties": {
+                        "DEVICE_PROFILE_ID": {
+                            "type": "string",
+                            "description": "Reference device or part hardness profile identifier."
+                        },
+                        "SEE_UPSET_RATE_PER_BIT_DAY": {
+                            "type": "number",
+                            "description": "Single-event upset rate in upsets/bit/day."
+                        },
+                        "SEL_PROBABILITY": {
+                            "type": "number",
+                            "description": "Single-event latchup probability over the assessment window (0..1)."
+                        },
+                        "SEB_SEGR_RISK": {
+                            "type": "number",
+                            "description": "Single-event burnout / gate rupture risk metric (0..1)."
+                        },
+                        "TID_KRAD_SI": {
+                            "type": "number",
+                            "description": "Total ionizing dose accumulated over the window in krad(Si)."
+                        },
+                        "TID_MARGIN_PCT": {
+                            "type": "number",
+                            "description": "Remaining TID design margin in percent."
+                        },
+                        "LET_THRESHOLD_MEV_CM2_MG": {
+                            "type": "number",
+                            "description": "Linear energy transfer threshold in MeV*cm^2/mg."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "RDECrewDose": {
+                    "type": "object",
+                    "description": "Human crew dosimetry and career limit tracking.",
+                    "properties": {
+                        "CREW_ID": {
+                            "type": "string",
+                            "description": "Crew member or mission role identifier."
+                        },
+                        "EFFECTIVE_DOSE_MSV": {
+                            "type": "number",
+                            "description": "Whole-body effective dose over the window in mSv."
+                        },
+                        "BLOOD_FORMING_ORGANS_MSV": {
+                            "type": "number",
+                            "description": "Blood-forming organs (BFO) dose in mSv."
+                        },
+                        "EYE_LENS_MSV": {
+                            "type": "number",
+                            "description": "Eye lens dose in mSv."
+                        },
+                        "SKIN_MSV": {
+                            "type": "number",
+                            "description": "Skin dose in mSv."
+                        },
+                        "CUMULATIVE_CAREER_MSV": {
+                            "type": "number",
+                            "description": "Updated cumulative career effective dose in mSv."
+                        },
+                        "CAREER_LIMIT_FRACTION": {
+                            "type": "number",
+                            "description": "Fraction of applicable career limit consumed (0..1+)."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "RDESepEffect": {
+                    "type": "object",
+                    "description": "Solar flare / solar energetic particle (SEP) asset impact entry.",
+                    "properties": {
+                        "SFE_EVENT_ID": {
+                            "type": "string",
+                            "description": "Referenced $SFE solar flare event identifier."
+                        },
+                        "NOAA_S_SCALE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "NOAA Solar Radiation Storm scale S1..S5 (0 if below S1)."
+                        },
+                        "FLARE_CLASS": {
+                            "type": "string",
+                            "description": "Soft X-ray flare class verbatim (e.g. \"X2.4\")."
+                        },
+                        "SEP_DOSE_MSV": {
+                            "type": "number",
+                            "description": "Additional SEP event dose in mSv."
+                        },
+                        "SOLAR_CELL_DEGRADATION_PCT": {
+                            "type": "number",
+                            "description": "Estimated solar array power degradation in percent."
+                        },
+                        "STAR_TRACKER_BLINDING_MIN": {
+                            "type": "number",
+                            "description": "Estimated star-tracker blinding duration in minutes."
+                        },
+                        "SUMMARY": {
+                            "type": "string",
+                            "description": "Concise human-readable impact summary."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "RDE": {
+                    "type": "object",
+                    "description": "Radiation Effects",
+                    "properties": {
+                        "RDE_ID": {
+                            "type": "string",
+                            "description": "Unique identifier of this radiation effects record."
+                        },
+                        "BODY_NAME": {
+                            "type": "string",
+                            "description": "CCSDS SANA central body name (e.g. \"EARTH\", \"JUPITER\", \"SATURN\")."
+                        },
+                        "BODY_NAIF_ID": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "NAIF SPICE body identifier (e.g. 399, 599, 699)."
+                        },
+                        "NORAD_CAT_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "NORAD catalog number of the target spacecraft (0 for uncataloged/crew trajectory)."
+                        },
+                        "OBJECT_ID": {
+                            "type": "string",
+                            "description": "International designator or object identifier."
+                        },
+                        "WINDOW_START": {
+                            "type": "string",
+                            "description": "Inclusive assessment window start, RFC 3339 UTC."
+                        },
+                        "WINDOW_END": {
+                            "type": "string",
+                            "description": "Exclusive assessment window end, RFC 3339 UTC."
+                        },
+                        "RBF_RECORD_IDS": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Referenced $RBF radiation belt flux record identifiers."
+                        },
+                        "SPACE_WEATHER_REFS": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Referenced $SWS or $SFE space-weather record identifiers."
+                        },
+                        "SHIELDING": {
+                            "$ref": "#/definitions/RDEShielding",
+                            "description": "Spacecraft or habitat shielding configuration."
+                        },
+                        "INSTANT_DOSE_RATE_MSV_H": {
+                            "type": "number",
+                            "description": "Instantaneous dose rate at WINDOW_START in mSv/h."
+                        },
+                        "ORBIT_AVG_DOSE_RATE_MSV_H": {
+                            "type": "number",
+                            "description": "Orbit-averaged dose rate over the assessment window in mSv/h."
+                        },
+                        "MISSION_DOSE_MSV": {
+                            "type": "number",
+                            "description": "Total mission/window dose in mSv."
+                        },
+                        "TID_KRAD_SI": {
+                            "type": "number",
+                            "description": "Total ionizing dose in silicon over the window in krad(Si)."
+                        },
+                        "EFFECT_SEVERITY": {
+                            "$ref": "#/definitions/rdeEffectSeverity",
+                            "description": "Overall effect severity classification."
+                        },
+                        "PASS_DOSES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/RDEPassDose"
+                            },
+                            "description": "Per-pass dose breakdown across belt and SAA transits."
+                        },
+                        "SHIELDING_CURVE": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/RDEShieldCurvePoint"
+                            },
+                            "description": "Depth-dose attenuation curve across shielding thicknesses."
+                        },
+                        "ELECTRONICS": {
+                            "$ref": "#/definitions/RDEElectronicsEffect",
+                            "description": "Electronics SEE and TID margin assessment."
+                        },
+                        "CREW": {
+                            "$ref": "#/definitions/RDECrewDose",
+                            "description": "Crew organ and career dose assessment when crewed."
+                        },
+                        "SEP_EFFECTS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/RDESepEffect"
+                            },
+                            "description": "Solar flare / SEP impact breakdown."
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/PVN",
+                            "description": "Record-level source and build provenance."
+                        }
+                    },
+                    "required": [
+                        "RDE_ID",
+                        "BODY_NAME",
+                        "WINDOW_START",
+                        "WINDOW_END",
+                        "PROVENANCE"
+                    ],
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/RDE"
+        },
         "EOP": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
@@ -93062,6 +93504,330 @@
                 }
             },
             "$ref": "#/definitions/FSB"
+        },
+        "THP": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "pvnSourceKind": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "ElementSet",
+                        "Ephemeris",
+                        "Observation",
+                        "Reference"
+                    ]
+                },
+                "pvnLicenseClass": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "Reproducible",
+                        "CiteOnly",
+                        "ShareAlike",
+                        "NonCommercial"
+                    ]
+                },
+                "thpThreatCategory": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "CO_ORBITAL",
+                        "DIRECT_ASCENT",
+                        "RF_JAMMER",
+                        "GNSS_DENIAL",
+                        "DIRECTED_ENERGY",
+                        "SPACE_WEATHER",
+                        "ISR_CUSTODY",
+                        "GROUND_CYBER"
+                    ]
+                },
+                "thpCertaintyLevel": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "MEASURED",
+                        "PUBLISHED",
+                        "KINEMATIC_BOUND",
+                        "STATED_WHATIF",
+                        "NOT_PUBLIC"
+                    ]
+                },
+                "thpAccessTier": {
+                    "type": "string",
+                    "enum": [
+                        "OPEN",
+                        "COMMERCIAL",
+                        "GOVERNMENT"
+                    ]
+                },
+                "thpParamValueKind": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "SCALAR_DOUBLE",
+                        "TEXT",
+                        "BOOLEAN"
+                    ]
+                },
+                "PVN": {
+                    "type": "object",
+                    "description": "Product Provenance",
+                    "properties": {
+                        "SOURCE_ID": {
+                            "type": "string",
+                            "description": "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+                        },
+                        "SOURCE_KIND": {
+                            "$ref": "#/definitions/pvnSourceKind",
+                            "description": "What kind of data the source supplies."
+                        },
+                        "ORIGINATOR": {
+                            "type": "string",
+                            "description": "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+                        },
+                        "PROVIDER_ID": {
+                            "type": "string",
+                            "description": "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+                        },
+                        "PRODUCER": {
+                            "type": "string",
+                            "description": "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+                        },
+                        "LICENSE_CLASS": {
+                            "$ref": "#/definitions/pvnLicenseClass",
+                            "description": "What the source's terms permit for the product."
+                        },
+                        "LICENSE_ID": {
+                            "type": "string",
+                            "description": "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+                        },
+                        "LINEAGE": {
+                            "type": "string",
+                            "description": "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+                        },
+                        "SOURCE_URL": {
+                            "type": "string",
+                            "description": "Replayable URL or provider query identifying the source material as it\nwas retrieved (the SOURCE_URL of $CMR and $AVL)."
+                        },
+                        "SOURCE_VERSION": {
+                            "type": "string",
+                            "description": "Source revision, edition or upstream update marker verbatim: for a file\nits originator stamps, the stamp."
+                        },
+                        "RETRIEVED_AT": {
+                            "type": "string",
+                            "description": "RFC 3339 UTC fixed-millisecond time the source material was retrieved."
+                        },
+                        "SOURCE_SHA256": {
+                            "type": "string",
+                            "description": "SHA-256 of the exact source payload bytes as retrieved, 64 lowercase\nhexadecimal characters. Empty when the source cannot expose replayable\nbytes."
+                        },
+                        "SOURCE_BYTES": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
+                        },
+                        "PRODUCER_SHA256": {
+                            "type": "string",
+                            "description": "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "THPProvenance": {
+                    "type": "object",
+                    "description": "Provenance and classification metadata for a threat parameter.",
+                    "properties": {
+                        "SOURCE_URI": {
+                            "type": "string",
+                            "description": "URI or canonical source identifier for this parameter."
+                        },
+                        "PUBLISHED_DATE": {
+                            "type": "string",
+                            "description": "Publication or revision date, ISO 8601 UTC."
+                        },
+                        "CERTAINTY": {
+                            "$ref": "#/definitions/thpCertaintyLevel",
+                            "description": "Epistemic certainty level of the parameter value."
+                        },
+                        "ACCESS_TIER": {
+                            "$ref": "#/definitions/thpAccessTier",
+                            "description": "Access tier governing visibility of this parameter."
+                        },
+                        "RECORD_PROVENANCE": {
+                            "$ref": "#/definitions/PVN",
+                            "description": "Optional full $PVN provenance block."
+                        },
+                        "NOTES": {
+                            "type": "string",
+                            "description": "Explanatory analyst notes."
+                        }
+                    },
+                    "required": [
+                        "SOURCE_URI"
+                    ],
+                    "additionalProperties": false
+                },
+                "THPReference": {
+                    "type": "object",
+                    "description": "Typed reference to an existing SDS record without duplicating its fields.",
+                    "properties": {
+                        "SCHEMA_FILE_ID": {
+                            "type": "string",
+                            "description": "Four-character SDS file identifier including \"$\", e.g. \"$OMM\", \"$RFB\", \"$SIT\"."
+                        },
+                        "RECORD_ID": {
+                            "type": "string",
+                            "description": "Canonical identifier of the referenced record within that standard."
+                        },
+                        "NORAD_CAT_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Optional catalog number when the referenced record targets a cataloged object."
+                        },
+                        "CID": {
+                            "type": "string",
+                            "description": "Optional content identifier pinning exact immutable record bytes."
+                        },
+                        "ROLE": {
+                            "type": "string",
+                            "description": "Role of the referenced record in this threat profile (e.g. \"PLATFORM\", \"EMITTER\", \"SITE\")."
+                        }
+                    },
+                    "required": [
+                        "SCHEMA_FILE_ID",
+                        "RECORD_ID"
+                    ],
+                    "additionalProperties": false
+                },
+                "THPParameter": {
+                    "type": "object",
+                    "description": "One typed capability or environmental threshold parameter on a threat profile.",
+                    "properties": {
+                        "PARAM_KEY": {
+                            "type": "string",
+                            "description": "Canonical parameter key (e.g. \"ALTITUDE_CAP_KM\", \"EIRP_DBW\", \"LASER_WAVELENGTH_NM\")."
+                        },
+                        "VALUE_KIND": {
+                            "$ref": "#/definitions/thpParamValueKind",
+                            "description": "Discriminator naming which value field is populated."
+                        },
+                        "NUMERIC_VALUE": {
+                            "type": "number",
+                            "description": "Numeric parameter value when VALUE_KIND is SCALAR_DOUBLE."
+                        },
+                        "TEXT_VALUE": {
+                            "type": "string",
+                            "description": "String parameter value when VALUE_KIND is TEXT."
+                        },
+                        "BOOL_VALUE": {
+                            "type": "boolean",
+                            "description": "Boolean parameter value when VALUE_KIND is BOOLEAN."
+                        },
+                        "UNITS": {
+                            "type": "string",
+                            "description": "Physical units string for numeric values (e.g. \"km\", \"dBW\", \"MHz\", \"nm\")."
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/THPProvenance",
+                            "description": "Parameter-level provenance and certainty."
+                        }
+                    },
+                    "required": [
+                        "PARAM_KEY",
+                        "PROVENANCE"
+                    ],
+                    "additionalProperties": false
+                },
+                "THP": {
+                    "type": "object",
+                    "description": "Threat Profile",
+                    "properties": {
+                        "THP_ID": {
+                            "type": "string",
+                            "description": "Stable identifier of this threat profile."
+                        },
+                        "NAME": {
+                            "type": "string",
+                            "description": "Human-readable display name of the threat profile."
+                        },
+                        "DESCRIPTION": {
+                            "type": "string",
+                            "description": "Summary description of the threat profile and scope."
+                        },
+                        "CATEGORY": {
+                            "$ref": "#/definitions/thpThreatCategory",
+                            "description": "Threat phenomenology category."
+                        },
+                        "ACCESS_TIER": {
+                            "$ref": "#/definitions/thpAccessTier",
+                            "description": "Minimum access tier required to consume this threat profile."
+                        },
+                        "ACTIVE": {
+                            "type": "boolean",
+                            "description": "True when the threat profile is active for screening runs."
+                        },
+                        "LINKED_SCHEMA": {
+                            "type": "string",
+                            "description": "Four-character SDS file identifier including \"$\" of the primary linked record."
+                        },
+                        "LINKED_RECORD_ID": {
+                            "type": "string",
+                            "description": "Canonical record identifier of the primary linked SDS record."
+                        },
+                        "LINKED_NORAD_CAT_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Optional NORAD catalog number of the primary linked space object."
+                        },
+                        "ADDITIONAL_REFS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/THPReference"
+                            },
+                            "description": "Additional linked SDS records referenced by ($SCHEMA_FILE_ID, RECORD_ID)."
+                        },
+                        "PARAMETERS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/THPParameter"
+                            },
+                            "description": "Typed capability and threshold parameters with per-parameter provenance."
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/PVN",
+                            "description": "Record-level source and build provenance."
+                        },
+                        "CREATED_AT": {
+                            "type": "string",
+                            "description": "Creation timestamp, RFC 3339 UTC."
+                        },
+                        "UPDATED_AT": {
+                            "type": "string",
+                            "description": "Last update timestamp, RFC 3339 UTC."
+                        },
+                        "SIGNATURE": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Optional Ed25519 signature bytes over the canonical threat lane payload."
+                        }
+                    },
+                    "required": [
+                        "THP_ID",
+                        "NAME",
+                        "PROVENANCE"
+                    ],
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/THP"
         },
         "PAP": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -111596,7 +112362,12 @@
                         "UNSPECIFIED",
                         "MANEUVER",
                         "RIDE_OUT",
-                        "RECOVERY"
+                        "RECOVERY",
+                        "RF_COUNTERMEASURE",
+                        "GATEWAY_REROUTE",
+                        "SENSOR_PROTECTION",
+                        "SAFE_MODE",
+                        "TRACK_TASKING"
                     ]
                 },
                 "COAStep": {
@@ -113858,6 +114629,372 @@
                 }
             },
             "$ref": "#/definitions/PHY"
+        },
+        "RBF": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "pvnSourceKind": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "ElementSet",
+                        "Ephemeris",
+                        "Observation",
+                        "Reference"
+                    ]
+                },
+                "pvnLicenseClass": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "Reproducible",
+                        "CiteOnly",
+                        "ShareAlike",
+                        "NonCommercial"
+                    ]
+                },
+                "rbfModelKind": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "AE9_AP9_CLASS",
+                        "GIRE3_JOSE_CLASS",
+                        "SALAMMBO_CLASS",
+                        "VOYAGER_EMPIRICAL",
+                        "IO_PLASMA_TORUS",
+                        "CUSTOM"
+                    ]
+                },
+                "rbfParticleSpecies": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "ELECTRON",
+                        "PROTON",
+                        "ALPHA",
+                        "HEAVY_ION",
+                        "OXYGEN_ION",
+                        "SULFUR_ION"
+                    ]
+                },
+                "rbfFluxKind": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "OMNIDIRECTIONAL_INTEGRAL",
+                        "OMNIDIRECTIONAL_DIFFERENTIAL",
+                        "UNIDIRECTIONAL_DIFFERENTIAL",
+                        "PLASMA_DENSITY"
+                    ]
+                },
+                "rbfStructureKind": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "IO_TORUS",
+                        "MOON_SWEEP_GAP",
+                        "RING_ABSORPTION_GAP",
+                        "SLOT_REGION"
+                    ]
+                },
+                "PVN": {
+                    "type": "object",
+                    "description": "Product Provenance",
+                    "properties": {
+                        "SOURCE_ID": {
+                            "type": "string",
+                            "description": "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+                        },
+                        "SOURCE_KIND": {
+                            "$ref": "#/definitions/pvnSourceKind",
+                            "description": "What kind of data the source supplies."
+                        },
+                        "ORIGINATOR": {
+                            "type": "string",
+                            "description": "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+                        },
+                        "PROVIDER_ID": {
+                            "type": "string",
+                            "description": "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+                        },
+                        "PRODUCER": {
+                            "type": "string",
+                            "description": "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+                        },
+                        "LICENSE_CLASS": {
+                            "$ref": "#/definitions/pvnLicenseClass",
+                            "description": "What the source's terms permit for the product."
+                        },
+                        "LICENSE_ID": {
+                            "type": "string",
+                            "description": "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+                        },
+                        "LINEAGE": {
+                            "type": "string",
+                            "description": "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+                        },
+                        "SOURCE_URL": {
+                            "type": "string",
+                            "description": "Replayable URL or provider query identifying the source material as it\nwas retrieved (the SOURCE_URL of $CMR and $AVL)."
+                        },
+                        "SOURCE_VERSION": {
+                            "type": "string",
+                            "description": "Source revision, edition or upstream update marker verbatim: for a file\nits originator stamps, the stamp."
+                        },
+                        "RETRIEVED_AT": {
+                            "type": "string",
+                            "description": "RFC 3339 UTC fixed-millisecond time the source material was retrieved."
+                        },
+                        "SOURCE_SHA256": {
+                            "type": "string",
+                            "description": "SHA-256 of the exact source payload bytes as retrieved, 64 lowercase\nhexadecimal characters. Empty when the source cannot expose replayable\nbytes."
+                        },
+                        "SOURCE_BYTES": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
+                        },
+                        "PRODUCER_SHA256": {
+                            "type": "string",
+                            "description": "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "RBFStructureFeature": {
+                    "type": "object",
+                    "description": "Radial magnetospheric feature (torus, moon sweep gap, ring absorption, or slot region).",
+                    "properties": {
+                        "KIND": {
+                            "$ref": "#/definitions/rbfStructureKind",
+                            "description": "Feature classification."
+                        },
+                        "FEATURE_NAME": {
+                            "type": "string",
+                            "description": "Descriptive feature name (e.g. \"IO_TORUS\", \"EUROPA_SWEEP\", \"MAIN_RINGS\")."
+                        },
+                        "RADIAL_MIN_RB": {
+                            "type": "number",
+                            "description": "Inner radial boundary in planetary radii (R_b)."
+                        },
+                        "RADIAL_MAX_RB": {
+                            "type": "number",
+                            "description": "Outer radial boundary in planetary radii (R_b)."
+                        },
+                        "ATTENUATION_FACTOR": {
+                            "type": "number",
+                            "description": "Multiplicative flux attenuation (or enhancement) factor in this feature."
+                        }
+                    },
+                    "required": [
+                        "FEATURE_NAME"
+                    ],
+                    "additionalProperties": false
+                },
+                "RBFSaaContour": {
+                    "type": "object",
+                    "description": "Computed South Atlantic Anomaly (or planetary magnetic anomaly) iso-flux contour.",
+                    "properties": {
+                        "CONTOUR_ID": {
+                            "type": "string",
+                            "description": "Stable contour identifier."
+                        },
+                        "ALTITUDE_KM": {
+                            "type": "number",
+                            "description": "Reference geodetic/planetodetic altitude in km."
+                        },
+                        "FLUX_THRESHOLD": {
+                            "type": "number",
+                            "description": "Flux threshold defining this contour boundary."
+                        },
+                        "FLUX_UNITS": {
+                            "type": "string",
+                            "description": "Physical units of FLUX_THRESHOLD and PEAK_FLUX."
+                        },
+                        "LATITUDES_DEG": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Ordered polygon vertex latitudes in degrees."
+                        },
+                        "LONGITUDES_DEG": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Ordered polygon vertex longitudes in degrees."
+                        },
+                        "PEAK_FLUX": {
+                            "type": "number",
+                            "description": "Peak flux inside the anomaly contour."
+                        },
+                        "PEAK_LAT_DEG": {
+                            "type": "number",
+                            "description": "Latitude of peak anomaly flux in degrees."
+                        },
+                        "PEAK_LON_DEG": {
+                            "type": "number",
+                            "description": "Longitude of peak anomaly flux in degrees."
+                        }
+                    },
+                    "required": [
+                        "CONTOUR_ID"
+                    ],
+                    "additionalProperties": false
+                },
+                "RBF": {
+                    "type": "object",
+                    "description": "Radiation Belt Flux",
+                    "properties": {
+                        "RBF_ID": {
+                            "type": "string",
+                            "description": "Unique identifier of this radiation belt flux record."
+                        },
+                        "BODY_NAME": {
+                            "type": "string",
+                            "description": "CCSDS SANA central body name (e.g. \"EARTH\", \"JUPITER\", \"SATURN\", \"URANUS\", \"NEPTUNE\")."
+                        },
+                        "BODY_NAIF_ID": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "NAIF SPICE body identifier (e.g. 399, 599, 699, 799, 899)."
+                        },
+                        "MODEL": {
+                            "$ref": "#/definitions/rbfModelKind",
+                            "description": "Radiation belt model family."
+                        },
+                        "MODEL_VERSION": {
+                            "type": "string",
+                            "description": "Model version or edition string."
+                        },
+                        "MAG_MODEL_ID": {
+                            "type": "string",
+                            "description": "Underlying planetary magnetic field model identifier."
+                        },
+                        "REFERENCE_FRAME": {
+                            "type": "string",
+                            "description": "Body-fixed coordinate frame identifier."
+                        },
+                        "SPECIES": {
+                            "$ref": "#/definitions/rbfParticleSpecies",
+                            "description": "Particle species tabulated in FLUX_GRID."
+                        },
+                        "FLUX_TYPE": {
+                            "$ref": "#/definitions/rbfFluxKind",
+                            "description": "Flux or plasma density representation kind."
+                        },
+                        "UNITS": {
+                            "type": "string",
+                            "description": "Physical units string for FLUX_GRID (e.g. \"cm^-2 s^-1\", \"cm^-2 s^-1 MeV^-1 sr^-1\", \"cm^-3\")."
+                        },
+                        "EPOCH": {
+                            "type": "string",
+                            "description": "Valid epoch for the model state, RFC 3339 UTC."
+                        },
+                        "KP": {
+                            "type": "number",
+                            "description": "Geomagnetic Kp index driving the model state (meaningful when HAS_KP is true)."
+                        },
+                        "HAS_KP": {
+                            "type": "boolean",
+                            "description": "True when KP was supplied to the model."
+                        },
+                        "DST_NT": {
+                            "type": "number",
+                            "description": "Disturbance storm time index Dst in nT (meaningful when HAS_DST_NT is true)."
+                        },
+                        "HAS_DST_NT": {
+                            "type": "boolean",
+                            "description": "True when DST_NT was supplied to the model."
+                        },
+                        "F107": {
+                            "type": "number",
+                            "description": "10.7 cm solar radio flux F10.7 in sfu (meaningful when HAS_F107 is true)."
+                        },
+                        "HAS_F107": {
+                            "type": "boolean",
+                            "description": "True when F107 was supplied to the model."
+                        },
+                        "SOLAR_WIND_PRESSURE_NPA": {
+                            "type": "number",
+                            "description": "Solar wind dynamic pressure in nPa (meaningful when HAS_SOLAR_WIND_PRESSURE is true)."
+                        },
+                        "HAS_SOLAR_WIND_PRESSURE": {
+                            "type": "boolean",
+                            "description": "True when SOLAR_WIND_PRESSURE_NPA was supplied to the model."
+                        },
+                        "QUANTILE_PCT": {
+                            "type": "number",
+                            "description": "Statistical percentile/quantile for probabilistic belt models (0..100, default median 50.0)."
+                        },
+                        "L_SHELLS": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "McIlwain L-shell grid coordinates in planetary radii."
+                        },
+                        "ENERGY_MEV": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Particle kinetic energy grid coordinates in MeV."
+                        },
+                        "B_OVER_B0": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Magnetic field ratio B/B0 grid coordinates along field lines."
+                        },
+                        "FLUX_GRID": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Flattened row-major flux values indexed by [L, E, B/B0]."
+                        },
+                        "STRUCTURES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/RBFStructureFeature"
+                            },
+                            "description": "Magnetospheric structures (tori, moon sweep gaps, ring absorption, slot region)."
+                        },
+                        "SAA_CONTOURS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/RBFSaaContour"
+                            },
+                            "description": "Computed anomaly contours (e.g. South Atlantic Anomaly at reference altitudes)."
+                        },
+                        "SPACE_WEATHER_REFS": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Referenced $SWS or $SPW space-weather record identifiers."
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/PVN",
+                            "description": "Record-level source and build provenance."
+                        }
+                    },
+                    "required": [
+                        "RBF_ID",
+                        "BODY_NAME",
+                        "UNITS",
+                        "EPOCH",
+                        "PROVENANCE"
+                    ],
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/RBF"
         },
         "REM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -129903,7 +131040,12 @@
                         "UNSPECIFIED",
                         "MANEUVER",
                         "RIDE_OUT",
-                        "RECOVERY"
+                        "RECOVERY",
+                        "RF_COUNTERMEASURE",
+                        "GATEWAY_REROUTE",
+                        "SENSOR_PROTECTION",
+                        "SAFE_MODE",
+                        "TRACK_TASKING"
                     ]
                 },
                 "ComModulationType": {
@@ -131551,6 +132693,44 @@
                         "InvalidRequest",
                         "IntegrationFailed",
                         "Failed"
+                    ]
+                },
+                "dcoActionKind": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "MANEUVER_AVOID",
+                        "MANEUVER_PHASE_SHIFT",
+                        "MANEUVER_ALTITUDE_CHANGE",
+                        "RF_FREQ_HOP",
+                        "RF_NULL_STEER",
+                        "RF_POWER_BOOST",
+                        "RF_BEAM_NARROW",
+                        "GATEWAY_REROUTE",
+                        "SENSOR_SHUTTER_OR_SLEW",
+                        "SAFE_MODE_PREEMPT",
+                        "TRACK_TASKING_SURGE",
+                        "RIDE_OUT"
+                    ]
+                },
+                "dcoSeverityLevel": {
+                    "type": "string",
+                    "enum": [
+                        "UNAVAILABLE",
+                        "NOMINAL",
+                        "WATCH",
+                        "HIGH",
+                        "CRITICAL"
+                    ]
+                },
+                "dcoRecheckOutcome": {
+                    "type": "string",
+                    "enum": [
+                        "UNCHECKED",
+                        "CLEAR",
+                        "CONFLICTS_FOUND",
+                        "SECONDARY_THREAT_FOUND",
+                        "INFEASIBLE"
                     ]
                 },
                 "ModuleType": {
@@ -134703,6 +135883,50 @@
                         "PEER_ABORT"
                     ]
                 },
+                "rbfModelKind": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "AE9_AP9_CLASS",
+                        "GIRE3_JOSE_CLASS",
+                        "SALAMMBO_CLASS",
+                        "VOYAGER_EMPIRICAL",
+                        "IO_PLASMA_TORUS",
+                        "CUSTOM"
+                    ]
+                },
+                "rbfParticleSpecies": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "ELECTRON",
+                        "PROTON",
+                        "ALPHA",
+                        "HEAVY_ION",
+                        "OXYGEN_ION",
+                        "SULFUR_ION"
+                    ]
+                },
+                "rbfFluxKind": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "OMNIDIRECTIONAL_INTEGRAL",
+                        "OMNIDIRECTIONAL_DIFFERENTIAL",
+                        "UNIDIRECTIONAL_DIFFERENTIAL",
+                        "PLASMA_DENSITY"
+                    ]
+                },
+                "rbfStructureKind": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "IO_TORUS",
+                        "MOON_SWEEP_GAP",
+                        "RING_ABSORPTION_GAP",
+                        "SLOT_REGION"
+                    ]
+                },
                 "rbkOperationCode": {
                     "type": "string",
                     "enum": [
@@ -134809,6 +136033,39 @@
                         "TRANSFER_BUFFER",
                         "STATUS_REPORT",
                         "PEER_ABORT"
+                    ]
+                },
+                "rdeShieldMaterial": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "ALUMINUM",
+                        "POLYETHYLENE",
+                        "TANTALUM",
+                        "WATER",
+                        "CARBON_COMPOSITE",
+                        "MULTI_MATERIAL",
+                        "CUSTOM"
+                    ]
+                },
+                "rdeShieldGeometry": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "SOLID_SPHERE",
+                        "HOLLOW_SPHERE",
+                        "SLAB",
+                        "SECTOR_TRACE"
+                    ]
+                },
+                "rdeEffectSeverity": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "NOMINAL",
+                        "ELEVATED",
+                        "WARNING",
+                        "CRITICAL"
                     ]
                 },
                 "reentryDisposition": {
@@ -136620,6 +137877,48 @@
                         "LAUNCH_PAD"
                     ]
                 },
+                "thpThreatCategory": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "CO_ORBITAL",
+                        "DIRECT_ASCENT",
+                        "RF_JAMMER",
+                        "GNSS_DENIAL",
+                        "DIRECTED_ENERGY",
+                        "SPACE_WEATHER",
+                        "ISR_CUSTODY",
+                        "GROUND_CYBER"
+                    ]
+                },
+                "thpCertaintyLevel": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "MEASURED",
+                        "PUBLISHED",
+                        "KINEMATIC_BOUND",
+                        "STATED_WHATIF",
+                        "NOT_PUBLIC"
+                    ]
+                },
+                "thpAccessTier": {
+                    "type": "string",
+                    "enum": [
+                        "OPEN",
+                        "COMMERCIAL",
+                        "GOVERNMENT"
+                    ]
+                },
+                "thpParamValueKind": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "SCALAR_DOUBLE",
+                        "TEXT",
+                        "BOOLEAN"
+                    ]
+                },
                 "FilterType": {
                     "type": "string",
                     "enum": [
@@ -136741,6 +138040,78 @@
                         "QUARTZ_OCXO",
                         "HYDROGEN_MASER",
                         "GPS_DISCIPLINED"
+                    ]
+                },
+                "tmxPhenomenologyKind": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "ORBITAL_KINETIC",
+                        "CO_ORBITAL_RPO",
+                        "DIRECT_ASCENT_ASAT",
+                        "RF_EW_GNSS",
+                        "OPTICAL_DIRECTED_ENERGY",
+                        "SPACE_ENV_RADIATION",
+                        "GROUND_CUSTODY_CYBER"
+                    ]
+                },
+                "tmxSeverityLevel": {
+                    "type": "string",
+                    "enum": [
+                        "UNAVAILABLE",
+                        "NOMINAL",
+                        "WATCH",
+                        "HIGH",
+                        "CRITICAL"
+                    ]
+                },
+                "tmxExecutionHostKind": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "BROWSER_LOCAL",
+                        "SDN_COMPUTE_NODE"
+                    ]
+                },
+                "tmxModuleRunStatus": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "OK",
+                        "PARTIAL",
+                        "UNAVAILABLE",
+                        "NOT_PUBLIC"
+                    ]
+                },
+                "tmxBucketKind": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "CONSTELLATION",
+                        "SHELL",
+                        "PLANE",
+                        "ASSET",
+                        "GATEWAY"
+                    ]
+                },
+                "tmxPropagatorKind": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "SDN_AP",
+                        "SGP4_XP",
+                        "SGP4"
+                    ]
+                },
+                "tmxCertaintyLevel": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "MEASURED",
+                        "PUBLISHED",
+                        "KINEMATIC_BOUND",
+                        "STATED_WHATIF",
+                        "NOT_PUBLIC"
                     ]
                 },
                 "trhHardwareKind": {
@@ -137723,7 +139094,12 @@
                         "DRB",
                         "COA",
                         "SLO",
-                        "UST"
+                        "UST",
+                        "THP",
+                        "TMX",
+                        "DCO",
+                        "RBF",
+                        "RDE"
                     ]
                 },
                 "ABA": {
@@ -162853,6 +164229,191 @@
                             "description": "Per-record source, provider, software, license terms and lineage."
                         }
                     },
+                    "additionalProperties": false
+                },
+                "DCOThreatRef": {
+                    "type": "object",
+                    "description": "Reference to a threat record, matrix bucket, or compound event addressed or introduced.",
+                    "properties": {
+                        "SCHEMA_FILE_ID": {
+                            "type": "string",
+                            "description": "Four-character SDS file identifier including \"$\", e.g. \"$TMX\", \"$CDM\", \"$RFL\", \"$RDE\"."
+                        },
+                        "RECORD_ID": {
+                            "type": "string",
+                            "description": "Record identifier within the referenced standard."
+                        },
+                        "BUCKET_ID": {
+                            "type": "string",
+                            "description": "Optional $TMX bucket identifier."
+                        },
+                        "COMPOUND_ID": {
+                            "type": "string",
+                            "description": "Optional $TMX compound event identifier."
+                        },
+                        "NORAD_CAT_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Optional NORAD catalog number of the affected space object."
+                        }
+                    },
+                    "required": [
+                        "SCHEMA_FILE_ID",
+                        "RECORD_ID"
+                    ],
+                    "additionalProperties": false
+                },
+                "DCOModuleAttribution": {
+                    "type": "object",
+                    "description": "Attribution linking a computed trade metric to the exact WASM module build that produced it.",
+                    "properties": {
+                        "METRIC_NAME": {
+                            "type": "string",
+                            "description": "Name of the computed metric (e.g. \"DELTA_V_MPS\", \"MARGIN_GAIN_DB\", \"RESIDUAL_SCORE\")."
+                        },
+                        "MODULE_ID": {
+                            "type": "string",
+                            "description": "Canonical module identifier (e.g. \"analysis/coa-synthesizer\")."
+                        },
+                        "MODULE_VERSION": {
+                            "type": "string",
+                            "description": "Module semantic version string."
+                        },
+                        "WASM_SHA256": {
+                            "type": "string",
+                            "description": "Lowercase hex SHA-256 of the executed portable WASM artifact."
+                        }
+                    },
+                    "required": [
+                        "METRIC_NAME",
+                        "MODULE_ID"
+                    ],
+                    "additionalProperties": false
+                },
+                "DCO": {
+                    "type": "object",
+                    "description": "Defensive COA Trade & Conflict-Recheck",
+                    "properties": {
+                        "DCO_ID": {
+                            "type": "string",
+                            "description": "Unique identifier of this defensive COA evaluation record."
+                        },
+                        "COA_ID": {
+                            "type": "string",
+                            "description": "Identifier of the input $COA record ($COA.ID)."
+                        },
+                        "TMX_RUN_ID": {
+                            "type": "string",
+                            "description": "Identifier of the $TMX assessment run ($TMX.RUN_ID)."
+                        },
+                        "CREATED_UTC": {
+                            "type": "string",
+                            "description": "Evaluation timestamp, RFC 3339 UTC."
+                        },
+                        "THREAT_REF": {
+                            "$ref": "#/definitions/DCOThreatRef",
+                            "description": "Primary threat or compound event answered by this COA."
+                        },
+                        "ACTION_KIND": {
+                            "$ref": "#/definitions/dcoActionKind",
+                            "description": "Specific defensive action modeled in this evaluation."
+                        },
+                        "NORAD_CAT_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "NORAD catalog number of the defended object (0 when GROUP_ID is used)."
+                        },
+                        "GROUP_ID": {
+                            "type": "string",
+                            "description": "Entity group identifier ($EGP.GROUP_ID) when the COA applies to a group."
+                        },
+                        "DELTA_V_MPS": {
+                            "type": "number",
+                            "description": "Computed maneuver delta-v cost in m/s."
+                        },
+                        "PROPELLANT_KG": {
+                            "type": "number",
+                            "description": "Computed propellant mass consumed in kg."
+                        },
+                        "MISSION_LIFE_DAYS": {
+                            "type": "number",
+                            "description": "Estimated mission life impact in days."
+                        },
+                        "OUTAGE_HOURS": {
+                            "type": "number",
+                            "description": "Service or payload outage duration in hours."
+                        },
+                        "COVERAGE_IMPACT_PCT": {
+                            "type": "number",
+                            "description": "Constellation or regional coverage impact in percent."
+                        },
+                        "MARGIN_GAIN_DB": {
+                            "type": "number",
+                            "description": "RF link margin gain achieved in dB."
+                        },
+                        "EXPOSURE_REDUCED_MIN": {
+                            "type": "number",
+                            "description": "Threat exposure time reduced in minutes."
+                        },
+                        "BASELINE_SCORE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Baseline severity score before the COA in basis points (0..10000)."
+                        },
+                        "RESIDUAL_SCORE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Residual severity score after applying the COA in basis points (0..10000)."
+                        },
+                        "RESIDUAL_TIER": {
+                            "$ref": "#/definitions/dcoSeverityLevel",
+                            "description": "Residual severity tier after applying the COA."
+                        },
+                        "CONFLICTS_WITH_COA_IDS": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Identifiers of other $COA records that conflict with this action."
+                        },
+                        "SECONDARY_THREATS_INTRODUCED": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/DCOThreatRef"
+                            },
+                            "description": "Secondary threats introduced by this action (e.g. post-maneuver conjunction or drag)."
+                        },
+                        "RECHECKED": {
+                            "type": "boolean",
+                            "description": "True once full multi-phenomenology conflict re-screening has been executed."
+                        },
+                        "RECHECK_STATUS": {
+                            "$ref": "#/definitions/dcoRecheckOutcome",
+                            "description": "Outcome status of the multi-phenomenology conflict re-screen."
+                        },
+                        "RECHECK_NOTES": {
+                            "type": "string",
+                            "description": "Human-readable diagnostics from conflict re-screening."
+                        },
+                        "ATTRIBUTIONS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/DCOModuleAttribution"
+                            },
+                            "description": "Per-metric module provenance attributions."
+                        }
+                    },
+                    "required": [
+                        "DCO_ID",
+                        "COA_ID",
+                        "TMX_RUN_ID",
+                        "CREATED_UTC",
+                        "THREAT_REF"
+                    ],
                     "additionalProperties": false
                 },
                 "driftRecord": {
@@ -192369,6 +193930,237 @@
                     },
                     "additionalProperties": false
                 },
+                "RBFStructureFeature": {
+                    "type": "object",
+                    "description": "Radial magnetospheric feature (torus, moon sweep gap, ring absorption, or slot region).",
+                    "properties": {
+                        "KIND": {
+                            "$ref": "#/definitions/rbfStructureKind",
+                            "description": "Feature classification."
+                        },
+                        "FEATURE_NAME": {
+                            "type": "string",
+                            "description": "Descriptive feature name (e.g. \"IO_TORUS\", \"EUROPA_SWEEP\", \"MAIN_RINGS\")."
+                        },
+                        "RADIAL_MIN_RB": {
+                            "type": "number",
+                            "description": "Inner radial boundary in planetary radii (R_b)."
+                        },
+                        "RADIAL_MAX_RB": {
+                            "type": "number",
+                            "description": "Outer radial boundary in planetary radii (R_b)."
+                        },
+                        "ATTENUATION_FACTOR": {
+                            "type": "number",
+                            "description": "Multiplicative flux attenuation (or enhancement) factor in this feature."
+                        }
+                    },
+                    "required": [
+                        "FEATURE_NAME"
+                    ],
+                    "additionalProperties": false
+                },
+                "RBFSaaContour": {
+                    "type": "object",
+                    "description": "Computed South Atlantic Anomaly (or planetary magnetic anomaly) iso-flux contour.",
+                    "properties": {
+                        "CONTOUR_ID": {
+                            "type": "string",
+                            "description": "Stable contour identifier."
+                        },
+                        "ALTITUDE_KM": {
+                            "type": "number",
+                            "description": "Reference geodetic/planetodetic altitude in km."
+                        },
+                        "FLUX_THRESHOLD": {
+                            "type": "number",
+                            "description": "Flux threshold defining this contour boundary."
+                        },
+                        "FLUX_UNITS": {
+                            "type": "string",
+                            "description": "Physical units of FLUX_THRESHOLD and PEAK_FLUX."
+                        },
+                        "LATITUDES_DEG": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Ordered polygon vertex latitudes in degrees."
+                        },
+                        "LONGITUDES_DEG": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Ordered polygon vertex longitudes in degrees."
+                        },
+                        "PEAK_FLUX": {
+                            "type": "number",
+                            "description": "Peak flux inside the anomaly contour."
+                        },
+                        "PEAK_LAT_DEG": {
+                            "type": "number",
+                            "description": "Latitude of peak anomaly flux in degrees."
+                        },
+                        "PEAK_LON_DEG": {
+                            "type": "number",
+                            "description": "Longitude of peak anomaly flux in degrees."
+                        }
+                    },
+                    "required": [
+                        "CONTOUR_ID"
+                    ],
+                    "additionalProperties": false
+                },
+                "RBF": {
+                    "type": "object",
+                    "description": "Radiation Belt Flux",
+                    "properties": {
+                        "RBF_ID": {
+                            "type": "string",
+                            "description": "Unique identifier of this radiation belt flux record."
+                        },
+                        "BODY_NAME": {
+                            "type": "string",
+                            "description": "CCSDS SANA central body name (e.g. \"EARTH\", \"JUPITER\", \"SATURN\", \"URANUS\", \"NEPTUNE\")."
+                        },
+                        "BODY_NAIF_ID": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "NAIF SPICE body identifier (e.g. 399, 599, 699, 799, 899)."
+                        },
+                        "MODEL": {
+                            "$ref": "#/definitions/rbfModelKind",
+                            "description": "Radiation belt model family."
+                        },
+                        "MODEL_VERSION": {
+                            "type": "string",
+                            "description": "Model version or edition string."
+                        },
+                        "MAG_MODEL_ID": {
+                            "type": "string",
+                            "description": "Underlying planetary magnetic field model identifier."
+                        },
+                        "REFERENCE_FRAME": {
+                            "type": "string",
+                            "description": "Body-fixed coordinate frame identifier."
+                        },
+                        "SPECIES": {
+                            "$ref": "#/definitions/rbfParticleSpecies",
+                            "description": "Particle species tabulated in FLUX_GRID."
+                        },
+                        "FLUX_TYPE": {
+                            "$ref": "#/definitions/rbfFluxKind",
+                            "description": "Flux or plasma density representation kind."
+                        },
+                        "UNITS": {
+                            "type": "string",
+                            "description": "Physical units string for FLUX_GRID (e.g. \"cm^-2 s^-1\", \"cm^-2 s^-1 MeV^-1 sr^-1\", \"cm^-3\")."
+                        },
+                        "EPOCH": {
+                            "type": "string",
+                            "description": "Valid epoch for the model state, RFC 3339 UTC."
+                        },
+                        "KP": {
+                            "type": "number",
+                            "description": "Geomagnetic Kp index driving the model state (meaningful when HAS_KP is true)."
+                        },
+                        "HAS_KP": {
+                            "type": "boolean",
+                            "description": "True when KP was supplied to the model."
+                        },
+                        "DST_NT": {
+                            "type": "number",
+                            "description": "Disturbance storm time index Dst in nT (meaningful when HAS_DST_NT is true)."
+                        },
+                        "HAS_DST_NT": {
+                            "type": "boolean",
+                            "description": "True when DST_NT was supplied to the model."
+                        },
+                        "F107": {
+                            "type": "number",
+                            "description": "10.7 cm solar radio flux F10.7 in sfu (meaningful when HAS_F107 is true)."
+                        },
+                        "HAS_F107": {
+                            "type": "boolean",
+                            "description": "True when F107 was supplied to the model."
+                        },
+                        "SOLAR_WIND_PRESSURE_NPA": {
+                            "type": "number",
+                            "description": "Solar wind dynamic pressure in nPa (meaningful when HAS_SOLAR_WIND_PRESSURE is true)."
+                        },
+                        "HAS_SOLAR_WIND_PRESSURE": {
+                            "type": "boolean",
+                            "description": "True when SOLAR_WIND_PRESSURE_NPA was supplied to the model."
+                        },
+                        "QUANTILE_PCT": {
+                            "type": "number",
+                            "description": "Statistical percentile/quantile for probabilistic belt models (0..100, default median 50.0)."
+                        },
+                        "L_SHELLS": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "McIlwain L-shell grid coordinates in planetary radii."
+                        },
+                        "ENERGY_MEV": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Particle kinetic energy grid coordinates in MeV."
+                        },
+                        "B_OVER_B0": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Magnetic field ratio B/B0 grid coordinates along field lines."
+                        },
+                        "FLUX_GRID": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Flattened row-major flux values indexed by [L, E, B/B0]."
+                        },
+                        "STRUCTURES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/RBFStructureFeature"
+                            },
+                            "description": "Magnetospheric structures (tori, moon sweep gaps, ring absorption, slot region)."
+                        },
+                        "SAA_CONTOURS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/RBFSaaContour"
+                            },
+                            "description": "Computed anomaly contours (e.g. South Atlantic Anomaly at reference altitudes)."
+                        },
+                        "SPACE_WEATHER_REFS": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Referenced $SWS or $SPW space-weather record identifiers."
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/PVN",
+                            "description": "Record-level source and build provenance."
+                        }
+                    },
+                    "required": [
+                        "RBF_ID",
+                        "BODY_NAME",
+                        "UNITS",
+                        "EPOCH",
+                        "PROVENANCE"
+                    ],
+                    "additionalProperties": false
+                },
                 "RBKVector3": {
                     "type": "object",
                     "description": "Three-vector used for MRP, Gibbs, PRV, angular rate, and related attitude math values.",
@@ -192572,6 +194364,324 @@
                             "description": "Data"
                         }
                     },
+                    "additionalProperties": false
+                },
+                "RDEShielding": {
+                    "type": "object",
+                    "description": "Shielding configuration for dose and TID calculations.",
+                    "properties": {
+                        "MATERIAL": {
+                            "$ref": "#/definitions/rdeShieldMaterial",
+                            "description": "Primary shielding material class."
+                        },
+                        "MATERIAL_NAME": {
+                            "type": "string",
+                            "description": "Descriptive material or layup name when CUSTOM or MULTI_MATERIAL."
+                        },
+                        "GEOMETRY": {
+                            "$ref": "#/definitions/rdeShieldGeometry",
+                            "description": "Transport geometry approximation."
+                        },
+                        "THICKNESS_MM": {
+                            "type": "number",
+                            "description": "Shield thickness in millimeters."
+                        },
+                        "AREAL_DENSITY_G_CM2": {
+                            "type": "number",
+                            "description": "Areal mass density in g/cm^2."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "RDEShieldCurvePoint": {
+                    "type": "object",
+                    "description": "One point on a depth-dose shielding curve.",
+                    "properties": {
+                        "THICKNESS_MM": {
+                            "type": "number",
+                            "description": "Shield thickness in millimeters."
+                        },
+                        "AREAL_DENSITY_G_CM2": {
+                            "type": "number",
+                            "description": "Areal mass density in g/cm^2."
+                        },
+                        "DOSE_RATE_MSV_H": {
+                            "type": "number",
+                            "description": "Computed dose rate behind this thickness in mSv/h."
+                        },
+                        "TID_KRAD_SI": {
+                            "type": "number",
+                            "description": "Computed total ionizing dose over the window in krad(Si)."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "RDEPassDose": {
+                    "type": "object",
+                    "description": "Integrated radiation exposure for a single belt or SAA pass.",
+                    "properties": {
+                        "PASS_ID": {
+                            "type": "string",
+                            "description": "Unique pass identifier within the assessment window."
+                        },
+                        "START_UTC": {
+                            "type": "string",
+                            "description": "Pass entry timestamp, RFC 3339 UTC."
+                        },
+                        "END_UTC": {
+                            "type": "string",
+                            "description": "Pass exit timestamp, RFC 3339 UTC."
+                        },
+                        "IN_SAA": {
+                            "type": "boolean",
+                            "description": "True when the pass traverses the South Atlantic Anomaly."
+                        },
+                        "IN_BELT_CORE": {
+                            "type": "boolean",
+                            "description": "True when the pass traverses a primary trapped radiation belt core."
+                        },
+                        "PEAK_DOSE_RATE_MSV_H": {
+                            "type": "number",
+                            "description": "Peak instantaneous dose rate during the pass in mSv/h."
+                        },
+                        "INTEGRATED_DOSE_MSV": {
+                            "type": "number",
+                            "description": "Total integrated dose accumulated during the pass in mSv."
+                        },
+                        "PEAK_L_SHELL": {
+                            "type": "number",
+                            "description": "Peak McIlwain L-shell reached during the pass."
+                        }
+                    },
+                    "required": [
+                        "PASS_ID",
+                        "START_UTC",
+                        "END_UTC"
+                    ],
+                    "additionalProperties": false
+                },
+                "RDEElectronicsEffect": {
+                    "type": "object",
+                    "description": "Spacecraft electronics single-event effects (SEE) and total ionizing dose (TID) assessment.",
+                    "properties": {
+                        "DEVICE_PROFILE_ID": {
+                            "type": "string",
+                            "description": "Reference device or part hardness profile identifier."
+                        },
+                        "SEE_UPSET_RATE_PER_BIT_DAY": {
+                            "type": "number",
+                            "description": "Single-event upset rate in upsets/bit/day."
+                        },
+                        "SEL_PROBABILITY": {
+                            "type": "number",
+                            "description": "Single-event latchup probability over the assessment window (0..1)."
+                        },
+                        "SEB_SEGR_RISK": {
+                            "type": "number",
+                            "description": "Single-event burnout / gate rupture risk metric (0..1)."
+                        },
+                        "TID_KRAD_SI": {
+                            "type": "number",
+                            "description": "Total ionizing dose accumulated over the window in krad(Si)."
+                        },
+                        "TID_MARGIN_PCT": {
+                            "type": "number",
+                            "description": "Remaining TID design margin in percent."
+                        },
+                        "LET_THRESHOLD_MEV_CM2_MG": {
+                            "type": "number",
+                            "description": "Linear energy transfer threshold in MeV*cm^2/mg."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "RDECrewDose": {
+                    "type": "object",
+                    "description": "Human crew dosimetry and career limit tracking.",
+                    "properties": {
+                        "CREW_ID": {
+                            "type": "string",
+                            "description": "Crew member or mission role identifier."
+                        },
+                        "EFFECTIVE_DOSE_MSV": {
+                            "type": "number",
+                            "description": "Whole-body effective dose over the window in mSv."
+                        },
+                        "BLOOD_FORMING_ORGANS_MSV": {
+                            "type": "number",
+                            "description": "Blood-forming organs (BFO) dose in mSv."
+                        },
+                        "EYE_LENS_MSV": {
+                            "type": "number",
+                            "description": "Eye lens dose in mSv."
+                        },
+                        "SKIN_MSV": {
+                            "type": "number",
+                            "description": "Skin dose in mSv."
+                        },
+                        "CUMULATIVE_CAREER_MSV": {
+                            "type": "number",
+                            "description": "Updated cumulative career effective dose in mSv."
+                        },
+                        "CAREER_LIMIT_FRACTION": {
+                            "type": "number",
+                            "description": "Fraction of applicable career limit consumed (0..1+)."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "RDESepEffect": {
+                    "type": "object",
+                    "description": "Solar flare / solar energetic particle (SEP) asset impact entry.",
+                    "properties": {
+                        "SFE_EVENT_ID": {
+                            "type": "string",
+                            "description": "Referenced $SFE solar flare event identifier."
+                        },
+                        "NOAA_S_SCALE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "NOAA Solar Radiation Storm scale S1..S5 (0 if below S1)."
+                        },
+                        "FLARE_CLASS": {
+                            "type": "string",
+                            "description": "Soft X-ray flare class verbatim (e.g. \"X2.4\")."
+                        },
+                        "SEP_DOSE_MSV": {
+                            "type": "number",
+                            "description": "Additional SEP event dose in mSv."
+                        },
+                        "SOLAR_CELL_DEGRADATION_PCT": {
+                            "type": "number",
+                            "description": "Estimated solar array power degradation in percent."
+                        },
+                        "STAR_TRACKER_BLINDING_MIN": {
+                            "type": "number",
+                            "description": "Estimated star-tracker blinding duration in minutes."
+                        },
+                        "SUMMARY": {
+                            "type": "string",
+                            "description": "Concise human-readable impact summary."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "RDE": {
+                    "type": "object",
+                    "description": "Radiation Effects",
+                    "properties": {
+                        "RDE_ID": {
+                            "type": "string",
+                            "description": "Unique identifier of this radiation effects record."
+                        },
+                        "BODY_NAME": {
+                            "type": "string",
+                            "description": "CCSDS SANA central body name (e.g. \"EARTH\", \"JUPITER\", \"SATURN\")."
+                        },
+                        "BODY_NAIF_ID": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "NAIF SPICE body identifier (e.g. 399, 599, 699)."
+                        },
+                        "NORAD_CAT_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "NORAD catalog number of the target spacecraft (0 for uncataloged/crew trajectory)."
+                        },
+                        "OBJECT_ID": {
+                            "type": "string",
+                            "description": "International designator or object identifier."
+                        },
+                        "WINDOW_START": {
+                            "type": "string",
+                            "description": "Inclusive assessment window start, RFC 3339 UTC."
+                        },
+                        "WINDOW_END": {
+                            "type": "string",
+                            "description": "Exclusive assessment window end, RFC 3339 UTC."
+                        },
+                        "RBF_RECORD_IDS": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Referenced $RBF radiation belt flux record identifiers."
+                        },
+                        "SPACE_WEATHER_REFS": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Referenced $SWS or $SFE space-weather record identifiers."
+                        },
+                        "SHIELDING": {
+                            "$ref": "#/definitions/RDEShielding",
+                            "description": "Spacecraft or habitat shielding configuration."
+                        },
+                        "INSTANT_DOSE_RATE_MSV_H": {
+                            "type": "number",
+                            "description": "Instantaneous dose rate at WINDOW_START in mSv/h."
+                        },
+                        "ORBIT_AVG_DOSE_RATE_MSV_H": {
+                            "type": "number",
+                            "description": "Orbit-averaged dose rate over the assessment window in mSv/h."
+                        },
+                        "MISSION_DOSE_MSV": {
+                            "type": "number",
+                            "description": "Total mission/window dose in mSv."
+                        },
+                        "TID_KRAD_SI": {
+                            "type": "number",
+                            "description": "Total ionizing dose in silicon over the window in krad(Si)."
+                        },
+                        "EFFECT_SEVERITY": {
+                            "$ref": "#/definitions/rdeEffectSeverity",
+                            "description": "Overall effect severity classification."
+                        },
+                        "PASS_DOSES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/RDEPassDose"
+                            },
+                            "description": "Per-pass dose breakdown across belt and SAA transits."
+                        },
+                        "SHIELDING_CURVE": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/RDEShieldCurvePoint"
+                            },
+                            "description": "Depth-dose attenuation curve across shielding thicknesses."
+                        },
+                        "ELECTRONICS": {
+                            "$ref": "#/definitions/RDEElectronicsEffect",
+                            "description": "Electronics SEE and TID margin assessment."
+                        },
+                        "CREW": {
+                            "$ref": "#/definitions/RDECrewDose",
+                            "description": "Crew organ and career dose assessment when crewed."
+                        },
+                        "SEP_EFFECTS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/RDESepEffect"
+                            },
+                            "description": "Solar flare / SEP impact breakdown."
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/PVN",
+                            "description": "Record-level source and build provenance."
+                        }
+                    },
+                    "required": [
+                        "RDE_ID",
+                        "BODY_NAME",
+                        "WINDOW_START",
+                        "WINDOW_END",
+                        "PROVENANCE"
+                    ],
                     "additionalProperties": false
                 },
                 "reentryStateVector": {
@@ -206839,6 +208949,197 @@
                     ],
                     "additionalProperties": false
                 },
+                "THPProvenance": {
+                    "type": "object",
+                    "description": "Provenance and classification metadata for a threat parameter.",
+                    "properties": {
+                        "SOURCE_URI": {
+                            "type": "string",
+                            "description": "URI or canonical source identifier for this parameter."
+                        },
+                        "PUBLISHED_DATE": {
+                            "type": "string",
+                            "description": "Publication or revision date, ISO 8601 UTC."
+                        },
+                        "CERTAINTY": {
+                            "$ref": "#/definitions/thpCertaintyLevel",
+                            "description": "Epistemic certainty level of the parameter value."
+                        },
+                        "ACCESS_TIER": {
+                            "$ref": "#/definitions/thpAccessTier",
+                            "description": "Access tier governing visibility of this parameter."
+                        },
+                        "RECORD_PROVENANCE": {
+                            "$ref": "#/definitions/PVN",
+                            "description": "Optional full $PVN provenance block."
+                        },
+                        "NOTES": {
+                            "type": "string",
+                            "description": "Explanatory analyst notes."
+                        }
+                    },
+                    "required": [
+                        "SOURCE_URI"
+                    ],
+                    "additionalProperties": false
+                },
+                "THPReference": {
+                    "type": "object",
+                    "description": "Typed reference to an existing SDS record without duplicating its fields.",
+                    "properties": {
+                        "SCHEMA_FILE_ID": {
+                            "type": "string",
+                            "description": "Four-character SDS file identifier including \"$\", e.g. \"$OMM\", \"$RFB\", \"$SIT\"."
+                        },
+                        "RECORD_ID": {
+                            "type": "string",
+                            "description": "Canonical identifier of the referenced record within that standard."
+                        },
+                        "NORAD_CAT_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Optional catalog number when the referenced record targets a cataloged object."
+                        },
+                        "CID": {
+                            "type": "string",
+                            "description": "Optional content identifier pinning exact immutable record bytes."
+                        },
+                        "ROLE": {
+                            "type": "string",
+                            "description": "Role of the referenced record in this threat profile (e.g. \"PLATFORM\", \"EMITTER\", \"SITE\")."
+                        }
+                    },
+                    "required": [
+                        "SCHEMA_FILE_ID",
+                        "RECORD_ID"
+                    ],
+                    "additionalProperties": false
+                },
+                "THPParameter": {
+                    "type": "object",
+                    "description": "One typed capability or environmental threshold parameter on a threat profile.",
+                    "properties": {
+                        "PARAM_KEY": {
+                            "type": "string",
+                            "description": "Canonical parameter key (e.g. \"ALTITUDE_CAP_KM\", \"EIRP_DBW\", \"LASER_WAVELENGTH_NM\")."
+                        },
+                        "VALUE_KIND": {
+                            "$ref": "#/definitions/thpParamValueKind",
+                            "description": "Discriminator naming which value field is populated."
+                        },
+                        "NUMERIC_VALUE": {
+                            "type": "number",
+                            "description": "Numeric parameter value when VALUE_KIND is SCALAR_DOUBLE."
+                        },
+                        "TEXT_VALUE": {
+                            "type": "string",
+                            "description": "String parameter value when VALUE_KIND is TEXT."
+                        },
+                        "BOOL_VALUE": {
+                            "type": "boolean",
+                            "description": "Boolean parameter value when VALUE_KIND is BOOLEAN."
+                        },
+                        "UNITS": {
+                            "type": "string",
+                            "description": "Physical units string for numeric values (e.g. \"km\", \"dBW\", \"MHz\", \"nm\")."
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/THPProvenance",
+                            "description": "Parameter-level provenance and certainty."
+                        }
+                    },
+                    "required": [
+                        "PARAM_KEY",
+                        "PROVENANCE"
+                    ],
+                    "additionalProperties": false
+                },
+                "THP": {
+                    "type": "object",
+                    "description": "Threat Profile",
+                    "properties": {
+                        "THP_ID": {
+                            "type": "string",
+                            "description": "Stable identifier of this threat profile."
+                        },
+                        "NAME": {
+                            "type": "string",
+                            "description": "Human-readable display name of the threat profile."
+                        },
+                        "DESCRIPTION": {
+                            "type": "string",
+                            "description": "Summary description of the threat profile and scope."
+                        },
+                        "CATEGORY": {
+                            "$ref": "#/definitions/thpThreatCategory",
+                            "description": "Threat phenomenology category."
+                        },
+                        "ACCESS_TIER": {
+                            "$ref": "#/definitions/thpAccessTier",
+                            "description": "Minimum access tier required to consume this threat profile."
+                        },
+                        "ACTIVE": {
+                            "type": "boolean",
+                            "description": "True when the threat profile is active for screening runs."
+                        },
+                        "LINKED_SCHEMA": {
+                            "type": "string",
+                            "description": "Four-character SDS file identifier including \"$\" of the primary linked record."
+                        },
+                        "LINKED_RECORD_ID": {
+                            "type": "string",
+                            "description": "Canonical record identifier of the primary linked SDS record."
+                        },
+                        "LINKED_NORAD_CAT_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Optional NORAD catalog number of the primary linked space object."
+                        },
+                        "ADDITIONAL_REFS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/THPReference"
+                            },
+                            "description": "Additional linked SDS records referenced by ($SCHEMA_FILE_ID, RECORD_ID)."
+                        },
+                        "PARAMETERS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/THPParameter"
+                            },
+                            "description": "Typed capability and threshold parameters with per-parameter provenance."
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/PVN",
+                            "description": "Record-level source and build provenance."
+                        },
+                        "CREATED_AT": {
+                            "type": "string",
+                            "description": "Creation timestamp, RFC 3339 UTC."
+                        },
+                        "UPDATED_AT": {
+                            "type": "string",
+                            "description": "Last update timestamp, RFC 3339 UTC."
+                        },
+                        "SIGNATURE": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Optional Ed25519 signature bytes over the canonical threat lane payload."
+                        }
+                    },
+                    "required": [
+                        "THP_ID",
+                        "NAME",
+                        "PROVENANCE"
+                    ],
+                    "additionalProperties": false
+                },
                 "TKG": {
                     "type": "object",
                     "description": "Tracking and Data Fusion",
@@ -207250,6 +209551,608 @@
                         "EPOCH",
                         "MODEL_ID",
                         "SOURCE"
+                    ],
+                    "additionalProperties": false
+                },
+                "TMXRequest": {
+                    "type": "object",
+                    "description": "Invocation request payload carried inside $PIV (PIVRequest.INPUTS) or local execution.",
+                    "properties": {
+                        "REQUEST_ID": {
+                            "type": "string",
+                            "description": "Unique identifier of this matrix evaluation request."
+                        },
+                        "TARGET_SCOPE": {
+                            "type": "string",
+                            "description": "Target scope selector (e.g. constellation name, group, or \"CUSTOM\")."
+                        },
+                        "TARGET_NORAD_CAT_IDS": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 4294967295
+                            },
+                            "description": "Explicit NORAD catalog numbers requested for screening."
+                        },
+                        "GROUP_IDS": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Entity group ($EGP) identifiers requested for screening."
+                        },
+                        "CATALOG_REVISION": {
+                            "type": "string",
+                            "description": "Catalog revision or snapshot identifier pinned for parity."
+                        },
+                        "WINDOW_START": {
+                            "type": "string",
+                            "description": "Inclusive analysis window start, RFC 3339 UTC."
+                        },
+                        "WINDOW_END": {
+                            "type": "string",
+                            "description": "Exclusive analysis window end, RFC 3339 UTC."
+                        },
+                        "PROPAGATOR": {
+                            "$ref": "#/definitions/tmxPropagatorKind",
+                            "description": "Selected propagator theory."
+                        },
+                        "PROPAGATOR_ID": {
+                            "type": "string",
+                            "description": "Canonical propagator module identifier (e.g. \"propagator/sdn-ap\")."
+                        },
+                        "EXECUTION_HOST": {
+                            "$ref": "#/definitions/tmxExecutionHostKind",
+                            "description": "Target execution host kind."
+                        },
+                        "PHENOMENOLOGIES_REQUESTED": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/tmxPhenomenologyKind"
+                            },
+                            "description": "Subset of phenomenologies to evaluate; empty requests all 7."
+                        },
+                        "THP_IDS": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Threat profile identifiers ($THP.THP_ID) to include."
+                        },
+                        "THP_CIDS": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Content identifiers pinning exact $THP payloads."
+                        },
+                        "SCORING_PROFILE_ID": {
+                            "type": "string",
+                            "description": "Named deterministic scoring profile identifier."
+                        },
+                        "INCLUDE_COAS": {
+                            "type": "boolean",
+                            "description": "True to synthesize and attach defensive COAs alongside matrix output."
+                        },
+                        "WHAT_IF_OVERRIDES_JSON": {
+                            "type": "string",
+                            "description": "Optional serialized parameter overrides for analyst what-if runs."
+                        }
+                    },
+                    "required": [
+                        "REQUEST_ID",
+                        "TARGET_SCOPE",
+                        "WINDOW_START",
+                        "WINDOW_END"
+                    ],
+                    "additionalProperties": false
+                },
+                "TMXBucket": {
+                    "type": "object",
+                    "description": "Target aggregation bucket (constellation, shell, plane, asset, or gateway).",
+                    "properties": {
+                        "BUCKET_ID": {
+                            "type": "string",
+                            "description": "Stable identifier of this bucket within the matrix run."
+                        },
+                        "PARENT_BUCKET_ID": {
+                            "type": "string",
+                            "description": "Optional parent bucket identifier in the hierarchy."
+                        },
+                        "BUCKET_KIND": {
+                            "$ref": "#/definitions/tmxBucketKind",
+                            "description": "Granularity kind of this bucket."
+                        },
+                        "LABEL": {
+                            "type": "string",
+                            "description": "Human-readable bucket label."
+                        },
+                        "ASSET_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of assets represented by this bucket."
+                        },
+                        "NORAD_CAT_IDS": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 4294967295
+                            },
+                            "description": "Member NORAD catalog numbers when enumerated."
+                        },
+                        "ALTITUDE_MIN_KM": {
+                            "type": "number",
+                            "description": "Minimum shell altitude in km."
+                        },
+                        "ALTITUDE_MAX_KM": {
+                            "type": "number",
+                            "description": "Maximum shell altitude in km."
+                        },
+                        "INCLINATION_DEG": {
+                            "type": "number",
+                            "description": "Representative orbital inclination in degrees."
+                        }
+                    },
+                    "required": [
+                        "BUCKET_ID",
+                        "LABEL"
+                    ],
+                    "additionalProperties": false
+                },
+                "TMXPhenomenologyWeight": {
+                    "type": "object",
+                    "description": "Deterministic weight and severity thresholds for one phenomenology (in basis points 0..10000).",
+                    "properties": {
+                        "PHENOMENOLOGY": {
+                            "$ref": "#/definitions/tmxPhenomenologyKind",
+                            "description": "Phenomenology configured by this entry."
+                        },
+                        "WEIGHT_BPS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Composite rollup weight in basis points (nominal sum across evaluated phenomenologies = 10000)."
+                        },
+                        "CRITICAL_THRESHOLD_BPS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Score threshold in basis points for CRITICAL tier."
+                        },
+                        "HIGH_THRESHOLD_BPS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Score threshold in basis points for HIGH tier."
+                        },
+                        "WATCH_THRESHOLD_BPS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Score threshold in basis points for WATCH tier."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "TMXCompoundRule": {
+                    "type": "object",
+                    "description": "Deterministic compound-overlap scoring rule across co-occurring phenomenologies.",
+                    "properties": {
+                        "RULE_ID": {
+                            "type": "string",
+                            "description": "Stable rule identifier."
+                        },
+                        "PHENOMENOLOGIES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/tmxPhenomenologyKind"
+                            },
+                            "description": "Set of phenomenologies whose temporal/spatial overlap triggers this rule."
+                        },
+                        "BONUS_BPS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Additive bonus in basis points (0..2500)."
+                        },
+                        "MULTIPLIER_BPS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Multiplicative factor in basis points (e.g. 10000 = 1.00x, 12500 = 1.25x)."
+                        }
+                    },
+                    "required": [
+                        "RULE_ID"
+                    ],
+                    "additionalProperties": false
+                },
+                "TMXModuleRun": {
+                    "type": "object",
+                    "description": "Execution telemetry and attribution for one phenomenology analyzer in this run.",
+                    "properties": {
+                        "PHENOMENOLOGY": {
+                            "$ref": "#/definitions/tmxPhenomenologyKind",
+                            "description": "Phenomenology axis produced by this module."
+                        },
+                        "MODULE_ID": {
+                            "type": "string",
+                            "description": "Canonical module identifier (e.g. \"analysis/asat-reach\")."
+                        },
+                        "MODULE_VERSION": {
+                            "type": "string",
+                            "description": "Module semantic version string."
+                        },
+                        "WASM_SHA256": {
+                            "type": "string",
+                            "description": "Lowercase hex SHA-256 of the executed portable WASM artifact."
+                        },
+                        "STATUS": {
+                            "$ref": "#/definitions/tmxModuleRunStatus",
+                            "description": "Outcome status of this module invocation."
+                        },
+                        "WALL_TIME_MS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Measured execution wall time in milliseconds."
+                        },
+                        "REFUSAL_REASON": {
+                            "type": "string",
+                            "description": "Explicit refusal or degradation reason when STATUS is not OK."
+                        }
+                    },
+                    "required": [
+                        "MODULE_ID"
+                    ],
+                    "additionalProperties": false
+                },
+                "TMXRecordRef": {
+                    "type": "object",
+                    "description": "Reference to a supporting underlying SDS record without duplicating its payload.",
+                    "properties": {
+                        "SCHEMA_FILE_ID": {
+                            "type": "string",
+                            "description": "Four-character SDS file identifier including \"$\", e.g. \"$CDM\", \"$ACW\", \"$RFL\", \"$RDE\", \"$THP\"."
+                        },
+                        "RECORD_ID": {
+                            "type": "string",
+                            "description": "Record identifier within the referenced SDS standard."
+                        },
+                        "NORAD_CAT_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Optional NORAD catalog number associated with the event."
+                        },
+                        "EPOCH": {
+                            "type": "string",
+                            "description": "Event epoch or peak timestamp, RFC 3339 UTC."
+                        },
+                        "METRIC_LABEL": {
+                            "type": "string",
+                            "description": "Primary metric label (e.g. \"MISS_DISTANCE_KM\", \"DOSE_MSV_H\", \"J_S_DB\")."
+                        },
+                        "METRIC_VALUE": {
+                            "type": "number",
+                            "description": "Primary metric numeric value."
+                        },
+                        "METRIC_UNITS": {
+                            "type": "string",
+                            "description": "Physical units string for METRIC_VALUE."
+                        }
+                    },
+                    "required": [
+                        "SCHEMA_FILE_ID",
+                        "RECORD_ID"
+                    ],
+                    "additionalProperties": false
+                },
+                "TMXCell": {
+                    "type": "object",
+                    "description": "Single (bucket x phenomenology) cell in the threat matrix.",
+                    "properties": {
+                        "BUCKET_ID": {
+                            "type": "string",
+                            "description": "Target bucket identifier referencing TMXBucket.BUCKET_ID."
+                        },
+                        "PHENOMENOLOGY": {
+                            "$ref": "#/definitions/tmxPhenomenologyKind",
+                            "description": "Phenomenology axis for this cell."
+                        },
+                        "SEVERITY_TIER": {
+                            "$ref": "#/definitions/tmxSeverityLevel",
+                            "description": "Categorical severity tier for this cell."
+                        },
+                        "PHENOMENOLOGY_SCORE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Deterministic fixed-point severity score in basis points (0..10000)."
+                        },
+                        "EXPOSED_ASSET_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Count of unique assets exposed in this cell."
+                        },
+                        "PEAK_SIMULTANEOUS_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Peak simultaneous exposed asset count over the window."
+                        },
+                        "EARLIEST_ONSET_UTC": {
+                            "type": "string",
+                            "description": "Earliest threat onset timestamp in the window, RFC 3339 UTC."
+                        },
+                        "TOTAL_EXPOSURE_MIN": {
+                            "type": "number",
+                            "description": "Total accumulated exposure duration in minutes."
+                        },
+                        "WORST_METRIC_SUMMARY": {
+                            "type": "string",
+                            "description": "Compact human-readable worst-case metric summary."
+                        },
+                        "CERTAINTY_FLOOR": {
+                            "$ref": "#/definitions/tmxCertaintyLevel",
+                            "description": "Minimum epistemic certainty across contributing threat inputs."
+                        },
+                        "EVENT_REFS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TMXRecordRef"
+                            },
+                            "description": "Underlying SDS event references supporting this cell."
+                        }
+                    },
+                    "required": [
+                        "BUCKET_ID"
+                    ],
+                    "additionalProperties": false
+                },
+                "TMXCompoundEvent": {
+                    "type": "object",
+                    "description": "Overlapping multi-phenomenology compound threat event on an asset, site, or bucket.",
+                    "properties": {
+                        "COMPOUND_ID": {
+                            "type": "string",
+                            "description": "Stable identifier of this compound overlap event."
+                        },
+                        "BUCKET_ID": {
+                            "type": "string",
+                            "description": "Bucket identifier where the overlap occurs."
+                        },
+                        "NORAD_CAT_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Optional NORAD catalog number of the affected asset."
+                        },
+                        "SITE_ID": {
+                            "type": "string",
+                            "description": "Optional ground site or gateway identifier."
+                        },
+                        "PHENOMENOLOGIES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/tmxPhenomenologyKind"
+                            },
+                            "description": "Co-occurring phenomenologies participating in the overlap."
+                        },
+                        "MEMBER_EVENT_REFS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TMXRecordRef"
+                            },
+                            "description": "Member SDS event references forming this compound event."
+                        },
+                        "OVERLAP_START_UTC": {
+                            "type": "string",
+                            "description": "Inclusive overlap window start, RFC 3339 UTC."
+                        },
+                        "OVERLAP_END_UTC": {
+                            "type": "string",
+                            "description": "Exclusive overlap window end, RFC 3339 UTC."
+                        },
+                        "COMPOUND_MULTIPLIER_BPS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Applied compound multiplier in basis points."
+                        },
+                        "COMPOUND_BONUS_BPS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Applied compound bonus in basis points."
+                        },
+                        "COMBINED_SCORE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Final deterministic combined score in basis points (0..10000)."
+                        },
+                        "SEVERITY_TIER": {
+                            "$ref": "#/definitions/tmxSeverityLevel",
+                            "description": "Resulting categorical severity tier."
+                        }
+                    },
+                    "required": [
+                        "COMPOUND_ID",
+                        "BUCKET_ID",
+                        "OVERLAP_START_UTC",
+                        "OVERLAP_END_UTC"
+                    ],
+                    "additionalProperties": false
+                },
+                "TMXRollup": {
+                    "type": "object",
+                    "description": "Deterministic composite rollup across all evaluated phenomenologies for a bucket.",
+                    "properties": {
+                        "BUCKET_ID": {
+                            "type": "string",
+                            "description": "Target bucket identifier referencing TMXBucket.BUCKET_ID."
+                        },
+                        "WORST_TIER": {
+                            "$ref": "#/definitions/tmxSeverityLevel",
+                            "description": "Worst severity tier observed across evaluated phenomenologies."
+                        },
+                        "COMPOSITE_SCORE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Final composite score in basis points (0..10000)."
+                        },
+                        "BASE_WEIGHTED_SCORE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Pre-bonus weighted average score in basis points (0..10000)."
+                        },
+                        "COMPOUND_BONUS_APPLIED_BPS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Compound overlap bonus applied in basis points."
+                        },
+                        "EVALUATED_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Number of phenomenologies successfully evaluated for this bucket."
+                        },
+                        "TOTAL_PHENOMENOLOGIES": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Total phenomenology axes configured in the matrix."
+                        },
+                        "COVERAGE_RATIO": {
+                            "type": "string",
+                            "description": "Coverage string such as \"7/7\"."
+                        },
+                        "TOP_THREAT_REFS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TMXRecordRef"
+                            },
+                            "description": "Highest-severity underlying SDS event references for quick drill-down."
+                        }
+                    },
+                    "required": [
+                        "BUCKET_ID"
+                    ],
+                    "additionalProperties": false
+                },
+                "TMX": {
+                    "type": "object",
+                    "description": "Multi-Phenomenology Threat Matrix",
+                    "properties": {
+                        "RUN_ID": {
+                            "type": "string",
+                            "description": "Unique run identifier for this threat matrix assessment."
+                        },
+                        "CREATED_UTC": {
+                            "type": "string",
+                            "description": "Creation timestamp of this chunk/run, RFC 3339 UTC."
+                        },
+                        "WINDOW_START": {
+                            "type": "string",
+                            "description": "Inclusive analysis window start, RFC 3339 UTC."
+                        },
+                        "WINDOW_END": {
+                            "type": "string",
+                            "description": "Exclusive analysis window end, RFC 3339 UTC."
+                        },
+                        "PROPAGATOR": {
+                            "$ref": "#/definitions/tmxPropagatorKind",
+                            "description": "Ephemeris propagator theory used for this run."
+                        },
+                        "PROPAGATOR_ID": {
+                            "type": "string",
+                            "description": "Canonical propagator module identifier."
+                        },
+                        "EXECUTION_HOST": {
+                            "$ref": "#/definitions/tmxExecutionHostKind",
+                            "description": "Execution host that computed this matrix."
+                        },
+                        "SCORING_PROFILE_ID": {
+                            "type": "string",
+                            "description": "Deterministic scoring profile identifier."
+                        },
+                        "CHUNK_INDEX": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Zero-based streaming chunk index for progressive delivery."
+                        },
+                        "IS_FINAL_CHUNK": {
+                            "type": "boolean",
+                            "description": "True on the final chunk of a streamed matrix run."
+                        },
+                        "REQUEST": {
+                            "$ref": "#/definitions/TMXRequest",
+                            "description": "Originating TMXRequest configuration for reproducibility."
+                        },
+                        "PHENOMENOLOGY_WEIGHTS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TMXPhenomenologyWeight"
+                            },
+                            "description": "Configured phenomenology weights and severity thresholds."
+                        },
+                        "COMPOUND_MULTIPLIERS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TMXCompoundRule"
+                            },
+                            "description": "Configured compound overlap multiplier/bonus rules."
+                        },
+                        "TARGET_BUCKETS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TMXBucket"
+                            },
+                            "description": "Target aggregation buckets included in this run."
+                        },
+                        "PHENOMENOLOGIES_RUN": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TMXModuleRun"
+                            },
+                            "description": "Per-phenomenology module execution records."
+                        },
+                        "CELLS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TMXCell"
+                            },
+                            "description": "Evaluated matrix cells (bucket x phenomenology)."
+                        },
+                        "COMPOUND_EVENTS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TMXCompoundEvent"
+                            },
+                            "description": "Detected multi-phenomenology compound overlap events."
+                        },
+                        "ROLLUPS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TMXRollup"
+                            },
+                            "description": "Deterministic composite rollups per bucket."
+                        }
+                    },
+                    "required": [
+                        "RUN_ID",
+                        "CREATED_UTC",
+                        "WINDOW_START",
+                        "WINDOW_END"
                     ],
                     "additionalProperties": false
                 },
@@ -257736,6 +260639,235 @@
                 }
             },
             "$ref": "#/definitions/TRK"
+        },
+        "DCO": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "dcoActionKind": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "MANEUVER_AVOID",
+                        "MANEUVER_PHASE_SHIFT",
+                        "MANEUVER_ALTITUDE_CHANGE",
+                        "RF_FREQ_HOP",
+                        "RF_NULL_STEER",
+                        "RF_POWER_BOOST",
+                        "RF_BEAM_NARROW",
+                        "GATEWAY_REROUTE",
+                        "SENSOR_SHUTTER_OR_SLEW",
+                        "SAFE_MODE_PREEMPT",
+                        "TRACK_TASKING_SURGE",
+                        "RIDE_OUT"
+                    ]
+                },
+                "dcoSeverityLevel": {
+                    "type": "string",
+                    "enum": [
+                        "UNAVAILABLE",
+                        "NOMINAL",
+                        "WATCH",
+                        "HIGH",
+                        "CRITICAL"
+                    ]
+                },
+                "dcoRecheckOutcome": {
+                    "type": "string",
+                    "enum": [
+                        "UNCHECKED",
+                        "CLEAR",
+                        "CONFLICTS_FOUND",
+                        "SECONDARY_THREAT_FOUND",
+                        "INFEASIBLE"
+                    ]
+                },
+                "DCOThreatRef": {
+                    "type": "object",
+                    "description": "Reference to a threat record, matrix bucket, or compound event addressed or introduced.",
+                    "properties": {
+                        "SCHEMA_FILE_ID": {
+                            "type": "string",
+                            "description": "Four-character SDS file identifier including \"$\", e.g. \"$TMX\", \"$CDM\", \"$RFL\", \"$RDE\"."
+                        },
+                        "RECORD_ID": {
+                            "type": "string",
+                            "description": "Record identifier within the referenced standard."
+                        },
+                        "BUCKET_ID": {
+                            "type": "string",
+                            "description": "Optional $TMX bucket identifier."
+                        },
+                        "COMPOUND_ID": {
+                            "type": "string",
+                            "description": "Optional $TMX compound event identifier."
+                        },
+                        "NORAD_CAT_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Optional NORAD catalog number of the affected space object."
+                        }
+                    },
+                    "required": [
+                        "SCHEMA_FILE_ID",
+                        "RECORD_ID"
+                    ],
+                    "additionalProperties": false
+                },
+                "DCOModuleAttribution": {
+                    "type": "object",
+                    "description": "Attribution linking a computed trade metric to the exact WASM module build that produced it.",
+                    "properties": {
+                        "METRIC_NAME": {
+                            "type": "string",
+                            "description": "Name of the computed metric (e.g. \"DELTA_V_MPS\", \"MARGIN_GAIN_DB\", \"RESIDUAL_SCORE\")."
+                        },
+                        "MODULE_ID": {
+                            "type": "string",
+                            "description": "Canonical module identifier (e.g. \"analysis/coa-synthesizer\")."
+                        },
+                        "MODULE_VERSION": {
+                            "type": "string",
+                            "description": "Module semantic version string."
+                        },
+                        "WASM_SHA256": {
+                            "type": "string",
+                            "description": "Lowercase hex SHA-256 of the executed portable WASM artifact."
+                        }
+                    },
+                    "required": [
+                        "METRIC_NAME",
+                        "MODULE_ID"
+                    ],
+                    "additionalProperties": false
+                },
+                "DCO": {
+                    "type": "object",
+                    "description": "Defensive COA Trade & Conflict-Recheck",
+                    "properties": {
+                        "DCO_ID": {
+                            "type": "string",
+                            "description": "Unique identifier of this defensive COA evaluation record."
+                        },
+                        "COA_ID": {
+                            "type": "string",
+                            "description": "Identifier of the input $COA record ($COA.ID)."
+                        },
+                        "TMX_RUN_ID": {
+                            "type": "string",
+                            "description": "Identifier of the $TMX assessment run ($TMX.RUN_ID)."
+                        },
+                        "CREATED_UTC": {
+                            "type": "string",
+                            "description": "Evaluation timestamp, RFC 3339 UTC."
+                        },
+                        "THREAT_REF": {
+                            "$ref": "#/definitions/DCOThreatRef",
+                            "description": "Primary threat or compound event answered by this COA."
+                        },
+                        "ACTION_KIND": {
+                            "$ref": "#/definitions/dcoActionKind",
+                            "description": "Specific defensive action modeled in this evaluation."
+                        },
+                        "NORAD_CAT_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "NORAD catalog number of the defended object (0 when GROUP_ID is used)."
+                        },
+                        "GROUP_ID": {
+                            "type": "string",
+                            "description": "Entity group identifier ($EGP.GROUP_ID) when the COA applies to a group."
+                        },
+                        "DELTA_V_MPS": {
+                            "type": "number",
+                            "description": "Computed maneuver delta-v cost in m/s."
+                        },
+                        "PROPELLANT_KG": {
+                            "type": "number",
+                            "description": "Computed propellant mass consumed in kg."
+                        },
+                        "MISSION_LIFE_DAYS": {
+                            "type": "number",
+                            "description": "Estimated mission life impact in days."
+                        },
+                        "OUTAGE_HOURS": {
+                            "type": "number",
+                            "description": "Service or payload outage duration in hours."
+                        },
+                        "COVERAGE_IMPACT_PCT": {
+                            "type": "number",
+                            "description": "Constellation or regional coverage impact in percent."
+                        },
+                        "MARGIN_GAIN_DB": {
+                            "type": "number",
+                            "description": "RF link margin gain achieved in dB."
+                        },
+                        "EXPOSURE_REDUCED_MIN": {
+                            "type": "number",
+                            "description": "Threat exposure time reduced in minutes."
+                        },
+                        "BASELINE_SCORE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Baseline severity score before the COA in basis points (0..10000)."
+                        },
+                        "RESIDUAL_SCORE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Residual severity score after applying the COA in basis points (0..10000)."
+                        },
+                        "RESIDUAL_TIER": {
+                            "$ref": "#/definitions/dcoSeverityLevel",
+                            "description": "Residual severity tier after applying the COA."
+                        },
+                        "CONFLICTS_WITH_COA_IDS": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Identifiers of other $COA records that conflict with this action."
+                        },
+                        "SECONDARY_THREATS_INTRODUCED": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/DCOThreatRef"
+                            },
+                            "description": "Secondary threats introduced by this action (e.g. post-maneuver conjunction or drag)."
+                        },
+                        "RECHECKED": {
+                            "type": "boolean",
+                            "description": "True once full multi-phenomenology conflict re-screening has been executed."
+                        },
+                        "RECHECK_STATUS": {
+                            "$ref": "#/definitions/dcoRecheckOutcome",
+                            "description": "Outcome status of the multi-phenomenology conflict re-screen."
+                        },
+                        "RECHECK_NOTES": {
+                            "type": "string",
+                            "description": "Human-readable diagnostics from conflict re-screening."
+                        },
+                        "ATTRIBUTIONS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/DCOModuleAttribution"
+                            },
+                            "description": "Per-metric module provenance attributions."
+                        }
+                    },
+                    "required": [
+                        "DCO_ID",
+                        "COA_ID",
+                        "TMX_RUN_ID",
+                        "CREATED_UTC",
+                        "THREAT_REF"
+                    ],
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/DCO"
         },
         "TRE": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -320391,6 +323523,686 @@
                 }
             },
             "$ref": "#/definitions/STO"
+        },
+        "TMX": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "tmxPhenomenologyKind": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "ORBITAL_KINETIC",
+                        "CO_ORBITAL_RPO",
+                        "DIRECT_ASCENT_ASAT",
+                        "RF_EW_GNSS",
+                        "OPTICAL_DIRECTED_ENERGY",
+                        "SPACE_ENV_RADIATION",
+                        "GROUND_CUSTODY_CYBER"
+                    ]
+                },
+                "tmxSeverityLevel": {
+                    "type": "string",
+                    "enum": [
+                        "UNAVAILABLE",
+                        "NOMINAL",
+                        "WATCH",
+                        "HIGH",
+                        "CRITICAL"
+                    ]
+                },
+                "tmxExecutionHostKind": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "BROWSER_LOCAL",
+                        "SDN_COMPUTE_NODE"
+                    ]
+                },
+                "tmxModuleRunStatus": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "OK",
+                        "PARTIAL",
+                        "UNAVAILABLE",
+                        "NOT_PUBLIC"
+                    ]
+                },
+                "tmxBucketKind": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "CONSTELLATION",
+                        "SHELL",
+                        "PLANE",
+                        "ASSET",
+                        "GATEWAY"
+                    ]
+                },
+                "tmxPropagatorKind": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "SDN_AP",
+                        "SGP4_XP",
+                        "SGP4"
+                    ]
+                },
+                "tmxCertaintyLevel": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "MEASURED",
+                        "PUBLISHED",
+                        "KINEMATIC_BOUND",
+                        "STATED_WHATIF",
+                        "NOT_PUBLIC"
+                    ]
+                },
+                "TMXRequest": {
+                    "type": "object",
+                    "description": "Invocation request payload carried inside $PIV (PIVRequest.INPUTS) or local execution.",
+                    "properties": {
+                        "REQUEST_ID": {
+                            "type": "string",
+                            "description": "Unique identifier of this matrix evaluation request."
+                        },
+                        "TARGET_SCOPE": {
+                            "type": "string",
+                            "description": "Target scope selector (e.g. constellation name, group, or \"CUSTOM\")."
+                        },
+                        "TARGET_NORAD_CAT_IDS": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 4294967295
+                            },
+                            "description": "Explicit NORAD catalog numbers requested for screening."
+                        },
+                        "GROUP_IDS": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Entity group ($EGP) identifiers requested for screening."
+                        },
+                        "CATALOG_REVISION": {
+                            "type": "string",
+                            "description": "Catalog revision or snapshot identifier pinned for parity."
+                        },
+                        "WINDOW_START": {
+                            "type": "string",
+                            "description": "Inclusive analysis window start, RFC 3339 UTC."
+                        },
+                        "WINDOW_END": {
+                            "type": "string",
+                            "description": "Exclusive analysis window end, RFC 3339 UTC."
+                        },
+                        "PROPAGATOR": {
+                            "$ref": "#/definitions/tmxPropagatorKind",
+                            "description": "Selected propagator theory."
+                        },
+                        "PROPAGATOR_ID": {
+                            "type": "string",
+                            "description": "Canonical propagator module identifier (e.g. \"propagator/sdn-ap\")."
+                        },
+                        "EXECUTION_HOST": {
+                            "$ref": "#/definitions/tmxExecutionHostKind",
+                            "description": "Target execution host kind."
+                        },
+                        "PHENOMENOLOGIES_REQUESTED": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/tmxPhenomenologyKind"
+                            },
+                            "description": "Subset of phenomenologies to evaluate; empty requests all 7."
+                        },
+                        "THP_IDS": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Threat profile identifiers ($THP.THP_ID) to include."
+                        },
+                        "THP_CIDS": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Content identifiers pinning exact $THP payloads."
+                        },
+                        "SCORING_PROFILE_ID": {
+                            "type": "string",
+                            "description": "Named deterministic scoring profile identifier."
+                        },
+                        "INCLUDE_COAS": {
+                            "type": "boolean",
+                            "description": "True to synthesize and attach defensive COAs alongside matrix output."
+                        },
+                        "WHAT_IF_OVERRIDES_JSON": {
+                            "type": "string",
+                            "description": "Optional serialized parameter overrides for analyst what-if runs."
+                        }
+                    },
+                    "required": [
+                        "REQUEST_ID",
+                        "TARGET_SCOPE",
+                        "WINDOW_START",
+                        "WINDOW_END"
+                    ],
+                    "additionalProperties": false
+                },
+                "TMXBucket": {
+                    "type": "object",
+                    "description": "Target aggregation bucket (constellation, shell, plane, asset, or gateway).",
+                    "properties": {
+                        "BUCKET_ID": {
+                            "type": "string",
+                            "description": "Stable identifier of this bucket within the matrix run."
+                        },
+                        "PARENT_BUCKET_ID": {
+                            "type": "string",
+                            "description": "Optional parent bucket identifier in the hierarchy."
+                        },
+                        "BUCKET_KIND": {
+                            "$ref": "#/definitions/tmxBucketKind",
+                            "description": "Granularity kind of this bucket."
+                        },
+                        "LABEL": {
+                            "type": "string",
+                            "description": "Human-readable bucket label."
+                        },
+                        "ASSET_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of assets represented by this bucket."
+                        },
+                        "NORAD_CAT_IDS": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 4294967295
+                            },
+                            "description": "Member NORAD catalog numbers when enumerated."
+                        },
+                        "ALTITUDE_MIN_KM": {
+                            "type": "number",
+                            "description": "Minimum shell altitude in km."
+                        },
+                        "ALTITUDE_MAX_KM": {
+                            "type": "number",
+                            "description": "Maximum shell altitude in km."
+                        },
+                        "INCLINATION_DEG": {
+                            "type": "number",
+                            "description": "Representative orbital inclination in degrees."
+                        }
+                    },
+                    "required": [
+                        "BUCKET_ID",
+                        "LABEL"
+                    ],
+                    "additionalProperties": false
+                },
+                "TMXPhenomenologyWeight": {
+                    "type": "object",
+                    "description": "Deterministic weight and severity thresholds for one phenomenology (in basis points 0..10000).",
+                    "properties": {
+                        "PHENOMENOLOGY": {
+                            "$ref": "#/definitions/tmxPhenomenologyKind",
+                            "description": "Phenomenology configured by this entry."
+                        },
+                        "WEIGHT_BPS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Composite rollup weight in basis points (nominal sum across evaluated phenomenologies = 10000)."
+                        },
+                        "CRITICAL_THRESHOLD_BPS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Score threshold in basis points for CRITICAL tier."
+                        },
+                        "HIGH_THRESHOLD_BPS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Score threshold in basis points for HIGH tier."
+                        },
+                        "WATCH_THRESHOLD_BPS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Score threshold in basis points for WATCH tier."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "TMXCompoundRule": {
+                    "type": "object",
+                    "description": "Deterministic compound-overlap scoring rule across co-occurring phenomenologies.",
+                    "properties": {
+                        "RULE_ID": {
+                            "type": "string",
+                            "description": "Stable rule identifier."
+                        },
+                        "PHENOMENOLOGIES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/tmxPhenomenologyKind"
+                            },
+                            "description": "Set of phenomenologies whose temporal/spatial overlap triggers this rule."
+                        },
+                        "BONUS_BPS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Additive bonus in basis points (0..2500)."
+                        },
+                        "MULTIPLIER_BPS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Multiplicative factor in basis points (e.g. 10000 = 1.00x, 12500 = 1.25x)."
+                        }
+                    },
+                    "required": [
+                        "RULE_ID"
+                    ],
+                    "additionalProperties": false
+                },
+                "TMXModuleRun": {
+                    "type": "object",
+                    "description": "Execution telemetry and attribution for one phenomenology analyzer in this run.",
+                    "properties": {
+                        "PHENOMENOLOGY": {
+                            "$ref": "#/definitions/tmxPhenomenologyKind",
+                            "description": "Phenomenology axis produced by this module."
+                        },
+                        "MODULE_ID": {
+                            "type": "string",
+                            "description": "Canonical module identifier (e.g. \"analysis/asat-reach\")."
+                        },
+                        "MODULE_VERSION": {
+                            "type": "string",
+                            "description": "Module semantic version string."
+                        },
+                        "WASM_SHA256": {
+                            "type": "string",
+                            "description": "Lowercase hex SHA-256 of the executed portable WASM artifact."
+                        },
+                        "STATUS": {
+                            "$ref": "#/definitions/tmxModuleRunStatus",
+                            "description": "Outcome status of this module invocation."
+                        },
+                        "WALL_TIME_MS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Measured execution wall time in milliseconds."
+                        },
+                        "REFUSAL_REASON": {
+                            "type": "string",
+                            "description": "Explicit refusal or degradation reason when STATUS is not OK."
+                        }
+                    },
+                    "required": [
+                        "MODULE_ID"
+                    ],
+                    "additionalProperties": false
+                },
+                "TMXRecordRef": {
+                    "type": "object",
+                    "description": "Reference to a supporting underlying SDS record without duplicating its payload.",
+                    "properties": {
+                        "SCHEMA_FILE_ID": {
+                            "type": "string",
+                            "description": "Four-character SDS file identifier including \"$\", e.g. \"$CDM\", \"$ACW\", \"$RFL\", \"$RDE\", \"$THP\"."
+                        },
+                        "RECORD_ID": {
+                            "type": "string",
+                            "description": "Record identifier within the referenced SDS standard."
+                        },
+                        "NORAD_CAT_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Optional NORAD catalog number associated with the event."
+                        },
+                        "EPOCH": {
+                            "type": "string",
+                            "description": "Event epoch or peak timestamp, RFC 3339 UTC."
+                        },
+                        "METRIC_LABEL": {
+                            "type": "string",
+                            "description": "Primary metric label (e.g. \"MISS_DISTANCE_KM\", \"DOSE_MSV_H\", \"J_S_DB\")."
+                        },
+                        "METRIC_VALUE": {
+                            "type": "number",
+                            "description": "Primary metric numeric value."
+                        },
+                        "METRIC_UNITS": {
+                            "type": "string",
+                            "description": "Physical units string for METRIC_VALUE."
+                        }
+                    },
+                    "required": [
+                        "SCHEMA_FILE_ID",
+                        "RECORD_ID"
+                    ],
+                    "additionalProperties": false
+                },
+                "TMXCell": {
+                    "type": "object",
+                    "description": "Single (bucket x phenomenology) cell in the threat matrix.",
+                    "properties": {
+                        "BUCKET_ID": {
+                            "type": "string",
+                            "description": "Target bucket identifier referencing TMXBucket.BUCKET_ID."
+                        },
+                        "PHENOMENOLOGY": {
+                            "$ref": "#/definitions/tmxPhenomenologyKind",
+                            "description": "Phenomenology axis for this cell."
+                        },
+                        "SEVERITY_TIER": {
+                            "$ref": "#/definitions/tmxSeverityLevel",
+                            "description": "Categorical severity tier for this cell."
+                        },
+                        "PHENOMENOLOGY_SCORE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Deterministic fixed-point severity score in basis points (0..10000)."
+                        },
+                        "EXPOSED_ASSET_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Count of unique assets exposed in this cell."
+                        },
+                        "PEAK_SIMULTANEOUS_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Peak simultaneous exposed asset count over the window."
+                        },
+                        "EARLIEST_ONSET_UTC": {
+                            "type": "string",
+                            "description": "Earliest threat onset timestamp in the window, RFC 3339 UTC."
+                        },
+                        "TOTAL_EXPOSURE_MIN": {
+                            "type": "number",
+                            "description": "Total accumulated exposure duration in minutes."
+                        },
+                        "WORST_METRIC_SUMMARY": {
+                            "type": "string",
+                            "description": "Compact human-readable worst-case metric summary."
+                        },
+                        "CERTAINTY_FLOOR": {
+                            "$ref": "#/definitions/tmxCertaintyLevel",
+                            "description": "Minimum epistemic certainty across contributing threat inputs."
+                        },
+                        "EVENT_REFS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TMXRecordRef"
+                            },
+                            "description": "Underlying SDS event references supporting this cell."
+                        }
+                    },
+                    "required": [
+                        "BUCKET_ID"
+                    ],
+                    "additionalProperties": false
+                },
+                "TMXCompoundEvent": {
+                    "type": "object",
+                    "description": "Overlapping multi-phenomenology compound threat event on an asset, site, or bucket.",
+                    "properties": {
+                        "COMPOUND_ID": {
+                            "type": "string",
+                            "description": "Stable identifier of this compound overlap event."
+                        },
+                        "BUCKET_ID": {
+                            "type": "string",
+                            "description": "Bucket identifier where the overlap occurs."
+                        },
+                        "NORAD_CAT_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Optional NORAD catalog number of the affected asset."
+                        },
+                        "SITE_ID": {
+                            "type": "string",
+                            "description": "Optional ground site or gateway identifier."
+                        },
+                        "PHENOMENOLOGIES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/tmxPhenomenologyKind"
+                            },
+                            "description": "Co-occurring phenomenologies participating in the overlap."
+                        },
+                        "MEMBER_EVENT_REFS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TMXRecordRef"
+                            },
+                            "description": "Member SDS event references forming this compound event."
+                        },
+                        "OVERLAP_START_UTC": {
+                            "type": "string",
+                            "description": "Inclusive overlap window start, RFC 3339 UTC."
+                        },
+                        "OVERLAP_END_UTC": {
+                            "type": "string",
+                            "description": "Exclusive overlap window end, RFC 3339 UTC."
+                        },
+                        "COMPOUND_MULTIPLIER_BPS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Applied compound multiplier in basis points."
+                        },
+                        "COMPOUND_BONUS_BPS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Applied compound bonus in basis points."
+                        },
+                        "COMBINED_SCORE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Final deterministic combined score in basis points (0..10000)."
+                        },
+                        "SEVERITY_TIER": {
+                            "$ref": "#/definitions/tmxSeverityLevel",
+                            "description": "Resulting categorical severity tier."
+                        }
+                    },
+                    "required": [
+                        "COMPOUND_ID",
+                        "BUCKET_ID",
+                        "OVERLAP_START_UTC",
+                        "OVERLAP_END_UTC"
+                    ],
+                    "additionalProperties": false
+                },
+                "TMXRollup": {
+                    "type": "object",
+                    "description": "Deterministic composite rollup across all evaluated phenomenologies for a bucket.",
+                    "properties": {
+                        "BUCKET_ID": {
+                            "type": "string",
+                            "description": "Target bucket identifier referencing TMXBucket.BUCKET_ID."
+                        },
+                        "WORST_TIER": {
+                            "$ref": "#/definitions/tmxSeverityLevel",
+                            "description": "Worst severity tier observed across evaluated phenomenologies."
+                        },
+                        "COMPOSITE_SCORE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Final composite score in basis points (0..10000)."
+                        },
+                        "BASE_WEIGHTED_SCORE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Pre-bonus weighted average score in basis points (0..10000)."
+                        },
+                        "COMPOUND_BONUS_APPLIED_BPS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Compound overlap bonus applied in basis points."
+                        },
+                        "EVALUATED_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Number of phenomenologies successfully evaluated for this bucket."
+                        },
+                        "TOTAL_PHENOMENOLOGIES": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Total phenomenology axes configured in the matrix."
+                        },
+                        "COVERAGE_RATIO": {
+                            "type": "string",
+                            "description": "Coverage string such as \"7/7\"."
+                        },
+                        "TOP_THREAT_REFS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TMXRecordRef"
+                            },
+                            "description": "Highest-severity underlying SDS event references for quick drill-down."
+                        }
+                    },
+                    "required": [
+                        "BUCKET_ID"
+                    ],
+                    "additionalProperties": false
+                },
+                "TMX": {
+                    "type": "object",
+                    "description": "Multi-Phenomenology Threat Matrix",
+                    "properties": {
+                        "RUN_ID": {
+                            "type": "string",
+                            "description": "Unique run identifier for this threat matrix assessment."
+                        },
+                        "CREATED_UTC": {
+                            "type": "string",
+                            "description": "Creation timestamp of this chunk/run, RFC 3339 UTC."
+                        },
+                        "WINDOW_START": {
+                            "type": "string",
+                            "description": "Inclusive analysis window start, RFC 3339 UTC."
+                        },
+                        "WINDOW_END": {
+                            "type": "string",
+                            "description": "Exclusive analysis window end, RFC 3339 UTC."
+                        },
+                        "PROPAGATOR": {
+                            "$ref": "#/definitions/tmxPropagatorKind",
+                            "description": "Ephemeris propagator theory used for this run."
+                        },
+                        "PROPAGATOR_ID": {
+                            "type": "string",
+                            "description": "Canonical propagator module identifier."
+                        },
+                        "EXECUTION_HOST": {
+                            "$ref": "#/definitions/tmxExecutionHostKind",
+                            "description": "Execution host that computed this matrix."
+                        },
+                        "SCORING_PROFILE_ID": {
+                            "type": "string",
+                            "description": "Deterministic scoring profile identifier."
+                        },
+                        "CHUNK_INDEX": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Zero-based streaming chunk index for progressive delivery."
+                        },
+                        "IS_FINAL_CHUNK": {
+                            "type": "boolean",
+                            "description": "True on the final chunk of a streamed matrix run."
+                        },
+                        "REQUEST": {
+                            "$ref": "#/definitions/TMXRequest",
+                            "description": "Originating TMXRequest configuration for reproducibility."
+                        },
+                        "PHENOMENOLOGY_WEIGHTS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TMXPhenomenologyWeight"
+                            },
+                            "description": "Configured phenomenology weights and severity thresholds."
+                        },
+                        "COMPOUND_MULTIPLIERS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TMXCompoundRule"
+                            },
+                            "description": "Configured compound overlap multiplier/bonus rules."
+                        },
+                        "TARGET_BUCKETS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TMXBucket"
+                            },
+                            "description": "Target aggregation buckets included in this run."
+                        },
+                        "PHENOMENOLOGIES_RUN": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TMXModuleRun"
+                            },
+                            "description": "Per-phenomenology module execution records."
+                        },
+                        "CELLS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TMXCell"
+                            },
+                            "description": "Evaluated matrix cells (bucket x phenomenology)."
+                        },
+                        "COMPOUND_EVENTS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TMXCompoundEvent"
+                            },
+                            "description": "Detected multi-phenomenology compound overlap events."
+                        },
+                        "ROLLUPS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TMXRollup"
+                            },
+                            "description": "Deterministic composite rollups per bucket."
+                        }
+                    },
+                    "required": [
+                        "RUN_ID",
+                        "CREATED_UTC",
+                        "WINDOW_START",
+                        "WINDOW_END"
+                    ],
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/TMX"
         },
         "OON": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",

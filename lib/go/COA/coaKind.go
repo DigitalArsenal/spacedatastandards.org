@@ -9,28 +9,48 @@ type coaKind int8
 
 const (
 	/// Not stated.
-	coaKindUNSPECIFIED coaKind = 0
+	coaKindUNSPECIFIED       coaKind = 0
 	/// A maneuver. When it answers an event it is made LEAD_SECONDS before EVENT_EPOCH and is back in
 	/// place within RETURN_WITHIN_SECONDS after it.
-	coaKindMANEUVER    coaKind = 1
+	coaKindMANEUVER          coaKind = 1
 	/// No action: the event is accepted.
-	coaKindRIDE_OUT    coaKind = 2
+	coaKindRIDE_OUT          coaKind = 2
 	/// STEPS, in order, restore service after the event.
-	coaKindRECOVERY    coaKind = 3
+	coaKindRECOVERY          coaKind = 3
+	/// RF countermeasure (frequency hop, null steer, power boost, beam narrow).
+	coaKindRF_COUNTERMEASURE coaKind = 4
+	/// Traffic / TT&C / payload gateway reroute.
+	coaKindGATEWAY_REROUTE   coaKind = 5
+	/// Optical / star-tracker / sensor shuttering or slew protection.
+	coaKindSENSOR_PROTECTION coaKind = 6
+	/// Preemptive spacecraft safe-mode entry (e.g. severe SEP/storm).
+	coaKindSAFE_MODE         coaKind = 7
+	/// Surge or tasking of tracking / custody sensors.
+	coaKindTRACK_TASKING     coaKind = 8
 )
 
 var EnumNamescoaKind = map[coaKind]string{
-	coaKindUNSPECIFIED: "UNSPECIFIED",
-	coaKindMANEUVER:    "MANEUVER",
-	coaKindRIDE_OUT:    "RIDE_OUT",
-	coaKindRECOVERY:    "RECOVERY",
+	coaKindUNSPECIFIED:       "UNSPECIFIED",
+	coaKindMANEUVER:          "MANEUVER",
+	coaKindRIDE_OUT:          "RIDE_OUT",
+	coaKindRECOVERY:          "RECOVERY",
+	coaKindRF_COUNTERMEASURE: "RF_COUNTERMEASURE",
+	coaKindGATEWAY_REROUTE:   "GATEWAY_REROUTE",
+	coaKindSENSOR_PROTECTION: "SENSOR_PROTECTION",
+	coaKindSAFE_MODE:         "SAFE_MODE",
+	coaKindTRACK_TASKING:     "TRACK_TASKING",
 }
 
 var EnumValuescoaKind = map[string]coaKind{
-	"UNSPECIFIED": coaKindUNSPECIFIED,
-	"MANEUVER":    coaKindMANEUVER,
-	"RIDE_OUT":    coaKindRIDE_OUT,
-	"RECOVERY":    coaKindRECOVERY,
+	"UNSPECIFIED":       coaKindUNSPECIFIED,
+	"MANEUVER":          coaKindMANEUVER,
+	"RIDE_OUT":          coaKindRIDE_OUT,
+	"RECOVERY":          coaKindRECOVERY,
+	"RF_COUNTERMEASURE": coaKindRF_COUNTERMEASURE,
+	"GATEWAY_REROUTE":   coaKindGATEWAY_REROUTE,
+	"SENSOR_PROTECTION": coaKindSENSOR_PROTECTION,
+	"SAFE_MODE":         coaKindSAFE_MODE,
+	"TRACK_TASKING":     coaKindTRACK_TASKING,
 }
 
 func (v coaKind) String() string {

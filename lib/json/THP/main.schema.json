@@ -1,0 +1,257 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "pvnSourceKind" : {
+      "type" : "string",
+      "enum": ["Unspecified", "ElementSet", "Ephemeris", "Observation", "Reference"]
+    },
+    "pvnLicenseClass" : {
+      "type" : "string",
+      "enum": ["Unspecified", "Reproducible", "CiteOnly", "ShareAlike", "NonCommercial"]
+    },
+    "thpThreatCategory" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "CO_ORBITAL", "DIRECT_ASCENT", "RF_JAMMER", "GNSS_DENIAL", "DIRECTED_ENERGY", "SPACE_WEATHER", "ISR_CUSTODY", "GROUND_CYBER"]
+    },
+    "thpCertaintyLevel" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "MEASURED", "PUBLISHED", "KINEMATIC_BOUND", "STATED_WHATIF", "NOT_PUBLIC"]
+    },
+    "thpAccessTier" : {
+      "type" : "string",
+      "enum": ["OPEN", "COMMERCIAL", "GOVERNMENT"]
+    },
+    "thpParamValueKind" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "SCALAR_DOUBLE", "TEXT", "BOOLEAN"]
+    },
+    "PVN" : {
+      "type" : "object",
+      "description" : "Product Provenance",
+      "properties" : {
+        "SOURCE_ID" : {
+                "type" : "string",
+                "description" : "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+              },
+        "SOURCE_KIND" : {
+                "$ref" : "#/definitions/pvnSourceKind",
+                "description" : "What kind of data the source supplies."
+              },
+        "ORIGINATOR" : {
+                "type" : "string",
+                "description" : "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+              },
+        "PROVIDER_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+              },
+        "PRODUCER" : {
+                "type" : "string",
+                "description" : "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+              },
+        "LICENSE_CLASS" : {
+                "$ref" : "#/definitions/pvnLicenseClass",
+                "description" : "What the source's terms permit for the product."
+              },
+        "LICENSE_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+              },
+        "LINEAGE" : {
+                "type" : "string",
+                "description" : "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+              },
+        "SOURCE_URL" : {
+                "type" : "string",
+                "description" : "Replayable URL or provider query identifying the source material as it\nwas retrieved (the SOURCE_URL of $CMR and $AVL)."
+              },
+        "SOURCE_VERSION" : {
+                "type" : "string",
+                "description" : "Source revision, edition or upstream update marker verbatim: for a file\nits originator stamps, the stamp."
+              },
+        "RETRIEVED_AT" : {
+                "type" : "string",
+                "description" : "RFC 3339 UTC fixed-millisecond time the source material was retrieved."
+              },
+        "SOURCE_SHA256" : {
+                "type" : "string",
+                "description" : "SHA-256 of the exact source payload bytes as retrieved, 64 lowercase\nhexadecimal characters. Empty when the source cannot expose replayable\nbytes."
+              },
+        "SOURCE_BYTES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
+              },
+        "PRODUCER_SHA256" : {
+                "type" : "string",
+                "description" : "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "THPProvenance" : {
+      "type" : "object",
+      "description" : "Provenance and classification metadata for a threat parameter.",
+      "properties" : {
+        "SOURCE_URI" : {
+                "type" : "string",
+                "description" : "URI or canonical source identifier for this parameter."
+              },
+        "PUBLISHED_DATE" : {
+                "type" : "string",
+                "description" : "Publication or revision date, ISO 8601 UTC."
+              },
+        "CERTAINTY" : {
+                "$ref" : "#/definitions/thpCertaintyLevel",
+                "description" : "Epistemic certainty level of the parameter value."
+              },
+        "ACCESS_TIER" : {
+                "$ref" : "#/definitions/thpAccessTier",
+                "description" : "Access tier governing visibility of this parameter."
+              },
+        "RECORD_PROVENANCE" : {
+                "$ref" : "#/definitions/PVN",
+                "description" : "Optional full $PVN provenance block."
+              },
+        "NOTES" : {
+                "type" : "string",
+                "description" : "Explanatory analyst notes."
+              }
+      },
+      "required" : ["SOURCE_URI"],
+      "additionalProperties" : false
+    },
+    "THPReference" : {
+      "type" : "object",
+      "description" : "Typed reference to an existing SDS record without duplicating its fields.",
+      "properties" : {
+        "SCHEMA_FILE_ID" : {
+                "type" : "string",
+                "description" : "Four-character SDS file identifier including \"$\", e.g. \"$OMM\", \"$RFB\", \"$SIT\"."
+              },
+        "RECORD_ID" : {
+                "type" : "string",
+                "description" : "Canonical identifier of the referenced record within that standard."
+              },
+        "NORAD_CAT_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Optional catalog number when the referenced record targets a cataloged object."
+              },
+        "CID" : {
+                "type" : "string",
+                "description" : "Optional content identifier pinning exact immutable record bytes."
+              },
+        "ROLE" : {
+                "type" : "string",
+                "description" : "Role of the referenced record in this threat profile (e.g. \"PLATFORM\", \"EMITTER\", \"SITE\")."
+              }
+      },
+      "required" : ["SCHEMA_FILE_ID", "RECORD_ID"],
+      "additionalProperties" : false
+    },
+    "THPParameter" : {
+      "type" : "object",
+      "description" : "One typed capability or environmental threshold parameter on a threat profile.",
+      "properties" : {
+        "PARAM_KEY" : {
+                "type" : "string",
+                "description" : "Canonical parameter key (e.g. \"ALTITUDE_CAP_KM\", \"EIRP_DBW\", \"LASER_WAVELENGTH_NM\")."
+              },
+        "VALUE_KIND" : {
+                "$ref" : "#/definitions/thpParamValueKind",
+                "description" : "Discriminator naming which value field is populated."
+              },
+        "NUMERIC_VALUE" : {
+                "type" : "number",
+                "description" : "Numeric parameter value when VALUE_KIND is SCALAR_DOUBLE."
+              },
+        "TEXT_VALUE" : {
+                "type" : "string",
+                "description" : "String parameter value when VALUE_KIND is TEXT."
+              },
+        "BOOL_VALUE" : {
+                "type" : "boolean",
+                "description" : "Boolean parameter value when VALUE_KIND is BOOLEAN."
+              },
+        "UNITS" : {
+                "type" : "string",
+                "description" : "Physical units string for numeric values (e.g. \"km\", \"dBW\", \"MHz\", \"nm\")."
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/THPProvenance",
+                "description" : "Parameter-level provenance and certainty."
+              }
+      },
+      "required" : ["PARAM_KEY", "PROVENANCE"],
+      "additionalProperties" : false
+    },
+    "THP" : {
+      "type" : "object",
+      "description" : "Threat Profile",
+      "properties" : {
+        "THP_ID" : {
+                "type" : "string",
+                "description" : "Stable identifier of this threat profile."
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Human-readable display name of the threat profile."
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Summary description of the threat profile and scope."
+              },
+        "CATEGORY" : {
+                "$ref" : "#/definitions/thpThreatCategory",
+                "description" : "Threat phenomenology category."
+              },
+        "ACCESS_TIER" : {
+                "$ref" : "#/definitions/thpAccessTier",
+                "description" : "Minimum access tier required to consume this threat profile."
+              },
+        "ACTIVE" : {
+                "type" : "boolean",
+                "description" : "True when the threat profile is active for screening runs."
+              },
+        "LINKED_SCHEMA" : {
+                "type" : "string",
+                "description" : "Four-character SDS file identifier including \"$\" of the primary linked record."
+              },
+        "LINKED_RECORD_ID" : {
+                "type" : "string",
+                "description" : "Canonical record identifier of the primary linked SDS record."
+              },
+        "LINKED_NORAD_CAT_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Optional NORAD catalog number of the primary linked space object."
+              },
+        "ADDITIONAL_REFS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/THPReference"},
+                "description" : "Additional linked SDS records referenced by ($SCHEMA_FILE_ID, RECORD_ID)."
+              },
+        "PARAMETERS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/THPParameter"},
+                "description" : "Typed capability and threshold parameters with per-parameter provenance."
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/PVN",
+                "description" : "Record-level source and build provenance."
+              },
+        "CREATED_AT" : {
+                "type" : "string",
+                "description" : "Creation timestamp, RFC 3339 UTC."
+              },
+        "UPDATED_AT" : {
+                "type" : "string",
+                "description" : "Last update timestamp, RFC 3339 UTC."
+              },
+        "SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Optional Ed25519 signature bytes over the canonical threat lane payload."
+              }
+      },
+      "required" : ["THP_ID", "NAME", "PROVENANCE"],
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/THP"
+}

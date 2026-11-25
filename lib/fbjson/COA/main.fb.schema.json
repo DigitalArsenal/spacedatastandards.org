@@ -7,7 +7,12 @@
         "UNSPECIFIED",
         "MANEUVER",
         "RIDE_OUT",
-        "RECOVERY"
+        "RECOVERY",
+        "RF_COUNTERMEASURE",
+        "GATEWAY_REROUTE",
+        "SENSOR_PROTECTION",
+        "SAFE_MODE",
+        "TRACK_TASKING"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -27,6 +32,26 @@
         "RECOVERY": {
           "value": 3,
           "description": "STEPS, in order, restore service after the event."
+        },
+        "RF_COUNTERMEASURE": {
+          "value": 4,
+          "description": "RF countermeasure (frequency hop, null steer, power boost, beam narrow)."
+        },
+        "GATEWAY_REROUTE": {
+          "value": 5,
+          "description": "Traffic / TT&C / payload gateway reroute."
+        },
+        "SENSOR_PROTECTION": {
+          "value": 6,
+          "description": "Optical / star-tracker / sensor shuttering or slew protection."
+        },
+        "SAFE_MODE": {
+          "value": 7,
+          "description": "Preemptive spacecraft safe-mode entry (e.g. severe SEP/storm)."
+        },
+        "TRACK_TASKING": {
+          "value": 8,
+          "description": "Surge or tasking of tracking / custody sensors."
         }
       }
     },
@@ -86,6 +111,26 @@
             "RECOVERY": {
               "value": 3,
               "description": "STEPS, in order, restore service after the event."
+            },
+            "RF_COUNTERMEASURE": {
+              "value": 4,
+              "description": "RF countermeasure (frequency hop, null steer, power boost, beam narrow)."
+            },
+            "GATEWAY_REROUTE": {
+              "value": 5,
+              "description": "Traffic / TT&C / payload gateway reroute."
+            },
+            "SENSOR_PROTECTION": {
+              "value": 6,
+              "description": "Optical / star-tracker / sensor shuttering or slew protection."
+            },
+            "SAFE_MODE": {
+              "value": 7,
+              "description": "Preemptive spacecraft safe-mode entry (e.g. severe SEP/storm)."
+            },
+            "TRACK_TASKING": {
+              "value": 8,
+              "description": "Surge or tasking of tracking / custody sensors."
             }
           },
           "x-flatbuffer-default": "UNSPECIFIED"

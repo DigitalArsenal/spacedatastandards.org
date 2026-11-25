@@ -1,0 +1,26 @@
+/**
+ * Outcome of re-screening the defensive COA across all phenomenologies. Append new values only.
+ */
+export declare enum dcoRecheckOutcome {
+    /**
+     * Conflict re-screening has not been run.
+     */
+    UNCHECKED = 0,
+    /**
+     * Re-screening passed with no COA conflicts or secondary threats.
+     */
+    CLEAR = 1,
+    /**
+     * Proposed action conflicts with another active or candidate COA.
+     */
+    CONFLICTS_FOUND = 2,
+    /**
+     * Proposed action introduces a secondary threat in another phenomenology.
+     */
+    SECONDARY_THREAT_FOUND = 3,
+    /**
+     * Proposed action violates physical, delta-v, or operational feasibility bounds.
+     */
+    INFEASIBLE = 4
+}
+//# sourceMappingURL=dcoRecheckOutcome.d.ts.map

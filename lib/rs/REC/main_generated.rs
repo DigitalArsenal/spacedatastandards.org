@@ -300,6 +300,11 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 pub mod flatbuffers_encryption {
 //! Field-encryption format 3: encrypts or decrypts, in place, every
@@ -8804,11 +8809,11 @@ impl RecordTypeT {
 pub const ENUM_MIN_RECORD_TYPE_EXTENDED: u16 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RECORD_TYPE_EXTENDED: u16 = 300;
+pub const ENUM_MAX_RECORD_TYPE_EXTENDED: u16 = 305;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RECORD_TYPE_EXTENDED: [RecordTypeExtended; 46] = [
+pub const ENUM_VALUES_RECORD_TYPE_EXTENDED: [RecordTypeExtended; 51] = [
     RecordTypeExtended::NONE,
     RecordTypeExtended::ABA,
     RecordTypeExtended::CVR,
@@ -8855,6 +8860,11 @@ pub const ENUM_VALUES_RECORD_TYPE_EXTENDED: [RecordTypeExtended; 46] = [
     RecordTypeExtended::COA,
     RecordTypeExtended::SLO,
     RecordTypeExtended::UST,
+    RecordTypeExtended::THP,
+    RecordTypeExtended::TMX,
+    RecordTypeExtended::DCO,
+    RecordTypeExtended::RBF,
+    RecordTypeExtended::RDE,
 ];
 
 /// WIDE RECORD TYPES -- APPEND ONLY, FOREVER.
@@ -8916,9 +8926,14 @@ impl RecordTypeExtended {
     pub const COA: Self = Self(298);
     pub const SLO: Self = Self(299);
     pub const UST: Self = Self(300);
+    pub const THP: Self = Self(301);
+    pub const TMX: Self = Self(302);
+    pub const DCO: Self = Self(303);
+    pub const RBF: Self = Self(304);
+    pub const RDE: Self = Self(305);
 
     pub const ENUM_MIN: u16 = 0;
-    pub const ENUM_MAX: u16 = 300;
+    pub const ENUM_MAX: u16 = 305;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::NONE,
         Self::ABA,
@@ -8966,6 +8981,11 @@ impl RecordTypeExtended {
         Self::COA,
         Self::SLO,
         Self::UST,
+        Self::THP,
+        Self::TMX,
+        Self::DCO,
+        Self::RBF,
+        Self::RDE,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -9017,6 +9037,11 @@ impl RecordTypeExtended {
             Self::COA => Some("COA"),
             Self::SLO => Some("SLO"),
             Self::UST => Some("UST"),
+            Self::THP => Some("THP"),
+            Self::TMX => Some("TMX"),
+            Self::DCO => Some("DCO"),
+            Self::RBF => Some("RBF"),
+            Self::RDE => Some("RDE"),
             _ => None,
         }
     }

@@ -1,0 +1,26 @@
+/**
+ * Shielding transport geometry approximation. Append new values only.
+ */
+export declare enum rdeShieldGeometry {
+    /**
+     * Not stated.
+     */
+    UNSPECIFIED = 0,
+    /**
+     * Dose at the center of a solid sphere.
+     */
+    SOLID_SPHERE = 1,
+    /**
+     * Dose inside a hollow spherical shell.
+     */
+    HOLLOW_SPHERE = 2,
+    /**
+     * Planar slab geometry.
+     */
+    SLAB = 3,
+    /**
+     * Multi-ray 3D sectoring trace.
+     */
+    SECTOR_TRACE = 4
+}
+//# sourceMappingURL=rdeShieldGeometry.d.ts.map
