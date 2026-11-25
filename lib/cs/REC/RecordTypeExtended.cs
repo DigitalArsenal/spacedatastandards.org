@@ -57,4 +57,9 @@ public enum RecordTypeExtended : ushort
   COA = 298,
   SLO = 299,
   UST = 300,
+  THP = 301,
+  TMX = 302,
+  DCO = 303,
+  RBF = 304,
+  RDE = 305,
 };

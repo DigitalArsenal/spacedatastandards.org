@@ -1,0 +1,208 @@
+// Hash: c363854bad6fcc8a6f11100093b0b7023c89fb5115a916626a78ba65d9edcf45
+// Version: 1.293.0
+// -----------------------------------END_HEADER
+// Radiation Effects (RDE)
+// Description
+// Spacecraft and crew radiation effects derived from $RBF trapped belt flux and $SWS/$SFE
+// solar energetic particle (SEP) inputs: instantaneous dose rate, orbit-averaged and per-pass
+// integrated dose, shielding depth-dose curves, electronics SEE/TID margins, cumulative crew
+// organ exposure, and solar flare/SEP impacts, with explicit provenance ($PVN).
+
+include "../PVN/main.fbs";
+
+/// Shielding material class. Append new values only.
+enum rdeShieldMaterial : byte {
+  /// Not stated.
+  UNSPECIFIED = 0,
+  /// Standard aerospace aluminum (Al).
+  ALUMINUM = 1,
+  /// Hydrogen-rich polyethylene shielding.
+  POLYETHYLENE = 2,
+  /// High-Z tantalum spot shielding.
+  TANTALUM = 3,
+  /// Water shielding wall / storm shelter.
+  WATER = 4,
+  /// Carbon-fiber composite structure.
+  CARBON_COMPOSITE = 5,
+  /// Layered multi-material stackup.
+  MULTI_MATERIAL = 6,
+  /// Custom material specification in MATERIAL_NAME.
+  CUSTOM = 7
+}
+
+/// Shielding transport geometry approximation. Append new values only.
+enum rdeShieldGeometry : byte {
+  /// Not stated.
+  UNSPECIFIED = 0,
+  /// Dose at the center of a solid sphere.
+  SOLID_SPHERE = 1,
+  /// Dose inside a hollow spherical shell.
+  HOLLOW_SPHERE = 2,
+  /// Planar slab geometry.
+  SLAB = 3,
+  /// Multi-ray 3D sectoring trace.
+  SECTOR_TRACE = 4
+}
+
+/// Overall spacecraft or crew radiation effect severity tier. Append new values only.
+enum rdeEffectSeverity : byte {
+  /// Not stated.
+  UNSPECIFIED = 0,
+  /// Nominal radiation environment and margins.
+  NOMINAL = 1,
+  /// Elevated radiation exposure; monitor margins.
+  ELEVATED = 2,
+  /// Warning threshold exceeded; operational mitigation advised.
+  WARNING = 3,
+  /// Critical threshold exceeded; safe-mode or crew shelter action required.
+  CRITICAL = 4
+}
+
+/// Shielding configuration for dose and TID calculations.
+table RDEShielding {
+  /// Primary shielding material class.
+  MATERIAL:rdeShieldMaterial = ALUMINUM;
+  /// Descriptive material or layup name when CUSTOM or MULTI_MATERIAL.
+  MATERIAL_NAME:string;
+  /// Transport geometry approximation.
+  GEOMETRY:rdeShieldGeometry = SOLID_SPHERE;
+  /// Shield thickness in millimeters.
+  THICKNESS_MM:double;
+  /// Areal mass density in g/cm^2.
+  AREAL_DENSITY_G_CM2:double;
+}
+
+/// One point on a depth-dose shielding curve.
+table RDEShieldCurvePoint {
+  /// Shield thickness in millimeters.
+  THICKNESS_MM:double;
+  /// Areal mass density in g/cm^2.
+  AREAL_DENSITY_G_CM2:double;
+  /// Computed dose rate behind this thickness in mSv/h.
+  DOSE_RATE_MSV_H:double;
+  /// Computed total ionizing dose over the window in krad(Si).
+  TID_KRAD_SI:double;
+}
+
+/// Integrated radiation exposure for a single belt or SAA pass.
+table RDEPassDose {
+  /// Unique pass identifier within the assessment window.
+  PASS_ID:string (required);
+  /// Pass entry timestamp, RFC 3339 UTC.
+  START_UTC:string (required);
+  /// Pass exit timestamp, RFC 3339 UTC.
+  END_UTC:string (required);
+  /// True when the pass traverses the South Atlantic Anomaly.
+  IN_SAA:bool = false;
+  /// True when the pass traverses a primary trapped radiation belt core.
+  IN_BELT_CORE:bool = false;
+  /// Peak instantaneous dose rate during the pass in mSv/h.
+  PEAK_DOSE_RATE_MSV_H:double;
+  /// Total integrated dose accumulated during the pass in mSv.
+  INTEGRATED_DOSE_MSV:double;
+  /// Peak McIlwain L-shell reached during the pass.
+  PEAK_L_SHELL:double;
+}
+
+/// Spacecraft electronics single-event effects (SEE) and total ionizing dose (TID) assessment.
+table RDEElectronicsEffect {
+  /// Reference device or part hardness profile identifier.
+  DEVICE_PROFILE_ID:string;
+  /// Single-event upset rate in upsets/bit/day.
+  SEE_UPSET_RATE_PER_BIT_DAY:double;
+  /// Single-event latchup probability over the assessment window (0..1).
+  SEL_PROBABILITY:double;
+  /// Single-event burnout / gate rupture risk metric (0..1).
+  SEB_SEGR_RISK:double;
+  /// Total ionizing dose accumulated over the window in krad(Si).
+  TID_KRAD_SI:double;
+  /// Remaining TID design margin in percent.
+  TID_MARGIN_PCT:double;
+  /// Linear energy transfer threshold in MeV*cm^2/mg.
+  LET_THRESHOLD_MEV_CM2_MG:double;
+}
+
+/// Human crew dosimetry and career limit tracking.
+table RDECrewDose {
+  /// Crew member or mission role identifier.
+  CREW_ID:string;
+  /// Whole-body effective dose over the window in mSv.
+  EFFECTIVE_DOSE_MSV:double;
+  /// Blood-forming organs (BFO) dose in mSv.
+  BLOOD_FORMING_ORGANS_MSV:double;
+  /// Eye lens dose in mSv.
+  EYE_LENS_MSV:double;
+  /// Skin dose in mSv.
+  SKIN_MSV:double;
+  /// Updated cumulative career effective dose in mSv.
+  CUMULATIVE_CAREER_MSV:double;
+  /// Fraction of applicable career limit consumed (0..1+).
+  CAREER_LIMIT_FRACTION:double;
+}
+
+/// Solar flare / solar energetic particle (SEP) asset impact entry.
+table RDESepEffect {
+  /// Referenced $SFE solar flare event identifier.
+  SFE_EVENT_ID:string;
+  /// NOAA Solar Radiation Storm scale S1..S5 (0 if below S1).
+  NOAA_S_SCALE:ubyte;
+  /// Soft X-ray flare class verbatim (e.g. "X2.4").
+  FLARE_CLASS:string;
+  /// Additional SEP event dose in mSv.
+  SEP_DOSE_MSV:double;
+  /// Estimated solar array power degradation in percent.
+  SOLAR_CELL_DEGRADATION_PCT:double;
+  /// Estimated star-tracker blinding duration in minutes.
+  STAR_TRACKER_BLINDING_MIN:double;
+  /// Concise human-readable impact summary.
+  SUMMARY:string;
+}
+
+/// Radiation Effects
+table RDE {
+  /// Unique identifier of this radiation effects record.
+  RDE_ID:string (required);
+  /// CCSDS SANA central body name (e.g. "EARTH", "JUPITER", "SATURN").
+  BODY_NAME:string (required);
+  /// NAIF SPICE body identifier (e.g. 399, 599, 699).
+  BODY_NAIF_ID:int;
+  /// NORAD catalog number of the target spacecraft (0 for uncataloged/crew trajectory).
+  NORAD_CAT_ID:uint;
+  /// International designator or object identifier.
+  OBJECT_ID:string;
+  /// Inclusive assessment window start, RFC 3339 UTC.
+  WINDOW_START:string (required);
+  /// Exclusive assessment window end, RFC 3339 UTC.
+  WINDOW_END:string (required);
+  /// Referenced $RBF radiation belt flux record identifiers.
+  RBF_RECORD_IDS:[string];
+  /// Referenced $SWS or $SFE space-weather record identifiers.
+  SPACE_WEATHER_REFS:[string];
+  /// Spacecraft or habitat shielding configuration.
+  SHIELDING:RDEShielding;
+  /// Instantaneous dose rate at WINDOW_START in mSv/h.
+  INSTANT_DOSE_RATE_MSV_H:double;
+  /// Orbit-averaged dose rate over the assessment window in mSv/h.
+  ORBIT_AVG_DOSE_RATE_MSV_H:double;
+  /// Total mission/window dose in mSv.
+  MISSION_DOSE_MSV:double;
+  /// Total ionizing dose in silicon over the window in krad(Si).
+  TID_KRAD_SI:double;
+  /// Overall effect severity classification.
+  EFFECT_SEVERITY:rdeEffectSeverity = UNSPECIFIED;
+  /// Per-pass dose breakdown across belt and SAA transits.
+  PASS_DOSES:[RDEPassDose];
+  /// Depth-dose attenuation curve across shielding thicknesses.
+  SHIELDING_CURVE:[RDEShieldCurvePoint];
+  /// Electronics SEE and TID margin assessment.
+  ELECTRONICS:RDEElectronicsEffect;
+  /// Crew organ and career dose assessment when crewed.
+  CREW:RDECrewDose;
+  /// Solar flare / SEP impact breakdown.
+  SEP_EFFECTS:[RDESepEffect];
+  /// Record-level source and build provenance.
+  PROVENANCE:PVN (required);
+}
+
+root_type RDE;
+file_identifier "$RDE";

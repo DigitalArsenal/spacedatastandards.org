@@ -71,6 +71,7 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 #include "../CZM/main_generated.h"
 #include "../DAV/main_generated.h"
 #include "../DCL/main_generated.h"
+#include "../DCO/main_generated.h"
 #include "../DFH/main_generated.h"
 #include "../DMG/main_generated.h"
 #include "../DOA/main_generated.h"
@@ -214,8 +215,10 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 #include "../QEM/main_generated.h"
 #include "../QRP/main_generated.h"
 #include "../RAF/main_generated.h"
+#include "../RBF/main_generated.h"
 #include "../RBK/main_generated.h"
 #include "../RCF/main_generated.h"
+#include "../RDE/main_generated.h"
 #include "../RDM/main_generated.h"
 #include "../RDO/main_generated.h"
 #include "../REM/main_generated.h"
@@ -285,11 +288,13 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 #include "../TCT/main_generated.h"
 #include "../TDM/main_generated.h"
 #include "../TFN/main_generated.h"
+#include "../THP/main_generated.h"
 #include "../TIM/main_generated.h"
 #include "../TKG/main_generated.h"
 #include "../TME/main_generated.h"
 #include "../TMF/main_generated.h"
 #include "../TMS/main_generated.h"
+#include "../TMX/main_generated.h"
 #include "../TNR/main_generated.h"
 #include "../TPN/main_generated.h"
 #include "../TRE/main_generated.h"
@@ -2209,11 +2214,16 @@ enum RecordTypeExtended : uint16_t {
   RecordTypeExtended_COA = 298,
   RecordTypeExtended_SLO = 299,
   RecordTypeExtended_UST = 300,
+  RecordTypeExtended_THP = 301,
+  RecordTypeExtended_TMX = 302,
+  RecordTypeExtended_DCO = 303,
+  RecordTypeExtended_RBF = 304,
+  RecordTypeExtended_RDE = 305,
   RecordTypeExtended_MIN = RecordTypeExtended_NONE,
-  RecordTypeExtended_MAX = RecordTypeExtended_UST
+  RecordTypeExtended_MAX = RecordTypeExtended_RDE
 };
 
-inline const RecordTypeExtended (&EnumValuesRecordTypeExtended())[46] {
+inline const RecordTypeExtended (&EnumValuesRecordTypeExtended())[51] {
   static const RecordTypeExtended values[] = {
     RecordTypeExtended_NONE,
     RecordTypeExtended_ABA,
@@ -2260,7 +2270,12 @@ inline const RecordTypeExtended (&EnumValuesRecordTypeExtended())[46] {
     RecordTypeExtended_DRB,
     RecordTypeExtended_COA,
     RecordTypeExtended_SLO,
-    RecordTypeExtended_UST
+    RecordTypeExtended_UST,
+    RecordTypeExtended_THP,
+    RecordTypeExtended_TMX,
+    RecordTypeExtended_DCO,
+    RecordTypeExtended_RBF,
+    RecordTypeExtended_RDE
   };
   return values;
 }
@@ -2313,6 +2328,11 @@ inline const char *EnumNameRecordTypeExtended(RecordTypeExtended e) {
     case RecordTypeExtended_COA: return "COA";
     case RecordTypeExtended_SLO: return "SLO";
     case RecordTypeExtended_UST: return "UST";
+    case RecordTypeExtended_THP: return "THP";
+    case RecordTypeExtended_TMX: return "TMX";
+    case RecordTypeExtended_DCO: return "DCO";
+    case RecordTypeExtended_RBF: return "RBF";
+    case RecordTypeExtended_RDE: return "RDE";
     default: return "";
   }
 }

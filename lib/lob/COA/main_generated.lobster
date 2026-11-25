@@ -12,6 +12,16 @@ enum coaKind:
     coaKind_RIDE_OUT = 2
     /// STEPS, in order, restore service after the event.
     coaKind_RECOVERY = 3
+    /// RF countermeasure (frequency hop, null steer, power boost, beam narrow).
+    coaKind_RF_COUNTERMEASURE = 4
+    /// Traffic / TT&C / payload gateway reroute.
+    coaKind_GATEWAY_REROUTE = 5
+    /// Optical / star-tracker / sensor shuttering or slew protection.
+    coaKind_SENSOR_PROTECTION = 6
+    /// Preemptive spacecraft safe-mode entry (e.g. severe SEP/storm).
+    coaKind_SAFE_MODE = 7
+    /// Surge or tasking of tracking / custody sensors.
+    coaKind_TRACK_TASKING = 8
 
 class COAStep
 

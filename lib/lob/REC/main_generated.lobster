@@ -58,6 +58,7 @@ import CVR.main_generated
 import CZM.main_generated
 import DAV.main_generated
 import DCL.main_generated
+import DCO.main_generated
 import DFH.main_generated
 import DMG.main_generated
 import DOA.main_generated
@@ -201,8 +202,10 @@ import PVN.main_generated
 import QEM.main_generated
 import QRP.main_generated
 import RAF.main_generated
+import RBF.main_generated
 import RBK.main_generated
 import RCF.main_generated
+import RDE.main_generated
 import RDM.main_generated
 import RDO.main_generated
 import REM.main_generated
@@ -272,11 +275,13 @@ import TCF.main_generated
 import TCT.main_generated
 import TDM.main_generated
 import TFN.main_generated
+import THP.main_generated
 import TIM.main_generated
 import TKG.main_generated
 import TME.main_generated
 import TMF.main_generated
 import TMS.main_generated
+import TMX.main_generated
 import TNR.main_generated
 import TPN.main_generated
 import TRE.main_generated
@@ -1006,6 +1011,11 @@ enum RecordTypeExtended:
     RecordTypeExtended_COA = 298
     RecordTypeExtended_SLO = 299
     RecordTypeExtended_UST = 300
+    RecordTypeExtended_THP = 301
+    RecordTypeExtended_TMX = 302
+    RecordTypeExtended_DCO = 303
+    RecordTypeExtended_RBF = 304
+    RecordTypeExtended_RDE = 305
 
 class Record
 

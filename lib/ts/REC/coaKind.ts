@@ -25,5 +25,30 @@ export enum coaKind {
   /**
    * STEPS, in order, restore service after the event.
    */
-  RECOVERY = 3
+  RECOVERY = 3,
+
+  /**
+   * RF countermeasure (frequency hop, null steer, power boost, beam narrow).
+   */
+  RF_COUNTERMEASURE = 4,
+
+  /**
+   * Traffic / TT&C / payload gateway reroute.
+   */
+  GATEWAY_REROUTE = 5,
+
+  /**
+   * Optical / star-tracker / sensor shuttering or slew protection.
+   */
+  SENSOR_PROTECTION = 6,
+
+  /**
+   * Preemptive spacecraft safe-mode entry (e.g. severe SEP/storm).
+   */
+  SAFE_MODE = 7,
+
+  /**
+   * Surge or tasking of tracking / custody sensors.
+   */
+  TRACK_TASKING = 8
 }

@@ -22,8 +22,18 @@ public enum coaKind: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   case rideOut = 2
   ///  STEPS, in order, restore service after the event.
   case recovery = 3
+  ///  RF countermeasure (frequency hop, null steer, power boost, beam narrow).
+  case rfCountermeasure = 4
+  ///  Traffic / TT&C / payload gateway reroute.
+  case gatewayReroute = 5
+  ///  Optical / star-tracker / sensor shuttering or slew protection.
+  case sensorProtection = 6
+  ///  Preemptive spacecraft safe-mode entry (e.g. severe SEP/storm).
+  case safeMode = 7
+  ///  Surge or tasking of tracking / custody sensors.
+  case trackTasking = 8
 
-  public static var max: coaKind { return .recovery }
+  public static var max: coaKind { return .trackTasking }
   public static var min: coaKind { return .unspecified }
 }
 

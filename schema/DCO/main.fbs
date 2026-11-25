@@ -1,0 +1,148 @@
+// Hash: 6d05047ea22e0a84760b69cac1e7f8f53d008073b9ededef139630a4b1c9dc07
+// Version: 1.293.0
+// -----------------------------------END_HEADER
+// Defensive COA Trade & Conflict-Recheck (DCO)
+// Description
+// Computed defensive course-of-action trade evaluation and multi-phenomenology conflict
+// re-screening output. Preserves $COA (ordinal 298) as strictly inputs-only while linking
+// computed cost, risk reduction, residual severity, and secondary threat conflicts back to
+// $COA.ID and $TMX.RUN_ID.
+
+/// Specific defensive action evaluated in this trade record. Append new values only.
+enum dcoActionKind : byte {
+  /// Not stated.
+  UNSPECIFIED = 0,
+  /// Orbital collision or threat avoidance maneuver.
+  MANEUVER_AVOID = 1,
+  /// In-plane phasing shift maneuver.
+  MANEUVER_PHASE_SHIFT = 2,
+  /// Altitude-change maneuver.
+  MANEUVER_ALTITUDE_CHANGE = 3,
+  /// RF frequency hopping countermeasure.
+  RF_FREQ_HOP = 4,
+  /// Phased-array null steering countermeasure.
+  RF_NULL_STEER = 5,
+  /// Transmit power boost countermeasure.
+  RF_POWER_BOOST = 6,
+  /// Antenna beam narrowing countermeasure.
+  RF_BEAM_NARROW = 7,
+  /// Traffic or TT&C gateway reroute.
+  GATEWAY_REROUTE = 8,
+  /// Optical or star-tracker shuttering or protective slew.
+  SENSOR_SHUTTER_OR_SLEW = 9,
+  /// Preemptive spacecraft safe-mode entry.
+  SAFE_MODE_PREEMPT = 10,
+  /// Tracking / custody sensor tasking surge.
+  TRACK_TASKING_SURGE = 11,
+  /// Ride out the event with no active maneuver or reconfiguration.
+  RIDE_OUT = 12
+}
+
+/// Residual severity tier after applying the evaluated defensive COA. Append new values only.
+enum dcoSeverityLevel : byte {
+  /// Residual risk could not be evaluated.
+  UNAVAILABLE = 0,
+  /// Residual risk reduced to nominal.
+  NOMINAL = 1,
+  /// Residual risk remains at watch level.
+  WATCH = 2,
+  /// Residual risk remains high.
+  HIGH = 3,
+  /// Residual risk remains critical.
+  CRITICAL = 4
+}
+
+/// Outcome of re-screening the defensive COA across all phenomenologies. Append new values only.
+enum dcoRecheckOutcome : byte {
+  /// Conflict re-screening has not been run.
+  UNCHECKED = 0,
+  /// Re-screening passed with no COA conflicts or secondary threats.
+  CLEAR = 1,
+  /// Proposed action conflicts with another active or candidate COA.
+  CONFLICTS_FOUND = 2,
+  /// Proposed action introduces a secondary threat in another phenomenology.
+  SECONDARY_THREAT_FOUND = 3,
+  /// Proposed action violates physical, delta-v, or operational feasibility bounds.
+  INFEASIBLE = 4
+}
+
+/// Reference to a threat record, matrix bucket, or compound event addressed or introduced.
+table DCOThreatRef {
+  /// Four-character SDS file identifier including "$", e.g. "$TMX", "$CDM", "$RFL", "$RDE".
+  SCHEMA_FILE_ID:string (required);
+  /// Record identifier within the referenced standard.
+  RECORD_ID:string (required);
+  /// Optional $TMX bucket identifier.
+  BUCKET_ID:string;
+  /// Optional $TMX compound event identifier.
+  COMPOUND_ID:string;
+  /// Optional NORAD catalog number of the affected space object.
+  NORAD_CAT_ID:uint;
+}
+
+/// Attribution linking a computed trade metric to the exact WASM module build that produced it.
+table DCOModuleAttribution {
+  /// Name of the computed metric (e.g. "DELTA_V_MPS", "MARGIN_GAIN_DB", "RESIDUAL_SCORE").
+  METRIC_NAME:string (required);
+  /// Canonical module identifier (e.g. "analysis/coa-synthesizer").
+  MODULE_ID:string (required);
+  /// Module semantic version string.
+  MODULE_VERSION:string;
+  /// Lowercase hex SHA-256 of the executed portable WASM artifact.
+  WASM_SHA256:string;
+}
+
+/// Defensive COA Trade & Conflict-Recheck
+table DCO {
+  /// Unique identifier of this defensive COA evaluation record.
+  DCO_ID:string (required);
+  /// Identifier of the input $COA record ($COA.ID).
+  COA_ID:string (required);
+  /// Identifier of the $TMX assessment run ($TMX.RUN_ID).
+  TMX_RUN_ID:string (required);
+  /// Evaluation timestamp, RFC 3339 UTC.
+  CREATED_UTC:string (required);
+  /// Primary threat or compound event answered by this COA.
+  THREAT_REF:DCOThreatRef (required);
+  /// Specific defensive action modeled in this evaluation.
+  ACTION_KIND:dcoActionKind = UNSPECIFIED;
+  /// NORAD catalog number of the defended object (0 when GROUP_ID is used).
+  NORAD_CAT_ID:uint;
+  /// Entity group identifier ($EGP.GROUP_ID) when the COA applies to a group.
+  GROUP_ID:string;
+  /// Computed maneuver delta-v cost in m/s.
+  DELTA_V_MPS:double;
+  /// Computed propellant mass consumed in kg.
+  PROPELLANT_KG:double;
+  /// Estimated mission life impact in days.
+  MISSION_LIFE_DAYS:double;
+  /// Service or payload outage duration in hours.
+  OUTAGE_HOURS:double;
+  /// Constellation or regional coverage impact in percent.
+  COVERAGE_IMPACT_PCT:double;
+  /// RF link margin gain achieved in dB.
+  MARGIN_GAIN_DB:double;
+  /// Threat exposure time reduced in minutes.
+  EXPOSURE_REDUCED_MIN:double;
+  /// Baseline severity score before the COA in basis points (0..10000).
+  BASELINE_SCORE:uint16;
+  /// Residual severity score after applying the COA in basis points (0..10000).
+  RESIDUAL_SCORE:uint16;
+  /// Residual severity tier after applying the COA.
+  RESIDUAL_TIER:dcoSeverityLevel = UNAVAILABLE;
+  /// Identifiers of other $COA records that conflict with this action.
+  CONFLICTS_WITH_COA_IDS:[string];
+  /// Secondary threats introduced by this action (e.g. post-maneuver conjunction or drag).
+  SECONDARY_THREATS_INTRODUCED:[DCOThreatRef];
+  /// True once full multi-phenomenology conflict re-screening has been executed.
+  RECHECKED:bool = false;
+  /// Outcome status of the multi-phenomenology conflict re-screen.
+  RECHECK_STATUS:dcoRecheckOutcome = UNCHECKED;
+  /// Human-readable diagnostics from conflict re-screening.
+  RECHECK_NOTES:string;
+  /// Per-metric module provenance attributions.
+  ATTRIBUTIONS:[DCOModuleAttribution];
+}
+
+root_type DCO;
+file_identifier "$DCO";

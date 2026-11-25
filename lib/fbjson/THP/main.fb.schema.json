@@ -1,0 +1,702 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "pvnSourceKind": {
+      "type": "string",
+      "enum": [
+        "Unspecified",
+        "ElementSet",
+        "Ephemeris",
+        "Observation",
+        "Reference"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Unspecified": {
+          "value": 0,
+          "description": "Not stated"
+        },
+        "ElementSet": {
+          "value": 1,
+          "description": "Element sets of a catalog"
+        },
+        "Ephemeris": {
+          "value": 2,
+          "description": "Ephemerides: states over time, from an operator or a precise-orbit service"
+        },
+        "Observation": {
+          "value": 3,
+          "description": "Observations (ranges, angles, other measurements) that states are estimated from"
+        },
+        "Reference": {
+          "value": 4,
+          "description": "Reference registers of sites and facilities (status, dates, identity)"
+        }
+      }
+    },
+    "pvnLicenseClass": {
+      "type": "string",
+      "enum": [
+        "Unspecified",
+        "Reproducible",
+        "CiteOnly",
+        "ShareAlike",
+        "NonCommercial"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Unspecified": {
+          "value": 0,
+          "description": "Not stated. Never a grant: treated as CiteOnly."
+        },
+        "Reproducible": {
+          "value": 1,
+          "description": "The records may be republished, with the credit the terms ask."
+        },
+        "CiteOnly": {
+          "value": 2,
+          "description": "The records are computed on and cited, never republished."
+        },
+        "ShareAlike": {
+          "value": 3,
+          "description": "The records may be republished under the same terms, which every derived record carries."
+        },
+        "NonCommercial": {
+          "value": 4,
+          "description": "The records may be republished for non-commercial use only."
+        }
+      }
+    },
+    "thpThreatCategory": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "CO_ORBITAL",
+        "DIRECT_ASCENT",
+        "RF_JAMMER",
+        "GNSS_DENIAL",
+        "DIRECTED_ENERGY",
+        "SPACE_WEATHER",
+        "ISR_CUSTODY",
+        "GROUND_CYBER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0,
+          "description": "Not stated."
+        },
+        "CO_ORBITAL": {
+          "value": 1,
+          "description": "Co-orbital / rendezvous & proximity operations threat."
+        },
+        "DIRECT_ASCENT": {
+          "value": 2,
+          "description": "Direct-ascent anti-satellite threat."
+        },
+        "RF_JAMMER": {
+          "value": 3,
+          "description": "RF jamming or electronic warfare threat."
+        },
+        "GNSS_DENIAL": {
+          "value": 4,
+          "description": "GNSS denial or spoofing threat."
+        },
+        "DIRECTED_ENERGY": {
+          "value": 5,
+          "description": "Optical or RF directed-energy threat."
+        },
+        "SPACE_WEATHER": {
+          "value": 6,
+          "description": "Space weather or planetary radiation threat."
+        },
+        "ISR_CUSTODY": {
+          "value": 7,
+          "description": "ISR / tracking custody threat."
+        },
+        "GROUND_CYBER": {
+          "value": 8,
+          "description": "Ground segment or cyber threat."
+        }
+      }
+    },
+    "thpCertaintyLevel": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "MEASURED",
+        "PUBLISHED",
+        "KINEMATIC_BOUND",
+        "STATED_WHATIF",
+        "NOT_PUBLIC"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0,
+          "description": "Not stated."
+        },
+        "MEASURED": {
+          "value": 1,
+          "description": "Directly measured from empirical observations."
+        },
+        "PUBLISHED": {
+          "value": 2,
+          "description": "Published in authoritative open or operator sources."
+        },
+        "KINEMATIC_BOUND": {
+          "value": 3,
+          "description": "Derived from kinematic or physical bounding limits."
+        },
+        "STATED_WHATIF": {
+          "value": 4,
+          "description": "Analyst-stated what-if or parametric scenario assumption."
+        },
+        "NOT_PUBLIC": {
+          "value": 5,
+          "description": "Redacted or restricted; not public."
+        }
+      }
+    },
+    "thpAccessTier": {
+      "type": "string",
+      "enum": [
+        "OPEN",
+        "COMMERCIAL",
+        "GOVERNMENT"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "OPEN": {
+          "value": 0,
+          "description": "Openly accessible without restriction."
+        },
+        "COMMERCIAL": {
+          "value": 1,
+          "description": "Commercial subscription tier."
+        },
+        "GOVERNMENT": {
+          "value": 2,
+          "description": "Government or restricted authorization tier."
+        }
+      }
+    },
+    "thpParamValueKind": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "SCALAR_DOUBLE",
+        "TEXT",
+        "BOOLEAN"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0,
+          "description": "Not stated."
+        },
+        "SCALAR_DOUBLE": {
+          "value": 1,
+          "description": "Numeric scalar in NUMERIC_VALUE."
+        },
+        "TEXT": {
+          "value": 2,
+          "description": "Textual value in TEXT_VALUE."
+        },
+        "BOOLEAN": {
+          "value": 3,
+          "description": "Boolean value in BOOL_VALUE."
+        }
+      }
+    },
+    "PVN": {
+      "type": "object",
+      "description": "Product Provenance",
+      "properties": {
+        "SOURCE_ID": {
+          "type": "string",
+          "description": "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_KIND": {
+          "$ref": "#/definitions/pvnSourceKind",
+          "description": "What kind of data the source supplies.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0,
+              "description": "Not stated"
+            },
+            "ElementSet": {
+              "value": 1,
+              "description": "Element sets of a catalog"
+            },
+            "Ephemeris": {
+              "value": 2,
+              "description": "Ephemerides: states over time, from an operator or a precise-orbit service"
+            },
+            "Observation": {
+              "value": 3,
+              "description": "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            "Reference": {
+              "value": 4,
+              "description": "Reference registers of sites and facilities (status, dates, identity)"
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "ORIGINATOR": {
+          "type": "string",
+          "description": "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage.",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVIDER_ID": {
+          "type": "string",
+          "description": "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data.",
+          "x-flatbuffer-type": "string"
+        },
+        "PRODUCER": {
+          "type": "string",
+          "description": "Identifier of the software that made the product from the source data,\nwith its version when it has one.",
+          "x-flatbuffer-type": "string"
+        },
+        "LICENSE_CLASS": {
+          "$ref": "#/definitions/pvnLicenseClass",
+          "description": "What the source's terms permit for the product.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0,
+              "description": "Not stated. Never a grant: treated as CiteOnly."
+            },
+            "Reproducible": {
+              "value": 1,
+              "description": "The records may be republished, with the credit the terms ask."
+            },
+            "CiteOnly": {
+              "value": 2,
+              "description": "The records are computed on and cited, never republished."
+            },
+            "ShareAlike": {
+              "value": 3,
+              "description": "The records may be republished under the same terms, which every derived record carries."
+            },
+            "NonCommercial": {
+              "value": 4,
+              "description": "The records may be republished for non-commercial use only."
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "LICENSE_ID": {
+          "type": "string",
+          "description": "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register.",
+          "x-flatbuffer-type": "string"
+        },
+        "LINEAGE": {
+          "type": "string",
+          "description": "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_URL": {
+          "type": "string",
+          "description": "Replayable URL or provider query identifying the source material as it\nwas retrieved (the SOURCE_URL of $CMR and $AVL).",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_VERSION": {
+          "type": "string",
+          "description": "Source revision, edition or upstream update marker verbatim: for a file\nits originator stamps, the stamp.",
+          "x-flatbuffer-type": "string"
+        },
+        "RETRIEVED_AT": {
+          "type": "string",
+          "description": "RFC 3339 UTC fixed-millisecond time the source material was retrieved.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_SHA256": {
+          "type": "string",
+          "description": "SHA-256 of the exact source payload bytes as retrieved, 64 lowercase\nhexadecimal characters. Empty when the source cannot expose replayable\nbytes.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_BYTES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "PRODUCER_SHA256": {
+          "type": "string",
+          "description": "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "THPProvenance": {
+      "type": "object",
+      "description": "Provenance and classification metadata for a threat parameter.",
+      "properties": {
+        "SOURCE_URI": {
+          "type": "string",
+          "description": "URI or canonical source identifier for this parameter.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "PUBLISHED_DATE": {
+          "type": "string",
+          "description": "Publication or revision date, ISO 8601 UTC.",
+          "x-flatbuffer-type": "string"
+        },
+        "CERTAINTY": {
+          "$ref": "#/definitions/thpCertaintyLevel",
+          "description": "Epistemic certainty level of the parameter value.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "Not stated."
+            },
+            "MEASURED": {
+              "value": 1,
+              "description": "Directly measured from empirical observations."
+            },
+            "PUBLISHED": {
+              "value": 2,
+              "description": "Published in authoritative open or operator sources."
+            },
+            "KINEMATIC_BOUND": {
+              "value": 3,
+              "description": "Derived from kinematic or physical bounding limits."
+            },
+            "STATED_WHATIF": {
+              "value": 4,
+              "description": "Analyst-stated what-if or parametric scenario assumption."
+            },
+            "NOT_PUBLIC": {
+              "value": 5,
+              "description": "Redacted or restricted; not public."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "ACCESS_TIER": {
+          "$ref": "#/definitions/thpAccessTier",
+          "description": "Access tier governing visibility of this parameter.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "OPEN": {
+              "value": 0,
+              "description": "Openly accessible without restriction."
+            },
+            "COMMERCIAL": {
+              "value": 1,
+              "description": "Commercial subscription tier."
+            },
+            "GOVERNMENT": {
+              "value": 2,
+              "description": "Government or restricted authorization tier."
+            }
+          },
+          "x-flatbuffer-default": "OPEN"
+        },
+        "RECORD_PROVENANCE": {
+          "$ref": "#/definitions/PVN",
+          "description": "Optional full $PVN provenance block.",
+          "x-flatbuffer-type": "PVN"
+        },
+        "NOTES": {
+          "type": "string",
+          "description": "Explanatory analyst notes.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "SOURCE_URI"
+      ],
+      "additionalProperties": false
+    },
+    "THPReference": {
+      "type": "object",
+      "description": "Typed reference to an existing SDS record without duplicating its fields.",
+      "properties": {
+        "SCHEMA_FILE_ID": {
+          "type": "string",
+          "description": "Four-character SDS file identifier including \"$\", e.g. \"$OMM\", \"$RFB\", \"$SIT\".",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "RECORD_ID": {
+          "type": "string",
+          "description": "Canonical identifier of the referenced record within that standard.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "NORAD_CAT_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Optional catalog number when the referenced record targets a cataloged object.",
+          "x-flatbuffer-type": "uint"
+        },
+        "CID": {
+          "type": "string",
+          "description": "Optional content identifier pinning exact immutable record bytes.",
+          "x-flatbuffer-type": "string"
+        },
+        "ROLE": {
+          "type": "string",
+          "description": "Role of the referenced record in this threat profile (e.g. \"PLATFORM\", \"EMITTER\", \"SITE\").",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "SCHEMA_FILE_ID",
+        "RECORD_ID"
+      ],
+      "additionalProperties": false
+    },
+    "THPParameter": {
+      "type": "object",
+      "description": "One typed capability or environmental threshold parameter on a threat profile.",
+      "properties": {
+        "PARAM_KEY": {
+          "type": "string",
+          "description": "Canonical parameter key (e.g. \"ALTITUDE_CAP_KM\", \"EIRP_DBW\", \"LASER_WAVELENGTH_NM\").",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "VALUE_KIND": {
+          "$ref": "#/definitions/thpParamValueKind",
+          "description": "Discriminator naming which value field is populated.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "Not stated."
+            },
+            "SCALAR_DOUBLE": {
+              "value": 1,
+              "description": "Numeric scalar in NUMERIC_VALUE."
+            },
+            "TEXT": {
+              "value": 2,
+              "description": "Textual value in TEXT_VALUE."
+            },
+            "BOOLEAN": {
+              "value": 3,
+              "description": "Boolean value in BOOL_VALUE."
+            }
+          },
+          "x-flatbuffer-default": "SCALAR_DOUBLE"
+        },
+        "NUMERIC_VALUE": {
+          "type": "number",
+          "description": "Numeric parameter value when VALUE_KIND is SCALAR_DOUBLE.",
+          "x-flatbuffer-type": "double"
+        },
+        "TEXT_VALUE": {
+          "type": "string",
+          "description": "String parameter value when VALUE_KIND is TEXT.",
+          "x-flatbuffer-type": "string"
+        },
+        "BOOL_VALUE": {
+          "type": "boolean",
+          "description": "Boolean parameter value when VALUE_KIND is BOOLEAN.",
+          "x-flatbuffer-type": "bool"
+        },
+        "UNITS": {
+          "type": "string",
+          "description": "Physical units string for numeric values (e.g. \"km\", \"dBW\", \"MHz\", \"nm\").",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVENANCE": {
+          "$ref": "#/definitions/THPProvenance",
+          "description": "Parameter-level provenance and certainty.",
+          "x-flatbuffer-type": "THPProvenance",
+          "x-flatbuffer-required": true
+        }
+      },
+      "required": [
+        "PARAM_KEY",
+        "PROVENANCE"
+      ],
+      "additionalProperties": false
+    },
+    "THP": {
+      "type": "object",
+      "description": "Threat Profile",
+      "properties": {
+        "THP_ID": {
+          "type": "string",
+          "description": "Stable identifier of this threat profile.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Human-readable display name of the threat profile.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Summary description of the threat profile and scope.",
+          "x-flatbuffer-type": "string"
+        },
+        "CATEGORY": {
+          "$ref": "#/definitions/thpThreatCategory",
+          "description": "Threat phenomenology category.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "Not stated."
+            },
+            "CO_ORBITAL": {
+              "value": 1,
+              "description": "Co-orbital / rendezvous & proximity operations threat."
+            },
+            "DIRECT_ASCENT": {
+              "value": 2,
+              "description": "Direct-ascent anti-satellite threat."
+            },
+            "RF_JAMMER": {
+              "value": 3,
+              "description": "RF jamming or electronic warfare threat."
+            },
+            "GNSS_DENIAL": {
+              "value": 4,
+              "description": "GNSS denial or spoofing threat."
+            },
+            "DIRECTED_ENERGY": {
+              "value": 5,
+              "description": "Optical or RF directed-energy threat."
+            },
+            "SPACE_WEATHER": {
+              "value": 6,
+              "description": "Space weather or planetary radiation threat."
+            },
+            "ISR_CUSTODY": {
+              "value": 7,
+              "description": "ISR / tracking custody threat."
+            },
+            "GROUND_CYBER": {
+              "value": 8,
+              "description": "Ground segment or cyber threat."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "ACCESS_TIER": {
+          "$ref": "#/definitions/thpAccessTier",
+          "description": "Minimum access tier required to consume this threat profile.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "OPEN": {
+              "value": 0,
+              "description": "Openly accessible without restriction."
+            },
+            "COMMERCIAL": {
+              "value": 1,
+              "description": "Commercial subscription tier."
+            },
+            "GOVERNMENT": {
+              "value": 2,
+              "description": "Government or restricted authorization tier."
+            }
+          },
+          "x-flatbuffer-default": "OPEN"
+        },
+        "ACTIVE": {
+          "type": "boolean",
+          "description": "True when the threat profile is active for screening runs.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "true"
+        },
+        "LINKED_SCHEMA": {
+          "type": "string",
+          "description": "Four-character SDS file identifier including \"$\" of the primary linked record.",
+          "x-flatbuffer-type": "string"
+        },
+        "LINKED_RECORD_ID": {
+          "type": "string",
+          "description": "Canonical record identifier of the primary linked SDS record.",
+          "x-flatbuffer-type": "string"
+        },
+        "LINKED_NORAD_CAT_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Optional NORAD catalog number of the primary linked space object.",
+          "x-flatbuffer-type": "uint"
+        },
+        "ADDITIONAL_REFS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/THPReference"
+          },
+          "description": "Additional linked SDS records referenced by ($SCHEMA_FILE_ID, RECORD_ID).",
+          "x-flatbuffer-type": "[THPReference]"
+        },
+        "PARAMETERS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/THPParameter"
+          },
+          "description": "Typed capability and threshold parameters with per-parameter provenance.",
+          "x-flatbuffer-type": "[THPParameter]"
+        },
+        "PROVENANCE": {
+          "$ref": "#/definitions/PVN",
+          "description": "Record-level source and build provenance.",
+          "x-flatbuffer-type": "PVN",
+          "x-flatbuffer-required": true
+        },
+        "CREATED_AT": {
+          "type": "string",
+          "description": "Creation timestamp, RFC 3339 UTC.",
+          "x-flatbuffer-type": "string"
+        },
+        "UPDATED_AT": {
+          "type": "string",
+          "description": "Last update timestamp, RFC 3339 UTC.",
+          "x-flatbuffer-type": "string"
+        },
+        "SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Optional Ed25519 signature bytes over the canonical threat lane payload.",
+          "x-flatbuffer-type": "[ubyte]"
+        }
+      },
+      "required": [
+        "THP_ID",
+        "NAME",
+        "PROVENANCE"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/THP",
+  "x-flatbuffer-root-type": "THP",
+  "x-flatbuffer-file-identifier": "$THP"
+}

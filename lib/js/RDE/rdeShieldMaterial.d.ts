@@ -1,0 +1,38 @@
+/**
+ * Shielding material class. Append new values only.
+ */
+export declare enum rdeShieldMaterial {
+    /**
+     * Not stated.
+     */
+    UNSPECIFIED = 0,
+    /**
+     * Standard aerospace aluminum (Al).
+     */
+    ALUMINUM = 1,
+    /**
+     * Hydrogen-rich polyethylene shielding.
+     */
+    POLYETHYLENE = 2,
+    /**
+     * High-Z tantalum spot shielding.
+     */
+    TANTALUM = 3,
+    /**
+     * Water shielding wall / storm shelter.
+     */
+    WATER = 4,
+    /**
+     * Carbon-fiber composite structure.
+     */
+    CARBON_COMPOSITE = 5,
+    /**
+     * Layered multi-material stackup.
+     */
+    MULTI_MATERIAL = 6,
+    /**
+     * Custom material specification in MATERIAL_NAME.
+     */
+    CUSTOM = 7
+}
+//# sourceMappingURL=rdeShieldMaterial.d.ts.map

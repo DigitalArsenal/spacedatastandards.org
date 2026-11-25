@@ -30,33 +30,53 @@ enum coaKind : int8_t {
   coaKind_RIDE_OUT = 2,
   /// STEPS, in order, restore service after the event.
   coaKind_RECOVERY = 3,
+  /// RF countermeasure (frequency hop, null steer, power boost, beam narrow).
+  coaKind_RF_COUNTERMEASURE = 4,
+  /// Traffic / TT&C / payload gateway reroute.
+  coaKind_GATEWAY_REROUTE = 5,
+  /// Optical / star-tracker / sensor shuttering or slew protection.
+  coaKind_SENSOR_PROTECTION = 6,
+  /// Preemptive spacecraft safe-mode entry (e.g. severe SEP/storm).
+  coaKind_SAFE_MODE = 7,
+  /// Surge or tasking of tracking / custody sensors.
+  coaKind_TRACK_TASKING = 8,
   coaKind_MIN = coaKind_UNSPECIFIED,
-  coaKind_MAX = coaKind_RECOVERY
+  coaKind_MAX = coaKind_TRACK_TASKING
 };
 
-inline const coaKind (&EnumValuescoaKind())[4] {
+inline const coaKind (&EnumValuescoaKind())[9] {
   static const coaKind values[] = {
     coaKind_UNSPECIFIED,
     coaKind_MANEUVER,
     coaKind_RIDE_OUT,
-    coaKind_RECOVERY
+    coaKind_RECOVERY,
+    coaKind_RF_COUNTERMEASURE,
+    coaKind_GATEWAY_REROUTE,
+    coaKind_SENSOR_PROTECTION,
+    coaKind_SAFE_MODE,
+    coaKind_TRACK_TASKING
   };
   return values;
 }
 
 inline const char * const *EnumNamescoaKind() {
-  static const char * const names[5] = {
+  static const char * const names[10] = {
     "UNSPECIFIED",
     "MANEUVER",
     "RIDE_OUT",
     "RECOVERY",
+    "RF_COUNTERMEASURE",
+    "GATEWAY_REROUTE",
+    "SENSOR_PROTECTION",
+    "SAFE_MODE",
+    "TRACK_TASKING",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamecoaKind(coaKind e) {
-  if (::flatbuffers::IsOutRange(e, coaKind_UNSPECIFIED, coaKind_RECOVERY)) return "";
+  if (::flatbuffers::IsOutRange(e, coaKind_UNSPECIFIED, coaKind_TRACK_TASKING)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamescoaKind()[index];
 }

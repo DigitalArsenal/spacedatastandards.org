@@ -1,0 +1,30 @@
+/**
+ * Epistemic certainty of the stated threat parameter or profile. Append new values only.
+ */
+export declare enum thpCertaintyLevel {
+    /**
+     * Not stated.
+     */
+    UNSPECIFIED = 0,
+    /**
+     * Directly measured from empirical observations.
+     */
+    MEASURED = 1,
+    /**
+     * Published in authoritative open or operator sources.
+     */
+    PUBLISHED = 2,
+    /**
+     * Derived from kinematic or physical bounding limits.
+     */
+    KINEMATIC_BOUND = 3,
+    /**
+     * Analyst-stated what-if or parametric scenario assumption.
+     */
+    STATED_WHATIF = 4,
+    /**
+     * Redacted or restricted; not public.
+     */
+    NOT_PUBLIC = 5
+}
+//# sourceMappingURL=thpCertaintyLevel.d.ts.map

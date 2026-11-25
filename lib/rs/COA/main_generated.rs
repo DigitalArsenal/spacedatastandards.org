@@ -6,15 +6,20 @@ extern crate alloc;
 pub const ENUM_MIN_COA_KIND: i8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_COA_KIND: i8 = 3;
+pub const ENUM_MAX_COA_KIND: i8 = 8;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_COA_KIND: [coaKind; 4] = [
+pub const ENUM_VALUES_COA_KIND: [coaKind; 9] = [
     coaKind::UNSPECIFIED,
     coaKind::MANEUVER,
     coaKind::RIDE_OUT,
     coaKind::RECOVERY,
+    coaKind::RF_COUNTERMEASURE,
+    coaKind::GATEWAY_REROUTE,
+    coaKind::SENSOR_PROTECTION,
+    coaKind::SAFE_MODE,
+    coaKind::TRACK_TASKING,
 ];
 
 /// What a course of action does. Append new values only.
@@ -33,14 +38,29 @@ impl coaKind {
     pub const RIDE_OUT: Self = Self(2);
     /// STEPS, in order, restore service after the event.
     pub const RECOVERY: Self = Self(3);
+    /// RF countermeasure (frequency hop, null steer, power boost, beam narrow).
+    pub const RF_COUNTERMEASURE: Self = Self(4);
+    /// Traffic / TT&C / payload gateway reroute.
+    pub const GATEWAY_REROUTE: Self = Self(5);
+    /// Optical / star-tracker / sensor shuttering or slew protection.
+    pub const SENSOR_PROTECTION: Self = Self(6);
+    /// Preemptive spacecraft safe-mode entry (e.g. severe SEP/storm).
+    pub const SAFE_MODE: Self = Self(7);
+    /// Surge or tasking of tracking / custody sensors.
+    pub const TRACK_TASKING: Self = Self(8);
 
     pub const ENUM_MIN: i8 = 0;
-    pub const ENUM_MAX: i8 = 3;
+    pub const ENUM_MAX: i8 = 8;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::UNSPECIFIED,
         Self::MANEUVER,
         Self::RIDE_OUT,
         Self::RECOVERY,
+        Self::RF_COUNTERMEASURE,
+        Self::GATEWAY_REROUTE,
+        Self::SENSOR_PROTECTION,
+        Self::SAFE_MODE,
+        Self::TRACK_TASKING,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -50,6 +70,11 @@ impl coaKind {
             Self::MANEUVER => Some("MANEUVER"),
             Self::RIDE_OUT => Some("RIDE_OUT"),
             Self::RECOVERY => Some("RECOVERY"),
+            Self::RF_COUNTERMEASURE => Some("RF_COUNTERMEASURE"),
+            Self::GATEWAY_REROUTE => Some("GATEWAY_REROUTE"),
+            Self::SENSOR_PROTECTION => Some("SENSOR_PROTECTION"),
+            Self::SAFE_MODE => Some("SAFE_MODE"),
+            Self::TRACK_TASKING => Some("TRACK_TASKING"),
             _ => None,
         }
     }

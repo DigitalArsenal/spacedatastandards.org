@@ -3,7 +3,7 @@
   "definitions": {
     "coaKind" : {
       "type" : "string",
-      "enum": ["UNSPECIFIED", "MANEUVER", "RIDE_OUT", "RECOVERY"]
+      "enum": ["UNSPECIFIED", "MANEUVER", "RIDE_OUT", "RECOVERY", "RF_COUNTERMEASURE", "GATEWAY_REROUTE", "SENSOR_PROTECTION", "SAFE_MODE", "TRACK_TASKING"]
     },
     "COAStep" : {
       "type" : "object",

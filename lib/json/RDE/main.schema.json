@@ -1,0 +1,376 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "pvnSourceKind" : {
+      "type" : "string",
+      "enum": ["Unspecified", "ElementSet", "Ephemeris", "Observation", "Reference"]
+    },
+    "pvnLicenseClass" : {
+      "type" : "string",
+      "enum": ["Unspecified", "Reproducible", "CiteOnly", "ShareAlike", "NonCommercial"]
+    },
+    "rdeShieldMaterial" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "ALUMINUM", "POLYETHYLENE", "TANTALUM", "WATER", "CARBON_COMPOSITE", "MULTI_MATERIAL", "CUSTOM"]
+    },
+    "rdeShieldGeometry" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "SOLID_SPHERE", "HOLLOW_SPHERE", "SLAB", "SECTOR_TRACE"]
+    },
+    "rdeEffectSeverity" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "NOMINAL", "ELEVATED", "WARNING", "CRITICAL"]
+    },
+    "PVN" : {
+      "type" : "object",
+      "description" : "Product Provenance",
+      "properties" : {
+        "SOURCE_ID" : {
+                "type" : "string",
+                "description" : "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+              },
+        "SOURCE_KIND" : {
+                "$ref" : "#/definitions/pvnSourceKind",
+                "description" : "What kind of data the source supplies."
+              },
+        "ORIGINATOR" : {
+                "type" : "string",
+                "description" : "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+              },
+        "PROVIDER_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+              },
+        "PRODUCER" : {
+                "type" : "string",
+                "description" : "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+              },
+        "LICENSE_CLASS" : {
+                "$ref" : "#/definitions/pvnLicenseClass",
+                "description" : "What the source's terms permit for the product."
+              },
+        "LICENSE_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+              },
+        "LINEAGE" : {
+                "type" : "string",
+                "description" : "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+              },
+        "SOURCE_URL" : {
+                "type" : "string",
+                "description" : "Replayable URL or provider query identifying the source material as it\nwas retrieved (the SOURCE_URL of $CMR and $AVL)."
+              },
+        "SOURCE_VERSION" : {
+                "type" : "string",
+                "description" : "Source revision, edition or upstream update marker verbatim: for a file\nits originator stamps, the stamp."
+              },
+        "RETRIEVED_AT" : {
+                "type" : "string",
+                "description" : "RFC 3339 UTC fixed-millisecond time the source material was retrieved."
+              },
+        "SOURCE_SHA256" : {
+                "type" : "string",
+                "description" : "SHA-256 of the exact source payload bytes as retrieved, 64 lowercase\nhexadecimal characters. Empty when the source cannot expose replayable\nbytes."
+              },
+        "SOURCE_BYTES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Number of source bytes SOURCE_SHA256 covers: the length of the prefix when\nthe source was fetched by range. 0 when not stated."
+              },
+        "PRODUCER_SHA256" : {
+                "type" : "string",
+                "description" : "SHA-256 of the build of PRODUCER that made the product (its dist\nmodule.wasm), 64 lowercase hexadecimal characters. Stamped by the host\nthat loaded the producing module: a module cannot hash its own bytes.\nEmpty when not stated."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RDEShielding" : {
+      "type" : "object",
+      "description" : "Shielding configuration for dose and TID calculations.",
+      "properties" : {
+        "MATERIAL" : {
+                "$ref" : "#/definitions/rdeShieldMaterial",
+                "description" : "Primary shielding material class."
+              },
+        "MATERIAL_NAME" : {
+                "type" : "string",
+                "description" : "Descriptive material or layup name when CUSTOM or MULTI_MATERIAL."
+              },
+        "GEOMETRY" : {
+                "$ref" : "#/definitions/rdeShieldGeometry",
+                "description" : "Transport geometry approximation."
+              },
+        "THICKNESS_MM" : {
+                "type" : "number",
+                "description" : "Shield thickness in millimeters."
+              },
+        "AREAL_DENSITY_G_CM2" : {
+                "type" : "number",
+                "description" : "Areal mass density in g/cm^2."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RDEShieldCurvePoint" : {
+      "type" : "object",
+      "description" : "One point on a depth-dose shielding curve.",
+      "properties" : {
+        "THICKNESS_MM" : {
+                "type" : "number",
+                "description" : "Shield thickness in millimeters."
+              },
+        "AREAL_DENSITY_G_CM2" : {
+                "type" : "number",
+                "description" : "Areal mass density in g/cm^2."
+              },
+        "DOSE_RATE_MSV_H" : {
+                "type" : "number",
+                "description" : "Computed dose rate behind this thickness in mSv/h."
+              },
+        "TID_KRAD_SI" : {
+                "type" : "number",
+                "description" : "Computed total ionizing dose over the window in krad(Si)."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RDEPassDose" : {
+      "type" : "object",
+      "description" : "Integrated radiation exposure for a single belt or SAA pass.",
+      "properties" : {
+        "PASS_ID" : {
+                "type" : "string",
+                "description" : "Unique pass identifier within the assessment window."
+              },
+        "START_UTC" : {
+                "type" : "string",
+                "description" : "Pass entry timestamp, RFC 3339 UTC."
+              },
+        "END_UTC" : {
+                "type" : "string",
+                "description" : "Pass exit timestamp, RFC 3339 UTC."
+              },
+        "IN_SAA" : {
+                "type" : "boolean",
+                "description" : "True when the pass traverses the South Atlantic Anomaly."
+              },
+        "IN_BELT_CORE" : {
+                "type" : "boolean",
+                "description" : "True when the pass traverses a primary trapped radiation belt core."
+              },
+        "PEAK_DOSE_RATE_MSV_H" : {
+                "type" : "number",
+                "description" : "Peak instantaneous dose rate during the pass in mSv/h."
+              },
+        "INTEGRATED_DOSE_MSV" : {
+                "type" : "number",
+                "description" : "Total integrated dose accumulated during the pass in mSv."
+              },
+        "PEAK_L_SHELL" : {
+                "type" : "number",
+                "description" : "Peak McIlwain L-shell reached during the pass."
+              }
+      },
+      "required" : ["PASS_ID", "START_UTC", "END_UTC"],
+      "additionalProperties" : false
+    },
+    "RDEElectronicsEffect" : {
+      "type" : "object",
+      "description" : "Spacecraft electronics single-event effects (SEE) and total ionizing dose (TID) assessment.",
+      "properties" : {
+        "DEVICE_PROFILE_ID" : {
+                "type" : "string",
+                "description" : "Reference device or part hardness profile identifier."
+              },
+        "SEE_UPSET_RATE_PER_BIT_DAY" : {
+                "type" : "number",
+                "description" : "Single-event upset rate in upsets/bit/day."
+              },
+        "SEL_PROBABILITY" : {
+                "type" : "number",
+                "description" : "Single-event latchup probability over the assessment window (0..1)."
+              },
+        "SEB_SEGR_RISK" : {
+                "type" : "number",
+                "description" : "Single-event burnout / gate rupture risk metric (0..1)."
+              },
+        "TID_KRAD_SI" : {
+                "type" : "number",
+                "description" : "Total ionizing dose accumulated over the window in krad(Si)."
+              },
+        "TID_MARGIN_PCT" : {
+                "type" : "number",
+                "description" : "Remaining TID design margin in percent."
+              },
+        "LET_THRESHOLD_MEV_CM2_MG" : {
+                "type" : "number",
+                "description" : "Linear energy transfer threshold in MeV*cm^2/mg."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RDECrewDose" : {
+      "type" : "object",
+      "description" : "Human crew dosimetry and career limit tracking.",
+      "properties" : {
+        "CREW_ID" : {
+                "type" : "string",
+                "description" : "Crew member or mission role identifier."
+              },
+        "EFFECTIVE_DOSE_MSV" : {
+                "type" : "number",
+                "description" : "Whole-body effective dose over the window in mSv."
+              },
+        "BLOOD_FORMING_ORGANS_MSV" : {
+                "type" : "number",
+                "description" : "Blood-forming organs (BFO) dose in mSv."
+              },
+        "EYE_LENS_MSV" : {
+                "type" : "number",
+                "description" : "Eye lens dose in mSv."
+              },
+        "SKIN_MSV" : {
+                "type" : "number",
+                "description" : "Skin dose in mSv."
+              },
+        "CUMULATIVE_CAREER_MSV" : {
+                "type" : "number",
+                "description" : "Updated cumulative career effective dose in mSv."
+              },
+        "CAREER_LIMIT_FRACTION" : {
+                "type" : "number",
+                "description" : "Fraction of applicable career limit consumed (0..1+)."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RDESepEffect" : {
+      "type" : "object",
+      "description" : "Solar flare / solar energetic particle (SEP) asset impact entry.",
+      "properties" : {
+        "SFE_EVENT_ID" : {
+                "type" : "string",
+                "description" : "Referenced $SFE solar flare event identifier."
+              },
+        "NOAA_S_SCALE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "NOAA Solar Radiation Storm scale S1..S5 (0 if below S1)."
+              },
+        "FLARE_CLASS" : {
+                "type" : "string",
+                "description" : "Soft X-ray flare class verbatim (e.g. \"X2.4\")."
+              },
+        "SEP_DOSE_MSV" : {
+                "type" : "number",
+                "description" : "Additional SEP event dose in mSv."
+              },
+        "SOLAR_CELL_DEGRADATION_PCT" : {
+                "type" : "number",
+                "description" : "Estimated solar array power degradation in percent."
+              },
+        "STAR_TRACKER_BLINDING_MIN" : {
+                "type" : "number",
+                "description" : "Estimated star-tracker blinding duration in minutes."
+              },
+        "SUMMARY" : {
+                "type" : "string",
+                "description" : "Concise human-readable impact summary."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RDE" : {
+      "type" : "object",
+      "description" : "Radiation Effects",
+      "properties" : {
+        "RDE_ID" : {
+                "type" : "string",
+                "description" : "Unique identifier of this radiation effects record."
+              },
+        "BODY_NAME" : {
+                "type" : "string",
+                "description" : "CCSDS SANA central body name (e.g. \"EARTH\", \"JUPITER\", \"SATURN\")."
+              },
+        "BODY_NAIF_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "NAIF SPICE body identifier (e.g. 399, 599, 699)."
+              },
+        "NORAD_CAT_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "NORAD catalog number of the target spacecraft (0 for uncataloged/crew trajectory)."
+              },
+        "OBJECT_ID" : {
+                "type" : "string",
+                "description" : "International designator or object identifier."
+              },
+        "WINDOW_START" : {
+                "type" : "string",
+                "description" : "Inclusive assessment window start, RFC 3339 UTC."
+              },
+        "WINDOW_END" : {
+                "type" : "string",
+                "description" : "Exclusive assessment window end, RFC 3339 UTC."
+              },
+        "RBF_RECORD_IDS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Referenced $RBF radiation belt flux record identifiers."
+              },
+        "SPACE_WEATHER_REFS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Referenced $SWS or $SFE space-weather record identifiers."
+              },
+        "SHIELDING" : {
+                "$ref" : "#/definitions/RDEShielding",
+                "description" : "Spacecraft or habitat shielding configuration."
+              },
+        "INSTANT_DOSE_RATE_MSV_H" : {
+                "type" : "number",
+                "description" : "Instantaneous dose rate at WINDOW_START in mSv/h."
+              },
+        "ORBIT_AVG_DOSE_RATE_MSV_H" : {
+                "type" : "number",
+                "description" : "Orbit-averaged dose rate over the assessment window in mSv/h."
+              },
+        "MISSION_DOSE_MSV" : {
+                "type" : "number",
+                "description" : "Total mission/window dose in mSv."
+              },
+        "TID_KRAD_SI" : {
+                "type" : "number",
+                "description" : "Total ionizing dose in silicon over the window in krad(Si)."
+              },
+        "EFFECT_SEVERITY" : {
+                "$ref" : "#/definitions/rdeEffectSeverity",
+                "description" : "Overall effect severity classification."
+              },
+        "PASS_DOSES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/RDEPassDose"},
+                "description" : "Per-pass dose breakdown across belt and SAA transits."
+              },
+        "SHIELDING_CURVE" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/RDEShieldCurvePoint"},
+                "description" : "Depth-dose attenuation curve across shielding thicknesses."
+              },
+        "ELECTRONICS" : {
+                "$ref" : "#/definitions/RDEElectronicsEffect",
+                "description" : "Electronics SEE and TID margin assessment."
+              },
+        "CREW" : {
+                "$ref" : "#/definitions/RDECrewDose",
+                "description" : "Crew organ and career dose assessment when crewed."
+              },
+        "SEP_EFFECTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/RDESepEffect"},
+                "description" : "Solar flare / SEP impact breakdown."
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/PVN",
+                "description" : "Record-level source and build provenance."
+              }
+      },
+      "required" : ["RDE_ID", "BODY_NAME", "WINDOW_START", "WINDOW_END", "PROVENANCE"],
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/RDE"
+}
