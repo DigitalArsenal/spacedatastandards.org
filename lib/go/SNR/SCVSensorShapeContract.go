@@ -457,8 +457,32 @@ func (rcv *SCVSensorShapeContract) AltitudeReference(obj *SCVEllipsoid) *SCVElli
 
 /// The surface MAX_ALTITUDE_M is measured from. Absent: the standard ellipsoid of the body the sensor is on (WGS84
 /// on the Earth). SEMI_INTERMEDIATE_M 0 is SEMI_MAJOR_M (an ellipsoid of revolution); a sphere has equal semi-axes.
+/// For SAR_ANNULAR_SECTOR: which side(s) of the ground track the sensor can
+/// image (LEFT, RIGHT, or BILATERAL when roll/steering supports both sides).
+func (rcv *SCVSensorShapeContract) SAR_LOOK_SIDE() scvSarLookSide {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	if o != 0 {
+		return scvSarLookSide(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *SCVSensorShapeContract) SarLookSide() scvSarLookSide {
+	return rcv.SAR_LOOK_SIDE()
+}
+
+/// For SAR_ANNULAR_SECTOR: which side(s) of the ground track the sensor can
+/// image (LEFT, RIGHT, or BILATERAL when roll/steering supports both sides).
+func (rcv *SCVSensorShapeContract) MutateSAR_LOOK_SIDE(n scvSarLookSide) bool {
+	return rcv._tab.MutateByteSlot(42, byte(n))
+}
+
+func (rcv *SCVSensorShapeContract) MutateSarLookSide(n scvSarLookSide) bool {
+	return rcv.MutateSAR_LOOK_SIDE(n)
+}
+
 func SCVSensorShapeContractStart(builder *flatbuffers.Builder) {
-	builder.StartObject(19)
+	builder.StartObject(20)
 }
 func SCVSensorShapeContractAddSHAPE_KIND(builder *flatbuffers.Builder, SHAPE_KIND scvSensorShapeKind) {
 	builder.PrependByteSlot(0, byte(SHAPE_KIND), 0)
@@ -585,6 +609,12 @@ func SCVSensorShapeContractAddALTITUDE_REFERENCE(builder *flatbuffers.Builder, A
 }
 func SCVSensorShapeContractAddAltitudeReference(builder *flatbuffers.Builder, ALTITUDE_REFERENCE flatbuffers.UOffsetT) {
 	SCVSensorShapeContractAddALTITUDE_REFERENCE(builder, ALTITUDE_REFERENCE)
+}
+func SCVSensorShapeContractAddSAR_LOOK_SIDE(builder *flatbuffers.Builder, SAR_LOOK_SIDE scvSarLookSide) {
+	builder.PrependByteSlot(19, byte(SAR_LOOK_SIDE), 0)
+}
+func SCVSensorShapeContractAddSarLookSide(builder *flatbuffers.Builder, SAR_LOOK_SIDE scvSarLookSide) {
+	SCVSensorShapeContractAddSAR_LOOK_SIDE(builder, SAR_LOOK_SIDE)
 }
 func SCVSensorShapeContractEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -280,6 +280,44 @@ inline const char *EnumNamescvSensorShapeKind(scvSensorShapeKind e) {
   return EnumNamesscvSensorShapeKind()[index];
 }
 
+/// Side-looking geometry capability of a synthetic-aperture radar (SAR)
+/// sensor relative to the spacecraft velocity vector.
+enum scvSarLookSide : uint8_t {
+  scvSarLookSide_UNSPECIFIED = 0,
+  scvSarLookSide_LEFT = 1,
+  scvSarLookSide_RIGHT = 2,
+  scvSarLookSide_BILATERAL = 3,
+  scvSarLookSide_MIN = scvSarLookSide_UNSPECIFIED,
+  scvSarLookSide_MAX = scvSarLookSide_BILATERAL
+};
+
+inline const scvSarLookSide (&EnumValuesscvSarLookSide())[4] {
+  static const scvSarLookSide values[] = {
+    scvSarLookSide_UNSPECIFIED,
+    scvSarLookSide_LEFT,
+    scvSarLookSide_RIGHT,
+    scvSarLookSide_BILATERAL
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesscvSarLookSide() {
+  static const char * const names[5] = {
+    "UNSPECIFIED",
+    "LEFT",
+    "RIGHT",
+    "BILATERAL",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamescvSarLookSide(scvSarLookSide e) {
+  if (::flatbuffers::IsOutRange(e, scvSarLookSide_UNSPECIFIED, scvSarLookSide_BILATERAL)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesscvSarLookSide()[index];
+}
+
 enum scvSensorAxisConvention : uint8_t {
   scvSensorAxisConvention_LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT = 0,
   scvSensorAxisConvention_MIN = scvSensorAxisConvention_LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT,
@@ -1045,7 +1083,8 @@ struct SCVSensorShapeContract FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::T
     VT_POLYGON_FRAME = 34,
     VT_AZ_EL_MASK = 36,
     VT_MAX_ALTITUDE_M = 38,
-    VT_ALTITUDE_REFERENCE = 40
+    VT_ALTITUDE_REFERENCE = 40,
+    VT_SAR_LOOK_SIDE = 42
   };
   scvSensorShapeKind SHAPE_KIND() const {
     return static_cast<scvSensorShapeKind>(GetField<uint8_t>(VT_SHAPE_KIND, 0));
@@ -1111,6 +1150,11 @@ struct SCVSensorShapeContract FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::T
   const SCVEllipsoid *ALTITUDE_REFERENCE() const {
     return GetPointer<const SCVEllipsoid *>(VT_ALTITUDE_REFERENCE);
   }
+  /// For SAR_ANNULAR_SECTOR: which side(s) of the ground track the sensor can
+  /// image (LEFT, RIGHT, or BILATERAL when roll/steering supports both sides).
+  scvSarLookSide SAR_LOOK_SIDE() const {
+    return static_cast<scvSarLookSide>(GetField<uint8_t>(VT_SAR_LOOK_SIDE, 0));
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -1138,6 +1182,7 @@ struct SCVSensorShapeContract FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::T
            VerifyField<double>(verifier, VT_MAX_ALTITUDE_M, 8) &&
            VerifyOffset(verifier, VT_ALTITUDE_REFERENCE) &&
            verifier.VerifyTable(ALTITUDE_REFERENCE()) &&
+           VerifyField<uint8_t>(verifier, VT_SAR_LOOK_SIDE, 1) &&
            verifier.EndTable();
   }
 };
@@ -1203,6 +1248,9 @@ struct SCVSensorShapeContractBuilder {
   void add_ALTITUDE_REFERENCE(::flatbuffers::Offset<SCVEllipsoid> ALTITUDE_REFERENCE) {
     fbb_.AddOffset(SCVSensorShapeContract::VT_ALTITUDE_REFERENCE, ALTITUDE_REFERENCE);
   }
+  void add_SAR_LOOK_SIDE(scvSarLookSide SAR_LOOK_SIDE) {
+    fbb_.AddElement<uint8_t>(SCVSensorShapeContract::VT_SAR_LOOK_SIDE, static_cast<uint8_t>(SAR_LOOK_SIDE), 0);
+  }
   explicit SCVSensorShapeContractBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1234,7 +1282,8 @@ inline ::flatbuffers::Offset<SCVSensorShapeContract> CreateSCVSensorShapeContrac
     scvCoordinateFrame POLYGON_FRAME = scvCoordinateFrame_UNKNOWN,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<SCVAzElMaskPoint>>> AZ_EL_MASK = 0,
     double MAX_ALTITUDE_M = 0.0,
-    ::flatbuffers::Offset<SCVEllipsoid> ALTITUDE_REFERENCE = 0) {
+    ::flatbuffers::Offset<SCVEllipsoid> ALTITUDE_REFERENCE = 0,
+    scvSarLookSide SAR_LOOK_SIDE = scvSarLookSide_UNSPECIFIED) {
   SCVSensorShapeContractBuilder builder_(_fbb);
   builder_.add_MAX_ALTITUDE_M(MAX_ALTITUDE_M);
   builder_.add_MAX_RANGE_M(MAX_RANGE_M);
@@ -1251,6 +1300,7 @@ inline ::flatbuffers::Offset<SCVSensorShapeContract> CreateSCVSensorShapeContrac
   builder_.add_ALTITUDE_REFERENCE(ALTITUDE_REFERENCE);
   builder_.add_AZ_EL_MASK(AZ_EL_MASK);
   builder_.add_POLYGON_VERTICES(POLYGON_VERTICES);
+  builder_.add_SAR_LOOK_SIDE(SAR_LOOK_SIDE);
   builder_.add_POLYGON_FRAME(POLYGON_FRAME);
   builder_.add_RANGE_BOUNDARY(RANGE_BOUNDARY);
   builder_.add_AXIS_CONVENTION(AXIS_CONVENTION);
@@ -1278,7 +1328,8 @@ inline ::flatbuffers::Offset<SCVSensorShapeContract> CreateSCVSensorShapeContrac
     scvCoordinateFrame POLYGON_FRAME = scvCoordinateFrame_UNKNOWN,
     const std::vector<::flatbuffers::Offset<SCVAzElMaskPoint>> *AZ_EL_MASK = nullptr,
     double MAX_ALTITUDE_M = 0.0,
-    ::flatbuffers::Offset<SCVEllipsoid> ALTITUDE_REFERENCE = 0) {
+    ::flatbuffers::Offset<SCVEllipsoid> ALTITUDE_REFERENCE = 0,
+    scvSarLookSide SAR_LOOK_SIDE = scvSarLookSide_UNSPECIFIED) {
   auto POLYGON_VERTICES__ = POLYGON_VERTICES ? _fbb.CreateVector<::flatbuffers::Offset<SCVVec3>>(*POLYGON_VERTICES) : 0;
   auto AZ_EL_MASK__ = AZ_EL_MASK ? _fbb.CreateVector<::flatbuffers::Offset<SCVAzElMaskPoint>>(*AZ_EL_MASK) : 0;
   return CreateSCVSensorShapeContract(
@@ -1301,7 +1352,8 @@ inline ::flatbuffers::Offset<SCVSensorShapeContract> CreateSCVSensorShapeContrac
       POLYGON_FRAME,
       AZ_EL_MASK__,
       MAX_ALTITUDE_M,
-      ALTITUDE_REFERENCE);
+      ALTITUDE_REFERENCE,
+      SAR_LOOK_SIDE);
 }
 
 struct SCVSensor FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {

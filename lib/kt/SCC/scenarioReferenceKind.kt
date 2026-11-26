@@ -28,5 +28,10 @@ class scenarioReferenceKind private constructor() {
          * alpha-2 code when the area is a country.
          */
         const val AREA_OF_INTEREST: Byte = 10
+        /**
+         * A console top-level folder (for example SELECTION, GROUPS, OBJECTS) that
+         * carries shared display-style overrides in DISPLAY_STYLE.
+         */
+        const val FOLDER: Byte = 11
     }
 }

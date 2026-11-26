@@ -609,8 +609,27 @@ func (rcv *SCNReference) MutateShowCovariance(n bool) bool {
 	return rcv.MutateSHOW_COVARIANCE(n)
 }
 
+/// Typed display-style overrides for this reference (object, group, or folder).
+func (rcv *SCNReference) DISPLAY_STYLE(obj *SCNDisplayStyle) *SCNDisplayStyle {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(SCNDisplayStyle)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *SCNReference) DisplayStyle(obj *SCNDisplayStyle) *SCNDisplayStyle {
+	return rcv.DISPLAY_STYLE(obj)
+}
+
+/// Typed display-style overrides for this reference (object, group, or folder).
 func SCNReferenceStart(builder *flatbuffers.Builder) {
-	builder.StartObject(28)
+	builder.StartObject(29)
 }
 func SCNReferenceAddREFERENCE_ID(builder *flatbuffers.Builder, REFERENCE_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(REFERENCE_ID), 0)
@@ -815,6 +834,12 @@ func SCNReferenceAddSHOW_COVARIANCE(builder *flatbuffers.Builder, SHOW_COVARIANC
 }
 func SCNReferenceAddShowCovariance(builder *flatbuffers.Builder, SHOW_COVARIANCE bool) {
 	SCNReferenceAddSHOW_COVARIANCE(builder, SHOW_COVARIANCE)
+}
+func SCNReferenceAddDISPLAY_STYLE(builder *flatbuffers.Builder, DISPLAY_STYLE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(28, flatbuffers.UOffsetT(DISPLAY_STYLE), 0)
+}
+func SCNReferenceAddDisplayStyle(builder *flatbuffers.Builder, DISPLAY_STYLE flatbuffers.UOffsetT) {
+	SCNReferenceAddDISPLAY_STYLE(builder, DISPLAY_STYLE)
 }
 func SCNReferenceEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

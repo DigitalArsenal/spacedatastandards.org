@@ -21,11 +21,11 @@ extern crate alloc;
 pub const ENUM_MIN_SCENARIO_REFERENCE_KIND: i8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_SCENARIO_REFERENCE_KIND: i8 = 10;
+pub const ENUM_MAX_SCENARIO_REFERENCE_KIND: i8 = 11;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_SCENARIO_REFERENCE_KIND: [scenarioReferenceKind; 11] = [
+pub const ENUM_VALUES_SCENARIO_REFERENCE_KIND: [scenarioReferenceKind; 12] = [
     scenarioReferenceKind::UNKNOWN,
     scenarioReferenceKind::SATELLITE,
     scenarioReferenceKind::GROUND_SITE,
@@ -37,6 +37,7 @@ pub const ENUM_VALUES_SCENARIO_REFERENCE_KIND: [scenarioReferenceKind; 11] = [
     scenarioReferenceKind::OBSERVATION,
     scenarioReferenceKind::GROUP,
     scenarioReferenceKind::AREA_OF_INTEREST,
+    scenarioReferenceKind::FOLDER,
 ];
 
 /// Scenario reference category. This is intentionally broader than the
@@ -64,9 +65,12 @@ impl scenarioReferenceKind {
     /// equals REFERENCE_ID. NAME is its label; COUNTRY is its ISO 3166-1
     /// alpha-2 code when the area is a country.
     pub const AREA_OF_INTEREST: Self = Self(10);
+    /// A console top-level folder (for example SELECTION, GROUPS, OBJECTS) that
+    /// carries shared display-style overrides in DISPLAY_STYLE.
+    pub const FOLDER: Self = Self(11);
 
     pub const ENUM_MIN: i8 = 0;
-    pub const ENUM_MAX: i8 = 10;
+    pub const ENUM_MAX: i8 = 11;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::UNKNOWN,
         Self::SATELLITE,
@@ -79,6 +83,7 @@ impl scenarioReferenceKind {
         Self::OBSERVATION,
         Self::GROUP,
         Self::AREA_OF_INTEREST,
+        Self::FOLDER,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -95,6 +100,7 @@ impl scenarioReferenceKind {
             Self::OBSERVATION => Some("OBSERVATION"),
             Self::GROUP => Some("GROUP"),
             Self::AREA_OF_INTEREST => Some("AREA_OF_INTEREST"),
+            Self::FOLDER => Some("FOLDER"),
             _ => None,
         }
     }
@@ -155,6 +161,107 @@ impl<'a> ::flatbuffers::Verifiable for scenarioReferenceKind {
 }
 
 impl ::flatbuffers::SimpleToVerifyInSlice for scenarioReferenceKind {}
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_SCN_TOGGLE: i8 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_SCN_TOGGLE: i8 = 2;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_SCN_TOGGLE: [scnToggle; 3] = [
+    scnToggle::UNSET,
+    scnToggle::OFF,
+    scnToggle::ON,
+];
+
+/// Tri-state toggle for optional display-style switches so absent differs
+/// from explicitly disabled.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct scnToggle(pub i8);
+
+#[allow(non_upper_case_globals)]
+impl scnToggle {
+    pub const UNSET: Self = Self(0);
+    pub const OFF: Self = Self(1);
+    pub const ON: Self = Self(2);
+
+    pub const ENUM_MIN: i8 = 0;
+    pub const ENUM_MAX: i8 = 2;
+    pub const ENUM_VALUES: &'static [Self] = &[
+        Self::UNSET,
+        Self::OFF,
+        Self::ON,
+    ];
+
+    /// Returns the variant's name or "" if unknown.
+    pub fn variant_name(self) -> Option<&'static str> {
+        match self {
+            Self::UNSET => Some("UNSET"),
+            Self::OFF => Some("OFF"),
+            Self::ON => Some("ON"),
+            _ => None,
+        }
+    }
+}
+
+impl ::core::fmt::Debug for scnToggle {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        if let Some(name) = self.variant_name() {
+            f.write_str(name)
+        } else {
+            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+        }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for scnToggle {
+    type Inner = Self;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+        Self(b)
+    }
+}
+
+impl ::flatbuffers::Push for scnToggle {
+    type Output = scnToggle;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for scnToggle {
+    type Scalar = i8;
+
+    #[inline]
+    fn to_little_endian(self) -> i8 {
+        self.0.to_le()
+    }
+
+    #[inline]
+    #[allow(clippy::wrong_self_convention)]
+    fn from_little_endian(v: i8) -> Self {
+        let b = i8::from_le(v);
+        Self(b)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for scnToggle {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        i8::run_verifier(v, pos)
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for scnToggle {}
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_SCN_RIC_COORDINATES: i8 = 0;
@@ -451,6 +558,998 @@ impl<'a> ::flatbuffers::Verifiable for scenarioActionCode {
 }
 
 impl ::flatbuffers::SimpleToVerifyInSlice for scenarioActionCode {}
+
+pub enum SCNDisplayStyleOffset {}
+
+/// Typed display customization for a scenario reference (object, group, or
+/// top-level folder). Unset strings are null, unset numeric fields are NaN,
+/// and unset switches are UNSET.
+#[derive(Copy, Clone, PartialEq)]
+pub struct SCNDisplayStyle<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for SCNDisplayStyle<'a> {
+    type Inner = SCNDisplayStyle<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> SCNDisplayStyle<'a> {
+    pub const VT_DOT_COLOR: ::flatbuffers::VOffsetT = 4;
+    pub const VT_DOT_SIZE: ::flatbuffers::VOffsetT = 6;
+    pub const VT_OUTLINE_COLOR: ::flatbuffers::VOffsetT = 8;
+    pub const VT_OUTLINE_WIDTH: ::flatbuffers::VOffsetT = 10;
+    pub const VT_SHOW_PATH: ::flatbuffers::VOffsetT = 12;
+    pub const VT_PATH_RELATIVE_TO: ::flatbuffers::VOffsetT = 14;
+    pub const VT_PATH_COLOR: ::flatbuffers::VOffsetT = 16;
+    pub const VT_PATH_WIDTH: ::flatbuffers::VOffsetT = 18;
+    pub const VT_PATH_AHEAD_MIN: ::flatbuffers::VOffsetT = 20;
+    pub const VT_PATH_BEHIND_MIN: ::flatbuffers::VOffsetT = 22;
+    pub const VT_SHOW_LABEL: ::flatbuffers::VOffsetT = 24;
+    pub const VT_LABEL_COLOR: ::flatbuffers::VOffsetT = 26;
+    pub const VT_LABEL_SIZE: ::flatbuffers::VOffsetT = 28;
+    pub const VT_LABEL_OPACITY: ::flatbuffers::VOffsetT = 30;
+    pub const VT_SHOW_RIC_AXES: ::flatbuffers::VOffsetT = 32;
+    pub const VT_RIC_AXES_LENGTH_KM: ::flatbuffers::VOffsetT = 34;
+    pub const VT_SHOW_MODEL: ::flatbuffers::VOffsetT = 36;
+    pub const VT_SHOW_COVARIANCE: ::flatbuffers::VOffsetT = 38;
+    pub const VT_SHOW_SELECTOR: ::flatbuffers::VOffsetT = 40;
+    pub const VT_SHOW_SELECTOR_LABEL: ::flatbuffers::VOffsetT = 42;
+    pub const VT_SELECTOR_COLOR: ::flatbuffers::VOffsetT = 44;
+    pub const VT_SELECTOR_WIDTH: ::flatbuffers::VOffsetT = 46;
+    pub const VT_SELECTOR_SEGMENTS: ::flatbuffers::VOffsetT = 48;
+    pub const VT_SELECTOR_FILL: ::flatbuffers::VOffsetT = 50;
+    pub const VT_SELECTOR_BINDING: ::flatbuffers::VOffsetT = 52;
+    pub const VT_SELECTOR_MIN: ::flatbuffers::VOffsetT = 54;
+    pub const VT_SELECTOR_MAX: ::flatbuffers::VOffsetT = 56;
+    pub const VT_ORIENT_RADIAL_DEG: ::flatbuffers::VOffsetT = 58;
+    pub const VT_ORIENT_CROSS_TRACK_DEG: ::flatbuffers::VOffsetT = 60;
+    pub const VT_ORIENT_IN_TRACK_DEG: ::flatbuffers::VOffsetT = 62;
+    pub const VT_LABEL_COUNT: ::flatbuffers::VOffsetT = 64;
+    pub const VT_RIC_AXES_COUNT: ::flatbuffers::VOffsetT = 66;
+    pub const VT_MODEL_COUNT: ::flatbuffers::VOffsetT = 68;
+    pub const VT_COVARIANCE_COUNT: ::flatbuffers::VOffsetT = 70;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        SCNDisplayStyle { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args SCNDisplayStyleArgs<'args>
+    ) -> ::flatbuffers::WIPOffset<SCNDisplayStyle<'bldr>> {
+        let mut builder = SCNDisplayStyleBuilder::new(_fbb);
+        builder.add_COVARIANCE_COUNT(args.COVARIANCE_COUNT);
+        builder.add_MODEL_COUNT(args.MODEL_COUNT);
+        builder.add_RIC_AXES_COUNT(args.RIC_AXES_COUNT);
+        builder.add_LABEL_COUNT(args.LABEL_COUNT);
+        builder.add_ORIENT_IN_TRACK_DEG(args.ORIENT_IN_TRACK_DEG);
+        builder.add_ORIENT_CROSS_TRACK_DEG(args.ORIENT_CROSS_TRACK_DEG);
+        builder.add_ORIENT_RADIAL_DEG(args.ORIENT_RADIAL_DEG);
+        builder.add_SELECTOR_MAX(args.SELECTOR_MAX);
+        builder.add_SELECTOR_MIN(args.SELECTOR_MIN);
+        builder.add_SELECTOR_FILL(args.SELECTOR_FILL);
+        builder.add_SELECTOR_SEGMENTS(args.SELECTOR_SEGMENTS);
+        builder.add_SELECTOR_WIDTH(args.SELECTOR_WIDTH);
+        builder.add_RIC_AXES_LENGTH_KM(args.RIC_AXES_LENGTH_KM);
+        builder.add_LABEL_OPACITY(args.LABEL_OPACITY);
+        builder.add_LABEL_SIZE(args.LABEL_SIZE);
+        builder.add_PATH_BEHIND_MIN(args.PATH_BEHIND_MIN);
+        builder.add_PATH_AHEAD_MIN(args.PATH_AHEAD_MIN);
+        builder.add_PATH_WIDTH(args.PATH_WIDTH);
+        builder.add_OUTLINE_WIDTH(args.OUTLINE_WIDTH);
+        builder.add_DOT_SIZE(args.DOT_SIZE);
+        if let Some(x) = args.SELECTOR_BINDING { builder.add_SELECTOR_BINDING(x); }
+        if let Some(x) = args.SELECTOR_COLOR { builder.add_SELECTOR_COLOR(x); }
+        if let Some(x) = args.LABEL_COLOR { builder.add_LABEL_COLOR(x); }
+        if let Some(x) = args.PATH_COLOR { builder.add_PATH_COLOR(x); }
+        if let Some(x) = args.PATH_RELATIVE_TO { builder.add_PATH_RELATIVE_TO(x); }
+        if let Some(x) = args.OUTLINE_COLOR { builder.add_OUTLINE_COLOR(x); }
+        if let Some(x) = args.DOT_COLOR { builder.add_DOT_COLOR(x); }
+        builder.add_SHOW_SELECTOR_LABEL(args.SHOW_SELECTOR_LABEL);
+        builder.add_SHOW_SELECTOR(args.SHOW_SELECTOR);
+        builder.add_SHOW_COVARIANCE(args.SHOW_COVARIANCE);
+        builder.add_SHOW_MODEL(args.SHOW_MODEL);
+        builder.add_SHOW_RIC_AXES(args.SHOW_RIC_AXES);
+        builder.add_SHOW_LABEL(args.SHOW_LABEL);
+        builder.add_SHOW_PATH(args.SHOW_PATH);
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> SCNDisplayStyleT {
+        let DOT_COLOR = self.DOT_COLOR().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let DOT_SIZE = self.DOT_SIZE();
+        let OUTLINE_COLOR = self.OUTLINE_COLOR().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let OUTLINE_WIDTH = self.OUTLINE_WIDTH();
+        let SHOW_PATH = self.SHOW_PATH();
+        let PATH_RELATIVE_TO = self.PATH_RELATIVE_TO().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let PATH_COLOR = self.PATH_COLOR().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let PATH_WIDTH = self.PATH_WIDTH();
+        let PATH_AHEAD_MIN = self.PATH_AHEAD_MIN();
+        let PATH_BEHIND_MIN = self.PATH_BEHIND_MIN();
+        let SHOW_LABEL = self.SHOW_LABEL();
+        let LABEL_COLOR = self.LABEL_COLOR().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let LABEL_SIZE = self.LABEL_SIZE();
+        let LABEL_OPACITY = self.LABEL_OPACITY();
+        let SHOW_RIC_AXES = self.SHOW_RIC_AXES();
+        let RIC_AXES_LENGTH_KM = self.RIC_AXES_LENGTH_KM();
+        let SHOW_MODEL = self.SHOW_MODEL();
+        let SHOW_COVARIANCE = self.SHOW_COVARIANCE();
+        let SHOW_SELECTOR = self.SHOW_SELECTOR();
+        let SHOW_SELECTOR_LABEL = self.SHOW_SELECTOR_LABEL();
+        let SELECTOR_COLOR = self.SELECTOR_COLOR().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let SELECTOR_WIDTH = self.SELECTOR_WIDTH();
+        let SELECTOR_SEGMENTS = self.SELECTOR_SEGMENTS();
+        let SELECTOR_FILL = self.SELECTOR_FILL();
+        let SELECTOR_BINDING = self.SELECTOR_BINDING().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let SELECTOR_MIN = self.SELECTOR_MIN();
+        let SELECTOR_MAX = self.SELECTOR_MAX();
+        let ORIENT_RADIAL_DEG = self.ORIENT_RADIAL_DEG();
+        let ORIENT_CROSS_TRACK_DEG = self.ORIENT_CROSS_TRACK_DEG();
+        let ORIENT_IN_TRACK_DEG = self.ORIENT_IN_TRACK_DEG();
+        let LABEL_COUNT = self.LABEL_COUNT();
+        let RIC_AXES_COUNT = self.RIC_AXES_COUNT();
+        let MODEL_COUNT = self.MODEL_COUNT();
+        let COVARIANCE_COUNT = self.COVARIANCE_COUNT();
+        SCNDisplayStyleT {
+            DOT_COLOR,
+            DOT_SIZE,
+            OUTLINE_COLOR,
+            OUTLINE_WIDTH,
+            SHOW_PATH,
+            PATH_RELATIVE_TO,
+            PATH_COLOR,
+            PATH_WIDTH,
+            PATH_AHEAD_MIN,
+            PATH_BEHIND_MIN,
+            SHOW_LABEL,
+            LABEL_COLOR,
+            LABEL_SIZE,
+            LABEL_OPACITY,
+            SHOW_RIC_AXES,
+            RIC_AXES_LENGTH_KM,
+            SHOW_MODEL,
+            SHOW_COVARIANCE,
+            SHOW_SELECTOR,
+            SHOW_SELECTOR_LABEL,
+            SELECTOR_COLOR,
+            SELECTOR_WIDTH,
+            SELECTOR_SEGMENTS,
+            SELECTOR_FILL,
+            SELECTOR_BINDING,
+            SELECTOR_MIN,
+            SELECTOR_MAX,
+            ORIENT_RADIAL_DEG,
+            ORIENT_CROSS_TRACK_DEG,
+            ORIENT_IN_TRACK_DEG,
+            LABEL_COUNT,
+            RIC_AXES_COUNT,
+            MODEL_COUNT,
+            COVARIANCE_COUNT,
+        }
+    }
+
+    #[inline]
+    pub fn DOT_COLOR(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNDisplayStyle::VT_DOT_COLOR, None)}
+    }
+
+    #[inline]
+    pub fn DOT_SIZE(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(SCNDisplayStyle::VT_DOT_SIZE, Some(f64::NAN)).unwrap()}
+    }
+
+    #[inline]
+    pub fn OUTLINE_COLOR(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNDisplayStyle::VT_OUTLINE_COLOR, None)}
+    }
+
+    #[inline]
+    pub fn OUTLINE_WIDTH(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(SCNDisplayStyle::VT_OUTLINE_WIDTH, Some(f64::NAN)).unwrap()}
+    }
+
+    #[inline]
+    pub fn SHOW_PATH(&self) -> scnToggle {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<scnToggle>(SCNDisplayStyle::VT_SHOW_PATH, Some(scnToggle::UNSET)).unwrap()}
+    }
+
+    #[inline]
+    pub fn PATH_RELATIVE_TO(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNDisplayStyle::VT_PATH_RELATIVE_TO, None)}
+    }
+
+    #[inline]
+    pub fn PATH_COLOR(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNDisplayStyle::VT_PATH_COLOR, None)}
+    }
+
+    #[inline]
+    pub fn PATH_WIDTH(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(SCNDisplayStyle::VT_PATH_WIDTH, Some(f64::NAN)).unwrap()}
+    }
+
+    #[inline]
+    pub fn PATH_AHEAD_MIN(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(SCNDisplayStyle::VT_PATH_AHEAD_MIN, Some(f64::NAN)).unwrap()}
+    }
+
+    #[inline]
+    pub fn PATH_BEHIND_MIN(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(SCNDisplayStyle::VT_PATH_BEHIND_MIN, Some(f64::NAN)).unwrap()}
+    }
+
+    #[inline]
+    pub fn SHOW_LABEL(&self) -> scnToggle {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<scnToggle>(SCNDisplayStyle::VT_SHOW_LABEL, Some(scnToggle::UNSET)).unwrap()}
+    }
+
+    #[inline]
+    pub fn LABEL_COLOR(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNDisplayStyle::VT_LABEL_COLOR, None)}
+    }
+
+    #[inline]
+    pub fn LABEL_SIZE(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(SCNDisplayStyle::VT_LABEL_SIZE, Some(f64::NAN)).unwrap()}
+    }
+
+    #[inline]
+    pub fn LABEL_OPACITY(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(SCNDisplayStyle::VT_LABEL_OPACITY, Some(f64::NAN)).unwrap()}
+    }
+
+    #[inline]
+    pub fn SHOW_RIC_AXES(&self) -> scnToggle {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<scnToggle>(SCNDisplayStyle::VT_SHOW_RIC_AXES, Some(scnToggle::UNSET)).unwrap()}
+    }
+
+    #[inline]
+    pub fn RIC_AXES_LENGTH_KM(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(SCNDisplayStyle::VT_RIC_AXES_LENGTH_KM, Some(f64::NAN)).unwrap()}
+    }
+
+    #[inline]
+    pub fn SHOW_MODEL(&self) -> scnToggle {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<scnToggle>(SCNDisplayStyle::VT_SHOW_MODEL, Some(scnToggle::UNSET)).unwrap()}
+    }
+
+    #[inline]
+    pub fn SHOW_COVARIANCE(&self) -> scnToggle {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<scnToggle>(SCNDisplayStyle::VT_SHOW_COVARIANCE, Some(scnToggle::UNSET)).unwrap()}
+    }
+
+    #[inline]
+    pub fn SHOW_SELECTOR(&self) -> scnToggle {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<scnToggle>(SCNDisplayStyle::VT_SHOW_SELECTOR, Some(scnToggle::UNSET)).unwrap()}
+    }
+
+    #[inline]
+    pub fn SHOW_SELECTOR_LABEL(&self) -> scnToggle {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<scnToggle>(SCNDisplayStyle::VT_SHOW_SELECTOR_LABEL, Some(scnToggle::UNSET)).unwrap()}
+    }
+
+    #[inline]
+    pub fn SELECTOR_COLOR(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNDisplayStyle::VT_SELECTOR_COLOR, None)}
+    }
+
+    #[inline]
+    pub fn SELECTOR_WIDTH(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(SCNDisplayStyle::VT_SELECTOR_WIDTH, Some(f64::NAN)).unwrap()}
+    }
+
+    #[inline]
+    pub fn SELECTOR_SEGMENTS(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(SCNDisplayStyle::VT_SELECTOR_SEGMENTS, Some(f64::NAN)).unwrap()}
+    }
+
+    #[inline]
+    pub fn SELECTOR_FILL(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(SCNDisplayStyle::VT_SELECTOR_FILL, Some(f64::NAN)).unwrap()}
+    }
+
+    #[inline]
+    pub fn SELECTOR_BINDING(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNDisplayStyle::VT_SELECTOR_BINDING, None)}
+    }
+
+    #[inline]
+    pub fn SELECTOR_MIN(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(SCNDisplayStyle::VT_SELECTOR_MIN, Some(f64::NAN)).unwrap()}
+    }
+
+    #[inline]
+    pub fn SELECTOR_MAX(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(SCNDisplayStyle::VT_SELECTOR_MAX, Some(f64::NAN)).unwrap()}
+    }
+
+    #[inline]
+    pub fn ORIENT_RADIAL_DEG(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(SCNDisplayStyle::VT_ORIENT_RADIAL_DEG, Some(f64::NAN)).unwrap()}
+    }
+
+    #[inline]
+    pub fn ORIENT_CROSS_TRACK_DEG(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(SCNDisplayStyle::VT_ORIENT_CROSS_TRACK_DEG, Some(f64::NAN)).unwrap()}
+    }
+
+    #[inline]
+    pub fn ORIENT_IN_TRACK_DEG(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(SCNDisplayStyle::VT_ORIENT_IN_TRACK_DEG, Some(f64::NAN)).unwrap()}
+    }
+
+    #[inline]
+    pub fn LABEL_COUNT(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(SCNDisplayStyle::VT_LABEL_COUNT, Some(f64::NAN)).unwrap()}
+    }
+
+    #[inline]
+    pub fn RIC_AXES_COUNT(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(SCNDisplayStyle::VT_RIC_AXES_COUNT, Some(f64::NAN)).unwrap()}
+    }
+
+    #[inline]
+    pub fn MODEL_COUNT(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(SCNDisplayStyle::VT_MODEL_COUNT, Some(f64::NAN)).unwrap()}
+    }
+
+    #[inline]
+    pub fn COVARIANCE_COUNT(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(SCNDisplayStyle::VT_COVARIANCE_COUNT, Some(f64::NAN)).unwrap()}
+    }
+}
+
+impl ::flatbuffers::Verifiable for SCNDisplayStyle<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DOT_COLOR", Self::VT_DOT_COLOR, false)?
+            .visit_field::<f64>("DOT_SIZE", Self::VT_DOT_SIZE, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OUTLINE_COLOR", Self::VT_OUTLINE_COLOR, false)?
+            .visit_field::<f64>("OUTLINE_WIDTH", Self::VT_OUTLINE_WIDTH, false)?
+            .visit_field::<scnToggle>("SHOW_PATH", Self::VT_SHOW_PATH, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PATH_RELATIVE_TO", Self::VT_PATH_RELATIVE_TO, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PATH_COLOR", Self::VT_PATH_COLOR, false)?
+            .visit_field::<f64>("PATH_WIDTH", Self::VT_PATH_WIDTH, false)?
+            .visit_field::<f64>("PATH_AHEAD_MIN", Self::VT_PATH_AHEAD_MIN, false)?
+            .visit_field::<f64>("PATH_BEHIND_MIN", Self::VT_PATH_BEHIND_MIN, false)?
+            .visit_field::<scnToggle>("SHOW_LABEL", Self::VT_SHOW_LABEL, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("LABEL_COLOR", Self::VT_LABEL_COLOR, false)?
+            .visit_field::<f64>("LABEL_SIZE", Self::VT_LABEL_SIZE, false)?
+            .visit_field::<f64>("LABEL_OPACITY", Self::VT_LABEL_OPACITY, false)?
+            .visit_field::<scnToggle>("SHOW_RIC_AXES", Self::VT_SHOW_RIC_AXES, false)?
+            .visit_field::<f64>("RIC_AXES_LENGTH_KM", Self::VT_RIC_AXES_LENGTH_KM, false)?
+            .visit_field::<scnToggle>("SHOW_MODEL", Self::VT_SHOW_MODEL, false)?
+            .visit_field::<scnToggle>("SHOW_COVARIANCE", Self::VT_SHOW_COVARIANCE, false)?
+            .visit_field::<scnToggle>("SHOW_SELECTOR", Self::VT_SHOW_SELECTOR, false)?
+            .visit_field::<scnToggle>("SHOW_SELECTOR_LABEL", Self::VT_SHOW_SELECTOR_LABEL, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SELECTOR_COLOR", Self::VT_SELECTOR_COLOR, false)?
+            .visit_field::<f64>("SELECTOR_WIDTH", Self::VT_SELECTOR_WIDTH, false)?
+            .visit_field::<f64>("SELECTOR_SEGMENTS", Self::VT_SELECTOR_SEGMENTS, false)?
+            .visit_field::<f64>("SELECTOR_FILL", Self::VT_SELECTOR_FILL, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SELECTOR_BINDING", Self::VT_SELECTOR_BINDING, false)?
+            .visit_field::<f64>("SELECTOR_MIN", Self::VT_SELECTOR_MIN, false)?
+            .visit_field::<f64>("SELECTOR_MAX", Self::VT_SELECTOR_MAX, false)?
+            .visit_field::<f64>("ORIENT_RADIAL_DEG", Self::VT_ORIENT_RADIAL_DEG, false)?
+            .visit_field::<f64>("ORIENT_CROSS_TRACK_DEG", Self::VT_ORIENT_CROSS_TRACK_DEG, false)?
+            .visit_field::<f64>("ORIENT_IN_TRACK_DEG", Self::VT_ORIENT_IN_TRACK_DEG, false)?
+            .visit_field::<f64>("LABEL_COUNT", Self::VT_LABEL_COUNT, false)?
+            .visit_field::<f64>("RIC_AXES_COUNT", Self::VT_RIC_AXES_COUNT, false)?
+            .visit_field::<f64>("MODEL_COUNT", Self::VT_MODEL_COUNT, false)?
+            .visit_field::<f64>("COVARIANCE_COUNT", Self::VT_COVARIANCE_COUNT, false)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct SCNDisplayStyleArgs<'a> {
+    pub DOT_COLOR: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DOT_SIZE: f64,
+    pub OUTLINE_COLOR: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub OUTLINE_WIDTH: f64,
+    pub SHOW_PATH: scnToggle,
+    pub PATH_RELATIVE_TO: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PATH_COLOR: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PATH_WIDTH: f64,
+    pub PATH_AHEAD_MIN: f64,
+    pub PATH_BEHIND_MIN: f64,
+    pub SHOW_LABEL: scnToggle,
+    pub LABEL_COLOR: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub LABEL_SIZE: f64,
+    pub LABEL_OPACITY: f64,
+    pub SHOW_RIC_AXES: scnToggle,
+    pub RIC_AXES_LENGTH_KM: f64,
+    pub SHOW_MODEL: scnToggle,
+    pub SHOW_COVARIANCE: scnToggle,
+    pub SHOW_SELECTOR: scnToggle,
+    pub SHOW_SELECTOR_LABEL: scnToggle,
+    pub SELECTOR_COLOR: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SELECTOR_WIDTH: f64,
+    pub SELECTOR_SEGMENTS: f64,
+    pub SELECTOR_FILL: f64,
+    pub SELECTOR_BINDING: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SELECTOR_MIN: f64,
+    pub SELECTOR_MAX: f64,
+    pub ORIENT_RADIAL_DEG: f64,
+    pub ORIENT_CROSS_TRACK_DEG: f64,
+    pub ORIENT_IN_TRACK_DEG: f64,
+    pub LABEL_COUNT: f64,
+    pub RIC_AXES_COUNT: f64,
+    pub MODEL_COUNT: f64,
+    pub COVARIANCE_COUNT: f64,
+}
+
+impl<'a> Default for SCNDisplayStyleArgs<'a> {
+    #[inline]
+    fn default() -> Self {
+        SCNDisplayStyleArgs {
+            DOT_COLOR: None,
+            DOT_SIZE: f64::NAN,
+            OUTLINE_COLOR: None,
+            OUTLINE_WIDTH: f64::NAN,
+            SHOW_PATH: scnToggle::UNSET,
+            PATH_RELATIVE_TO: None,
+            PATH_COLOR: None,
+            PATH_WIDTH: f64::NAN,
+            PATH_AHEAD_MIN: f64::NAN,
+            PATH_BEHIND_MIN: f64::NAN,
+            SHOW_LABEL: scnToggle::UNSET,
+            LABEL_COLOR: None,
+            LABEL_SIZE: f64::NAN,
+            LABEL_OPACITY: f64::NAN,
+            SHOW_RIC_AXES: scnToggle::UNSET,
+            RIC_AXES_LENGTH_KM: f64::NAN,
+            SHOW_MODEL: scnToggle::UNSET,
+            SHOW_COVARIANCE: scnToggle::UNSET,
+            SHOW_SELECTOR: scnToggle::UNSET,
+            SHOW_SELECTOR_LABEL: scnToggle::UNSET,
+            SELECTOR_COLOR: None,
+            SELECTOR_WIDTH: f64::NAN,
+            SELECTOR_SEGMENTS: f64::NAN,
+            SELECTOR_FILL: f64::NAN,
+            SELECTOR_BINDING: None,
+            SELECTOR_MIN: f64::NAN,
+            SELECTOR_MAX: f64::NAN,
+            ORIENT_RADIAL_DEG: f64::NAN,
+            ORIENT_CROSS_TRACK_DEG: f64::NAN,
+            ORIENT_IN_TRACK_DEG: f64::NAN,
+            LABEL_COUNT: f64::NAN,
+            RIC_AXES_COUNT: f64::NAN,
+            MODEL_COUNT: f64::NAN,
+            COVARIANCE_COUNT: f64::NAN,
+        }
+    }
+}
+
+pub struct SCNDisplayStyleBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCNDisplayStyleBuilder<'a, 'b, A> {
+    #[inline]
+    pub fn add_DOT_COLOR(&mut self, DOT_COLOR: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCNDisplayStyle::VT_DOT_COLOR, DOT_COLOR);
+    }
+
+    #[inline]
+    pub fn add_DOT_SIZE(&mut self, DOT_SIZE: f64) {
+        self.fbb_.push_slot::<f64>(SCNDisplayStyle::VT_DOT_SIZE, DOT_SIZE, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_OUTLINE_COLOR(&mut self, OUTLINE_COLOR: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCNDisplayStyle::VT_OUTLINE_COLOR, OUTLINE_COLOR);
+    }
+
+    #[inline]
+    pub fn add_OUTLINE_WIDTH(&mut self, OUTLINE_WIDTH: f64) {
+        self.fbb_.push_slot::<f64>(SCNDisplayStyle::VT_OUTLINE_WIDTH, OUTLINE_WIDTH, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_SHOW_PATH(&mut self, SHOW_PATH: scnToggle) {
+        self.fbb_.push_slot::<scnToggle>(SCNDisplayStyle::VT_SHOW_PATH, SHOW_PATH, scnToggle::UNSET);
+    }
+
+    #[inline]
+    pub fn add_PATH_RELATIVE_TO(&mut self, PATH_RELATIVE_TO: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCNDisplayStyle::VT_PATH_RELATIVE_TO, PATH_RELATIVE_TO);
+    }
+
+    #[inline]
+    pub fn add_PATH_COLOR(&mut self, PATH_COLOR: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCNDisplayStyle::VT_PATH_COLOR, PATH_COLOR);
+    }
+
+    #[inline]
+    pub fn add_PATH_WIDTH(&mut self, PATH_WIDTH: f64) {
+        self.fbb_.push_slot::<f64>(SCNDisplayStyle::VT_PATH_WIDTH, PATH_WIDTH, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_PATH_AHEAD_MIN(&mut self, PATH_AHEAD_MIN: f64) {
+        self.fbb_.push_slot::<f64>(SCNDisplayStyle::VT_PATH_AHEAD_MIN, PATH_AHEAD_MIN, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_PATH_BEHIND_MIN(&mut self, PATH_BEHIND_MIN: f64) {
+        self.fbb_.push_slot::<f64>(SCNDisplayStyle::VT_PATH_BEHIND_MIN, PATH_BEHIND_MIN, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_SHOW_LABEL(&mut self, SHOW_LABEL: scnToggle) {
+        self.fbb_.push_slot::<scnToggle>(SCNDisplayStyle::VT_SHOW_LABEL, SHOW_LABEL, scnToggle::UNSET);
+    }
+
+    #[inline]
+    pub fn add_LABEL_COLOR(&mut self, LABEL_COLOR: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCNDisplayStyle::VT_LABEL_COLOR, LABEL_COLOR);
+    }
+
+    #[inline]
+    pub fn add_LABEL_SIZE(&mut self, LABEL_SIZE: f64) {
+        self.fbb_.push_slot::<f64>(SCNDisplayStyle::VT_LABEL_SIZE, LABEL_SIZE, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_LABEL_OPACITY(&mut self, LABEL_OPACITY: f64) {
+        self.fbb_.push_slot::<f64>(SCNDisplayStyle::VT_LABEL_OPACITY, LABEL_OPACITY, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_SHOW_RIC_AXES(&mut self, SHOW_RIC_AXES: scnToggle) {
+        self.fbb_.push_slot::<scnToggle>(SCNDisplayStyle::VT_SHOW_RIC_AXES, SHOW_RIC_AXES, scnToggle::UNSET);
+    }
+
+    #[inline]
+    pub fn add_RIC_AXES_LENGTH_KM(&mut self, RIC_AXES_LENGTH_KM: f64) {
+        self.fbb_.push_slot::<f64>(SCNDisplayStyle::VT_RIC_AXES_LENGTH_KM, RIC_AXES_LENGTH_KM, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_SHOW_MODEL(&mut self, SHOW_MODEL: scnToggle) {
+        self.fbb_.push_slot::<scnToggle>(SCNDisplayStyle::VT_SHOW_MODEL, SHOW_MODEL, scnToggle::UNSET);
+    }
+
+    #[inline]
+    pub fn add_SHOW_COVARIANCE(&mut self, SHOW_COVARIANCE: scnToggle) {
+        self.fbb_.push_slot::<scnToggle>(SCNDisplayStyle::VT_SHOW_COVARIANCE, SHOW_COVARIANCE, scnToggle::UNSET);
+    }
+
+    #[inline]
+    pub fn add_SHOW_SELECTOR(&mut self, SHOW_SELECTOR: scnToggle) {
+        self.fbb_.push_slot::<scnToggle>(SCNDisplayStyle::VT_SHOW_SELECTOR, SHOW_SELECTOR, scnToggle::UNSET);
+    }
+
+    #[inline]
+    pub fn add_SHOW_SELECTOR_LABEL(&mut self, SHOW_SELECTOR_LABEL: scnToggle) {
+        self.fbb_.push_slot::<scnToggle>(SCNDisplayStyle::VT_SHOW_SELECTOR_LABEL, SHOW_SELECTOR_LABEL, scnToggle::UNSET);
+    }
+
+    #[inline]
+    pub fn add_SELECTOR_COLOR(&mut self, SELECTOR_COLOR: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCNDisplayStyle::VT_SELECTOR_COLOR, SELECTOR_COLOR);
+    }
+
+    #[inline]
+    pub fn add_SELECTOR_WIDTH(&mut self, SELECTOR_WIDTH: f64) {
+        self.fbb_.push_slot::<f64>(SCNDisplayStyle::VT_SELECTOR_WIDTH, SELECTOR_WIDTH, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_SELECTOR_SEGMENTS(&mut self, SELECTOR_SEGMENTS: f64) {
+        self.fbb_.push_slot::<f64>(SCNDisplayStyle::VT_SELECTOR_SEGMENTS, SELECTOR_SEGMENTS, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_SELECTOR_FILL(&mut self, SELECTOR_FILL: f64) {
+        self.fbb_.push_slot::<f64>(SCNDisplayStyle::VT_SELECTOR_FILL, SELECTOR_FILL, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_SELECTOR_BINDING(&mut self, SELECTOR_BINDING: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCNDisplayStyle::VT_SELECTOR_BINDING, SELECTOR_BINDING);
+    }
+
+    #[inline]
+    pub fn add_SELECTOR_MIN(&mut self, SELECTOR_MIN: f64) {
+        self.fbb_.push_slot::<f64>(SCNDisplayStyle::VT_SELECTOR_MIN, SELECTOR_MIN, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_SELECTOR_MAX(&mut self, SELECTOR_MAX: f64) {
+        self.fbb_.push_slot::<f64>(SCNDisplayStyle::VT_SELECTOR_MAX, SELECTOR_MAX, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_ORIENT_RADIAL_DEG(&mut self, ORIENT_RADIAL_DEG: f64) {
+        self.fbb_.push_slot::<f64>(SCNDisplayStyle::VT_ORIENT_RADIAL_DEG, ORIENT_RADIAL_DEG, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_ORIENT_CROSS_TRACK_DEG(&mut self, ORIENT_CROSS_TRACK_DEG: f64) {
+        self.fbb_.push_slot::<f64>(SCNDisplayStyle::VT_ORIENT_CROSS_TRACK_DEG, ORIENT_CROSS_TRACK_DEG, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_ORIENT_IN_TRACK_DEG(&mut self, ORIENT_IN_TRACK_DEG: f64) {
+        self.fbb_.push_slot::<f64>(SCNDisplayStyle::VT_ORIENT_IN_TRACK_DEG, ORIENT_IN_TRACK_DEG, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_LABEL_COUNT(&mut self, LABEL_COUNT: f64) {
+        self.fbb_.push_slot::<f64>(SCNDisplayStyle::VT_LABEL_COUNT, LABEL_COUNT, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_RIC_AXES_COUNT(&mut self, RIC_AXES_COUNT: f64) {
+        self.fbb_.push_slot::<f64>(SCNDisplayStyle::VT_RIC_AXES_COUNT, RIC_AXES_COUNT, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_MODEL_COUNT(&mut self, MODEL_COUNT: f64) {
+        self.fbb_.push_slot::<f64>(SCNDisplayStyle::VT_MODEL_COUNT, MODEL_COUNT, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_COVARIANCE_COUNT(&mut self, COVARIANCE_COUNT: f64) {
+        self.fbb_.push_slot::<f64>(SCNDisplayStyle::VT_COVARIANCE_COUNT, COVARIANCE_COUNT, f64::NAN);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SCNDisplayStyleBuilder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        SCNDisplayStyleBuilder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<SCNDisplayStyle<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for SCNDisplayStyle<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("SCNDisplayStyle");
+        ds.field("DOT_COLOR", &self.DOT_COLOR());
+        ds.field("DOT_SIZE", &self.DOT_SIZE());
+        ds.field("OUTLINE_COLOR", &self.OUTLINE_COLOR());
+        ds.field("OUTLINE_WIDTH", &self.OUTLINE_WIDTH());
+        ds.field("SHOW_PATH", &self.SHOW_PATH());
+        ds.field("PATH_RELATIVE_TO", &self.PATH_RELATIVE_TO());
+        ds.field("PATH_COLOR", &self.PATH_COLOR());
+        ds.field("PATH_WIDTH", &self.PATH_WIDTH());
+        ds.field("PATH_AHEAD_MIN", &self.PATH_AHEAD_MIN());
+        ds.field("PATH_BEHIND_MIN", &self.PATH_BEHIND_MIN());
+        ds.field("SHOW_LABEL", &self.SHOW_LABEL());
+        ds.field("LABEL_COLOR", &self.LABEL_COLOR());
+        ds.field("LABEL_SIZE", &self.LABEL_SIZE());
+        ds.field("LABEL_OPACITY", &self.LABEL_OPACITY());
+        ds.field("SHOW_RIC_AXES", &self.SHOW_RIC_AXES());
+        ds.field("RIC_AXES_LENGTH_KM", &self.RIC_AXES_LENGTH_KM());
+        ds.field("SHOW_MODEL", &self.SHOW_MODEL());
+        ds.field("SHOW_COVARIANCE", &self.SHOW_COVARIANCE());
+        ds.field("SHOW_SELECTOR", &self.SHOW_SELECTOR());
+        ds.field("SHOW_SELECTOR_LABEL", &self.SHOW_SELECTOR_LABEL());
+        ds.field("SELECTOR_COLOR", &self.SELECTOR_COLOR());
+        ds.field("SELECTOR_WIDTH", &self.SELECTOR_WIDTH());
+        ds.field("SELECTOR_SEGMENTS", &self.SELECTOR_SEGMENTS());
+        ds.field("SELECTOR_FILL", &self.SELECTOR_FILL());
+        ds.field("SELECTOR_BINDING", &self.SELECTOR_BINDING());
+        ds.field("SELECTOR_MIN", &self.SELECTOR_MIN());
+        ds.field("SELECTOR_MAX", &self.SELECTOR_MAX());
+        ds.field("ORIENT_RADIAL_DEG", &self.ORIENT_RADIAL_DEG());
+        ds.field("ORIENT_CROSS_TRACK_DEG", &self.ORIENT_CROSS_TRACK_DEG());
+        ds.field("ORIENT_IN_TRACK_DEG", &self.ORIENT_IN_TRACK_DEG());
+        ds.field("LABEL_COUNT", &self.LABEL_COUNT());
+        ds.field("RIC_AXES_COUNT", &self.RIC_AXES_COUNT());
+        ds.field("MODEL_COUNT", &self.MODEL_COUNT());
+        ds.field("COVARIANCE_COUNT", &self.COVARIANCE_COUNT());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct SCNDisplayStyleT {
+    pub DOT_COLOR: Option<alloc::string::String>,
+    pub DOT_SIZE: f64,
+    pub OUTLINE_COLOR: Option<alloc::string::String>,
+    pub OUTLINE_WIDTH: f64,
+    pub SHOW_PATH: scnToggle,
+    pub PATH_RELATIVE_TO: Option<alloc::string::String>,
+    pub PATH_COLOR: Option<alloc::string::String>,
+    pub PATH_WIDTH: f64,
+    pub PATH_AHEAD_MIN: f64,
+    pub PATH_BEHIND_MIN: f64,
+    pub SHOW_LABEL: scnToggle,
+    pub LABEL_COLOR: Option<alloc::string::String>,
+    pub LABEL_SIZE: f64,
+    pub LABEL_OPACITY: f64,
+    pub SHOW_RIC_AXES: scnToggle,
+    pub RIC_AXES_LENGTH_KM: f64,
+    pub SHOW_MODEL: scnToggle,
+    pub SHOW_COVARIANCE: scnToggle,
+    pub SHOW_SELECTOR: scnToggle,
+    pub SHOW_SELECTOR_LABEL: scnToggle,
+    pub SELECTOR_COLOR: Option<alloc::string::String>,
+    pub SELECTOR_WIDTH: f64,
+    pub SELECTOR_SEGMENTS: f64,
+    pub SELECTOR_FILL: f64,
+    pub SELECTOR_BINDING: Option<alloc::string::String>,
+    pub SELECTOR_MIN: f64,
+    pub SELECTOR_MAX: f64,
+    pub ORIENT_RADIAL_DEG: f64,
+    pub ORIENT_CROSS_TRACK_DEG: f64,
+    pub ORIENT_IN_TRACK_DEG: f64,
+    pub LABEL_COUNT: f64,
+    pub RIC_AXES_COUNT: f64,
+    pub MODEL_COUNT: f64,
+    pub COVARIANCE_COUNT: f64,
+}
+
+impl Default for SCNDisplayStyleT {
+    fn default() -> Self {
+        Self {
+            DOT_COLOR: None,
+            DOT_SIZE: f64::NAN,
+            OUTLINE_COLOR: None,
+            OUTLINE_WIDTH: f64::NAN,
+            SHOW_PATH: scnToggle::UNSET,
+            PATH_RELATIVE_TO: None,
+            PATH_COLOR: None,
+            PATH_WIDTH: f64::NAN,
+            PATH_AHEAD_MIN: f64::NAN,
+            PATH_BEHIND_MIN: f64::NAN,
+            SHOW_LABEL: scnToggle::UNSET,
+            LABEL_COLOR: None,
+            LABEL_SIZE: f64::NAN,
+            LABEL_OPACITY: f64::NAN,
+            SHOW_RIC_AXES: scnToggle::UNSET,
+            RIC_AXES_LENGTH_KM: f64::NAN,
+            SHOW_MODEL: scnToggle::UNSET,
+            SHOW_COVARIANCE: scnToggle::UNSET,
+            SHOW_SELECTOR: scnToggle::UNSET,
+            SHOW_SELECTOR_LABEL: scnToggle::UNSET,
+            SELECTOR_COLOR: None,
+            SELECTOR_WIDTH: f64::NAN,
+            SELECTOR_SEGMENTS: f64::NAN,
+            SELECTOR_FILL: f64::NAN,
+            SELECTOR_BINDING: None,
+            SELECTOR_MIN: f64::NAN,
+            SELECTOR_MAX: f64::NAN,
+            ORIENT_RADIAL_DEG: f64::NAN,
+            ORIENT_CROSS_TRACK_DEG: f64::NAN,
+            ORIENT_IN_TRACK_DEG: f64::NAN,
+            LABEL_COUNT: f64::NAN,
+            RIC_AXES_COUNT: f64::NAN,
+            MODEL_COUNT: f64::NAN,
+            COVARIANCE_COUNT: f64::NAN,
+        }
+    }
+}
+
+impl SCNDisplayStyleT {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<SCNDisplayStyle<'b>> {
+        let DOT_COLOR = self.DOT_COLOR.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let DOT_SIZE = self.DOT_SIZE;
+        let OUTLINE_COLOR = self.OUTLINE_COLOR.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let OUTLINE_WIDTH = self.OUTLINE_WIDTH;
+        let SHOW_PATH = self.SHOW_PATH;
+        let PATH_RELATIVE_TO = self.PATH_RELATIVE_TO.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let PATH_COLOR = self.PATH_COLOR.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let PATH_WIDTH = self.PATH_WIDTH;
+        let PATH_AHEAD_MIN = self.PATH_AHEAD_MIN;
+        let PATH_BEHIND_MIN = self.PATH_BEHIND_MIN;
+        let SHOW_LABEL = self.SHOW_LABEL;
+        let LABEL_COLOR = self.LABEL_COLOR.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let LABEL_SIZE = self.LABEL_SIZE;
+        let LABEL_OPACITY = self.LABEL_OPACITY;
+        let SHOW_RIC_AXES = self.SHOW_RIC_AXES;
+        let RIC_AXES_LENGTH_KM = self.RIC_AXES_LENGTH_KM;
+        let SHOW_MODEL = self.SHOW_MODEL;
+        let SHOW_COVARIANCE = self.SHOW_COVARIANCE;
+        let SHOW_SELECTOR = self.SHOW_SELECTOR;
+        let SHOW_SELECTOR_LABEL = self.SHOW_SELECTOR_LABEL;
+        let SELECTOR_COLOR = self.SELECTOR_COLOR.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let SELECTOR_WIDTH = self.SELECTOR_WIDTH;
+        let SELECTOR_SEGMENTS = self.SELECTOR_SEGMENTS;
+        let SELECTOR_FILL = self.SELECTOR_FILL;
+        let SELECTOR_BINDING = self.SELECTOR_BINDING.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let SELECTOR_MIN = self.SELECTOR_MIN;
+        let SELECTOR_MAX = self.SELECTOR_MAX;
+        let ORIENT_RADIAL_DEG = self.ORIENT_RADIAL_DEG;
+        let ORIENT_CROSS_TRACK_DEG = self.ORIENT_CROSS_TRACK_DEG;
+        let ORIENT_IN_TRACK_DEG = self.ORIENT_IN_TRACK_DEG;
+        let LABEL_COUNT = self.LABEL_COUNT;
+        let RIC_AXES_COUNT = self.RIC_AXES_COUNT;
+        let MODEL_COUNT = self.MODEL_COUNT;
+        let COVARIANCE_COUNT = self.COVARIANCE_COUNT;
+        SCNDisplayStyle::create(_fbb, &SCNDisplayStyleArgs{
+            DOT_COLOR,
+            DOT_SIZE,
+            OUTLINE_COLOR,
+            OUTLINE_WIDTH,
+            SHOW_PATH,
+            PATH_RELATIVE_TO,
+            PATH_COLOR,
+            PATH_WIDTH,
+            PATH_AHEAD_MIN,
+            PATH_BEHIND_MIN,
+            SHOW_LABEL,
+            LABEL_COLOR,
+            LABEL_SIZE,
+            LABEL_OPACITY,
+            SHOW_RIC_AXES,
+            RIC_AXES_LENGTH_KM,
+            SHOW_MODEL,
+            SHOW_COVARIANCE,
+            SHOW_SELECTOR,
+            SHOW_SELECTOR_LABEL,
+            SELECTOR_COLOR,
+            SELECTOR_WIDTH,
+            SELECTOR_SEGMENTS,
+            SELECTOR_FILL,
+            SELECTOR_BINDING,
+            SELECTOR_MIN,
+            SELECTOR_MAX,
+            ORIENT_RADIAL_DEG,
+            ORIENT_CROSS_TRACK_DEG,
+            ORIENT_IN_TRACK_DEG,
+            LABEL_COUNT,
+            RIC_AXES_COUNT,
+            MODEL_COUNT,
+            COVARIANCE_COUNT,
+        })
+    }
+}
 
 pub enum SCNRicBoxOffset {}
 
@@ -2060,6 +3159,7 @@ impl<'a> SCNReference<'a> {
     pub const VT_OBSERVATION_RADAR: ::flatbuffers::VOffsetT = 54;
     pub const VT_COLOR: ::flatbuffers::VOffsetT = 56;
     pub const VT_SHOW_COVARIANCE: ::flatbuffers::VOffsetT = 58;
+    pub const VT_DISPLAY_STYLE: ::flatbuffers::VOffsetT = 60;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -2072,6 +3172,7 @@ impl<'a> SCNReference<'a> {
         args: &'args SCNReferenceArgs<'args>
     ) -> ::flatbuffers::WIPOffset<SCNReference<'bldr>> {
         let mut builder = SCNReferenceBuilder::new(_fbb);
+        if let Some(x) = args.DISPLAY_STYLE { builder.add_DISPLAY_STYLE(x); }
         if let Some(x) = args.COLOR { builder.add_COLOR(x); }
         if let Some(x) = args.OBSERVATION_RADAR { builder.add_OBSERVATION_RADAR(x); }
         if let Some(x) = args.OBSERVATION_EO { builder.add_OBSERVATION_EO(x); }
@@ -2180,6 +3281,9 @@ impl<'a> SCNReference<'a> {
             alloc::string::ToString::to_string(x)
         });
         let SHOW_COVARIANCE = self.SHOW_COVARIANCE();
+        let DISPLAY_STYLE = self.DISPLAY_STYLE().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
         SCNReferenceT {
             REFERENCE_ID,
             NAME,
@@ -2209,6 +3313,7 @@ impl<'a> SCNReference<'a> {
             OBSERVATION_RADAR,
             COLOR,
             SHOW_COVARIANCE,
+            DISPLAY_STYLE,
         }
     }
 
@@ -2463,6 +3568,15 @@ impl<'a> SCNReference<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<bool>(SCNReference::VT_SHOW_COVARIANCE, Some(false)).unwrap()}
     }
+
+    /// Typed display-style overrides for this reference (object, group, or folder).
+    #[inline]
+    pub fn DISPLAY_STYLE(&self) -> Option<SCNDisplayStyle<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<SCNDisplayStyle>>(SCNReference::VT_DISPLAY_STYLE, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for SCNReference<'_> {
@@ -2499,6 +3613,7 @@ impl ::flatbuffers::Verifiable for SCNReference<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<RDO>>("OBSERVATION_RADAR", Self::VT_OBSERVATION_RADAR, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("COLOR", Self::VT_COLOR, false)?
             .visit_field::<bool>("SHOW_COVARIANCE", Self::VT_SHOW_COVARIANCE, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<SCNDisplayStyle>>("DISPLAY_STYLE", Self::VT_DISPLAY_STYLE, false)?
             .finish();
         Ok(())
     }
@@ -2533,6 +3648,7 @@ pub struct SCNReferenceArgs<'a> {
     pub OBSERVATION_RADAR: Option<::flatbuffers::WIPOffset<RDO<'a>>>,
     pub COLOR: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub SHOW_COVARIANCE: bool,
+    pub DISPLAY_STYLE: Option<::flatbuffers::WIPOffset<SCNDisplayStyle<'a>>>,
 }
 
 impl<'a> Default for SCNReferenceArgs<'a> {
@@ -2567,6 +3683,7 @@ impl<'a> Default for SCNReferenceArgs<'a> {
             OBSERVATION_RADAR: None,
             COLOR: None,
             SHOW_COVARIANCE: false,
+            DISPLAY_STYLE: None,
         }
     }
 }
@@ -2718,6 +3835,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCNReferenceBuilder<'a, 'b, A
     }
 
     #[inline]
+    pub fn add_DISPLAY_STYLE(&mut self, DISPLAY_STYLE: ::flatbuffers::WIPOffset<SCNDisplayStyle<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<SCNDisplayStyle>>(SCNReference::VT_DISPLAY_STYLE, DISPLAY_STYLE);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SCNReferenceBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         SCNReferenceBuilder {
@@ -2764,6 +3886,7 @@ impl ::core::fmt::Debug for SCNReference<'_> {
         ds.field("OBSERVATION_RADAR", &self.OBSERVATION_RADAR());
         ds.field("COLOR", &self.COLOR());
         ds.field("SHOW_COVARIANCE", &self.SHOW_COVARIANCE());
+        ds.field("DISPLAY_STYLE", &self.DISPLAY_STYLE());
         ds.finish()
     }
 }
@@ -2799,6 +3922,7 @@ pub struct SCNReferenceT {
     pub OBSERVATION_RADAR: Option<alloc::boxed::Box<RDOT>>,
     pub COLOR: Option<alloc::string::String>,
     pub SHOW_COVARIANCE: bool,
+    pub DISPLAY_STYLE: Option<alloc::boxed::Box<SCNDisplayStyleT>>,
 }
 
 impl Default for SCNReferenceT {
@@ -2832,6 +3956,7 @@ impl Default for SCNReferenceT {
             OBSERVATION_RADAR: None,
             COLOR: None,
             SHOW_COVARIANCE: false,
+            DISPLAY_STYLE: None,
         }
     }
 }
@@ -2917,6 +4042,9 @@ impl SCNReferenceT {
             _fbb.create_string(x)
         });
         let SHOW_COVARIANCE = self.SHOW_COVARIANCE;
+        let DISPLAY_STYLE = self.DISPLAY_STYLE.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
         SCNReference::create(_fbb, &SCNReferenceArgs{
             REFERENCE_ID,
             NAME,
@@ -2946,6 +4074,7 @@ impl SCNReferenceT {
             OBSERVATION_RADAR,
             COLOR,
             SHOW_COVARIANCE,
+            DISPLAY_STYLE,
         })
     }
 }

@@ -4,6 +4,7 @@ import { GJNPosition, GJNPositionT } from './GJNPosition.js';
 import { MNV, MNVT } from './MNV.js';
 import { OMM, OMMT } from './OMM.js';
 import { RDO, RDOT } from './RDO.js';
+import { SCNDisplayStyle, SCNDisplayStyleT } from './SCNDisplayStyle.js';
 import { SCNExclusionZone, SCNExclusionZoneT } from './SCNExclusionZone.js';
 import { SCNPointOfInterest, SCNPointOfInterestT } from './SCNPointOfInterest.js';
 import { SCNSunAdvantageTarget, SCNSunAdvantageTargetT } from './SCNSunAdvantageTarget.js';
@@ -152,6 +153,10 @@ export declare class SCNReference implements flatbuffers.IUnpackableObject<SCNRe
      * True when the 1-sigma covariance ellipsoid is shown on this reference.
      */
     SHOW_COVARIANCE(): boolean;
+    /**
+     * Typed display-style overrides for this reference (object, group, or folder).
+     */
+    DISPLAY_STYLE(obj?: SCNDisplayStyle): SCNDisplayStyle | null;
     static startSCNReference(builder: flatbuffers.Builder): void;
     static addReferenceId(builder: flatbuffers.Builder, REFERENCE_IDOffset: flatbuffers.Offset): void;
     static addName(builder: flatbuffers.Builder, NAMEOffset: flatbuffers.Offset): void;
@@ -193,6 +198,7 @@ export declare class SCNReference implements flatbuffers.IUnpackableObject<SCNRe
     static addObservationRadar(builder: flatbuffers.Builder, OBSERVATION_RADAROffset: flatbuffers.Offset): void;
     static addColor(builder: flatbuffers.Builder, COLOROffset: flatbuffers.Offset): void;
     static addShowCovariance(builder: flatbuffers.Builder, SHOW_COVARIANCE: boolean): void;
+    static addDisplayStyle(builder: flatbuffers.Builder, DISPLAY_STYLEOffset: flatbuffers.Offset): void;
     static endSCNReference(builder: flatbuffers.Builder): flatbuffers.Offset;
     unpack(): SCNReferenceT;
     unpackTo(_o: SCNReferenceT): void;
@@ -226,7 +232,8 @@ export declare class SCNReferenceT implements flatbuffers.IGeneratedObject {
     OBSERVATION_RADAR: RDOT | null;
     COLOR: string | Uint8Array | null;
     SHOW_COVARIANCE: boolean;
-    constructor(REFERENCE_ID?: string | Uint8Array | null, NAME?: string | Uint8Array | null, REFERENCE_KIND?: scenarioReferenceKind, REMOVE?: boolean, NORAD_CAT_ID?: number, OBJECT_ID?: string | Uint8Array | null, COUNTRY?: string | Uint8Array | null, OWNER?: string | Uint8Array | null, SOURCES?: (string)[], DATA_MODES?: (string)[], MEAN_ELEMENTS?: (OMMT)[], STATE_VECTORS?: (STVT)[], MANEUVERS?: (MNVT)[], SITE?: SITT | null, SENSOR?: SENT | null, SENSOR_SYSTEM_ID?: string | Uint8Array | null, SENSOR_ID?: string | Uint8Array | null, SITE_POSITION?: GJNPositionT | null, VARIABLE_SATELLITE_ID?: string | Uint8Array | null, VARIABLE_SITE_ID?: string | Uint8Array | null, POINTS?: (SCNPointOfInterestT)[], VIEW_CONE?: SCNViewConeT | null, SUN_ADVANTAGE_TARGET?: SCNSunAdvantageTargetT | null, EXCLUSION_ZONE?: SCNExclusionZoneT | null, OBSERVATION_EO?: EOOT | null, OBSERVATION_RADAR?: RDOT | null, COLOR?: string | Uint8Array | null, SHOW_COVARIANCE?: boolean);
+    DISPLAY_STYLE: SCNDisplayStyleT | null;
+    constructor(REFERENCE_ID?: string | Uint8Array | null, NAME?: string | Uint8Array | null, REFERENCE_KIND?: scenarioReferenceKind, REMOVE?: boolean, NORAD_CAT_ID?: number, OBJECT_ID?: string | Uint8Array | null, COUNTRY?: string | Uint8Array | null, OWNER?: string | Uint8Array | null, SOURCES?: (string)[], DATA_MODES?: (string)[], MEAN_ELEMENTS?: (OMMT)[], STATE_VECTORS?: (STVT)[], MANEUVERS?: (MNVT)[], SITE?: SITT | null, SENSOR?: SENT | null, SENSOR_SYSTEM_ID?: string | Uint8Array | null, SENSOR_ID?: string | Uint8Array | null, SITE_POSITION?: GJNPositionT | null, VARIABLE_SATELLITE_ID?: string | Uint8Array | null, VARIABLE_SITE_ID?: string | Uint8Array | null, POINTS?: (SCNPointOfInterestT)[], VIEW_CONE?: SCNViewConeT | null, SUN_ADVANTAGE_TARGET?: SCNSunAdvantageTargetT | null, EXCLUSION_ZONE?: SCNExclusionZoneT | null, OBSERVATION_EO?: EOOT | null, OBSERVATION_RADAR?: RDOT | null, COLOR?: string | Uint8Array | null, SHOW_COVARIANCE?: boolean, DISPLAY_STYLE?: SCNDisplayStyleT | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=SCNReference.d.ts.map

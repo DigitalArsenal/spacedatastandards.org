@@ -22,6 +22,9 @@ class scenarioReferenceKind
     /// equals REFERENCE_ID. NAME is its label; COUNTRY is its ISO 3166-1
     /// alpha-2 code when the area is a country.
     const AREA_OF_INTEREST = 10;
+    /// A console top-level folder (for example SELECTION, GROUPS, OBJECTS) that
+    /// carries shared display-style overrides in DISPLAY_STYLE.
+    const FOLDER = 11;
 
     private static $names = array(
         scenarioReferenceKind::UNKNOWN=>"UNKNOWN",
@@ -35,6 +38,7 @@ class scenarioReferenceKind
         scenarioReferenceKind::OBSERVATION=>"OBSERVATION",
         scenarioReferenceKind::GROUP=>"GROUP",
         scenarioReferenceKind::AREA_OF_INTEREST=>"AREA_OF_INTEREST",
+        scenarioReferenceKind::FOLDER=>"FOLDER",
     );
 
     public static function Name($e)

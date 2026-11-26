@@ -36,6 +36,16 @@ enum scenarioReferenceKind:
     /// equals REFERENCE_ID. NAME is its label; COUNTRY is its ISO 3166-1
     /// alpha-2 code when the area is a country.
     scenarioReferenceKind_AREA_OF_INTEREST = 10
+    /// A console top-level folder (for example SELECTION, GROUPS, OBJECTS) that
+    /// carries shared display-style overrides in DISPLAY_STYLE.
+    scenarioReferenceKind_FOLDER = 11
+
+/// Tri-state toggle for optional display-style switches so absent differs
+/// from explicitly disabled.
+enum scnToggle:
+    scnToggle_UNSET = 0
+    scnToggle_OFF = 1
+    scnToggle_ON = 2
 
 /// Coordinate convention for a relative-motion RIC box.
 enum scnRicCoordinates:
@@ -53,6 +63,8 @@ enum scenarioActionCode:
     scenarioActionCode_NONE = 0
     scenarioActionCode_CLEAR = 1
     scenarioActionCode_RESET = 2
+
+class SCNDisplayStyle
 
 class SCNRicBox
 
@@ -73,6 +85,191 @@ class SCNAssetsChanged
 class SCNPinnedRow
 
 class SCN
+
+/// Typed display customization for a scenario reference (object, group, or
+/// top-level folder). Unset strings are null, unset numeric fields are NaN,
+/// and unset switches are UNSET.
+class SCNDisplayStyle : flatbuffers.handle
+    def DOT_COLOR() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    def DOT_SIZE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 6, nan)
+    def OUTLINE_COLOR() -> string:
+        return flatbuffers.field_string(buf_, pos_, 8)
+    def OUTLINE_WIDTH() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 10, nan)
+    def SHOW_PATH() -> scnToggle:
+        return scnToggle(flatbuffers.field_int8(buf_, pos_, 12, 0))
+    def PATH_RELATIVE_TO() -> string:
+        return flatbuffers.field_string(buf_, pos_, 14)
+    def PATH_COLOR() -> string:
+        return flatbuffers.field_string(buf_, pos_, 16)
+    def PATH_WIDTH() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 18, nan)
+    def PATH_AHEAD_MIN() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 20, nan)
+    def PATH_BEHIND_MIN() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 22, nan)
+    def SHOW_LABEL() -> scnToggle:
+        return scnToggle(flatbuffers.field_int8(buf_, pos_, 24, 0))
+    def LABEL_COLOR() -> string:
+        return flatbuffers.field_string(buf_, pos_, 26)
+    def LABEL_SIZE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 28, nan)
+    def LABEL_OPACITY() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 30, nan)
+    def SHOW_RIC_AXES() -> scnToggle:
+        return scnToggle(flatbuffers.field_int8(buf_, pos_, 32, 0))
+    def RIC_AXES_LENGTH_KM() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 34, nan)
+    def SHOW_MODEL() -> scnToggle:
+        return scnToggle(flatbuffers.field_int8(buf_, pos_, 36, 0))
+    def SHOW_COVARIANCE() -> scnToggle:
+        return scnToggle(flatbuffers.field_int8(buf_, pos_, 38, 0))
+    def SHOW_SELECTOR() -> scnToggle:
+        return scnToggle(flatbuffers.field_int8(buf_, pos_, 40, 0))
+    def SHOW_SELECTOR_LABEL() -> scnToggle:
+        return scnToggle(flatbuffers.field_int8(buf_, pos_, 42, 0))
+    def SELECTOR_COLOR() -> string:
+        return flatbuffers.field_string(buf_, pos_, 44)
+    def SELECTOR_WIDTH() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 46, nan)
+    def SELECTOR_SEGMENTS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 48, nan)
+    def SELECTOR_FILL() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 50, nan)
+    def SELECTOR_BINDING() -> string:
+        return flatbuffers.field_string(buf_, pos_, 52)
+    def SELECTOR_MIN() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 54, nan)
+    def SELECTOR_MAX() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 56, nan)
+    def ORIENT_RADIAL_DEG() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 58, nan)
+    def ORIENT_CROSS_TRACK_DEG() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 60, nan)
+    def ORIENT_IN_TRACK_DEG() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 62, nan)
+    def LABEL_COUNT() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 64, nan)
+    def RIC_AXES_COUNT() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 66, nan)
+    def MODEL_COUNT() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 68, nan)
+    def COVARIANCE_COUNT() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 70, nan)
+
+def GetRootAsSCNDisplayStyle(buf:string): return SCNDisplayStyle { buf, flatbuffers.indirect(buf, 0) }
+
+struct SCNDisplayStyleBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(34)
+        return this
+    def add_DOT_COLOR(DOT_COLOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, DOT_COLOR)
+        return this
+    def add_DOT_SIZE(DOT_SIZE:float):
+        b_.PrependFloat64Slot(1, DOT_SIZE, nan)
+        return this
+    def add_OUTLINE_COLOR(OUTLINE_COLOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, OUTLINE_COLOR)
+        return this
+    def add_OUTLINE_WIDTH(OUTLINE_WIDTH:float):
+        b_.PrependFloat64Slot(3, OUTLINE_WIDTH, nan)
+        return this
+    def add_SHOW_PATH(SHOW_PATH:scnToggle):
+        b_.PrependInt8Slot(4, SHOW_PATH, 0)
+        return this
+    def add_PATH_RELATIVE_TO(PATH_RELATIVE_TO:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, PATH_RELATIVE_TO)
+        return this
+    def add_PATH_COLOR(PATH_COLOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(6, PATH_COLOR)
+        return this
+    def add_PATH_WIDTH(PATH_WIDTH:float):
+        b_.PrependFloat64Slot(7, PATH_WIDTH, nan)
+        return this
+    def add_PATH_AHEAD_MIN(PATH_AHEAD_MIN:float):
+        b_.PrependFloat64Slot(8, PATH_AHEAD_MIN, nan)
+        return this
+    def add_PATH_BEHIND_MIN(PATH_BEHIND_MIN:float):
+        b_.PrependFloat64Slot(9, PATH_BEHIND_MIN, nan)
+        return this
+    def add_SHOW_LABEL(SHOW_LABEL:scnToggle):
+        b_.PrependInt8Slot(10, SHOW_LABEL, 0)
+        return this
+    def add_LABEL_COLOR(LABEL_COLOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(11, LABEL_COLOR)
+        return this
+    def add_LABEL_SIZE(LABEL_SIZE:float):
+        b_.PrependFloat64Slot(12, LABEL_SIZE, nan)
+        return this
+    def add_LABEL_OPACITY(LABEL_OPACITY:float):
+        b_.PrependFloat64Slot(13, LABEL_OPACITY, nan)
+        return this
+    def add_SHOW_RIC_AXES(SHOW_RIC_AXES:scnToggle):
+        b_.PrependInt8Slot(14, SHOW_RIC_AXES, 0)
+        return this
+    def add_RIC_AXES_LENGTH_KM(RIC_AXES_LENGTH_KM:float):
+        b_.PrependFloat64Slot(15, RIC_AXES_LENGTH_KM, nan)
+        return this
+    def add_SHOW_MODEL(SHOW_MODEL:scnToggle):
+        b_.PrependInt8Slot(16, SHOW_MODEL, 0)
+        return this
+    def add_SHOW_COVARIANCE(SHOW_COVARIANCE:scnToggle):
+        b_.PrependInt8Slot(17, SHOW_COVARIANCE, 0)
+        return this
+    def add_SHOW_SELECTOR(SHOW_SELECTOR:scnToggle):
+        b_.PrependInt8Slot(18, SHOW_SELECTOR, 0)
+        return this
+    def add_SHOW_SELECTOR_LABEL(SHOW_SELECTOR_LABEL:scnToggle):
+        b_.PrependInt8Slot(19, SHOW_SELECTOR_LABEL, 0)
+        return this
+    def add_SELECTOR_COLOR(SELECTOR_COLOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(20, SELECTOR_COLOR)
+        return this
+    def add_SELECTOR_WIDTH(SELECTOR_WIDTH:float):
+        b_.PrependFloat64Slot(21, SELECTOR_WIDTH, nan)
+        return this
+    def add_SELECTOR_SEGMENTS(SELECTOR_SEGMENTS:float):
+        b_.PrependFloat64Slot(22, SELECTOR_SEGMENTS, nan)
+        return this
+    def add_SELECTOR_FILL(SELECTOR_FILL:float):
+        b_.PrependFloat64Slot(23, SELECTOR_FILL, nan)
+        return this
+    def add_SELECTOR_BINDING(SELECTOR_BINDING:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(24, SELECTOR_BINDING)
+        return this
+    def add_SELECTOR_MIN(SELECTOR_MIN:float):
+        b_.PrependFloat64Slot(25, SELECTOR_MIN, nan)
+        return this
+    def add_SELECTOR_MAX(SELECTOR_MAX:float):
+        b_.PrependFloat64Slot(26, SELECTOR_MAX, nan)
+        return this
+    def add_ORIENT_RADIAL_DEG(ORIENT_RADIAL_DEG:float):
+        b_.PrependFloat64Slot(27, ORIENT_RADIAL_DEG, nan)
+        return this
+    def add_ORIENT_CROSS_TRACK_DEG(ORIENT_CROSS_TRACK_DEG:float):
+        b_.PrependFloat64Slot(28, ORIENT_CROSS_TRACK_DEG, nan)
+        return this
+    def add_ORIENT_IN_TRACK_DEG(ORIENT_IN_TRACK_DEG:float):
+        b_.PrependFloat64Slot(29, ORIENT_IN_TRACK_DEG, nan)
+        return this
+    def add_LABEL_COUNT(LABEL_COUNT:float):
+        b_.PrependFloat64Slot(30, LABEL_COUNT, nan)
+        return this
+    def add_RIC_AXES_COUNT(RIC_AXES_COUNT:float):
+        b_.PrependFloat64Slot(31, RIC_AXES_COUNT, nan)
+        return this
+    def add_MODEL_COUNT(MODEL_COUNT:float):
+        b_.PrependFloat64Slot(32, MODEL_COUNT, nan)
+        return this
+    def add_COVARIANCE_COUNT(COVARIANCE_COUNT:float):
+        b_.PrependFloat64Slot(33, COVARIANCE_COUNT, nan)
+        return this
+    def end():
+        return b_.EndObject()
 
 /// Relative-motion RIC box and RPO time-lapse settings kept with a scenario.
 class SCNRicBox : flatbuffers.handle
@@ -492,13 +689,17 @@ class SCNReference : flatbuffers.handle
     /// True when the 1-sigma covariance ellipsoid is shown on this reference.
     def SHOW_COVARIANCE() -> bool:
         return bool(flatbuffers.field_int8(buf_, pos_, 58, 0))
+    /// Typed display-style overrides for this reference (object, group, or folder).
+    def DISPLAY_STYLE() -> SCNDisplayStyle?:
+        let o = flatbuffers.field_table(buf_, pos_, 60)
+        return if o: SCNDisplayStyle { buf_, o } else: nil
 
 def GetRootAsSCNReference(buf:string): return SCNReference { buf, flatbuffers.indirect(buf, 0) }
 
 struct SCNReferenceBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(28)
+        b_.StartObject(29)
         return this
     def add_REFERENCE_ID(REFERENCE_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, REFERENCE_ID)
@@ -583,6 +784,9 @@ struct SCNReferenceBuilder:
         return this
     def add_SHOW_COVARIANCE(SHOW_COVARIANCE:bool):
         b_.PrependBoolSlot(27, SHOW_COVARIANCE, 0)
+        return this
+    def add_DISPLAY_STYLE(DISPLAY_STYLE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(28, DISPLAY_STYLE)
         return this
     def end():
         return b_.EndObject()

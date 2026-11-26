@@ -1,5 +1,5 @@
-// Hash: 4f2ffbe7ec6d9766d08b6a0bf9147f86f0f0ee547608cdbd063aede13a7867a2
-// Version: 1.136.7
+// Hash: 153b86e726fadefa87deffdbfbaa4fd0238efdcfba4fac8c5b6f1e3330d4ee38
+// Version: 1.136.8
 // -----------------------------------END_HEADER
 include "../EOO/main.fbs";
 include "../RDO/main.fbs";
@@ -31,7 +31,58 @@ enum scenarioReferenceKind : byte {
   /// An area of interest: the $GJN feature of the enclosing $REC whose ID
   /// equals REFERENCE_ID. NAME is its label; COUNTRY is its ISO 3166-1
   /// alpha-2 code when the area is a country.
-  AREA_OF_INTEREST
+  AREA_OF_INTEREST,
+  /// A console top-level folder (for example SELECTION, GROUPS, OBJECTS) that
+  /// carries shared display-style overrides in DISPLAY_STYLE.
+  FOLDER
+}
+
+/// Tri-state toggle for optional display-style switches so absent differs
+/// from explicitly disabled.
+enum scnToggle : byte {
+  UNSET,
+  OFF,
+  ON
+}
+
+/// Typed display customization for a scenario reference (object, group, or
+/// top-level folder). Unset strings are null, unset numeric fields are NaN,
+/// and unset switches are UNSET.
+table SCNDisplayStyle {
+  DOT_COLOR:string;
+  DOT_SIZE:double = nan;
+  OUTLINE_COLOR:string;
+  OUTLINE_WIDTH:double = nan;
+  SHOW_PATH:scnToggle = UNSET;
+  PATH_RELATIVE_TO:string;
+  PATH_COLOR:string;
+  PATH_WIDTH:double = nan;
+  PATH_AHEAD_MIN:double = nan;
+  PATH_BEHIND_MIN:double = nan;
+  SHOW_LABEL:scnToggle = UNSET;
+  LABEL_COLOR:string;
+  LABEL_SIZE:double = nan;
+  LABEL_OPACITY:double = nan;
+  SHOW_RIC_AXES:scnToggle = UNSET;
+  RIC_AXES_LENGTH_KM:double = nan;
+  SHOW_MODEL:scnToggle = UNSET;
+  SHOW_COVARIANCE:scnToggle = UNSET;
+  SHOW_SELECTOR:scnToggle = UNSET;
+  SHOW_SELECTOR_LABEL:scnToggle = UNSET;
+  SELECTOR_COLOR:string;
+  SELECTOR_WIDTH:double = nan;
+  SELECTOR_SEGMENTS:double = nan;
+  SELECTOR_FILL:double = nan;
+  SELECTOR_BINDING:string;
+  SELECTOR_MIN:double = nan;
+  SELECTOR_MAX:double = nan;
+  ORIENT_RADIAL_DEG:double = nan;
+  ORIENT_CROSS_TRACK_DEG:double = nan;
+  ORIENT_IN_TRACK_DEG:double = nan;
+  LABEL_COUNT:double = nan;
+  RIC_AXES_COUNT:double = nan;
+  MODEL_COUNT:double = nan;
+  COVARIANCE_COUNT:double = nan;
 }
 
 /// Coordinate convention for a relative-motion RIC box.
@@ -206,6 +257,8 @@ table SCNReference {
   COLOR:string;
   /// True when the 1-sigma covariance ellipsoid is shown on this reference.
   SHOW_COVARIANCE:bool;
+  /// Typed display-style overrides for this reference (object, group, or folder).
+  DISPLAY_STYLE:SCNDisplayStyle;
 }
 
 /// Imported scenario event payload composed from existing SDS records.

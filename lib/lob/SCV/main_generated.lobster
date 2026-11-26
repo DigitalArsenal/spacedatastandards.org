@@ -38,6 +38,14 @@ enum scvSensorShapeKind:
     scvSensorShapeKind_CUSTOM_POLYGON = 2
     scvSensorShapeKind_SAR_ANNULAR_SECTOR = 3
 
+/// Side-looking geometry capability of a synthetic-aperture radar (SAR)
+/// sensor relative to the spacecraft velocity vector.
+enum scvSarLookSide:
+    scvSarLookSide_UNSPECIFIED = 0
+    scvSarLookSide_LEFT = 1
+    scvSarLookSide_RIGHT = 2
+    scvSarLookSide_BILATERAL = 3
+
 enum scvSensorAxisConvention:
     scvSensorAxisConvention_LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT = 0
 
@@ -361,13 +369,17 @@ class SCVSensorShapeContract : flatbuffers.handle
     def ALTITUDE_REFERENCE() -> SCVEllipsoid?:
         let o = flatbuffers.field_table(buf_, pos_, 40)
         return if o: SCVEllipsoid { buf_, o } else: nil
+    /// For SAR_ANNULAR_SECTOR: which side(s) of the ground track the sensor can
+    /// image (LEFT, RIGHT, or BILATERAL when roll/steering supports both sides).
+    def SAR_LOOK_SIDE() -> scvSarLookSide:
+        return scvSarLookSide(flatbuffers.field_uint8(buf_, pos_, 42, 0))
 
 def GetRootAsSCVSensorShapeContract(buf:string): return SCVSensorShapeContract { buf, flatbuffers.indirect(buf, 0) }
 
 struct SCVSensorShapeContractBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(19)
+        b_.StartObject(20)
         return this
     def add_SHAPE_KIND(SHAPE_KIND:scvSensorShapeKind):
         b_.PrependUint8Slot(0, SHAPE_KIND, 0)
@@ -425,6 +437,9 @@ struct SCVSensorShapeContractBuilder:
         return this
     def add_ALTITUDE_REFERENCE(ALTITUDE_REFERENCE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(18, ALTITUDE_REFERENCE)
+        return this
+    def add_SAR_LOOK_SIDE(SAR_LOOK_SIDE:scvSarLookSide):
+        b_.PrependUint8Slot(19, SAR_LOOK_SIDE, 0)
         return this
     def end():
         return b_.EndObject()

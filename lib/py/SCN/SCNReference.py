@@ -384,8 +384,20 @@ class SCNReference(object):
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # Typed display-style overrides for this reference (object, group, or folder).
+    # SCNReference
+    def DISPLAY_STYLE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from SCNDisplayStyle import SCNDisplayStyle
+            obj = SCNDisplayStyle()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def SCNReferenceStart(builder):
-    builder.StartObject(28)
+    builder.StartObject(29)
 
 def Start(builder):
     SCNReferenceStart(builder)
@@ -630,6 +642,12 @@ def SCNReferenceAddSHOW_COVARIANCE(builder, SHOW_COVARIANCE):
 def AddSHOW_COVARIANCE(builder, SHOW_COVARIANCE):
     SCNReferenceAddSHOW_COVARIANCE(builder, SHOW_COVARIANCE)
 
+def SCNReferenceAddDISPLAY_STYLE(builder, DISPLAY_STYLE):
+    builder.PrependUOffsetTRelativeSlot(28, flatbuffers.number_types.UOffsetTFlags.py_type(DISPLAY_STYLE), 0)
+
+def AddDISPLAY_STYLE(builder, DISPLAY_STYLE):
+    SCNReferenceAddDISPLAY_STYLE(builder, DISPLAY_STYLE)
+
 def SCNReferenceEnd(builder):
     return builder.EndObject()
 
@@ -641,6 +659,7 @@ import GJNPosition
 import MNV
 import OMM
 import RDO
+import SCNDisplayStyle
 import SCNExclusionZone
 import SCNPointOfInterest
 import SCNSunAdvantageTarget
@@ -686,6 +705,7 @@ class SCNReferenceT(object):
         OBSERVATION_RADAR = None,
         COLOR = None,
         SHOW_COVARIANCE = False,
+        DISPLAY_STYLE = None,
     ):
         self.REFERENCE_ID = REFERENCE_ID  # type: Optional[str]
         self.NAME = NAME  # type: Optional[str]
@@ -715,6 +735,7 @@ class SCNReferenceT(object):
         self.OBSERVATION_RADAR = OBSERVATION_RADAR  # type: Optional[RDO.RDOT]
         self.COLOR = COLOR  # type: Optional[str]
         self.SHOW_COVARIANCE = SHOW_COVARIANCE  # type: bool
+        self.DISPLAY_STYLE = DISPLAY_STYLE  # type: Optional[SCNDisplayStyle.SCNDisplayStyleT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -807,6 +828,8 @@ class SCNReferenceT(object):
             self.OBSERVATION_RADAR = RDO.RDOT.InitFromObj(SCNReference.OBSERVATION_RADAR())
         self.COLOR = SCNReference.COLOR()
         self.SHOW_COVARIANCE = SCNReference.SHOW_COVARIANCE()
+        if SCNReference.DISPLAY_STYLE() is not None:
+            self.DISPLAY_STYLE = SCNDisplayStyle.SCNDisplayStyleT.InitFromObj(SCNReference.DISPLAY_STYLE())
 
     # SCNReferenceT
     def Pack(self, builder):
@@ -894,6 +917,8 @@ class SCNReferenceT(object):
             OBSERVATION_RADAR = self.OBSERVATION_RADAR.Pack(builder)
         if self.COLOR is not None:
             COLOR = builder.CreateString(self.COLOR)
+        if self.DISPLAY_STYLE is not None:
+            DISPLAY_STYLE = self.DISPLAY_STYLE.Pack(builder)
         SCNReferenceStart(builder)
         if self.REFERENCE_ID is not None:
             SCNReferenceAddREFERENCE_ID(builder, REFERENCE_ID)
@@ -947,5 +972,7 @@ class SCNReferenceT(object):
         if self.COLOR is not None:
             SCNReferenceAddCOLOR(builder, COLOR)
         SCNReferenceAddSHOW_COVARIANCE(builder, self.SHOW_COVARIANCE)
+        if self.DISPLAY_STYLE is not None:
+            SCNReferenceAddDISPLAY_STYLE(builder, DISPLAY_STYLE)
         SCNReference = SCNReferenceEnd(builder)
         return SCNReference

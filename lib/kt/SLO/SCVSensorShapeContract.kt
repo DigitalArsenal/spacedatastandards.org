@@ -159,6 +159,15 @@ class SCVSensorShapeContract : Table() {
             null
         }
     }
+    /**
+     * For SAR_ANNULAR_SECTOR: which side(s) of the ground track the sensor can
+     * image (LEFT, RIGHT, or BILATERAL when roll/steering supports both sides).
+     */
+    val sarLookSide : UByte
+        get() {
+            val o = __offset(42)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSCVSensorShapeContract(_bb: ByteBuffer): SCVSensorShapeContract = getRootAsSCVSensorShapeContract(_bb, SCVSensorShapeContract())
@@ -166,8 +175,8 @@ class SCVSensorShapeContract : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createSCVSensorShapeContract(builder: FlatBufferBuilder, shapeKind: UByte, axisConvention: UByte, rangeBoundary: UByte, outerHalfAngleDeg: Double, innerHalfAngleDeg: Double, minClockAngleDeg: Double, maxClockAngleDeg: Double, xHalfAngleDeg: Double, yHalfAngleDeg: Double, innerLookAngleDeg: Double, outerLookAngleDeg: Double, sarSamplingDensity: Double, minRangeM: Double, maxRangeM: Double, polygonVerticesOffset: Int, polygonFrame: UByte, azElMaskOffset: Int, maxAltitudeM: Double, altitudeReferenceOffset: Int) : Int {
-            builder.startTable(19)
+        fun createSCVSensorShapeContract(builder: FlatBufferBuilder, shapeKind: UByte, axisConvention: UByte, rangeBoundary: UByte, outerHalfAngleDeg: Double, innerHalfAngleDeg: Double, minClockAngleDeg: Double, maxClockAngleDeg: Double, xHalfAngleDeg: Double, yHalfAngleDeg: Double, innerLookAngleDeg: Double, outerLookAngleDeg: Double, sarSamplingDensity: Double, minRangeM: Double, maxRangeM: Double, polygonVerticesOffset: Int, polygonFrame: UByte, azElMaskOffset: Int, maxAltitudeM: Double, altitudeReferenceOffset: Int, sarLookSide: UByte) : Int {
+            builder.startTable(20)
             addMAXALTITUDEM(builder, maxAltitudeM)
             addMAXRANGEM(builder, maxRangeM)
             addMINRANGEM(builder, minRangeM)
@@ -183,13 +192,14 @@ class SCVSensorShapeContract : Table() {
             addALTITUDEREFERENCE(builder, altitudeReferenceOffset)
             addAZELMASK(builder, azElMaskOffset)
             addPOLYGONVERTICES(builder, polygonVerticesOffset)
+            addSARLOOKSIDE(builder, sarLookSide)
             addPOLYGONFRAME(builder, polygonFrame)
             addRANGEBOUNDARY(builder, rangeBoundary)
             addAXISCONVENTION(builder, axisConvention)
             addSHAPEKIND(builder, shapeKind)
             return endSCVSensorShapeContract(builder)
         }
-        fun startSCVSensorShapeContract(builder: FlatBufferBuilder) = builder.startTable(19)
+        fun startSCVSensorShapeContract(builder: FlatBufferBuilder) = builder.startTable(20)
         fun addSHAPEKIND(builder: FlatBufferBuilder, shapeKind: UByte) = builder.addByte(0, shapeKind.toByte(), 0)
         fun addAXISCONVENTION(builder: FlatBufferBuilder, axisConvention: UByte) = builder.addByte(1, axisConvention.toByte(), 0)
         fun addRANGEBOUNDARY(builder: FlatBufferBuilder, rangeBoundary: UByte) = builder.addByte(2, rangeBoundary.toByte(), 0)
@@ -225,6 +235,7 @@ class SCVSensorShapeContract : Table() {
         fun startAzElMaskVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addMAXALTITUDEM(builder: FlatBufferBuilder, maxAltitudeM: Double) = builder.addDouble(17, maxAltitudeM, 0.0)
         fun addALTITUDEREFERENCE(builder: FlatBufferBuilder, altitudeReference: Int) = builder.addOffset(18, altitudeReference, 0)
+        fun addSARLOOKSIDE(builder: FlatBufferBuilder, sarLookSide: UByte) = builder.addByte(19, sarLookSide.toByte(), 0)
         fun endSCVSensorShapeContract(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

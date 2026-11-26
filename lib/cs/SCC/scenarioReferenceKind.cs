@@ -23,4 +23,7 @@ public enum scenarioReferenceKind : sbyte
   /// equals REFERENCE_ID. NAME is its label; COUNTRY is its ISO 3166-1
   /// alpha-2 code when the area is a country.
   AREA_OF_INTEREST = 10,
+  /// A console top-level folder (for example SELECTION, GROUPS, OBJECTS) that
+  /// carries shared display-style overrides in DISPLAY_STYLE.
+  FOLDER = 11,
 };

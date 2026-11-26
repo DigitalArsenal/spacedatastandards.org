@@ -26,6 +26,9 @@ const (
 	/// equals REFERENCE_ID. NAME is its label; COUNTRY is its ISO 3166-1
 	/// alpha-2 code when the area is a country.
 	scenarioReferenceKindAREA_OF_INTEREST   scenarioReferenceKind = 10
+	/// A console top-level folder (for example SELECTION, GROUPS, OBJECTS) that
+	/// carries shared display-style overrides in DISPLAY_STYLE.
+	scenarioReferenceKindFOLDER             scenarioReferenceKind = 11
 )
 
 var EnumNamesscenarioReferenceKind = map[scenarioReferenceKind]string{
@@ -40,6 +43,7 @@ var EnumNamesscenarioReferenceKind = map[scenarioReferenceKind]string{
 	scenarioReferenceKindOBSERVATION:        "OBSERVATION",
 	scenarioReferenceKindGROUP:              "GROUP",
 	scenarioReferenceKindAREA_OF_INTEREST:   "AREA_OF_INTEREST",
+	scenarioReferenceKindFOLDER:             "FOLDER",
 }
 
 var EnumValuesscenarioReferenceKind = map[string]scenarioReferenceKind{
@@ -54,6 +58,7 @@ var EnumValuesscenarioReferenceKind = map[string]scenarioReferenceKind{
 	"OBSERVATION":        scenarioReferenceKindOBSERVATION,
 	"GROUP":              scenarioReferenceKindGROUP,
 	"AREA_OF_INTEREST":   scenarioReferenceKindAREA_OF_INTEREST,
+	"FOLDER":             scenarioReferenceKindFOLDER,
 }
 
 func (v scenarioReferenceKind) String() string {

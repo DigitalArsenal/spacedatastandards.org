@@ -35,7 +35,8 @@ enum scenarioReferenceKind {
   EXCLUSION_ZONE(7),
   OBSERVATION(8),
   GROUP(9),
-  AREA_OF_INTEREST(10);
+  AREA_OF_INTEREST(10),
+  FOLDER(11);
 
   final int value;
   const scenarioReferenceKind(this.value);
@@ -53,6 +54,7 @@ enum scenarioReferenceKind {
       case 8: return scenarioReferenceKind.OBSERVATION;
       case 9: return scenarioReferenceKind.GROUP;
       case 10: return scenarioReferenceKind.AREA_OF_INTEREST;
+      case 11: return scenarioReferenceKind.FOLDER;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -61,7 +63,7 @@ enum scenarioReferenceKind {
       value == null ? null : scenarioReferenceKind.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 10;
+  static const int maxValue = 11;
   static const fb.Reader<scenarioReferenceKind> reader = _scenarioReferenceKindReader();
 }
 
@@ -74,6 +76,44 @@ class _scenarioReferenceKindReader extends fb.Reader<scenarioReferenceKind> {
   @override
   scenarioReferenceKind read(fb.BufferContext bc, int offset) =>
       scenarioReferenceKind.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Tri-state toggle for optional display-style switches so absent differs
+///  from explicitly disabled.
+enum scnToggle {
+  UNSET(0),
+  OFF(1),
+  ON(2);
+
+  final int value;
+  const scnToggle(this.value);
+
+  factory scnToggle.fromValue(int value) {
+    switch (value) {
+      case 0: return scnToggle.UNSET;
+      case 1: return scnToggle.OFF;
+      case 2: return scnToggle.ON;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static scnToggle? _createOrNull(int? value) =>
+      value == null ? null : scnToggle.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static const fb.Reader<scnToggle> reader = _scnToggleReader();
+}
+
+class _scnToggleReader extends fb.Reader<scnToggle> {
+  const _scnToggleReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  scnToggle read(fb.BufferContext bc, int offset) =>
+      scnToggle.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
 ///  Coordinate convention for a relative-motion RIC box.
@@ -185,6 +225,459 @@ class _scenarioActionCodeReader extends fb.Reader<scenarioActionCode> {
       scenarioActionCode.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
+///  Typed display customization for a scenario reference (object, group, or
+///  top-level folder). Unset strings are null, unset numeric fields are NaN,
+///  and unset switches are UNSET.
+class SCNDisplayStyle {
+  SCNDisplayStyle._(this._bc, this._bcOffset);
+  factory SCNDisplayStyle(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<SCNDisplayStyle> reader = _SCNDisplayStyleReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  String? get DOT_COLOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get dotColor => DOT_COLOR;
+  double get DOT_SIZE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, double.nan);
+  double get dotSize => DOT_SIZE;
+  String? get OUTLINE_COLOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get outlineColor => OUTLINE_COLOR;
+  double get OUTLINE_WIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, double.nan);
+  double get outlineWidth => OUTLINE_WIDTH;
+  scnToggle get SHOW_PATH => scnToggle.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 12, 0));
+  scnToggle get showPath => SHOW_PATH;
+  String? get PATH_RELATIVE_TO => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get pathRelativeTo => PATH_RELATIVE_TO;
+  String? get PATH_COLOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get pathColor => PATH_COLOR;
+  double get PATH_WIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, double.nan);
+  double get pathWidth => PATH_WIDTH;
+  double get PATH_AHEAD_MIN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, double.nan);
+  double get pathAheadMin => PATH_AHEAD_MIN;
+  double get PATH_BEHIND_MIN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, double.nan);
+  double get pathBehindMin => PATH_BEHIND_MIN;
+  scnToggle get SHOW_LABEL => scnToggle.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 24, 0));
+  scnToggle get showLabel => SHOW_LABEL;
+  String? get LABEL_COLOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  String? get labelColor => LABEL_COLOR;
+  double get LABEL_SIZE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, double.nan);
+  double get labelSize => LABEL_SIZE;
+  double get LABEL_OPACITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, double.nan);
+  double get labelOpacity => LABEL_OPACITY;
+  scnToggle get SHOW_RIC_AXES => scnToggle.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 32, 0));
+  scnToggle get showRicAxes => SHOW_RIC_AXES;
+  double get RIC_AXES_LENGTH_KM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, double.nan);
+  double get ricAxesLengthKm => RIC_AXES_LENGTH_KM;
+  scnToggle get SHOW_MODEL => scnToggle.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 36, 0));
+  scnToggle get showModel => SHOW_MODEL;
+  scnToggle get SHOW_COVARIANCE => scnToggle.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 38, 0));
+  scnToggle get showCovariance => SHOW_COVARIANCE;
+  scnToggle get SHOW_SELECTOR => scnToggle.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 40, 0));
+  scnToggle get showSelector => SHOW_SELECTOR;
+  scnToggle get SHOW_SELECTOR_LABEL => scnToggle.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 42, 0));
+  scnToggle get showSelectorLabel => SHOW_SELECTOR_LABEL;
+  String? get SELECTOR_COLOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 44);
+  String? get selectorColor => SELECTOR_COLOR;
+  double get SELECTOR_WIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 46, double.nan);
+  double get selectorWidth => SELECTOR_WIDTH;
+  double get SELECTOR_SEGMENTS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 48, double.nan);
+  double get selectorSegments => SELECTOR_SEGMENTS;
+  double get SELECTOR_FILL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 50, double.nan);
+  double get selectorFill => SELECTOR_FILL;
+  String? get SELECTOR_BINDING => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 52);
+  String? get selectorBinding => SELECTOR_BINDING;
+  double get SELECTOR_MIN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 54, double.nan);
+  double get selectorMin => SELECTOR_MIN;
+  double get SELECTOR_MAX => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 56, double.nan);
+  double get selectorMax => SELECTOR_MAX;
+  double get ORIENT_RADIAL_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 58, double.nan);
+  double get orientRadialDeg => ORIENT_RADIAL_DEG;
+  double get ORIENT_CROSS_TRACK_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 60, double.nan);
+  double get orientCrossTrackDeg => ORIENT_CROSS_TRACK_DEG;
+  double get ORIENT_IN_TRACK_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 62, double.nan);
+  double get orientInTrackDeg => ORIENT_IN_TRACK_DEG;
+  double get LABEL_COUNT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 64, double.nan);
+  double get labelCount => LABEL_COUNT;
+  double get RIC_AXES_COUNT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 66, double.nan);
+  double get ricAxesCount => RIC_AXES_COUNT;
+  double get MODEL_COUNT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 68, double.nan);
+  double get modelCount => MODEL_COUNT;
+  double get COVARIANCE_COUNT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 70, double.nan);
+  double get covarianceCount => COVARIANCE_COUNT;
+
+  @override
+  String toString() {
+    return 'SCNDisplayStyle{dotColor: ${dotColor}, dotSize: ${dotSize}, outlineColor: ${outlineColor}, outlineWidth: ${outlineWidth}, showPath: ${showPath}, pathRelativeTo: ${pathRelativeTo}, pathColor: ${pathColor}, pathWidth: ${pathWidth}, pathAheadMin: ${pathAheadMin}, pathBehindMin: ${pathBehindMin}, showLabel: ${showLabel}, labelColor: ${labelColor}, labelSize: ${labelSize}, labelOpacity: ${labelOpacity}, showRicAxes: ${showRicAxes}, ricAxesLengthKm: ${ricAxesLengthKm}, showModel: ${showModel}, showCovariance: ${showCovariance}, showSelector: ${showSelector}, showSelectorLabel: ${showSelectorLabel}, selectorColor: ${selectorColor}, selectorWidth: ${selectorWidth}, selectorSegments: ${selectorSegments}, selectorFill: ${selectorFill}, selectorBinding: ${selectorBinding}, selectorMin: ${selectorMin}, selectorMax: ${selectorMax}, orientRadialDeg: ${orientRadialDeg}, orientCrossTrackDeg: ${orientCrossTrackDeg}, orientInTrackDeg: ${orientInTrackDeg}, labelCount: ${labelCount}, ricAxesCount: ${ricAxesCount}, modelCount: ${modelCount}, covarianceCount: ${covarianceCount}}';
+  }
+}
+
+class _SCNDisplayStyleReader extends fb.TableReader<SCNDisplayStyle> {
+  const _SCNDisplayStyleReader();
+
+  @override
+  SCNDisplayStyle createObject(fb.BufferContext bc, int offset) =>
+    SCNDisplayStyle._(bc, offset);
+}
+
+class SCNDisplayStyleBuilder {
+  SCNDisplayStyleBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(34);
+  }
+
+  int addDotColorOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addDotSize(double? DOT_SIZE) {
+    fbBuilder.addFloat64(1, DOT_SIZE);
+    return fbBuilder.offset;
+  }
+  int addOutlineColorOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addOutlineWidth(double? OUTLINE_WIDTH) {
+    fbBuilder.addFloat64(3, OUTLINE_WIDTH);
+    return fbBuilder.offset;
+  }
+  int addShowPath(scnToggle? SHOW_PATH) {
+    fbBuilder.addInt8(4, SHOW_PATH?.value);
+    return fbBuilder.offset;
+  }
+  int addPathRelativeToOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addPathColorOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addPathWidth(double? PATH_WIDTH) {
+    fbBuilder.addFloat64(7, PATH_WIDTH);
+    return fbBuilder.offset;
+  }
+  int addPathAheadMin(double? PATH_AHEAD_MIN) {
+    fbBuilder.addFloat64(8, PATH_AHEAD_MIN);
+    return fbBuilder.offset;
+  }
+  int addPathBehindMin(double? PATH_BEHIND_MIN) {
+    fbBuilder.addFloat64(9, PATH_BEHIND_MIN);
+    return fbBuilder.offset;
+  }
+  int addShowLabel(scnToggle? SHOW_LABEL) {
+    fbBuilder.addInt8(10, SHOW_LABEL?.value);
+    return fbBuilder.offset;
+  }
+  int addLabelColorOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addLabelSize(double? LABEL_SIZE) {
+    fbBuilder.addFloat64(12, LABEL_SIZE);
+    return fbBuilder.offset;
+  }
+  int addLabelOpacity(double? LABEL_OPACITY) {
+    fbBuilder.addFloat64(13, LABEL_OPACITY);
+    return fbBuilder.offset;
+  }
+  int addShowRicAxes(scnToggle? SHOW_RIC_AXES) {
+    fbBuilder.addInt8(14, SHOW_RIC_AXES?.value);
+    return fbBuilder.offset;
+  }
+  int addRicAxesLengthKm(double? RIC_AXES_LENGTH_KM) {
+    fbBuilder.addFloat64(15, RIC_AXES_LENGTH_KM);
+    return fbBuilder.offset;
+  }
+  int addShowModel(scnToggle? SHOW_MODEL) {
+    fbBuilder.addInt8(16, SHOW_MODEL?.value);
+    return fbBuilder.offset;
+  }
+  int addShowCovariance(scnToggle? SHOW_COVARIANCE) {
+    fbBuilder.addInt8(17, SHOW_COVARIANCE?.value);
+    return fbBuilder.offset;
+  }
+  int addShowSelector(scnToggle? SHOW_SELECTOR) {
+    fbBuilder.addInt8(18, SHOW_SELECTOR?.value);
+    return fbBuilder.offset;
+  }
+  int addShowSelectorLabel(scnToggle? SHOW_SELECTOR_LABEL) {
+    fbBuilder.addInt8(19, SHOW_SELECTOR_LABEL?.value);
+    return fbBuilder.offset;
+  }
+  int addSelectorColorOffset(int? offset) {
+    fbBuilder.addOffset(20, offset);
+    return fbBuilder.offset;
+  }
+  int addSelectorWidth(double? SELECTOR_WIDTH) {
+    fbBuilder.addFloat64(21, SELECTOR_WIDTH);
+    return fbBuilder.offset;
+  }
+  int addSelectorSegments(double? SELECTOR_SEGMENTS) {
+    fbBuilder.addFloat64(22, SELECTOR_SEGMENTS);
+    return fbBuilder.offset;
+  }
+  int addSelectorFill(double? SELECTOR_FILL) {
+    fbBuilder.addFloat64(23, SELECTOR_FILL);
+    return fbBuilder.offset;
+  }
+  int addSelectorBindingOffset(int? offset) {
+    fbBuilder.addOffset(24, offset);
+    return fbBuilder.offset;
+  }
+  int addSelectorMin(double? SELECTOR_MIN) {
+    fbBuilder.addFloat64(25, SELECTOR_MIN);
+    return fbBuilder.offset;
+  }
+  int addSelectorMax(double? SELECTOR_MAX) {
+    fbBuilder.addFloat64(26, SELECTOR_MAX);
+    return fbBuilder.offset;
+  }
+  int addOrientRadialDeg(double? ORIENT_RADIAL_DEG) {
+    fbBuilder.addFloat64(27, ORIENT_RADIAL_DEG);
+    return fbBuilder.offset;
+  }
+  int addOrientCrossTrackDeg(double? ORIENT_CROSS_TRACK_DEG) {
+    fbBuilder.addFloat64(28, ORIENT_CROSS_TRACK_DEG);
+    return fbBuilder.offset;
+  }
+  int addOrientInTrackDeg(double? ORIENT_IN_TRACK_DEG) {
+    fbBuilder.addFloat64(29, ORIENT_IN_TRACK_DEG);
+    return fbBuilder.offset;
+  }
+  int addLabelCount(double? LABEL_COUNT) {
+    fbBuilder.addFloat64(30, LABEL_COUNT);
+    return fbBuilder.offset;
+  }
+  int addRicAxesCount(double? RIC_AXES_COUNT) {
+    fbBuilder.addFloat64(31, RIC_AXES_COUNT);
+    return fbBuilder.offset;
+  }
+  int addModelCount(double? MODEL_COUNT) {
+    fbBuilder.addFloat64(32, MODEL_COUNT);
+    return fbBuilder.offset;
+  }
+  int addCovarianceCount(double? COVARIANCE_COUNT) {
+    fbBuilder.addFloat64(33, COVARIANCE_COUNT);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class SCNDisplayStyleObjectBuilder extends fb.ObjectBuilder {
+  final String? _DOT_COLOR;
+  final double? _DOT_SIZE;
+  final String? _OUTLINE_COLOR;
+  final double? _OUTLINE_WIDTH;
+  final scnToggle? _SHOW_PATH;
+  final String? _PATH_RELATIVE_TO;
+  final String? _PATH_COLOR;
+  final double? _PATH_WIDTH;
+  final double? _PATH_AHEAD_MIN;
+  final double? _PATH_BEHIND_MIN;
+  final scnToggle? _SHOW_LABEL;
+  final String? _LABEL_COLOR;
+  final double? _LABEL_SIZE;
+  final double? _LABEL_OPACITY;
+  final scnToggle? _SHOW_RIC_AXES;
+  final double? _RIC_AXES_LENGTH_KM;
+  final scnToggle? _SHOW_MODEL;
+  final scnToggle? _SHOW_COVARIANCE;
+  final scnToggle? _SHOW_SELECTOR;
+  final scnToggle? _SHOW_SELECTOR_LABEL;
+  final String? _SELECTOR_COLOR;
+  final double? _SELECTOR_WIDTH;
+  final double? _SELECTOR_SEGMENTS;
+  final double? _SELECTOR_FILL;
+  final String? _SELECTOR_BINDING;
+  final double? _SELECTOR_MIN;
+  final double? _SELECTOR_MAX;
+  final double? _ORIENT_RADIAL_DEG;
+  final double? _ORIENT_CROSS_TRACK_DEG;
+  final double? _ORIENT_IN_TRACK_DEG;
+  final double? _LABEL_COUNT;
+  final double? _RIC_AXES_COUNT;
+  final double? _MODEL_COUNT;
+  final double? _COVARIANCE_COUNT;
+
+  SCNDisplayStyleObjectBuilder({
+    String? DOT_COLOR,
+    String? dotColor,
+    double? DOT_SIZE,
+    double? dotSize,
+    String? OUTLINE_COLOR,
+    String? outlineColor,
+    double? OUTLINE_WIDTH,
+    double? outlineWidth,
+    scnToggle? SHOW_PATH,
+    scnToggle? showPath,
+    String? PATH_RELATIVE_TO,
+    String? pathRelativeTo,
+    String? PATH_COLOR,
+    String? pathColor,
+    double? PATH_WIDTH,
+    double? pathWidth,
+    double? PATH_AHEAD_MIN,
+    double? pathAheadMin,
+    double? PATH_BEHIND_MIN,
+    double? pathBehindMin,
+    scnToggle? SHOW_LABEL,
+    scnToggle? showLabel,
+    String? LABEL_COLOR,
+    String? labelColor,
+    double? LABEL_SIZE,
+    double? labelSize,
+    double? LABEL_OPACITY,
+    double? labelOpacity,
+    scnToggle? SHOW_RIC_AXES,
+    scnToggle? showRicAxes,
+    double? RIC_AXES_LENGTH_KM,
+    double? ricAxesLengthKm,
+    scnToggle? SHOW_MODEL,
+    scnToggle? showModel,
+    scnToggle? SHOW_COVARIANCE,
+    scnToggle? showCovariance,
+    scnToggle? SHOW_SELECTOR,
+    scnToggle? showSelector,
+    scnToggle? SHOW_SELECTOR_LABEL,
+    scnToggle? showSelectorLabel,
+    String? SELECTOR_COLOR,
+    String? selectorColor,
+    double? SELECTOR_WIDTH,
+    double? selectorWidth,
+    double? SELECTOR_SEGMENTS,
+    double? selectorSegments,
+    double? SELECTOR_FILL,
+    double? selectorFill,
+    String? SELECTOR_BINDING,
+    String? selectorBinding,
+    double? SELECTOR_MIN,
+    double? selectorMin,
+    double? SELECTOR_MAX,
+    double? selectorMax,
+    double? ORIENT_RADIAL_DEG,
+    double? orientRadialDeg,
+    double? ORIENT_CROSS_TRACK_DEG,
+    double? orientCrossTrackDeg,
+    double? ORIENT_IN_TRACK_DEG,
+    double? orientInTrackDeg,
+    double? LABEL_COUNT,
+    double? labelCount,
+    double? RIC_AXES_COUNT,
+    double? ricAxesCount,
+    double? MODEL_COUNT,
+    double? modelCount,
+    double? COVARIANCE_COUNT,
+    double? covarianceCount,
+  })
+      : _DOT_COLOR = dotColor ?? DOT_COLOR,
+        _DOT_SIZE = dotSize ?? DOT_SIZE,
+        _OUTLINE_COLOR = outlineColor ?? OUTLINE_COLOR,
+        _OUTLINE_WIDTH = outlineWidth ?? OUTLINE_WIDTH,
+        _SHOW_PATH = showPath ?? SHOW_PATH,
+        _PATH_RELATIVE_TO = pathRelativeTo ?? PATH_RELATIVE_TO,
+        _PATH_COLOR = pathColor ?? PATH_COLOR,
+        _PATH_WIDTH = pathWidth ?? PATH_WIDTH,
+        _PATH_AHEAD_MIN = pathAheadMin ?? PATH_AHEAD_MIN,
+        _PATH_BEHIND_MIN = pathBehindMin ?? PATH_BEHIND_MIN,
+        _SHOW_LABEL = showLabel ?? SHOW_LABEL,
+        _LABEL_COLOR = labelColor ?? LABEL_COLOR,
+        _LABEL_SIZE = labelSize ?? LABEL_SIZE,
+        _LABEL_OPACITY = labelOpacity ?? LABEL_OPACITY,
+        _SHOW_RIC_AXES = showRicAxes ?? SHOW_RIC_AXES,
+        _RIC_AXES_LENGTH_KM = ricAxesLengthKm ?? RIC_AXES_LENGTH_KM,
+        _SHOW_MODEL = showModel ?? SHOW_MODEL,
+        _SHOW_COVARIANCE = showCovariance ?? SHOW_COVARIANCE,
+        _SHOW_SELECTOR = showSelector ?? SHOW_SELECTOR,
+        _SHOW_SELECTOR_LABEL = showSelectorLabel ?? SHOW_SELECTOR_LABEL,
+        _SELECTOR_COLOR = selectorColor ?? SELECTOR_COLOR,
+        _SELECTOR_WIDTH = selectorWidth ?? SELECTOR_WIDTH,
+        _SELECTOR_SEGMENTS = selectorSegments ?? SELECTOR_SEGMENTS,
+        _SELECTOR_FILL = selectorFill ?? SELECTOR_FILL,
+        _SELECTOR_BINDING = selectorBinding ?? SELECTOR_BINDING,
+        _SELECTOR_MIN = selectorMin ?? SELECTOR_MIN,
+        _SELECTOR_MAX = selectorMax ?? SELECTOR_MAX,
+        _ORIENT_RADIAL_DEG = orientRadialDeg ?? ORIENT_RADIAL_DEG,
+        _ORIENT_CROSS_TRACK_DEG = orientCrossTrackDeg ?? ORIENT_CROSS_TRACK_DEG,
+        _ORIENT_IN_TRACK_DEG = orientInTrackDeg ?? ORIENT_IN_TRACK_DEG,
+        _LABEL_COUNT = labelCount ?? LABEL_COUNT,
+        _RIC_AXES_COUNT = ricAxesCount ?? RIC_AXES_COUNT,
+        _MODEL_COUNT = modelCount ?? MODEL_COUNT,
+        _COVARIANCE_COUNT = covarianceCount ?? COVARIANCE_COUNT;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? DOT_COLOROffset = _DOT_COLOR == null ? null
+        : fbBuilder.writeString(_DOT_COLOR!);
+    final int? OUTLINE_COLOROffset = _OUTLINE_COLOR == null ? null
+        : fbBuilder.writeString(_OUTLINE_COLOR!);
+    final int? PATH_RELATIVE_TOOffset = _PATH_RELATIVE_TO == null ? null
+        : fbBuilder.writeString(_PATH_RELATIVE_TO!);
+    final int? PATH_COLOROffset = _PATH_COLOR == null ? null
+        : fbBuilder.writeString(_PATH_COLOR!);
+    final int? LABEL_COLOROffset = _LABEL_COLOR == null ? null
+        : fbBuilder.writeString(_LABEL_COLOR!);
+    final int? SELECTOR_COLOROffset = _SELECTOR_COLOR == null ? null
+        : fbBuilder.writeString(_SELECTOR_COLOR!);
+    final int? SELECTOR_BINDINGOffset = _SELECTOR_BINDING == null ? null
+        : fbBuilder.writeString(_SELECTOR_BINDING!);
+    fbBuilder.startTable(34);
+    fbBuilder.addOffset(0, DOT_COLOROffset);
+    fbBuilder.addFloat64(1, _DOT_SIZE);
+    fbBuilder.addOffset(2, OUTLINE_COLOROffset);
+    fbBuilder.addFloat64(3, _OUTLINE_WIDTH);
+    fbBuilder.addInt8(4, _SHOW_PATH?.value);
+    fbBuilder.addOffset(5, PATH_RELATIVE_TOOffset);
+    fbBuilder.addOffset(6, PATH_COLOROffset);
+    fbBuilder.addFloat64(7, _PATH_WIDTH);
+    fbBuilder.addFloat64(8, _PATH_AHEAD_MIN);
+    fbBuilder.addFloat64(9, _PATH_BEHIND_MIN);
+    fbBuilder.addInt8(10, _SHOW_LABEL?.value);
+    fbBuilder.addOffset(11, LABEL_COLOROffset);
+    fbBuilder.addFloat64(12, _LABEL_SIZE);
+    fbBuilder.addFloat64(13, _LABEL_OPACITY);
+    fbBuilder.addInt8(14, _SHOW_RIC_AXES?.value);
+    fbBuilder.addFloat64(15, _RIC_AXES_LENGTH_KM);
+    fbBuilder.addInt8(16, _SHOW_MODEL?.value);
+    fbBuilder.addInt8(17, _SHOW_COVARIANCE?.value);
+    fbBuilder.addInt8(18, _SHOW_SELECTOR?.value);
+    fbBuilder.addInt8(19, _SHOW_SELECTOR_LABEL?.value);
+    fbBuilder.addOffset(20, SELECTOR_COLOROffset);
+    fbBuilder.addFloat64(21, _SELECTOR_WIDTH);
+    fbBuilder.addFloat64(22, _SELECTOR_SEGMENTS);
+    fbBuilder.addFloat64(23, _SELECTOR_FILL);
+    fbBuilder.addOffset(24, SELECTOR_BINDINGOffset);
+    fbBuilder.addFloat64(25, _SELECTOR_MIN);
+    fbBuilder.addFloat64(26, _SELECTOR_MAX);
+    fbBuilder.addFloat64(27, _ORIENT_RADIAL_DEG);
+    fbBuilder.addFloat64(28, _ORIENT_CROSS_TRACK_DEG);
+    fbBuilder.addFloat64(29, _ORIENT_IN_TRACK_DEG);
+    fbBuilder.addFloat64(30, _LABEL_COUNT);
+    fbBuilder.addFloat64(31, _RIC_AXES_COUNT);
+    fbBuilder.addFloat64(32, _MODEL_COUNT);
+    fbBuilder.addFloat64(33, _COVARIANCE_COUNT);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
 ///  Relative-motion RIC box and RPO time-lapse settings kept with a scenario.
 class SCNRicBox {
   SCNRicBox._(this._bc, this._bcOffset);
@@ -1031,10 +1524,13 @@ class SCNReference {
   ///  True when the 1-sigma covariance ellipsoid is shown on this reference.
   bool get SHOW_COVARIANCE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 58, false);
   bool get showCovariance => SHOW_COVARIANCE;
+  ///  Typed display-style overrides for this reference (object, group, or folder).
+  SCNDisplayStyle? get DISPLAY_STYLE => SCNDisplayStyle.reader.vTableGetNullable(_bc, _bcOffset, 60);
+  SCNDisplayStyle? get displayStyle => DISPLAY_STYLE;
 
   @override
   String toString() {
-    return 'SCNReference{referenceId: ${referenceId}, NAME: ${NAME}, referenceKind: ${referenceKind}, REMOVE: ${REMOVE}, noradCatId: ${noradCatId}, objectId: ${objectId}, COUNTRY: ${COUNTRY}, OWNER: ${OWNER}, SOURCES: ${SOURCES}, dataModes: ${dataModes}, meanElements: ${meanElements}, stateVectors: ${stateVectors}, MANEUVERS: ${MANEUVERS}, SITE: ${SITE}, SENSOR: ${SENSOR}, sensorSystemId: ${sensorSystemId}, sensorId: ${sensorId}, sitePosition: ${sitePosition}, variableSatelliteId: ${variableSatelliteId}, variableSiteId: ${variableSiteId}, POINTS: ${POINTS}, viewCone: ${viewCone}, sunAdvantageTarget: ${sunAdvantageTarget}, exclusionZone: ${exclusionZone}, observationEo: ${observationEo}, observationRadar: ${observationRadar}, COLOR: ${COLOR}, showCovariance: ${showCovariance}}';
+    return 'SCNReference{referenceId: ${referenceId}, NAME: ${NAME}, referenceKind: ${referenceKind}, REMOVE: ${REMOVE}, noradCatId: ${noradCatId}, objectId: ${objectId}, COUNTRY: ${COUNTRY}, OWNER: ${OWNER}, SOURCES: ${SOURCES}, dataModes: ${dataModes}, meanElements: ${meanElements}, stateVectors: ${stateVectors}, MANEUVERS: ${MANEUVERS}, SITE: ${SITE}, SENSOR: ${SENSOR}, sensorSystemId: ${sensorSystemId}, sensorId: ${sensorId}, sitePosition: ${sitePosition}, variableSatelliteId: ${variableSatelliteId}, variableSiteId: ${variableSiteId}, POINTS: ${POINTS}, viewCone: ${viewCone}, sunAdvantageTarget: ${sunAdvantageTarget}, exclusionZone: ${exclusionZone}, observationEo: ${observationEo}, observationRadar: ${observationRadar}, COLOR: ${COLOR}, showCovariance: ${showCovariance}, displayStyle: ${displayStyle}}';
   }
 }
 
@@ -1052,7 +1548,7 @@ class SCNReferenceBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(28);
+    fbBuilder.startTable(29);
   }
 
   int addReferenceIdOffset(int? offset) {
@@ -1167,6 +1663,10 @@ class SCNReferenceBuilder {
     fbBuilder.addBool(27, SHOW_COVARIANCE);
     return fbBuilder.offset;
   }
+  int addDisplayStyleOffset(int? offset) {
+    fbBuilder.addOffset(28, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1202,6 +1702,7 @@ class SCNReferenceObjectBuilder extends fb.ObjectBuilder {
   final RDOObjectBuilder? _OBSERVATION_RADAR;
   final String? _COLOR;
   final bool? _SHOW_COVARIANCE;
+  final SCNDisplayStyleObjectBuilder? _DISPLAY_STYLE;
 
   SCNReferenceObjectBuilder({
     String? REFERENCE_ID,
@@ -1250,6 +1751,8 @@ class SCNReferenceObjectBuilder extends fb.ObjectBuilder {
     String? COLOR,
     bool? SHOW_COVARIANCE,
     bool? showCovariance,
+    SCNDisplayStyleObjectBuilder? DISPLAY_STYLE,
+    SCNDisplayStyleObjectBuilder? displayStyle,
   })
       : _REFERENCE_ID = referenceId ?? REFERENCE_ID,
         _NAME = NAME,
@@ -1278,7 +1781,8 @@ class SCNReferenceObjectBuilder extends fb.ObjectBuilder {
         _OBSERVATION_EO = observationEo ?? OBSERVATION_EO,
         _OBSERVATION_RADAR = observationRadar ?? OBSERVATION_RADAR,
         _COLOR = COLOR,
-        _SHOW_COVARIANCE = showCovariance ?? SHOW_COVARIANCE;
+        _SHOW_COVARIANCE = showCovariance ?? SHOW_COVARIANCE,
+        _DISPLAY_STYLE = displayStyle ?? DISPLAY_STYLE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1323,7 +1827,8 @@ class SCNReferenceObjectBuilder extends fb.ObjectBuilder {
     final int? OBSERVATION_RADAROffset = _OBSERVATION_RADAR?.getOrCreateOffset(fbBuilder);
     final int? COLOROffset = _COLOR == null ? null
         : fbBuilder.writeString(_COLOR!);
-    fbBuilder.startTable(28);
+    final int? DISPLAY_STYLEOffset = _DISPLAY_STYLE?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(29);
     fbBuilder.addOffset(0, REFERENCE_IDOffset);
     fbBuilder.addOffset(1, NAMEOffset);
     fbBuilder.addInt8(2, _REFERENCE_KIND?.value);
@@ -1352,6 +1857,7 @@ class SCNReferenceObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(25, OBSERVATION_RADAROffset);
     fbBuilder.addOffset(26, COLOROffset);
     fbBuilder.addBool(27, _SHOW_COVARIANCE);
+    fbBuilder.addOffset(28, DISPLAY_STYLEOffset);
     return fbBuilder.endTable();
   }
 

@@ -537,6 +537,111 @@ impl<'a> ::flatbuffers::Verifiable for scvSensorShapeKind {
 impl ::flatbuffers::SimpleToVerifyInSlice for scvSensorShapeKind {}
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_SCV_SAR_LOOK_SIDE: u8 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_SCV_SAR_LOOK_SIDE: u8 = 3;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_SCV_SAR_LOOK_SIDE: [scvSarLookSide; 4] = [
+    scvSarLookSide::UNSPECIFIED,
+    scvSarLookSide::LEFT,
+    scvSarLookSide::RIGHT,
+    scvSarLookSide::BILATERAL,
+];
+
+/// Side-looking geometry capability of a synthetic-aperture radar (SAR)
+/// sensor relative to the spacecraft velocity vector.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct scvSarLookSide(pub u8);
+
+#[allow(non_upper_case_globals)]
+impl scvSarLookSide {
+    pub const UNSPECIFIED: Self = Self(0);
+    pub const LEFT: Self = Self(1);
+    pub const RIGHT: Self = Self(2);
+    pub const BILATERAL: Self = Self(3);
+
+    pub const ENUM_MIN: u8 = 0;
+    pub const ENUM_MAX: u8 = 3;
+    pub const ENUM_VALUES: &'static [Self] = &[
+        Self::UNSPECIFIED,
+        Self::LEFT,
+        Self::RIGHT,
+        Self::BILATERAL,
+    ];
+
+    /// Returns the variant's name or "" if unknown.
+    pub fn variant_name(self) -> Option<&'static str> {
+        match self {
+            Self::UNSPECIFIED => Some("UNSPECIFIED"),
+            Self::LEFT => Some("LEFT"),
+            Self::RIGHT => Some("RIGHT"),
+            Self::BILATERAL => Some("BILATERAL"),
+            _ => None,
+        }
+    }
+}
+
+impl ::core::fmt::Debug for scvSarLookSide {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        if let Some(name) = self.variant_name() {
+            f.write_str(name)
+        } else {
+            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+        }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for scvSarLookSide {
+    type Inner = Self;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+        Self(b)
+    }
+}
+
+impl ::flatbuffers::Push for scvSarLookSide {
+    type Output = scvSarLookSide;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for scvSarLookSide {
+    type Scalar = u8;
+
+    #[inline]
+    fn to_little_endian(self) -> u8 {
+        self.0.to_le()
+    }
+
+    #[inline]
+    #[allow(clippy::wrong_self_convention)]
+    fn from_little_endian(v: u8) -> Self {
+        let b = u8::from_le(v);
+        Self(b)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for scvSarLookSide {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        u8::run_verifier(v, pos)
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for scvSarLookSide {}
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_SCV_SENSOR_AXIS_CONVENTION: u8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
@@ -2490,6 +2595,7 @@ impl<'a> SCVSensorShapeContract<'a> {
     pub const VT_AZ_EL_MASK: ::flatbuffers::VOffsetT = 36;
     pub const VT_MAX_ALTITUDE_M: ::flatbuffers::VOffsetT = 38;
     pub const VT_ALTITUDE_REFERENCE: ::flatbuffers::VOffsetT = 40;
+    pub const VT_SAR_LOOK_SIDE: ::flatbuffers::VOffsetT = 42;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -2517,6 +2623,7 @@ impl<'a> SCVSensorShapeContract<'a> {
         if let Some(x) = args.ALTITUDE_REFERENCE { builder.add_ALTITUDE_REFERENCE(x); }
         if let Some(x) = args.AZ_EL_MASK { builder.add_AZ_EL_MASK(x); }
         if let Some(x) = args.POLYGON_VERTICES { builder.add_POLYGON_VERTICES(x); }
+        builder.add_SAR_LOOK_SIDE(args.SAR_LOOK_SIDE);
         builder.add_POLYGON_FRAME(args.POLYGON_FRAME);
         builder.add_RANGE_BOUNDARY(args.RANGE_BOUNDARY);
         builder.add_AXIS_CONVENTION(args.AXIS_CONVENTION);
@@ -2550,6 +2657,7 @@ impl<'a> SCVSensorShapeContract<'a> {
         let ALTITUDE_REFERENCE = self.ALTITUDE_REFERENCE().map(|x| {
             alloc::boxed::Box::new(x.unpack())
         });
+        let SAR_LOOK_SIDE = self.SAR_LOOK_SIDE();
         SCVSensorShapeContractT {
             SHAPE_KIND,
             AXIS_CONVENTION,
@@ -2570,6 +2678,7 @@ impl<'a> SCVSensorShapeContract<'a> {
             AZ_EL_MASK,
             MAX_ALTITUDE_M,
             ALTITUDE_REFERENCE,
+            SAR_LOOK_SIDE,
         }
     }
 
@@ -2731,6 +2840,16 @@ impl<'a> SCVSensorShapeContract<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<SCVEllipsoid>>(SCVSensorShapeContract::VT_ALTITUDE_REFERENCE, None)}
     }
+
+    /// For SAR_ANNULAR_SECTOR: which side(s) of the ground track the sensor can
+    /// image (LEFT, RIGHT, or BILATERAL when roll/steering supports both sides).
+    #[inline]
+    pub fn SAR_LOOK_SIDE(&self) -> scvSarLookSide {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<scvSarLookSide>(SCVSensorShapeContract::VT_SAR_LOOK_SIDE, Some(scvSarLookSide::UNSPECIFIED)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for SCVSensorShapeContract<'_> {
@@ -2758,6 +2877,7 @@ impl ::flatbuffers::Verifiable for SCVSensorShapeContract<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<SCVAzElMaskPoint>>>>("AZ_EL_MASK", Self::VT_AZ_EL_MASK, false)?
             .visit_field::<f64>("MAX_ALTITUDE_M", Self::VT_MAX_ALTITUDE_M, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<SCVEllipsoid>>("ALTITUDE_REFERENCE", Self::VT_ALTITUDE_REFERENCE, false)?
+            .visit_field::<scvSarLookSide>("SAR_LOOK_SIDE", Self::VT_SAR_LOOK_SIDE, false)?
             .finish();
         Ok(())
     }
@@ -2783,6 +2903,7 @@ pub struct SCVSensorShapeContractArgs<'a> {
     pub AZ_EL_MASK: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVAzElMaskPoint<'a>>>>>,
     pub MAX_ALTITUDE_M: f64,
     pub ALTITUDE_REFERENCE: Option<::flatbuffers::WIPOffset<SCVEllipsoid<'a>>>,
+    pub SAR_LOOK_SIDE: scvSarLookSide,
 }
 
 impl<'a> Default for SCVSensorShapeContractArgs<'a> {
@@ -2808,6 +2929,7 @@ impl<'a> Default for SCVSensorShapeContractArgs<'a> {
             AZ_EL_MASK: None,
             MAX_ALTITUDE_M: 0.0,
             ALTITUDE_REFERENCE: None,
+            SAR_LOOK_SIDE: scvSarLookSide::UNSPECIFIED,
         }
     }
 }
@@ -2914,6 +3036,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCVSensorShapeContractBuilder
     }
 
     #[inline]
+    pub fn add_SAR_LOOK_SIDE(&mut self, SAR_LOOK_SIDE: scvSarLookSide) {
+        self.fbb_.push_slot::<scvSarLookSide>(SCVSensorShapeContract::VT_SAR_LOOK_SIDE, SAR_LOOK_SIDE, scvSarLookSide::UNSPECIFIED);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SCVSensorShapeContractBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         SCVSensorShapeContractBuilder {
@@ -2951,6 +3078,7 @@ impl ::core::fmt::Debug for SCVSensorShapeContract<'_> {
         ds.field("AZ_EL_MASK", &self.AZ_EL_MASK());
         ds.field("MAX_ALTITUDE_M", &self.MAX_ALTITUDE_M());
         ds.field("ALTITUDE_REFERENCE", &self.ALTITUDE_REFERENCE());
+        ds.field("SAR_LOOK_SIDE", &self.SAR_LOOK_SIDE());
         ds.finish()
     }
 }
@@ -2977,6 +3105,7 @@ pub struct SCVSensorShapeContractT {
     pub AZ_EL_MASK: Option<alloc::vec::Vec<SCVAzElMaskPointT>>,
     pub MAX_ALTITUDE_M: f64,
     pub ALTITUDE_REFERENCE: Option<alloc::boxed::Box<SCVEllipsoidT>>,
+    pub SAR_LOOK_SIDE: scvSarLookSide,
 }
 
 impl Default for SCVSensorShapeContractT {
@@ -3001,6 +3130,7 @@ impl Default for SCVSensorShapeContractT {
             AZ_EL_MASK: None,
             MAX_ALTITUDE_M: 0.0,
             ALTITUDE_REFERENCE: None,
+            SAR_LOOK_SIDE: scvSarLookSide::UNSPECIFIED,
         }
     }
 }
@@ -3035,6 +3165,7 @@ impl SCVSensorShapeContractT {
         let ALTITUDE_REFERENCE = self.ALTITUDE_REFERENCE.as_ref().map(|x|{
             x.pack(_fbb)
         });
+        let SAR_LOOK_SIDE = self.SAR_LOOK_SIDE;
         SCVSensorShapeContract::create(_fbb, &SCVSensorShapeContractArgs{
             SHAPE_KIND,
             AXIS_CONVENTION,
@@ -3055,6 +3186,7 @@ impl SCVSensorShapeContractT {
             AZ_EL_MASK,
             MAX_ALTITUDE_M,
             ALTITUDE_REFERENCE,
+            SAR_LOOK_SIDE,
         })
     }
 }

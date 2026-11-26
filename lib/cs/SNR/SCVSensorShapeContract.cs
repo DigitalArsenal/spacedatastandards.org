@@ -47,6 +47,9 @@ public struct SCVSensorShapeContract : IFlatbufferObject
   /// The surface MAX_ALTITUDE_M is measured from. Absent: the standard ellipsoid of the body the sensor is on (WGS84
   /// on the Earth). SEMI_INTERMEDIATE_M 0 is SEMI_MAJOR_M (an ellipsoid of revolution); a sphere has equal semi-axes.
   public SCVEllipsoid? ALTITUDE_REFERENCE { get { int o = __p.__offset(40); return o != 0 ? (SCVEllipsoid?)(new SCVEllipsoid()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// For SAR_ANNULAR_SECTOR: which side(s) of the ground track the sensor can
+  /// image (LEFT, RIGHT, or BILATERAL when roll/steering supports both sides).
+  public scvSarLookSide SAR_LOOK_SIDE { get { int o = __p.__offset(42); return o != 0 ? (scvSarLookSide)__p.bb.Get(o + __p.bb_pos) : scvSarLookSide.UNSPECIFIED; } }
 
   public static Offset<SCVSensorShapeContract> CreateSCVSensorShapeContract(FlatBufferBuilder builder,
       scvSensorShapeKind SHAPE_KIND = scvSensorShapeKind.CONIC,
@@ -67,8 +70,9 @@ public struct SCVSensorShapeContract : IFlatbufferObject
       scvCoordinateFrame POLYGON_FRAME = scvCoordinateFrame.UNKNOWN,
       VectorOffset AZ_EL_MASKOffset = default(VectorOffset),
       double MAX_ALTITUDE_M = 0.0,
-      Offset<SCVEllipsoid> ALTITUDE_REFERENCEOffset = default(Offset<SCVEllipsoid>)) {
-    builder.StartTable(19);
+      Offset<SCVEllipsoid> ALTITUDE_REFERENCEOffset = default(Offset<SCVEllipsoid>),
+      scvSarLookSide SAR_LOOK_SIDE = scvSarLookSide.UNSPECIFIED) {
+    builder.StartTable(20);
     SCVSensorShapeContract.AddMAX_ALTITUDE_M(builder, MAX_ALTITUDE_M);
     SCVSensorShapeContract.AddMAX_RANGE_M(builder, MAX_RANGE_M);
     SCVSensorShapeContract.AddMIN_RANGE_M(builder, MIN_RANGE_M);
@@ -84,6 +88,7 @@ public struct SCVSensorShapeContract : IFlatbufferObject
     SCVSensorShapeContract.AddALTITUDE_REFERENCE(builder, ALTITUDE_REFERENCEOffset);
     SCVSensorShapeContract.AddAZ_EL_MASK(builder, AZ_EL_MASKOffset);
     SCVSensorShapeContract.AddPOLYGON_VERTICES(builder, POLYGON_VERTICESOffset);
+    SCVSensorShapeContract.AddSAR_LOOK_SIDE(builder, SAR_LOOK_SIDE);
     SCVSensorShapeContract.AddPOLYGON_FRAME(builder, POLYGON_FRAME);
     SCVSensorShapeContract.AddRANGE_BOUNDARY(builder, RANGE_BOUNDARY);
     SCVSensorShapeContract.AddAXIS_CONVENTION(builder, AXIS_CONVENTION);
@@ -91,7 +96,7 @@ public struct SCVSensorShapeContract : IFlatbufferObject
     return SCVSensorShapeContract.EndSCVSensorShapeContract(builder);
   }
 
-  public static void StartSCVSensorShapeContract(FlatBufferBuilder builder) { builder.StartTable(19); }
+  public static void StartSCVSensorShapeContract(FlatBufferBuilder builder) { builder.StartTable(20); }
   public static void AddSHAPE_KIND(FlatBufferBuilder builder, scvSensorShapeKind SHAPE_KIND) { builder.AddByte(0, (byte)SHAPE_KIND, 0); }
   public static void AddAXIS_CONVENTION(FlatBufferBuilder builder, scvSensorAxisConvention AXIS_CONVENTION) { builder.AddByte(1, (byte)AXIS_CONVENTION, 0); }
   public static void AddRANGE_BOUNDARY(FlatBufferBuilder builder, scvSensorRangeBoundaryKind RANGE_BOUNDARY) { builder.AddByte(2, (byte)RANGE_BOUNDARY, 0); }
@@ -121,6 +126,7 @@ public struct SCVSensorShapeContract : IFlatbufferObject
   public static void StartAZ_EL_MASKVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddMAX_ALTITUDE_M(FlatBufferBuilder builder, double MAX_ALTITUDE_M) { builder.AddDouble(17, MAX_ALTITUDE_M, 0.0); }
   public static void AddALTITUDE_REFERENCE(FlatBufferBuilder builder, Offset<SCVEllipsoid> ALTITUDE_REFERENCEOffset) { builder.AddOffset(18, ALTITUDE_REFERENCEOffset.Value, 0); }
+  public static void AddSAR_LOOK_SIDE(FlatBufferBuilder builder, scvSarLookSide SAR_LOOK_SIDE) { builder.AddByte(19, (byte)SAR_LOOK_SIDE, 0); }
   public static Offset<SCVSensorShapeContract> EndSCVSensorShapeContract(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<SCVSensorShapeContract>(o);
@@ -152,6 +158,7 @@ public struct SCVSensorShapeContract : IFlatbufferObject
     for (var _j = 0; _j < this.AZ_EL_MASKLength; ++_j) {_o.AZ_EL_MASK.Add(this.AZ_EL_MASK(_j).HasValue ? this.AZ_EL_MASK(_j).Value.UnPack() : null);}
     _o.MAX_ALTITUDE_M = this.MAX_ALTITUDE_M;
     _o.ALTITUDE_REFERENCE = this.ALTITUDE_REFERENCE.HasValue ? this.ALTITUDE_REFERENCE.Value.UnPack() : null;
+    _o.SAR_LOOK_SIDE = this.SAR_LOOK_SIDE;
   }
   public static Offset<SCVSensorShapeContract> Pack(FlatBufferBuilder builder, SCVSensorShapeContractT _o) {
     if (_o == null) return default(Offset<SCVSensorShapeContract>);
@@ -188,7 +195,8 @@ public struct SCVSensorShapeContract : IFlatbufferObject
       _o.POLYGON_FRAME,
       _AZ_EL_MASK,
       _o.MAX_ALTITUDE_M,
-      _ALTITUDE_REFERENCE);
+      _ALTITUDE_REFERENCE,
+      _o.SAR_LOOK_SIDE);
   }
 }
 
@@ -213,6 +221,7 @@ public class SCVSensorShapeContractT
   public List<SCVAzElMaskPointT> AZ_EL_MASK { get; set; }
   public double MAX_ALTITUDE_M { get; set; }
   public SCVEllipsoidT ALTITUDE_REFERENCE { get; set; }
+  public scvSarLookSide SAR_LOOK_SIDE { get; set; }
 
   public SCVSensorShapeContractT() {
     this.SHAPE_KIND = scvSensorShapeKind.CONIC;
@@ -234,6 +243,7 @@ public class SCVSensorShapeContractT
     this.AZ_EL_MASK = null;
     this.MAX_ALTITUDE_M = 0.0;
     this.ALTITUDE_REFERENCE = null;
+    this.SAR_LOOK_SIDE = scvSarLookSide.UNSPECIFIED;
   }
 }
 
@@ -262,6 +272,7 @@ static public class SCVSensorShapeContractVerify
       && verifier.VerifyVectorOfTables(tablePos, 36 /*AZ_EL_MASK*/, SCVAzElMaskPointVerify.Verify, false)
       && verifier.VerifyField(tablePos, 38 /*MAX_ALTITUDE_M*/, 8 /*double*/, 8, false)
       && verifier.VerifyTable(tablePos, 40 /*ALTITUDE_REFERENCE*/, SCVEllipsoidVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 42 /*SAR_LOOK_SIDE*/, 1 /*scvSarLookSide*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

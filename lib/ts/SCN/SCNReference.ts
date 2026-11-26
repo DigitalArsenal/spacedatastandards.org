@@ -9,6 +9,7 @@ import { GJNPosition, GJNPositionT } from './GJNPosition.js';
 import { MNV, MNVT } from './MNV.js';
 import { OMM, OMMT } from './OMM.js';
 import { RDO, RDOT } from './RDO.js';
+import { SCNDisplayStyle, SCNDisplayStyleT } from './SCNDisplayStyle.js';
 import { SCNExclusionZone, SCNExclusionZoneT } from './SCNExclusionZone.js';
 import { SCNPointOfInterest, SCNPointOfInterestT } from './SCNPointOfInterest.js';
 import { SCNSunAdvantageTarget, SCNSunAdvantageTargetT } from './SCNSunAdvantageTarget.js';
@@ -319,8 +320,16 @@ SHOW_COVARIANCE():boolean {
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
+/**
+ * Typed display-style overrides for this reference (object, group, or folder).
+ */
+DISPLAY_STYLE(obj?:SCNDisplayStyle):SCNDisplayStyle|null {
+  const offset = this.bb!.__offset(this.bb_pos, 60);
+  return offset ? (obj || new SCNDisplayStyle()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startSCNReference(builder:flatbuffers.Builder) {
-  builder.startObject(28);
+  builder.startObject(29);
 }
 
 static addReferenceId(builder:flatbuffers.Builder, REFERENCE_IDOffset:flatbuffers.Offset) {
@@ -507,6 +516,10 @@ static addShowCovariance(builder:flatbuffers.Builder, SHOW_COVARIANCE:boolean) {
   builder.addFieldInt8(27, +SHOW_COVARIANCE, +false);
 }
 
+static addDisplayStyle(builder:flatbuffers.Builder, DISPLAY_STYLEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(28, DISPLAY_STYLEOffset, 0);
+}
+
 static endSCNReference(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -542,7 +555,8 @@ unpack(): SCNReferenceT {
     (this.OBSERVATION_EO() !== null ? this.OBSERVATION_EO()!.unpack() : null),
     (this.OBSERVATION_RADAR() !== null ? this.OBSERVATION_RADAR()!.unpack() : null),
     this.COLOR(),
-    this.SHOW_COVARIANCE()
+    this.SHOW_COVARIANCE(),
+    (this.DISPLAY_STYLE() !== null ? this.DISPLAY_STYLE()!.unpack() : null)
   );
 }
 
@@ -576,6 +590,7 @@ unpackTo(_o: SCNReferenceT): void {
   _o.OBSERVATION_RADAR = (this.OBSERVATION_RADAR() !== null ? this.OBSERVATION_RADAR()!.unpack() : null);
   _o.COLOR = this.COLOR();
   _o.SHOW_COVARIANCE = this.SHOW_COVARIANCE();
+  _o.DISPLAY_STYLE = (this.DISPLAY_STYLE() !== null ? this.DISPLAY_STYLE()!.unpack() : null);
 }
 }
 
@@ -608,7 +623,8 @@ constructor(
   public OBSERVATION_EO: EOOT|null = null,
   public OBSERVATION_RADAR: RDOT|null = null,
   public COLOR: string|Uint8Array|null = null,
-  public SHOW_COVARIANCE: boolean = false
+  public SHOW_COVARIANCE: boolean = false,
+  public DISPLAY_STYLE: SCNDisplayStyleT|null = null
 ){}
 
 
@@ -637,6 +653,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const OBSERVATION_EO = (this.OBSERVATION_EO !== null ? this.OBSERVATION_EO!.pack(builder) : 0);
   const OBSERVATION_RADAR = (this.OBSERVATION_RADAR !== null ? this.OBSERVATION_RADAR!.pack(builder) : 0);
   const COLOR = (this.COLOR !== null ? builder.createString(this.COLOR!) : 0);
+  const DISPLAY_STYLE = (this.DISPLAY_STYLE !== null ? this.DISPLAY_STYLE!.pack(builder) : 0);
 
   SCNReference.startSCNReference(builder);
   SCNReference.addReferenceId(builder, REFERENCE_ID);
@@ -667,6 +684,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   SCNReference.addObservationRadar(builder, OBSERVATION_RADAR);
   SCNReference.addColor(builder, COLOR);
   SCNReference.addShowCovariance(builder, this.SHOW_COVARIANCE);
+  SCNReference.addDisplayStyle(builder, DISPLAY_STYLE);
 
   return SCNReference.endSCNReference(builder);
 }

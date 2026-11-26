@@ -211,8 +211,17 @@ class SCVSensorShapeContract(object):
             return obj
         return None
 
+    # For SAR_ANNULAR_SECTOR: which side(s) of the ground track the sensor can
+    # image (LEFT, RIGHT, or BILATERAL when roll/steering supports both sides).
+    # SCVSensorShapeContract
+    def SAR_LOOK_SIDE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
 def SCVSensorShapeContractStart(builder):
-    builder.StartObject(19)
+    builder.StartObject(20)
 
 def Start(builder):
     SCVSensorShapeContractStart(builder)
@@ -355,6 +364,12 @@ def SCVSensorShapeContractAddALTITUDE_REFERENCE(builder, ALTITUDE_REFERENCE):
 def AddALTITUDE_REFERENCE(builder, ALTITUDE_REFERENCE):
     SCVSensorShapeContractAddALTITUDE_REFERENCE(builder, ALTITUDE_REFERENCE)
 
+def SCVSensorShapeContractAddSAR_LOOK_SIDE(builder, SAR_LOOK_SIDE):
+    builder.PrependUint8Slot(19, SAR_LOOK_SIDE, 0)
+
+def AddSAR_LOOK_SIDE(builder, SAR_LOOK_SIDE):
+    SCVSensorShapeContractAddSAR_LOOK_SIDE(builder, SAR_LOOK_SIDE)
+
 def SCVSensorShapeContractEnd(builder):
     return builder.EndObject()
 
@@ -393,6 +408,7 @@ class SCVSensorShapeContractT(object):
         AZ_EL_MASK = None,
         MAX_ALTITUDE_M = 0.0,
         ALTITUDE_REFERENCE = None,
+        SAR_LOOK_SIDE = 0,
     ):
         self.SHAPE_KIND = SHAPE_KIND  # type: int
         self.AXIS_CONVENTION = AXIS_CONVENTION  # type: int
@@ -413,6 +429,7 @@ class SCVSensorShapeContractT(object):
         self.AZ_EL_MASK = AZ_EL_MASK  # type: Optional[List[SCVAzElMaskPoint.SCVAzElMaskPointT]]
         self.MAX_ALTITUDE_M = MAX_ALTITUDE_M  # type: float
         self.ALTITUDE_REFERENCE = ALTITUDE_REFERENCE  # type: Optional[SCVEllipsoid.SCVEllipsoidT]
+        self.SAR_LOOK_SIDE = SAR_LOOK_SIDE  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -469,6 +486,7 @@ class SCVSensorShapeContractT(object):
         self.MAX_ALTITUDE_M = SCVSensorShapeContract.MAX_ALTITUDE_M()
         if SCVSensorShapeContract.ALTITUDE_REFERENCE() is not None:
             self.ALTITUDE_REFERENCE = SCVEllipsoid.SCVEllipsoidT.InitFromObj(SCVSensorShapeContract.ALTITUDE_REFERENCE())
+        self.SAR_LOOK_SIDE = SCVSensorShapeContract.SAR_LOOK_SIDE()
 
     # SCVSensorShapeContractT
     def Pack(self, builder):
@@ -513,5 +531,6 @@ class SCVSensorShapeContractT(object):
         SCVSensorShapeContractAddMAX_ALTITUDE_M(builder, self.MAX_ALTITUDE_M)
         if self.ALTITUDE_REFERENCE is not None:
             SCVSensorShapeContractAddALTITUDE_REFERENCE(builder, ALTITUDE_REFERENCE)
+        SCVSensorShapeContractAddSAR_LOOK_SIDE(builder, self.SAR_LOOK_SIDE)
         SCVSensorShapeContract = SCVSensorShapeContractEnd(builder)
         return SCVSensorShapeContract

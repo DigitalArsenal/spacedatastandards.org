@@ -85,6 +85,22 @@ public enum scvSensorShapeKind: UInt8, FlatbuffersVectorInitializable, Enum, Ver
 }
 
 
+///  Side-looking geometry capability of a synthetic-aperture radar (SAR)
+///  sensor relative to the spacecraft velocity vector.
+public enum scvSarLookSide: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case unspecified = 0
+  case left_ = 1
+  case right_ = 2
+  case bilateral = 3
+
+  public static var max: scvSarLookSide { return .bilateral }
+  public static var min: scvSarLookSide { return .unspecified }
+}
+
+
 public enum scvSensorAxisConvention: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = UInt8
   public static var byteSize: Int { return MemoryLayout<UInt8>.size }
@@ -500,6 +516,7 @@ public struct SCVSensorShapeContract: FlatBufferVerifiableTable, FlatbuffersVect
     static let AZ_EL_MASK: VOffset = 36
     static let MAX_ALTITUDE_M: VOffset = 38
     static let ALTITUDE_REFERENCE: VOffset = 40
+    static let SAR_LOOK_SIDE: VOffset = 42
   }
 
   public var SHAPE_KIND: scvSensorShapeKind { let o = _accessor.offset(VT.SHAPE_KIND); return o == 0 ? .conic : scvSensorShapeKind(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .conic }
@@ -528,7 +545,10 @@ public struct SCVSensorShapeContract: FlatBufferVerifiableTable, FlatbuffersVect
   ///  The surface MAX_ALTITUDE_M is measured from. Absent: the standard ellipsoid of the body the sensor is on (WGS84
   ///  on the Earth). SEMI_INTERMEDIATE_M 0 is SEMI_MAJOR_M (an ellipsoid of revolution); a sphere has equal semi-axes.
   public var ALTITUDE_REFERENCE: SCVEllipsoid? { let o = _accessor.offset(VT.ALTITUDE_REFERENCE); return o == 0 ? nil : SCVEllipsoid(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public static func startSCVSensorShapeContract(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 19) }
+  ///  For SAR_ANNULAR_SECTOR: which side(s) of the ground track the sensor can
+  ///  image (LEFT, RIGHT, or BILATERAL when roll/steering supports both sides).
+  public var SAR_LOOK_SIDE: scvSarLookSide { let o = _accessor.offset(VT.SAR_LOOK_SIDE); return o == 0 ? .unspecified : scvSarLookSide(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  public static func startSCVSensorShapeContract(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 20) }
   public static func add(SHAPE_KIND: scvSensorShapeKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHAPE_KIND.rawValue, def: 0, at: VT.SHAPE_KIND) }
   public static func add(AXIS_CONVENTION: scvSensorAxisConvention, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AXIS_CONVENTION.rawValue, def: 0, at: VT.AXIS_CONVENTION) }
   public static func add(RANGE_BOUNDARY: scvSensorRangeBoundaryKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RANGE_BOUNDARY.rawValue, def: 0, at: VT.RANGE_BOUNDARY) }
@@ -548,6 +568,7 @@ public struct SCVSensorShapeContract: FlatBufferVerifiableTable, FlatbuffersVect
   public static func addVectorOf(AZ_EL_MASK: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AZ_EL_MASK, at: VT.AZ_EL_MASK) }
   public static func add(MAX_ALTITUDE_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_ALTITUDE_M, def: 0.0, at: VT.MAX_ALTITUDE_M) }
   public static func add(ALTITUDE_REFERENCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALTITUDE_REFERENCE, at: VT.ALTITUDE_REFERENCE) }
+  public static func add(SAR_LOOK_SIDE: scvSarLookSide, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAR_LOOK_SIDE.rawValue, def: 0, at: VT.SAR_LOOK_SIDE) }
   public static func endSCVSensorShapeContract(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSCVSensorShapeContract(
     _ fbb: inout FlatBufferBuilder,
@@ -569,7 +590,8 @@ public struct SCVSensorShapeContract: FlatBufferVerifiableTable, FlatbuffersVect
     POLYGON_FRAME: scvCoordinateFrame = .unknown,
     AZ_EL_MASKVectorOffset AZ_EL_MASK: Offset = Offset(),
     MAX_ALTITUDE_M: Double = 0.0,
-    ALTITUDE_REFERENCEOffset ALTITUDE_REFERENCE: Offset = Offset()
+    ALTITUDE_REFERENCEOffset ALTITUDE_REFERENCE: Offset = Offset(),
+    SAR_LOOK_SIDE: scvSarLookSide = .unspecified
   ) -> Offset {
     let __start = SCVSensorShapeContract.startSCVSensorShapeContract(&fbb)
     SCVSensorShapeContract.add(SHAPE_KIND: SHAPE_KIND, &fbb)
@@ -591,6 +613,7 @@ public struct SCVSensorShapeContract: FlatBufferVerifiableTable, FlatbuffersVect
     SCVSensorShapeContract.addVectorOf(AZ_EL_MASK: AZ_EL_MASK, &fbb)
     SCVSensorShapeContract.add(MAX_ALTITUDE_M: MAX_ALTITUDE_M, &fbb)
     SCVSensorShapeContract.add(ALTITUDE_REFERENCE: ALTITUDE_REFERENCE, &fbb)
+    SCVSensorShapeContract.add(SAR_LOOK_SIDE: SAR_LOOK_SIDE, &fbb)
     return SCVSensorShapeContract.endSCVSensorShapeContract(&fbb, start: __start)
   }
 
@@ -615,6 +638,7 @@ public struct SCVSensorShapeContract: FlatBufferVerifiableTable, FlatbuffersVect
     try _v.visit(field: VT.AZ_EL_MASK, fieldName: "AZ_EL_MASK", required: false, type: ForwardOffset<Vector<ForwardOffset<SCVAzElMaskPoint>, SCVAzElMaskPoint>>.self)
     try _v.visit(field: VT.MAX_ALTITUDE_M, fieldName: "MAX_ALTITUDE_M", required: false, type: Double.self)
     try _v.visit(field: VT.ALTITUDE_REFERENCE, fieldName: "ALTITUDE_REFERENCE", required: false, type: ForwardOffset<SCVEllipsoid>.self)
+    try _v.visit(field: VT.SAR_LOOK_SIDE, fieldName: "SAR_LOOK_SIDE", required: false, type: scvSarLookSide.self)
     _v.finish()
   }
 }
