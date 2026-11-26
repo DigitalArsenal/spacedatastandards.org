@@ -216,8 +216,37 @@ class CQRObjectSource(object):
             return obj
         return None
 
+    # Optional position sensitivity to a unit dimensionless log-density shift
+    # (dr/ds) in EVALUATION_FRAME, 3 doubles in km. Empty when absent.
+    # CQRObjectSource
+    def DENSITY_SENSITIVITY_KM(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # CQRObjectSource
+    def DENSITY_SENSITIVITY_KMAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # CQRObjectSource
+    def DENSITY_SENSITIVITY_KMLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # CQRObjectSource
+    def DENSITY_SENSITIVITY_KMIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        return o == 0
+
 def CQRObjectSourceStart(builder):
-    builder.StartObject(20)
+    builder.StartObject(21)
 
 def Start(builder):
     CQRObjectSourceStart(builder)
@@ -342,6 +371,28 @@ def CQRObjectSourceAddCATALOG_ENTRY(builder, CATALOG_ENTRY):
 def AddCATALOG_ENTRY(builder, CATALOG_ENTRY):
     CQRObjectSourceAddCATALOG_ENTRY(builder, CATALOG_ENTRY)
 
+def CQRObjectSourceAddDENSITY_SENSITIVITY_KM(builder, DENSITY_SENSITIVITY_KM):
+    builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(DENSITY_SENSITIVITY_KM), 0)
+
+def AddDENSITY_SENSITIVITY_KM(builder, DENSITY_SENSITIVITY_KM):
+    CQRObjectSourceAddDENSITY_SENSITIVITY_KM(builder, DENSITY_SENSITIVITY_KM)
+
+def CQRObjectSourceStartDENSITY_SENSITIVITY_KMVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartDENSITY_SENSITIVITY_KMVector(builder, numElems):
+    return CQRObjectSourceStartDENSITY_SENSITIVITY_KMVector(builder, numElems)
+
+def CQRObjectSourceCreateDENSITY_SENSITIVITY_KMVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateDENSITY_SENSITIVITY_KMVector(builder, data):
+    return CQRObjectSourceCreateDENSITY_SENSITIVITY_KMVector(builder, data)
+
 def CQRObjectSourceEnd(builder):
     return builder.EndObject()
 
@@ -358,7 +409,7 @@ import PRWInstance
 import PRWTleLines
 import TIMInstant
 try:
-    from typing import Optional
+    from typing import List, Optional
 except:
     pass
 
@@ -387,6 +438,7 @@ class CQRObjectSourceT(object):
         HARD_BODY_RADIUS_M = 0.0,
         HAS_HARD_BODY_RADIUS_M = False,
         CATALOG_ENTRY = None,
+        DENSITY_SENSITIVITY_KM = None,
     ):
         self.OBJECT_ID = OBJECT_ID  # type: Optional[str]
         self.OBJECT_NAME = OBJECT_NAME  # type: Optional[str]
@@ -408,6 +460,7 @@ class CQRObjectSourceT(object):
         self.HARD_BODY_RADIUS_M = HARD_BODY_RADIUS_M  # type: float
         self.HAS_HARD_BODY_RADIUS_M = HAS_HARD_BODY_RADIUS_M  # type: bool
         self.CATALOG_ENTRY = CATALOG_ENTRY  # type: Optional[CAT.CATT]
+        self.DENSITY_SENSITIVITY_KM = DENSITY_SENSITIVITY_KM  # type: Optional[List[float]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -459,6 +512,13 @@ class CQRObjectSourceT(object):
         self.HAS_HARD_BODY_RADIUS_M = CQRObjectSource.HAS_HARD_BODY_RADIUS_M()
         if CQRObjectSource.CATALOG_ENTRY() is not None:
             self.CATALOG_ENTRY = CAT.CATT.InitFromObj(CQRObjectSource.CATALOG_ENTRY())
+        if not CQRObjectSource.DENSITY_SENSITIVITY_KMIsNone():
+            if np is None:
+                self.DENSITY_SENSITIVITY_KM = []
+                for i in range(CQRObjectSource.DENSITY_SENSITIVITY_KMLength()):
+                    self.DENSITY_SENSITIVITY_KM.append(CQRObjectSource.DENSITY_SENSITIVITY_KM(i))
+            else:
+                self.DENSITY_SENSITIVITY_KM = CQRObjectSource.DENSITY_SENSITIVITY_KMAsNumpy()
 
     # CQRObjectSourceT
     def Pack(self, builder):
@@ -486,6 +546,14 @@ class CQRObjectSourceT(object):
             SOURCE_EPOCH = self.SOURCE_EPOCH.Pack(builder)
         if self.CATALOG_ENTRY is not None:
             CATALOG_ENTRY = self.CATALOG_ENTRY.Pack(builder)
+        if self.DENSITY_SENSITIVITY_KM is not None:
+            if np is not None and type(self.DENSITY_SENSITIVITY_KM) is np.ndarray:
+                DENSITY_SENSITIVITY_KM = builder.CreateNumpyVector(self.DENSITY_SENSITIVITY_KM)
+            else:
+                CQRObjectSourceStartDENSITY_SENSITIVITY_KMVector(builder, len(self.DENSITY_SENSITIVITY_KM))
+                for i in reversed(range(len(self.DENSITY_SENSITIVITY_KM))):
+                    builder.PrependFloat64(self.DENSITY_SENSITIVITY_KM[i])
+                DENSITY_SENSITIVITY_KM = builder.EndVector()
         CQRObjectSourceStart(builder)
         if self.OBJECT_ID is not None:
             CQRObjectSourceAddOBJECT_ID(builder, OBJECT_ID)
@@ -519,5 +587,7 @@ class CQRObjectSourceT(object):
         CQRObjectSourceAddHAS_HARD_BODY_RADIUS_M(builder, self.HAS_HARD_BODY_RADIUS_M)
         if self.CATALOG_ENTRY is not None:
             CQRObjectSourceAddCATALOG_ENTRY(builder, CATALOG_ENTRY)
+        if self.DENSITY_SENSITIVITY_KM is not None:
+            CQRObjectSourceAddDENSITY_SENSITIVITY_KM(builder, DENSITY_SENSITIVITY_KM)
         CQRObjectSource = CQRObjectSourceEnd(builder)
         return CQRObjectSource

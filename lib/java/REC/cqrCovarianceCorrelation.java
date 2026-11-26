@@ -15,8 +15,13 @@ public final class cqrCovarianceCorrelation {
    * A cross covariance was supplied and used.
    */
   public static final int SUPPLIED_CROSS_COVARIANCE = 2;
+  /**
+   * Cross covariance derived from per-object atmospheric density sensitivity
+   * vectors and a shared log-density uncertainty.
+   */
+  public static final int SHARED_DENSITY_SENSITIVITY = 3;
 
-  public static final String[] names = { "UNSPECIFIED", "INDEPENDENT", "SUPPLIED_CROSS_COVARIANCE", };
+  public static final String[] names = { "UNSPECIFIED", "INDEPENDENT", "SUPPLIED_CROSS_COVARIANCE", "SHARED_DENSITY_SENSITIVITY", };
 
   public static String name(int e) { return names[e]; }
 }

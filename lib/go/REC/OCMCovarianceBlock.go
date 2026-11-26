@@ -336,8 +336,52 @@ func (rcv *OCMCovarianceBlock) CovRealismLength() int {
 
 /// Realism of the block's covariance: one entry per line of LINES, in order,
 /// or one entry for every line.
+/// Optional position sensitivity to a unit dimensionless log-density shift
+/// (dr/ds), flattened 3 doubles per line of LINES in COV_REF_FRAME, km.
+/// Empty when absent.
+func (rcv *OCMCovarianceBlock) DENSITY_SENSITIVITY_KM(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *OCMCovarianceBlock) DensitySensitivityKm(j int) float64 {
+	return rcv.DENSITY_SENSITIVITY_KM(j)
+}
+
+func (rcv *OCMCovarianceBlock) DENSITY_SENSITIVITY_KMLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *OCMCovarianceBlock) DensitySensitivityKmLength() int {
+	return rcv.DENSITY_SENSITIVITY_KMLength()
+}
+
+/// Optional position sensitivity to a unit dimensionless log-density shift
+/// (dr/ds), flattened 3 doubles per line of LINES in COV_REF_FRAME, km.
+/// Empty when absent.
+func (rcv *OCMCovarianceBlock) MutateDENSITY_SENSITIVITY_KM(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+func (rcv *OCMCovarianceBlock) MutateDensitySensitivityKm(j int, n float64) bool {
+	return rcv.MutateDENSITY_SENSITIVITY_KM(j, n)
+}
+
 func OCMCovarianceBlockStart(builder *flatbuffers.Builder) {
-	builder.StartObject(16)
+	builder.StartObject(17)
 }
 func OCMCovarianceBlockAddCOMMENT(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(COMMENT), 0)
@@ -446,6 +490,18 @@ func OCMCovarianceBlockStartCOV_REALISMVector(builder *flatbuffers.Builder, numE
 }
 func OCMCovarianceBlockStartCovRealismVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return OCMCovarianceBlockStartCOV_REALISMVector(builder, numElems)
+}
+func OCMCovarianceBlockAddDENSITY_SENSITIVITY_KM(builder *flatbuffers.Builder, DENSITY_SENSITIVITY_KM flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(DENSITY_SENSITIVITY_KM), 0)
+}
+func OCMCovarianceBlockAddDensitySensitivityKm(builder *flatbuffers.Builder, DENSITY_SENSITIVITY_KM flatbuffers.UOffsetT) {
+	OCMCovarianceBlockAddDENSITY_SENSITIVITY_KM(builder, DENSITY_SENSITIVITY_KM)
+}
+func OCMCovarianceBlockStartDENSITY_SENSITIVITY_KMVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func OCMCovarianceBlockStartDensitySensitivityKmVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return OCMCovarianceBlockStartDENSITY_SENSITIVITY_KMVector(builder, numElems)
 }
 func OCMCovarianceBlockEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

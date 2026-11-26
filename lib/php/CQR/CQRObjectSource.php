@@ -205,22 +205,43 @@ class CQRObjectSource extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// Optional position sensitivity to a unit dimensionless log-density shift
+    /// (dr/ds) in EVALUATION_FRAME, 3 doubles in km. Empty when absent.
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getDENSITY_SENSITIVITY_KM($j)
+    {
+        $o = $this->__offset(44);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDENSITY_SENSITIVITY_KMLength()
+    {
+        $o = $this->__offset(44);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startCQRObjectSource(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(20);
+        $builder->StartObject(21);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return CQRObjectSource
      */
-    public static function createCQRObjectSource(FlatBufferBuilder $builder, $OBJECT_ID, $OBJECT_NAME, $NORAD_CATALOG_ID, $INSTANCE, $SOURCE_HANDLE, $PROPAGATOR_PORT_ID, $MEAN_ELEMENTS, $EPHEMERIS, $COMPREHENSIVE_ORBIT, $POLYNOMIAL_EPHEMERIS, $TLE_LINES, $PROVENANCE, $SOURCE_EPOCH, $PERIGEE_ALTITUDE_M, $HAS_PERIGEE_ALTITUDE_M, $APOGEE_ALTITUDE_M, $HAS_APOGEE_ALTITUDE_M, $HARD_BODY_RADIUS_M, $HAS_HARD_BODY_RADIUS_M, $CATALOG_ENTRY)
+    public static function createCQRObjectSource(FlatBufferBuilder $builder, $OBJECT_ID, $OBJECT_NAME, $NORAD_CATALOG_ID, $INSTANCE, $SOURCE_HANDLE, $PROPAGATOR_PORT_ID, $MEAN_ELEMENTS, $EPHEMERIS, $COMPREHENSIVE_ORBIT, $POLYNOMIAL_EPHEMERIS, $TLE_LINES, $PROVENANCE, $SOURCE_EPOCH, $PERIGEE_ALTITUDE_M, $HAS_PERIGEE_ALTITUDE_M, $APOGEE_ALTITUDE_M, $HAS_APOGEE_ALTITUDE_M, $HARD_BODY_RADIUS_M, $HAS_HARD_BODY_RADIUS_M, $CATALOG_ENTRY, $DENSITY_SENSITIVITY_KM)
     {
-        $builder->startObject(20);
+        $builder->startObject(21);
         self::addOBJECT_ID($builder, $OBJECT_ID);
         self::addOBJECT_NAME($builder, $OBJECT_NAME);
         self::addNORAD_CATALOG_ID($builder, $NORAD_CATALOG_ID);
@@ -241,6 +262,7 @@ class CQRObjectSource extends Table
         self::addHARD_BODY_RADIUS_M($builder, $HARD_BODY_RADIUS_M);
         self::addHAS_HARD_BODY_RADIUS_M($builder, $HAS_HARD_BODY_RADIUS_M);
         self::addCATALOG_ENTRY($builder, $CATALOG_ENTRY);
+        self::addDENSITY_SENSITIVITY_KM($builder, $DENSITY_SENSITIVITY_KM);
         $o = $builder->endObject();
         $builder->required($o, 4);  // OBJECT_ID
         return $o;
@@ -444,6 +466,40 @@ class CQRObjectSource extends Table
     public static function addCATALOG_ENTRY(FlatBufferBuilder $builder, $CATALOG_ENTRY)
     {
         $builder->addOffsetX(19, $CATALOG_ENTRY, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addDENSITY_SENSITIVITY_KM(FlatBufferBuilder $builder, $DENSITY_SENSITIVITY_KM)
+    {
+        $builder->addOffsetX(20, $DENSITY_SENSITIVITY_KM, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createDENSITY_SENSITIVITY_KMVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startDENSITY_SENSITIVITY_KMVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
     }
 
     /**

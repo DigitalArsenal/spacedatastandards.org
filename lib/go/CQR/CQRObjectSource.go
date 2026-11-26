@@ -411,8 +411,50 @@ func (rcv *CQRObjectSource) CatalogEntry(obj *CAT) *CAT {
 
 /// The object's catalog entry. Without a supplied radius, its SIZE, else
 /// its RCS, gives the hard-body radius (see cqrHardBodyRadiusBasis).
+/// Optional position sensitivity to a unit dimensionless log-density shift
+/// (dr/ds) in EVALUATION_FRAME, 3 doubles in km. Empty when absent.
+func (rcv *CQRObjectSource) DENSITY_SENSITIVITY_KM(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *CQRObjectSource) DensitySensitivityKm(j int) float64 {
+	return rcv.DENSITY_SENSITIVITY_KM(j)
+}
+
+func (rcv *CQRObjectSource) DENSITY_SENSITIVITY_KMLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *CQRObjectSource) DensitySensitivityKmLength() int {
+	return rcv.DENSITY_SENSITIVITY_KMLength()
+}
+
+/// Optional position sensitivity to a unit dimensionless log-density shift
+/// (dr/ds) in EVALUATION_FRAME, 3 doubles in km. Empty when absent.
+func (rcv *CQRObjectSource) MutateDENSITY_SENSITIVITY_KM(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+func (rcv *CQRObjectSource) MutateDensitySensitivityKm(j int, n float64) bool {
+	return rcv.MutateDENSITY_SENSITIVITY_KM(j, n)
+}
+
 func CQRObjectSourceStart(builder *flatbuffers.Builder) {
-	builder.StartObject(20)
+	builder.StartObject(21)
 }
 func CQRObjectSourceAddOBJECT_ID(builder *flatbuffers.Builder, OBJECT_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(OBJECT_ID), 0)
@@ -533,6 +575,18 @@ func CQRObjectSourceAddCATALOG_ENTRY(builder *flatbuffers.Builder, CATALOG_ENTRY
 }
 func CQRObjectSourceAddCatalogEntry(builder *flatbuffers.Builder, CATALOG_ENTRY flatbuffers.UOffsetT) {
 	CQRObjectSourceAddCATALOG_ENTRY(builder, CATALOG_ENTRY)
+}
+func CQRObjectSourceAddDENSITY_SENSITIVITY_KM(builder *flatbuffers.Builder, DENSITY_SENSITIVITY_KM flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(20, flatbuffers.UOffsetT(DENSITY_SENSITIVITY_KM), 0)
+}
+func CQRObjectSourceAddDensitySensitivityKm(builder *flatbuffers.Builder, DENSITY_SENSITIVITY_KM flatbuffers.UOffsetT) {
+	CQRObjectSourceAddDENSITY_SENSITIVITY_KM(builder, DENSITY_SENSITIVITY_KM)
+}
+func CQRObjectSourceStartDENSITY_SENSITIVITY_KMVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func CQRObjectSourceStartDensitySensitivityKmVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return CQRObjectSourceStartDENSITY_SENSITIVITY_KMVector(builder, numElems)
 }
 func CQRObjectSourceEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

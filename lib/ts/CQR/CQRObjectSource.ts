@@ -167,8 +167,27 @@ CATALOG_ENTRY(obj?:CAT):CAT|null {
   return offset ? (obj || new CAT()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * Optional position sensitivity to a unit dimensionless log-density shift
+ * (dr/ds) in EVALUATION_FRAME, 3 doubles in km. Empty when absent.
+ */
+DENSITY_SENSITIVITY_KM(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+densitySensitivityKmLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+densitySensitivityKmArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
 static startCQRObjectSource(builder:flatbuffers.Builder) {
-  builder.startObject(20);
+  builder.startObject(21);
 }
 
 static addObjectId(builder:flatbuffers.Builder, OBJECT_IDOffset:flatbuffers.Offset) {
@@ -251,6 +270,27 @@ static addCatalogEntry(builder:flatbuffers.Builder, CATALOG_ENTRYOffset:flatbuff
   builder.addFieldOffset(19, CATALOG_ENTRYOffset, 0);
 }
 
+static addDensitySensitivityKm(builder:flatbuffers.Builder, DENSITY_SENSITIVITY_KMOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(20, DENSITY_SENSITIVITY_KMOffset, 0);
+}
+
+static createDensitySensitivityKmVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createDensitySensitivityKmVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createDensitySensitivityKmVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startDensitySensitivityKmVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
 static endCQRObjectSource(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // OBJECT_ID
@@ -279,7 +319,8 @@ unpack(): CQRObjectSourceT {
     this.HAS_APOGEE_ALTITUDE_M(),
     this.HARD_BODY_RADIUS_M(),
     this.HAS_HARD_BODY_RADIUS_M(),
-    (this.CATALOG_ENTRY() !== null ? this.CATALOG_ENTRY()!.unpack() : null)
+    (this.CATALOG_ENTRY() !== null ? this.CATALOG_ENTRY()!.unpack() : null),
+    this.bb!.createScalarList<number>(this.DENSITY_SENSITIVITY_KM.bind(this), this.densitySensitivityKmLength())
   );
 }
 
@@ -305,6 +346,7 @@ unpackTo(_o: CQRObjectSourceT): void {
   _o.HARD_BODY_RADIUS_M = this.HARD_BODY_RADIUS_M();
   _o.HAS_HARD_BODY_RADIUS_M = this.HAS_HARD_BODY_RADIUS_M();
   _o.CATALOG_ENTRY = (this.CATALOG_ENTRY() !== null ? this.CATALOG_ENTRY()!.unpack() : null);
+  _o.DENSITY_SENSITIVITY_KM = this.bb!.createScalarList<number>(this.DENSITY_SENSITIVITY_KM.bind(this), this.densitySensitivityKmLength());
 }
 }
 
@@ -329,7 +371,8 @@ constructor(
   public HAS_APOGEE_ALTITUDE_M: boolean = false,
   public HARD_BODY_RADIUS_M: number = 0.0,
   public HAS_HARD_BODY_RADIUS_M: boolean = false,
-  public CATALOG_ENTRY: CATT|null = null
+  public CATALOG_ENTRY: CATT|null = null,
+  public DENSITY_SENSITIVITY_KM: (number)[] = []
 ){}
 
 
@@ -346,6 +389,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const PROVENANCE = (this.PROVENANCE !== null ? this.PROVENANCE!.pack(builder) : 0);
   const SOURCE_EPOCH = (this.SOURCE_EPOCH !== null ? this.SOURCE_EPOCH!.pack(builder) : 0);
   const CATALOG_ENTRY = (this.CATALOG_ENTRY !== null ? this.CATALOG_ENTRY!.pack(builder) : 0);
+  const DENSITY_SENSITIVITY_KM = CQRObjectSource.createDensitySensitivityKmVector(builder, this.DENSITY_SENSITIVITY_KM);
 
   CQRObjectSource.startCQRObjectSource(builder);
   CQRObjectSource.addObjectId(builder, OBJECT_ID);
@@ -368,6 +412,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   CQRObjectSource.addHardBodyRadiusM(builder, this.HARD_BODY_RADIUS_M);
   CQRObjectSource.addHasHardBodyRadiusM(builder, this.HAS_HARD_BODY_RADIUS_M);
   CQRObjectSource.addCatalogEntry(builder, CATALOG_ENTRY);
+  CQRObjectSource.addDensitySensitivityKm(builder, DENSITY_SENSITIVITY_KM);
 
   return CQRObjectSource.endCQRObjectSource(builder);
 }

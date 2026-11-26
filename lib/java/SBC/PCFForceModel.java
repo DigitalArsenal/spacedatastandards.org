@@ -135,7 +135,7 @@ public final class PCFForceModel extends com.google.flatbuffers.Table {
   /**
    * Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth
    * orientation (the request's Earth orientation rows) to apply them. Default
-   * NONE.
+   * UNSPECIFIED (the propagator's own default).
    */
   public int SOLID_TIDES() { int o = __offset(48); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
   /**

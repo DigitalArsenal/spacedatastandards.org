@@ -195,22 +195,44 @@ class OCMCovarianceBlock extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Optional position sensitivity to a unit dimensionless log-density shift
+    /// (dr/ds), flattened 3 doubles per line of LINES in COV_REF_FRAME, km.
+    /// Empty when absent.
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getDENSITY_SENSITIVITY_KM($j)
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDENSITY_SENSITIVITY_KMLength()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startOCMCovarianceBlock(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(16);
+        $builder->StartObject(17);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return OCMCovarianceBlock
      */
-    public static function createOCMCovarianceBlock(FlatBufferBuilder $builder, $COMMENT, $COV_ID, $COV_PREV_ID, $COV_NEXT_ID, $COV_BASIS, $COV_BASIS_ID, $COV_REF_FRAME, $COV_FRAME_EPOCH, $COV_SCALE_MIN, $COV_SCALE_MAX, $COV_CONFIDENCE, $COV_TYPE, $COV_ORDERING, $COV_UNITS, $LINES, $COV_REALISM)
+    public static function createOCMCovarianceBlock(FlatBufferBuilder $builder, $COMMENT, $COV_ID, $COV_PREV_ID, $COV_NEXT_ID, $COV_BASIS, $COV_BASIS_ID, $COV_REF_FRAME, $COV_FRAME_EPOCH, $COV_SCALE_MIN, $COV_SCALE_MAX, $COV_CONFIDENCE, $COV_TYPE, $COV_ORDERING, $COV_UNITS, $LINES, $COV_REALISM, $DENSITY_SENSITIVITY_KM)
     {
-        $builder->startObject(16);
+        $builder->startObject(17);
         self::addCOMMENT($builder, $COMMENT);
         self::addCOV_ID($builder, $COV_ID);
         self::addCOV_PREV_ID($builder, $COV_PREV_ID);
@@ -227,6 +249,7 @@ class OCMCovarianceBlock extends Table
         self::addCOV_UNITS($builder, $COV_UNITS);
         self::addLINES($builder, $LINES);
         self::addCOV_REALISM($builder, $COV_REALISM);
+        self::addDENSITY_SENSITIVITY_KM($builder, $DENSITY_SENSITIVITY_KM);
         $o = $builder->endObject();
         return $o;
     }
@@ -437,6 +460,40 @@ class OCMCovarianceBlock extends Table
     public static function startCOV_REALISMVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addDENSITY_SENSITIVITY_KM(FlatBufferBuilder $builder, $DENSITY_SENSITIVITY_KM)
+    {
+        $builder->addOffsetX(16, $DENSITY_SENSITIVITY_KM, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createDENSITY_SENSITIVITY_KMVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startDENSITY_SENSITIVITY_KMVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
     }
 
     /**

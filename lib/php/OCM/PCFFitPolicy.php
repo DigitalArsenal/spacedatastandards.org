@@ -6,8 +6,7 @@ use \Google\FlatBuffers\Table;
 use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
-/// Fit policy: how long an arc a fit uses, how that is validated, and what a
-/// fit refuses.
+/// Optional configuration parameters for orbit estimation.
 class PCFFitPolicy extends Table
 {
     /**
@@ -42,39 +41,37 @@ class PCFFitPolicy extends Table
         return $this;
     }
 
-    /// Fit span used when the span rule is not run, hours. Default 48.
+    /// Optional span parameter in hours; 0 means unspecified.
     /**
      * @return double
      */
     public function getDEFAULT_SPAN_HOURS()
     {
         $o = $this->__offset(4);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 48.0;
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Shortest span a fit may take, hours. Default 24.
+    /// Optional minimum span in hours; 0 means unspecified.
     /**
      * @return double
      */
     public function getMINIMUM_SPAN_HOURS()
     {
         $o = $this->__offset(6);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 24.0;
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Longest span a fit may take, hours. Default 120.
+    /// Optional maximum span in hours; 0 means unspecified.
     /**
      * @return double
      */
     public function getMAXIMUM_SPAN_HOURS()
     {
         $o = $this->__offset(8);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 120.0;
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Spans the extension rule scores, ascending, hours, each within
-    /// [MINIMUM_SPAN_HOURS, MAXIMUM_SPAN_HOURS]. Empty: 48, 72 and 120; with
-    /// 24 in front when the eccentricity exceeds ECCENTRICITY_THRESHOLD.
+    /// Optional candidate span list in hours.
     /**
      * @param int offset
      * @return double
@@ -94,31 +91,27 @@ class PCFFitPolicy extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
-    /// Validation tail: each candidate is fitted to the data before the latest
-    /// TAIL_HOURS and scored on that tail, hours. Default 24.
+    /// Optional evaluation tail length in hours; 0 means unspecified.
     /**
      * @return double
      */
     public function getTAIL_HOURS()
     {
         $o = $this->__offset(12);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 24.0;
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Extension rule: a longer candidate is taken only when its tail error is
-    /// at most this fraction of the best shorter candidate's. Default 0.9.
+    /// Optional relative selection margin; 0 means unspecified.
     /**
      * @return double
      */
     public function getEXTENSION_MARGIN()
     {
         $o = $this->__offset(14);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.9;
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Hours held out at the end of the data and reported as error growth; the
-    /// fit then ends HOLDOUT_HOURS before the data does. Absent, the data
-    /// block's own useable stop time decides.
+    /// Optional holdout window length in hours.
     /**
      * @return double
      */
@@ -128,7 +121,7 @@ class PCFFitPolicy extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// True when HOLDOUT_HOURS carries a value; false means absent.
+    /// True when HOLDOUT_HOURS is explicitly provided.
     /**
      * @return bool
      */
@@ -138,60 +131,57 @@ class PCFFitPolicy extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
-    /// Eccentricity above which the eccentric-orbit rule applies. Default 0.5.
+    /// Optional eccentricity threshold; 0 means unspecified.
     /**
      * @return double
      */
     public function getECCENTRICITY_THRESHOLD()
     {
         $o = $this->__offset(20);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.5;
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Eccentric orbits: the default span, hours. Default 24.
+    /// Optional eccentric-orbit span in hours; 0 means unspecified.
     /**
      * @return double
      */
     public function getECCENTRIC_DEFAULT_SPAN_HOURS()
     {
         $o = $this->__offset(22);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 24.0;
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Eccentric orbits: EXTENSION_MARGIN. Default 0.7.
+    /// Optional eccentric-orbit relative margin; 0 means unspecified.
     /**
      * @return double
      */
     public function getECCENTRIC_EXTENSION_MARGIN()
     {
         $o = $this->__offset(24);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.7;
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Eccentric orbits: no candidate longer than this is tried once the orbital
-    /// period passes it, hours. Default 36.
+    /// Optional eccentric-orbit period bound in hours; 0 means unspecified.
     /**
      * @return double
      */
     public function getECCENTRIC_MAXIMUM_PERIOD_HOURS()
     {
         $o = $this->__offset(26);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 36.0;
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// A fit whose RMS passes this is refused as fit-implausible, km. Default
-    /// 100.
+    /// Optional maximum acceptable RMS in km; 0 means unspecified.
     /**
      * @return double
      */
     public function getIMPLAUSIBLE_RMS_KM()
     {
         $o = $this->__offset(28);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 100.0;
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent
-    /// or without sigma: mean 0, sigma 0.05.
+    /// Optional prior on drag parameter.
     public function getDRAG_PRIOR()
     {
         $obj = new PCFGaussianPrior();
@@ -199,8 +189,7 @@ class PCFFitPolicy extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
-    /// Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.
-    /// Absent or without sigma: mean 0, sigma 0.05.
+    /// Optional prior on solar radiation pressure parameter.
     public function getSRP_PRIOR()
     {
         $obj = new PCFGaussianPrior();
@@ -208,10 +197,7 @@ class PCFFitPolicy extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
-    /// The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
-    /// estimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its
-    /// MEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation
-    /// of ln B_eff.
+    /// Optional distribution form for DRAG_PRIOR.
     /**
      * @return byte
      */
@@ -221,10 +207,7 @@ class PCFFitPolicy extends Table
         return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \pcfPriorForm::GAUSSIAN_SIGNED;
     }
 
-    /// The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
-    /// estimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN
-    /// the median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of
-    /// ln AGOM.
+    /// Optional distribution form for SRP_PRIOR.
     /**
      * @return byte
      */
@@ -234,19 +217,14 @@ class PCFFitPolicy extends Table
         return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \pcfPriorForm::GAUSSIAN_SIGNED;
     }
 
-    /// Days past the element set's epoch day through which the fit writes the
-    /// daily space weather into the record it emits (OCM
-    /// PERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows
-    /// (WEATHER_SOURCE RECORDS). The last day written is the later of the fit
-    /// arc's last day and the epoch's day plus this count; rows supplied with
-    /// the request must reach it, or the fit is refused by name. Default 30.
+    /// Optional space-weather horizon in days past epoch; 0 means unspecified.
     /**
      * @return ushort
      */
     public function getWEATHER_HORIZON_DAYS()
     {
         $o = $this->__offset(38);
-        return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 30;
+        return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 0;
     }
 
     /**
@@ -294,7 +272,7 @@ class PCFFitPolicy extends Table
      */
     public static function addDEFAULT_SPAN_HOURS(FlatBufferBuilder $builder, $DEFAULT_SPAN_HOURS)
     {
-        $builder->addDoubleX(0, $DEFAULT_SPAN_HOURS, 48.0);
+        $builder->addDoubleX(0, $DEFAULT_SPAN_HOURS, 0.0);
     }
 
     /**
@@ -304,7 +282,7 @@ class PCFFitPolicy extends Table
      */
     public static function addMINIMUM_SPAN_HOURS(FlatBufferBuilder $builder, $MINIMUM_SPAN_HOURS)
     {
-        $builder->addDoubleX(1, $MINIMUM_SPAN_HOURS, 24.0);
+        $builder->addDoubleX(1, $MINIMUM_SPAN_HOURS, 0.0);
     }
 
     /**
@@ -314,7 +292,7 @@ class PCFFitPolicy extends Table
      */
     public static function addMAXIMUM_SPAN_HOURS(FlatBufferBuilder $builder, $MAXIMUM_SPAN_HOURS)
     {
-        $builder->addDoubleX(2, $MAXIMUM_SPAN_HOURS, 120.0);
+        $builder->addDoubleX(2, $MAXIMUM_SPAN_HOURS, 0.0);
     }
 
     /**
@@ -358,7 +336,7 @@ class PCFFitPolicy extends Table
      */
     public static function addTAIL_HOURS(FlatBufferBuilder $builder, $TAIL_HOURS)
     {
-        $builder->addDoubleX(4, $TAIL_HOURS, 24.0);
+        $builder->addDoubleX(4, $TAIL_HOURS, 0.0);
     }
 
     /**
@@ -368,7 +346,7 @@ class PCFFitPolicy extends Table
      */
     public static function addEXTENSION_MARGIN(FlatBufferBuilder $builder, $EXTENSION_MARGIN)
     {
-        $builder->addDoubleX(5, $EXTENSION_MARGIN, 0.9);
+        $builder->addDoubleX(5, $EXTENSION_MARGIN, 0.0);
     }
 
     /**
@@ -398,7 +376,7 @@ class PCFFitPolicy extends Table
      */
     public static function addECCENTRICITY_THRESHOLD(FlatBufferBuilder $builder, $ECCENTRICITY_THRESHOLD)
     {
-        $builder->addDoubleX(8, $ECCENTRICITY_THRESHOLD, 0.5);
+        $builder->addDoubleX(8, $ECCENTRICITY_THRESHOLD, 0.0);
     }
 
     /**
@@ -408,7 +386,7 @@ class PCFFitPolicy extends Table
      */
     public static function addECCENTRIC_DEFAULT_SPAN_HOURS(FlatBufferBuilder $builder, $ECCENTRIC_DEFAULT_SPAN_HOURS)
     {
-        $builder->addDoubleX(9, $ECCENTRIC_DEFAULT_SPAN_HOURS, 24.0);
+        $builder->addDoubleX(9, $ECCENTRIC_DEFAULT_SPAN_HOURS, 0.0);
     }
 
     /**
@@ -418,7 +396,7 @@ class PCFFitPolicy extends Table
      */
     public static function addECCENTRIC_EXTENSION_MARGIN(FlatBufferBuilder $builder, $ECCENTRIC_EXTENSION_MARGIN)
     {
-        $builder->addDoubleX(10, $ECCENTRIC_EXTENSION_MARGIN, 0.7);
+        $builder->addDoubleX(10, $ECCENTRIC_EXTENSION_MARGIN, 0.0);
     }
 
     /**
@@ -428,7 +406,7 @@ class PCFFitPolicy extends Table
      */
     public static function addECCENTRIC_MAXIMUM_PERIOD_HOURS(FlatBufferBuilder $builder, $ECCENTRIC_MAXIMUM_PERIOD_HOURS)
     {
-        $builder->addDoubleX(11, $ECCENTRIC_MAXIMUM_PERIOD_HOURS, 36.0);
+        $builder->addDoubleX(11, $ECCENTRIC_MAXIMUM_PERIOD_HOURS, 0.0);
     }
 
     /**
@@ -438,7 +416,7 @@ class PCFFitPolicy extends Table
      */
     public static function addIMPLAUSIBLE_RMS_KM(FlatBufferBuilder $builder, $IMPLAUSIBLE_RMS_KM)
     {
-        $builder->addDoubleX(12, $IMPLAUSIBLE_RMS_KM, 100.0);
+        $builder->addDoubleX(12, $IMPLAUSIBLE_RMS_KM, 0.0);
     }
 
     /**
@@ -488,7 +466,7 @@ class PCFFitPolicy extends Table
      */
     public static function addWEATHER_HORIZON_DAYS(FlatBufferBuilder $builder, $WEATHER_HORIZON_DAYS)
     {
-        $builder->addUshortX(17, $WEATHER_HORIZON_DAYS, 30);
+        $builder->addUshortX(17, $WEATHER_HORIZON_DAYS, 0);
     }
 
     /**

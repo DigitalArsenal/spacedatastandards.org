@@ -208,6 +208,24 @@ class CQRObjectSource : Table() {
             null
         }
     }
+    /**
+     * Optional position sensitivity to a unit dimensionless log-density shift
+     * (dr/ds) in EVALUATION_FRAME, 3 doubles in km. Empty when absent.
+     */
+    fun densitySensitivityKm(j: Int) : Double {
+        val o = __offset(44)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val densitySensitivityKmLength : Int
+        get() {
+            val o = __offset(44); return if (o != 0) __vector_len(o) else 0
+        }
+    val densitySensitivityKmAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(44, 8)
+    fun densitySensitivityKmInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 44, 8)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCQRObjectSource(_bb: ByteBuffer): CQRObjectSource = getRootAsCQRObjectSource(_bb, CQRObjectSource())
@@ -215,11 +233,12 @@ class CQRObjectSource : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCQRObjectSource(builder: FlatBufferBuilder, objectIdOffset: Int, objectNameOffset: Int, noradCatalogId: UInt, instanceOffset: Int, sourceHandle: UInt, propagatorPortIdOffset: Int, meanElementsOffset: Int, ephemerisOffset: Int, comprehensiveOrbitOffset: Int, polynomialEphemerisOffset: Int, tleLinesOffset: Int, provenanceOffset: Int, sourceEpochOffset: Int, perigeeAltitudeM: Double, hasPerigeeAltitudeM: Boolean, apogeeAltitudeM: Double, hasApogeeAltitudeM: Boolean, hardBodyRadiusM: Double, hasHardBodyRadiusM: Boolean, catalogEntryOffset: Int) : Int {
-            builder.startTable(20)
+        fun createCQRObjectSource(builder: FlatBufferBuilder, objectIdOffset: Int, objectNameOffset: Int, noradCatalogId: UInt, instanceOffset: Int, sourceHandle: UInt, propagatorPortIdOffset: Int, meanElementsOffset: Int, ephemerisOffset: Int, comprehensiveOrbitOffset: Int, polynomialEphemerisOffset: Int, tleLinesOffset: Int, provenanceOffset: Int, sourceEpochOffset: Int, perigeeAltitudeM: Double, hasPerigeeAltitudeM: Boolean, apogeeAltitudeM: Double, hasApogeeAltitudeM: Boolean, hardBodyRadiusM: Double, hasHardBodyRadiusM: Boolean, catalogEntryOffset: Int, densitySensitivityKmOffset: Int) : Int {
+            builder.startTable(21)
             addHARDBODYRADIUSM(builder, hardBodyRadiusM)
             addAPOGEEALTITUDEM(builder, apogeeAltitudeM)
             addPERIGEEALTITUDEM(builder, perigeeAltitudeM)
+            addDENSITYSENSITIVITYKM(builder, densitySensitivityKmOffset)
             addCATALOGENTRY(builder, catalogEntryOffset)
             addSOURCEEPOCH(builder, sourceEpochOffset)
             addPROVENANCE(builder, provenanceOffset)
@@ -239,7 +258,7 @@ class CQRObjectSource : Table() {
             addHASPERIGEEALTITUDEM(builder, hasPerigeeAltitudeM)
             return endCQRObjectSource(builder)
         }
-        fun startCQRObjectSource(builder: FlatBufferBuilder) = builder.startTable(20)
+        fun startCQRObjectSource(builder: FlatBufferBuilder) = builder.startTable(21)
         fun addOBJECTID(builder: FlatBufferBuilder, objectId: Int) = builder.addOffset(0, objectId, 0)
         fun addOBJECTNAME(builder: FlatBufferBuilder, objectName: Int) = builder.addOffset(1, objectName, 0)
         fun addNORADCATALOGID(builder: FlatBufferBuilder, noradCatalogId: UInt) = builder.addInt(2, noradCatalogId.toInt(), 0)
@@ -260,6 +279,15 @@ class CQRObjectSource : Table() {
         fun addHARDBODYRADIUSM(builder: FlatBufferBuilder, hardBodyRadiusM: Double) = builder.addDouble(17, hardBodyRadiusM, 0.0)
         fun addHASHARDBODYRADIUSM(builder: FlatBufferBuilder, hasHardBodyRadiusM: Boolean) = builder.addBoolean(18, hasHardBodyRadiusM, false)
         fun addCATALOGENTRY(builder: FlatBufferBuilder, catalogEntry: Int) = builder.addOffset(19, catalogEntry, 0)
+        fun addDENSITYSENSITIVITYKM(builder: FlatBufferBuilder, densitySensitivityKm: Int) = builder.addOffset(20, densitySensitivityKm, 0)
+        fun createDensitySensitivityKmVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startDensitySensitivityKmVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
         fun endCQRObjectSource(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

@@ -277,14 +277,14 @@ class PCFForceModel extends Table
 
     /// Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth
     /// orientation (the request's Earth orientation rows) to apply them. Default
-    /// NONE.
+    /// UNSPECIFIED (the propagator's own default).
     /**
      * @return byte
      */
     public function getSOLID_TIDES()
     {
         $o = $this->__offset(48);
-        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \pcfSolidTideModel::NONE;
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \pcfSolidTideModel::UNSPECIFIED;
     }
 
     /// Post-Newtonian terms. Default NONE.

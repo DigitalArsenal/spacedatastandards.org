@@ -31,11 +31,11 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.297.0+1795704353889",
+  version: "1.299.0+1795712678827",
   STANDARDS: {
     PCF: {
-      IDL: `// Hash: e259db0e1e4887f3ca3d15f7819bd8fbac894d2e251c81328b3c79a61b9e4060
-// Version: 1.0.9
+      IDL: `// Hash: 58396ab63fe33b2405c946f37774d457858d3b791a556e04cec3b67e62fb0cd8
+// Version: 1.0.11
 // -----------------------------------END_HEADER
 include "../FRM/main.fbs";
 include "../TIM/main.fbs";
@@ -363,15 +363,16 @@ enum pcfAtmosphereFamily : ubyte {
   JACCHIA70 = 8
 }
 
-/// Solid Earth tide model for the central body's field. NONE leaves the
-/// tides out. IERS_2010 is IERS Conventions (2010) section 6.2: the degree 2
-/// and 3 tides raised by the Sun and Moon with Table 6.3's anelastic Love
-/// numbers and the degree 4 terms through k+ (step 1, eqs. 6.6-6.7), the
-/// frequency-dependent corrections of Tables 6.5a-c (step 2, eq. 6.8), and
-/// the permanent tide handled for the field's own tide system. Pole tide is
-/// not included.
+/// Solid Earth tide model for the central body's field. UNSPECIFIED uses the
+/// propagator's own default (IERS 2010 when supported). NONE disables solid
+/// Earth tides explicitly. IERS_2010 is IERS Conventions (2010) section 6.2:
+/// degree 2 and 3 tides raised by the Sun and Moon with Table 6.3's anelastic
+/// Love numbers, degree 4 terms through k+ (step 1, eqs. 6.6-6.7),
+/// frequency-dependent corrections of Tables 6.5a-c (step 2, eq. 6.8), and the
+/// permanent tide handled for the field's own tide system. Pole tide is not
+/// included.
 enum pcfSolidTideModel : ubyte {
-  NONE = 0, IERS_2010 = 1
+  UNSPECIFIED = 0, NONE = 1, IERS_2010 = 2
 }
 
 /// Post-Newtonian corrections to the central body's acceleration (IERS
@@ -408,90 +409,62 @@ enum pcfOceanTideModel : ubyte { NONE = 0, FES2004 = 1 }
 /// GNSS spacecraft block, selecting the box-wing surfaces.
 enum pcfGnssSpacecraftBlock : ubyte { UNSPECIFIED = 0, GPS_IIR = 1, GPS_IIR_M = 2, GPS_IIF = 3 }
 
-/// The form of a fitted parameter's prior (PCFFitPolicy DRAG_PRIOR_FORM and
-/// SRP_PRIOR_FORM). Append new values only.
+/// Prior distribution form for an optional parameter constraint.
 enum pcfPriorForm : ubyte {
-  /// Gaussian on the parameter itself, which may take either sign (the
-  /// default): the prior's MEAN and SIGMA are in the parameter's unit.
+  /// Gaussian distribution on the parameter value.
   GAUSSIAN_SIGNED = 0,
-  /// Log-normal: the fit estimates the natural log of the parameter, so the
-  /// parameter is never <= 0. The prior's MEAN is the median, in the
-  /// parameter's unit, and must be > 0; its SIGMA is the standard deviation of
-  /// the natural log of the parameter. The prior is required (HAS_SIGMA true).
+  /// Log-normal distribution on a positive parameter value.
   LOG_NORMAL = 1
 }
 
-/// A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps
-/// the theory's own sigma and moves only the mean.
+/// Optional Gaussian parameter prior.
 table PCFGaussianPrior {
-  /// Prior mean, in the unit of the parameter it is attached to. Default 0.
+  /// Prior mean in the parameter's unit.
   MEAN:double = 0;
-  /// Prior standard deviation, in the same unit; > 0 when HAS_SIGMA.
+  /// Prior standard deviation in the parameter's unit; > 0 when HAS_SIGMA is true.
   SIGMA:double = 0;
-  /// True when SIGMA carries a value; false keeps the theory's own sigma.
+  /// True when SIGMA is explicitly provided.
   HAS_SIGMA:bool = false;
 }
 
-/// Fit policy: how long an arc a fit uses, how that is validated, and what a
-/// fit refuses.
+/// Optional configuration parameters for orbit estimation.
 table PCFFitPolicy {
-  /// Fit span used when the span rule is not run, hours. Default 48.
-  DEFAULT_SPAN_HOURS:double = 48;
-  /// Shortest span a fit may take, hours. Default 24.
-  MINIMUM_SPAN_HOURS:double = 24;
-  /// Longest span a fit may take, hours. Default 120.
-  MAXIMUM_SPAN_HOURS:double = 120;
-  /// Spans the extension rule scores, ascending, hours, each within
-  /// [MINIMUM_SPAN_HOURS, MAXIMUM_SPAN_HOURS]. Empty: 48, 72 and 120; with
-  /// 24 in front when the eccentricity exceeds ECCENTRICITY_THRESHOLD.
+  /// Optional span parameter in hours; 0 means unspecified.
+  DEFAULT_SPAN_HOURS:double = 0;
+  /// Optional minimum span in hours; 0 means unspecified.
+  MINIMUM_SPAN_HOURS:double = 0;
+  /// Optional maximum span in hours; 0 means unspecified.
+  MAXIMUM_SPAN_HOURS:double = 0;
+  /// Optional candidate span list in hours.
   CANDIDATE_SPANS_HOURS:[double];
-  /// Validation tail: each candidate is fitted to the data before the latest
-  /// TAIL_HOURS and scored on that tail, hours. Default 24.
-  TAIL_HOURS:double = 24;
-  /// Extension rule: a longer candidate is taken only when its tail error is
-  /// at most this fraction of the best shorter candidate's. Default 0.9.
-  EXTENSION_MARGIN:double = 0.9;
-  /// Hours held out at the end of the data and reported as error growth; the
-  /// fit then ends HOLDOUT_HOURS before the data does. Absent, the data
-  /// block's own useable stop time decides.
+  /// Optional evaluation tail length in hours; 0 means unspecified.
+  TAIL_HOURS:double = 0;
+  /// Optional relative selection margin; 0 means unspecified.
+  EXTENSION_MARGIN:double = 0;
+  /// Optional holdout window length in hours.
   HOLDOUT_HOURS:double = 0;
-  /// True when HOLDOUT_HOURS carries a value; false means absent.
+  /// True when HOLDOUT_HOURS is explicitly provided.
   HAS_HOLDOUT_HOURS:bool = false;
-  /// Eccentricity above which the eccentric-orbit rule applies. Default 0.5.
-  ECCENTRICITY_THRESHOLD:double = 0.5;
-  /// Eccentric orbits: the default span, hours. Default 24.
-  ECCENTRIC_DEFAULT_SPAN_HOURS:double = 24;
-  /// Eccentric orbits: EXTENSION_MARGIN. Default 0.7.
-  ECCENTRIC_EXTENSION_MARGIN:double = 0.7;
-  /// Eccentric orbits: no candidate longer than this is tried once the orbital
-  /// period passes it, hours. Default 36.
-  ECCENTRIC_MAXIMUM_PERIOD_HOURS:double = 36;
-  /// A fit whose RMS passes this is refused as fit-implausible, km. Default
-  /// 100.
-  IMPLAUSIBLE_RMS_KM:double = 100;
-  /// Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent
-  /// or without sigma: mean 0, sigma 0.05.
+  /// Optional eccentricity threshold; 0 means unspecified.
+  ECCENTRICITY_THRESHOLD:double = 0;
+  /// Optional eccentric-orbit span in hours; 0 means unspecified.
+  ECCENTRIC_DEFAULT_SPAN_HOURS:double = 0;
+  /// Optional eccentric-orbit relative margin; 0 means unspecified.
+  ECCENTRIC_EXTENSION_MARGIN:double = 0;
+  /// Optional eccentric-orbit period bound in hours; 0 means unspecified.
+  ECCENTRIC_MAXIMUM_PERIOD_HOURS:double = 0;
+  /// Optional maximum acceptable RMS in km; 0 means unspecified.
+  IMPLAUSIBLE_RMS_KM:double = 0;
+  /// Optional prior on drag parameter.
   DRAG_PRIOR:PCFGaussianPrior;
-  /// Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.
-  /// Absent or without sigma: mean 0, sigma 0.05.
+  /// Optional prior on solar radiation pressure parameter.
   SRP_PRIOR:PCFGaussianPrior;
-  /// The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
-  /// estimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its
-  /// MEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation
-  /// of ln B_eff.
+  /// Optional distribution form for DRAG_PRIOR.
   DRAG_PRIOR_FORM:pcfPriorForm = GAUSSIAN_SIGNED;
-  /// The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
-  /// estimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN
-  /// the median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of
-  /// ln AGOM.
+  /// Optional distribution form for SRP_PRIOR.
   SRP_PRIOR_FORM:pcfPriorForm = GAUSSIAN_SIGNED;
-  /// Days past the element set's epoch day through which the fit writes the
-  /// daily space weather into the record it emits (OCM
-  /// PERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows
-  /// (WEATHER_SOURCE RECORDS). The last day written is the later of the fit
-  /// arc's last day and the epoch's day plus this count; rows supplied with
-  /// the request must reach it, or the fit is refused by name. Default 30.
-  WEATHER_HORIZON_DAYS:ushort = 30;
+  /// Optional space-weather horizon in days past epoch; 0 means unspecified.
+  WEATHER_HORIZON_DAYS:ushort = 0;
 }
 
 /// One term of an expression program.
@@ -671,8 +644,8 @@ table PCFForceModel {
   EPHEMERIS_SOURCE:string (required);
   /// Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth
   /// orientation (the request's Earth orientation rows) to apply them. Default
-  /// NONE.
-  SOLID_TIDES:pcfSolidTideModel = NONE;
+  /// UNSPECIFIED (the propagator's own default).
+  SOLID_TIDES:pcfSolidTideModel = UNSPECIFIED;
   /// Post-Newtonian terms. Default NONE.
   RELATIVITY:pcfRelativityTerms = NONE;
   /// Constant acceleration along the in-track axis, m/s2: T of RTN,
@@ -26378,8 +26351,8 @@ file_identifier "$DAV";`,
       ]
     },
     CQR: {
-      IDL: `// Hash: 57fb9c0f02106deb779ad0477585c0f1c34573724c8fadeeb654696918ceaf35
-// Version: 1.219.4
+      IDL: `// Hash: 96539c8a59b644b6288ba9cdaaafdd2980491f1a9cb19dd90b66a547ce9cb062
+// Version: 1.219.6
 // -----------------------------------END_HEADER
 include "../PRW/main.fbs";
 include "../OMM/main.fbs";
@@ -26446,7 +26419,10 @@ enum cqrCovarianceCorrelation : ubyte {
   /// Independent errors: the combined covariance is the sum of the two.
   INDEPENDENT = 1,
   /// A cross covariance was supplied and used.
-  SUPPLIED_CROSS_COVARIANCE = 2
+  SUPPLIED_CROSS_COVARIANCE = 2,
+  /// Cross covariance derived from per-object atmospheric density sensitivity
+  /// vectors and a shared log-density uncertainty.
+  SHARED_DENSITY_SENSITIVITY = 3
 }
 enum cqrDocumentSyntax : ubyte {
   UNSPECIFIED = 0, CCSDS_CDM_KVN = 1, CCSDS_CDM_XML = 2
@@ -26511,6 +26487,9 @@ table CQRObjectSource {
   /// The object's catalog entry. Without a supplied radius, its SIZE, else
   /// its RCS, gives the hard-body radius (see cqrHardBodyRadiusBasis).
   CATALOG_ENTRY:CAT;
+  /// Optional position sensitivity to a unit dimensionless log-density shift
+  /// (dr/ds) in EVALUATION_FRAME, 3 doubles in km. Empty when absent.
+  DENSITY_SENSITIVITY_KM:[double];
 }
 
 /// On-orbit screening geometry; dimensions are metres.
@@ -26573,6 +26552,11 @@ table CQRScreeningControls {
   /// Builds whose AP covariance a collision probability may use. An empty or
   /// absent list means no collision probability from AP covariance.
   VERIFIED_COVARIANCE_PRODUCERS:[CQRVerifiedCovarianceProducer];
+  /// When true and DENSITY_LOG_SIGMA > 0 with both objects supplying
+  /// DENSITY_SENSITIVITY_KM, apply common-mode density cross-covariance.
+  APPLY_DENSITY_CROSS_CORRELATION:bool = false;
+  /// Dimensionless 1-sigma common-mode log-density uncertainty (sigma_s); 0 disables.
+  DENSITY_LOG_SIGMA:double = 0;
 }
 
 /// CONTROLS.COMBINED_RADIUS_M must equal PRIMARY_RADIUS_M + SECONDARY_RADIUS_M.
@@ -30812,8 +30796,8 @@ file_identifier "$TDM";`,
       ]
     },
     OCM: {
-      IDL: `// Hash: a7daf548117e22885027989c8374bf329dfdbae3b547f99a45c1cccca02dafa4
-// Version: 2.1.11
+      IDL: `// Hash: c3608998c28dee9d32b9b40c21224f7e46c2caa7303a408ca751eeccd13956a1
+// Version: 2.1.13
 // -----------------------------------END_HEADER
 include "../ATM/main.fbs";
 include "../CVR/main.fbs";
@@ -31516,7 +31500,7 @@ table OCMHeldOutDay {
 /// Position statistics of an element set fitted to a reference ephemeris, km. SDS addition:
 /// CCSDS 502.0-B-3 WEIGHTED_RMS and OD_RESIDUAL_RMS state no position unit.
 table OCMFitStatistics {
-  /// Reference states fitted.
+  /// Reference states reported; 0 means not stated.
   FIT_STATES: uint;
   /// Position RMS over the fit arc, km.
   FIT_RMS_KM: double = nan;
@@ -31527,9 +31511,9 @@ table OCMFitStatistics {
   FIT_RADIAL_RMS_KM: double = nan;
   FIT_IN_TRACK_RMS_KM: double = nan;
   FIT_CROSS_TRACK_RMS_KM: double = nan;
-  /// Iterations the fit took.
+  /// Iterations reported; 0 means not stated.
   ITERATIONS: uint;
-  /// True when the fit converged.
+  /// True when converged.
   CONVERGED: bool = false;
   /// End of the held-out window (ISO 8601 UTC); empty without one.
   HELD_OUT_STOP: string;
@@ -31539,7 +31523,7 @@ table OCMFitStatistics {
   HELD_OUT_MAX_KM: double = nan;
   /// The held-out error by day after the fit arc.
   HELD_OUT_DAYS: [OCMHeldOutDay];
-  /// CID of the $PCF the fit ran under: its span rule, priors and holdout.
+  /// CID of the $PCF configuration associated with the record.
   PCF_CID: string;
   /// First epoch of the fit arc (ISO 8601 UTC).
   FIT_START: string;
@@ -31955,6 +31939,10 @@ table OCMCovarianceBlock {
   /// Realism of the block's covariance: one entry per line of LINES, in order,
   /// or one entry for every line.
   COV_REALISM: [CVR];
+  /// Optional position sensitivity to a unit dimensionless log-density shift
+  /// (dr/ds), flattened 3 doubles per line of LINES in COV_REF_FRAME, km.
+  /// Empty when absent.
+  DENSITY_SENSITIVITY_KM: [double];
 }
 
 table UserDefinedParameters {
@@ -37328,6 +37316,7 @@ var json_default = {
         pcfSolidTideModel: {
           type: "string",
           enum: [
+            "UNSPECIFIED",
             "NONE",
             "IERS_2010"
           ]
@@ -39030,103 +39019,103 @@ var json_default = {
         },
         PCFGaussianPrior: {
           type: "object",
-          description: "A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps\nthe theory's own sigma and moves only the mean.",
+          description: "Optional Gaussian parameter prior.",
           properties: {
             MEAN: {
               type: "number",
-              description: "Prior mean, in the unit of the parameter it is attached to. Default 0."
+              description: "Prior mean in the parameter's unit."
             },
             SIGMA: {
               type: "number",
-              description: "Prior standard deviation, in the same unit; > 0 when HAS_SIGMA."
+              description: "Prior standard deviation in the parameter's unit; > 0 when HAS_SIGMA is true."
             },
             HAS_SIGMA: {
               type: "boolean",
-              description: "True when SIGMA carries a value; false keeps the theory's own sigma."
+              description: "True when SIGMA is explicitly provided."
             }
           },
           additionalProperties: false
         },
         PCFFitPolicy: {
           type: "object",
-          description: "Fit policy: how long an arc a fit uses, how that is validated, and what a\nfit refuses.",
+          description: "Optional configuration parameters for orbit estimation.",
           properties: {
             DEFAULT_SPAN_HOURS: {
               type: "number",
-              description: "Fit span used when the span rule is not run, hours. Default 48."
+              description: "Optional span parameter in hours; 0 means unspecified."
             },
             MINIMUM_SPAN_HOURS: {
               type: "number",
-              description: "Shortest span a fit may take, hours. Default 24."
+              description: "Optional minimum span in hours; 0 means unspecified."
             },
             MAXIMUM_SPAN_HOURS: {
               type: "number",
-              description: "Longest span a fit may take, hours. Default 120."
+              description: "Optional maximum span in hours; 0 means unspecified."
             },
             CANDIDATE_SPANS_HOURS: {
               type: "array",
               items: {
                 type: "number"
               },
-              description: "Spans the extension rule scores, ascending, hours, each within\n[MINIMUM_SPAN_HOURS, MAXIMUM_SPAN_HOURS]. Empty: 48, 72 and 120; with\n24 in front when the eccentricity exceeds ECCENTRICITY_THRESHOLD."
+              description: "Optional candidate span list in hours."
             },
             TAIL_HOURS: {
               type: "number",
-              description: "Validation tail: each candidate is fitted to the data before the latest\nTAIL_HOURS and scored on that tail, hours. Default 24."
+              description: "Optional evaluation tail length in hours; 0 means unspecified."
             },
             EXTENSION_MARGIN: {
               type: "number",
-              description: "Extension rule: a longer candidate is taken only when its tail error is\nat most this fraction of the best shorter candidate's. Default 0.9."
+              description: "Optional relative selection margin; 0 means unspecified."
             },
             HOLDOUT_HOURS: {
               type: "number",
-              description: "Hours held out at the end of the data and reported as error growth; the\nfit then ends HOLDOUT_HOURS before the data does. Absent, the data\nblock's own useable stop time decides."
+              description: "Optional holdout window length in hours."
             },
             HAS_HOLDOUT_HOURS: {
               type: "boolean",
-              description: "True when HOLDOUT_HOURS carries a value; false means absent."
+              description: "True when HOLDOUT_HOURS is explicitly provided."
             },
             ECCENTRICITY_THRESHOLD: {
               type: "number",
-              description: "Eccentricity above which the eccentric-orbit rule applies. Default 0.5."
+              description: "Optional eccentricity threshold; 0 means unspecified."
             },
             ECCENTRIC_DEFAULT_SPAN_HOURS: {
               type: "number",
-              description: "Eccentric orbits: the default span, hours. Default 24."
+              description: "Optional eccentric-orbit span in hours; 0 means unspecified."
             },
             ECCENTRIC_EXTENSION_MARGIN: {
               type: "number",
-              description: "Eccentric orbits: EXTENSION_MARGIN. Default 0.7."
+              description: "Optional eccentric-orbit relative margin; 0 means unspecified."
             },
             ECCENTRIC_MAXIMUM_PERIOD_HOURS: {
               type: "number",
-              description: "Eccentric orbits: no candidate longer than this is tried once the orbital\nperiod passes it, hours. Default 36."
+              description: "Optional eccentric-orbit period bound in hours; 0 means unspecified."
             },
             IMPLAUSIBLE_RMS_KM: {
               type: "number",
-              description: "A fit whose RMS passes this is refused as fit-implausible, km. Default\n100."
+              description: "Optional maximum acceptable RMS in km; 0 means unspecified."
             },
             DRAG_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0, sigma 0.05."
+              description: "Optional prior on drag parameter."
             },
             SRP_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.\nAbsent or without sigma: mean 0, sigma 0.05."
+              description: "Optional prior on solar radiation pressure parameter."
             },
             DRAG_PRIOR_FORM: {
               $ref: "#/definitions/pcfPriorForm",
-              description: "The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its\nMEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation\nof ln B_eff."
+              description: "Optional distribution form for DRAG_PRIOR."
             },
             SRP_PRIOR_FORM: {
               $ref: "#/definitions/pcfPriorForm",
-              description: "The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN\nthe median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of\nln AGOM."
+              description: "Optional distribution form for SRP_PRIOR."
             },
             WEATHER_HORIZON_DAYS: {
               type: "integer",
               minimum: 0,
               maximum: 65535,
-              description: "Days past the element set's epoch day through which the fit writes the\ndaily space weather into the record it emits (OCM\nPERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows\n(WEATHER_SOURCE RECORDS). The last day written is the later of the fit\narc's last day and the epoch's day plus this count; rows supplied with\nthe request must reach it, or the fit is refused by name. Default 30."
+              description: "Optional space-weather horizon in days past epoch; 0 means unspecified."
             }
           },
           additionalProperties: false
@@ -39461,7 +39450,7 @@ var json_default = {
             },
             SOLID_TIDES: {
               $ref: "#/definitions/pcfSolidTideModel",
-              description: "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nNONE."
+              description: "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nUNSPECIFIED (the propagator's own default)."
             },
             RELATIVITY: {
               $ref: "#/definitions/pcfRelativityTerms",
@@ -59342,6 +59331,7 @@ Decoding applies the inverses from the last back.`
         pcfSolidTideModel: {
           type: "string",
           enum: [
+            "UNSPECIFIED",
             "NONE",
             "IERS_2010"
           ]
@@ -62407,103 +62397,103 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`
         },
         PCFGaussianPrior: {
           type: "object",
-          description: "A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps\nthe theory's own sigma and moves only the mean.",
+          description: "Optional Gaussian parameter prior.",
           properties: {
             MEAN: {
               type: "number",
-              description: "Prior mean, in the unit of the parameter it is attached to. Default 0."
+              description: "Prior mean in the parameter's unit."
             },
             SIGMA: {
               type: "number",
-              description: "Prior standard deviation, in the same unit; > 0 when HAS_SIGMA."
+              description: "Prior standard deviation in the parameter's unit; > 0 when HAS_SIGMA is true."
             },
             HAS_SIGMA: {
               type: "boolean",
-              description: "True when SIGMA carries a value; false keeps the theory's own sigma."
+              description: "True when SIGMA is explicitly provided."
             }
           },
           additionalProperties: false
         },
         PCFFitPolicy: {
           type: "object",
-          description: "Fit policy: how long an arc a fit uses, how that is validated, and what a\nfit refuses.",
+          description: "Optional configuration parameters for orbit estimation.",
           properties: {
             DEFAULT_SPAN_HOURS: {
               type: "number",
-              description: "Fit span used when the span rule is not run, hours. Default 48."
+              description: "Optional span parameter in hours; 0 means unspecified."
             },
             MINIMUM_SPAN_HOURS: {
               type: "number",
-              description: "Shortest span a fit may take, hours. Default 24."
+              description: "Optional minimum span in hours; 0 means unspecified."
             },
             MAXIMUM_SPAN_HOURS: {
               type: "number",
-              description: "Longest span a fit may take, hours. Default 120."
+              description: "Optional maximum span in hours; 0 means unspecified."
             },
             CANDIDATE_SPANS_HOURS: {
               type: "array",
               items: {
                 type: "number"
               },
-              description: "Spans the extension rule scores, ascending, hours, each within\n[MINIMUM_SPAN_HOURS, MAXIMUM_SPAN_HOURS]. Empty: 48, 72 and 120; with\n24 in front when the eccentricity exceeds ECCENTRICITY_THRESHOLD."
+              description: "Optional candidate span list in hours."
             },
             TAIL_HOURS: {
               type: "number",
-              description: "Validation tail: each candidate is fitted to the data before the latest\nTAIL_HOURS and scored on that tail, hours. Default 24."
+              description: "Optional evaluation tail length in hours; 0 means unspecified."
             },
             EXTENSION_MARGIN: {
               type: "number",
-              description: "Extension rule: a longer candidate is taken only when its tail error is\nat most this fraction of the best shorter candidate's. Default 0.9."
+              description: "Optional relative selection margin; 0 means unspecified."
             },
             HOLDOUT_HOURS: {
               type: "number",
-              description: "Hours held out at the end of the data and reported as error growth; the\nfit then ends HOLDOUT_HOURS before the data does. Absent, the data\nblock's own useable stop time decides."
+              description: "Optional holdout window length in hours."
             },
             HAS_HOLDOUT_HOURS: {
               type: "boolean",
-              description: "True when HOLDOUT_HOURS carries a value; false means absent."
+              description: "True when HOLDOUT_HOURS is explicitly provided."
             },
             ECCENTRICITY_THRESHOLD: {
               type: "number",
-              description: "Eccentricity above which the eccentric-orbit rule applies. Default 0.5."
+              description: "Optional eccentricity threshold; 0 means unspecified."
             },
             ECCENTRIC_DEFAULT_SPAN_HOURS: {
               type: "number",
-              description: "Eccentric orbits: the default span, hours. Default 24."
+              description: "Optional eccentric-orbit span in hours; 0 means unspecified."
             },
             ECCENTRIC_EXTENSION_MARGIN: {
               type: "number",
-              description: "Eccentric orbits: EXTENSION_MARGIN. Default 0.7."
+              description: "Optional eccentric-orbit relative margin; 0 means unspecified."
             },
             ECCENTRIC_MAXIMUM_PERIOD_HOURS: {
               type: "number",
-              description: "Eccentric orbits: no candidate longer than this is tried once the orbital\nperiod passes it, hours. Default 36."
+              description: "Optional eccentric-orbit period bound in hours; 0 means unspecified."
             },
             IMPLAUSIBLE_RMS_KM: {
               type: "number",
-              description: "A fit whose RMS passes this is refused as fit-implausible, km. Default\n100."
+              description: "Optional maximum acceptable RMS in km; 0 means unspecified."
             },
             DRAG_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0, sigma 0.05."
+              description: "Optional prior on drag parameter."
             },
             SRP_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.\nAbsent or without sigma: mean 0, sigma 0.05."
+              description: "Optional prior on solar radiation pressure parameter."
             },
             DRAG_PRIOR_FORM: {
               $ref: "#/definitions/pcfPriorForm",
-              description: "The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its\nMEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation\nof ln B_eff."
+              description: "Optional distribution form for DRAG_PRIOR."
             },
             SRP_PRIOR_FORM: {
               $ref: "#/definitions/pcfPriorForm",
-              description: "The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN\nthe median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of\nln AGOM."
+              description: "Optional distribution form for SRP_PRIOR."
             },
             WEATHER_HORIZON_DAYS: {
               type: "integer",
               minimum: 0,
               maximum: 65535,
-              description: "Days past the element set's epoch day through which the fit writes the\ndaily space weather into the record it emits (OCM\nPERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows\n(WEATHER_SOURCE RECORDS). The last day written is the later of the fit\narc's last day and the epoch's day plus this count; rows supplied with\nthe request must reach it, or the fit is refused by name. Default 30."
+              description: "Optional space-weather horizon in days past epoch; 0 means unspecified."
             }
           },
           additionalProperties: false
@@ -62838,7 +62828,7 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`
             },
             SOLID_TIDES: {
               $ref: "#/definitions/pcfSolidTideModel",
-              description: "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nNONE."
+              description: "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nUNSPECIFIED (the propagator's own default)."
             },
             RELATIVITY: {
               $ref: "#/definitions/pcfRelativityTerms",
@@ -66254,7 +66244,7 @@ stated.`
               type: "integer",
               minimum: 0,
               maximum: 4294967295,
-              description: "Reference states fitted."
+              description: "Reference states reported; 0 means not stated."
             },
             FIT_RMS_KM: {
               type: "number",
@@ -66278,11 +66268,11 @@ stated.`
               type: "integer",
               minimum: 0,
               maximum: 4294967295,
-              description: "Iterations the fit took."
+              description: "Iterations reported; 0 means not stated."
             },
             CONVERGED: {
               type: "boolean",
-              description: "True when the fit converged."
+              description: "True when converged."
             },
             HELD_OUT_STOP: {
               type: "string",
@@ -66309,7 +66299,7 @@ stated.`
             },
             PCF_CID: {
               type: "string",
-              description: "CID of the $PCF the fit ran under: its span rule, priors and holdout."
+              description: "CID of the $PCF configuration associated with the record."
             },
             FIT_START: {
               type: "string",
@@ -67164,6 +67154,13 @@ stated.`
                 $ref: "#/definitions/CVR"
               },
               description: "Realism of the block's covariance: one entry per line of LINES, in order,\nor one entry for every line."
+            },
+            DENSITY_SENSITIVITY_KM: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Optional position sensitivity to a unit dimensionless log-density shift\n(dr/ds), flattened 3 doubles per line of LINES in COV_REF_FRAME, km.\nEmpty when absent."
             }
           },
           additionalProperties: false
@@ -76229,6 +76226,7 @@ turned into a number.`
         pcfSolidTideModel: {
           type: "string",
           enum: [
+            "UNSPECIFIED",
             "NONE",
             "IERS_2010"
           ]
@@ -79655,103 +79653,103 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`
         },
         PCFGaussianPrior: {
           type: "object",
-          description: "A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps\nthe theory's own sigma and moves only the mean.",
+          description: "Optional Gaussian parameter prior.",
           properties: {
             MEAN: {
               type: "number",
-              description: "Prior mean, in the unit of the parameter it is attached to. Default 0."
+              description: "Prior mean in the parameter's unit."
             },
             SIGMA: {
               type: "number",
-              description: "Prior standard deviation, in the same unit; > 0 when HAS_SIGMA."
+              description: "Prior standard deviation in the parameter's unit; > 0 when HAS_SIGMA is true."
             },
             HAS_SIGMA: {
               type: "boolean",
-              description: "True when SIGMA carries a value; false keeps the theory's own sigma."
+              description: "True when SIGMA is explicitly provided."
             }
           },
           additionalProperties: false
         },
         PCFFitPolicy: {
           type: "object",
-          description: "Fit policy: how long an arc a fit uses, how that is validated, and what a\nfit refuses.",
+          description: "Optional configuration parameters for orbit estimation.",
           properties: {
             DEFAULT_SPAN_HOURS: {
               type: "number",
-              description: "Fit span used when the span rule is not run, hours. Default 48."
+              description: "Optional span parameter in hours; 0 means unspecified."
             },
             MINIMUM_SPAN_HOURS: {
               type: "number",
-              description: "Shortest span a fit may take, hours. Default 24."
+              description: "Optional minimum span in hours; 0 means unspecified."
             },
             MAXIMUM_SPAN_HOURS: {
               type: "number",
-              description: "Longest span a fit may take, hours. Default 120."
+              description: "Optional maximum span in hours; 0 means unspecified."
             },
             CANDIDATE_SPANS_HOURS: {
               type: "array",
               items: {
                 type: "number"
               },
-              description: "Spans the extension rule scores, ascending, hours, each within\n[MINIMUM_SPAN_HOURS, MAXIMUM_SPAN_HOURS]. Empty: 48, 72 and 120; with\n24 in front when the eccentricity exceeds ECCENTRICITY_THRESHOLD."
+              description: "Optional candidate span list in hours."
             },
             TAIL_HOURS: {
               type: "number",
-              description: "Validation tail: each candidate is fitted to the data before the latest\nTAIL_HOURS and scored on that tail, hours. Default 24."
+              description: "Optional evaluation tail length in hours; 0 means unspecified."
             },
             EXTENSION_MARGIN: {
               type: "number",
-              description: "Extension rule: a longer candidate is taken only when its tail error is\nat most this fraction of the best shorter candidate's. Default 0.9."
+              description: "Optional relative selection margin; 0 means unspecified."
             },
             HOLDOUT_HOURS: {
               type: "number",
-              description: "Hours held out at the end of the data and reported as error growth; the\nfit then ends HOLDOUT_HOURS before the data does. Absent, the data\nblock's own useable stop time decides."
+              description: "Optional holdout window length in hours."
             },
             HAS_HOLDOUT_HOURS: {
               type: "boolean",
-              description: "True when HOLDOUT_HOURS carries a value; false means absent."
+              description: "True when HOLDOUT_HOURS is explicitly provided."
             },
             ECCENTRICITY_THRESHOLD: {
               type: "number",
-              description: "Eccentricity above which the eccentric-orbit rule applies. Default 0.5."
+              description: "Optional eccentricity threshold; 0 means unspecified."
             },
             ECCENTRIC_DEFAULT_SPAN_HOURS: {
               type: "number",
-              description: "Eccentric orbits: the default span, hours. Default 24."
+              description: "Optional eccentric-orbit span in hours; 0 means unspecified."
             },
             ECCENTRIC_EXTENSION_MARGIN: {
               type: "number",
-              description: "Eccentric orbits: EXTENSION_MARGIN. Default 0.7."
+              description: "Optional eccentric-orbit relative margin; 0 means unspecified."
             },
             ECCENTRIC_MAXIMUM_PERIOD_HOURS: {
               type: "number",
-              description: "Eccentric orbits: no candidate longer than this is tried once the orbital\nperiod passes it, hours. Default 36."
+              description: "Optional eccentric-orbit period bound in hours; 0 means unspecified."
             },
             IMPLAUSIBLE_RMS_KM: {
               type: "number",
-              description: "A fit whose RMS passes this is refused as fit-implausible, km. Default\n100."
+              description: "Optional maximum acceptable RMS in km; 0 means unspecified."
             },
             DRAG_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0, sigma 0.05."
+              description: "Optional prior on drag parameter."
             },
             SRP_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.\nAbsent or without sigma: mean 0, sigma 0.05."
+              description: "Optional prior on solar radiation pressure parameter."
             },
             DRAG_PRIOR_FORM: {
               $ref: "#/definitions/pcfPriorForm",
-              description: "The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its\nMEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation\nof ln B_eff."
+              description: "Optional distribution form for DRAG_PRIOR."
             },
             SRP_PRIOR_FORM: {
               $ref: "#/definitions/pcfPriorForm",
-              description: "The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN\nthe median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of\nln AGOM."
+              description: "Optional distribution form for SRP_PRIOR."
             },
             WEATHER_HORIZON_DAYS: {
               type: "integer",
               minimum: 0,
               maximum: 65535,
-              description: "Days past the element set's epoch day through which the fit writes the\ndaily space weather into the record it emits (OCM\nPERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows\n(WEATHER_SOURCE RECORDS). The last day written is the later of the fit\narc's last day and the epoch's day plus this count; rows supplied with\nthe request must reach it, or the fit is refused by name. Default 30."
+              description: "Optional space-weather horizon in days past epoch; 0 means unspecified."
             }
           },
           additionalProperties: false
@@ -80086,7 +80084,7 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`
             },
             SOLID_TIDES: {
               $ref: "#/definitions/pcfSolidTideModel",
-              description: "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nNONE."
+              description: "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nUNSPECIFIED (the propagator's own default)."
             },
             RELATIVITY: {
               $ref: "#/definitions/pcfRelativityTerms",
@@ -83502,7 +83500,7 @@ stated.`
               type: "integer",
               minimum: 0,
               maximum: 4294967295,
-              description: "Reference states fitted."
+              description: "Reference states reported; 0 means not stated."
             },
             FIT_RMS_KM: {
               type: "number",
@@ -83526,11 +83524,11 @@ stated.`
               type: "integer",
               minimum: 0,
               maximum: 4294967295,
-              description: "Iterations the fit took."
+              description: "Iterations reported; 0 means not stated."
             },
             CONVERGED: {
               type: "boolean",
-              description: "True when the fit converged."
+              description: "True when converged."
             },
             HELD_OUT_STOP: {
               type: "string",
@@ -83557,7 +83555,7 @@ stated.`
             },
             PCF_CID: {
               type: "string",
-              description: "CID of the $PCF the fit ran under: its span rule, priors and holdout."
+              description: "CID of the $PCF configuration associated with the record."
             },
             FIT_START: {
               type: "string",
@@ -84412,6 +84410,13 @@ stated.`
                 $ref: "#/definitions/CVR"
               },
               description: "Realism of the block's covariance: one entry per line of LINES, in order,\nor one entry for every line."
+            },
+            DENSITY_SENSITIVITY_KM: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Optional position sensitivity to a unit dimensionless log-density shift\n(dr/ds), flattened 3 doubles per line of LINES in COV_REF_FRAME, km.\nEmpty when absent."
             }
           },
           additionalProperties: false
@@ -89410,6 +89415,7 @@ verbatim what that source states about itself.`,
         pcfSolidTideModel: {
           type: "string",
           enum: [
+            "UNSPECIFIED",
             "NONE",
             "IERS_2010"
           ]
@@ -92927,103 +92933,103 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`
         },
         PCFGaussianPrior: {
           type: "object",
-          description: "A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps\nthe theory's own sigma and moves only the mean.",
+          description: "Optional Gaussian parameter prior.",
           properties: {
             MEAN: {
               type: "number",
-              description: "Prior mean, in the unit of the parameter it is attached to. Default 0."
+              description: "Prior mean in the parameter's unit."
             },
             SIGMA: {
               type: "number",
-              description: "Prior standard deviation, in the same unit; > 0 when HAS_SIGMA."
+              description: "Prior standard deviation in the parameter's unit; > 0 when HAS_SIGMA is true."
             },
             HAS_SIGMA: {
               type: "boolean",
-              description: "True when SIGMA carries a value; false keeps the theory's own sigma."
+              description: "True when SIGMA is explicitly provided."
             }
           },
           additionalProperties: false
         },
         PCFFitPolicy: {
           type: "object",
-          description: "Fit policy: how long an arc a fit uses, how that is validated, and what a\nfit refuses.",
+          description: "Optional configuration parameters for orbit estimation.",
           properties: {
             DEFAULT_SPAN_HOURS: {
               type: "number",
-              description: "Fit span used when the span rule is not run, hours. Default 48."
+              description: "Optional span parameter in hours; 0 means unspecified."
             },
             MINIMUM_SPAN_HOURS: {
               type: "number",
-              description: "Shortest span a fit may take, hours. Default 24."
+              description: "Optional minimum span in hours; 0 means unspecified."
             },
             MAXIMUM_SPAN_HOURS: {
               type: "number",
-              description: "Longest span a fit may take, hours. Default 120."
+              description: "Optional maximum span in hours; 0 means unspecified."
             },
             CANDIDATE_SPANS_HOURS: {
               type: "array",
               items: {
                 type: "number"
               },
-              description: "Spans the extension rule scores, ascending, hours, each within\n[MINIMUM_SPAN_HOURS, MAXIMUM_SPAN_HOURS]. Empty: 48, 72 and 120; with\n24 in front when the eccentricity exceeds ECCENTRICITY_THRESHOLD."
+              description: "Optional candidate span list in hours."
             },
             TAIL_HOURS: {
               type: "number",
-              description: "Validation tail: each candidate is fitted to the data before the latest\nTAIL_HOURS and scored on that tail, hours. Default 24."
+              description: "Optional evaluation tail length in hours; 0 means unspecified."
             },
             EXTENSION_MARGIN: {
               type: "number",
-              description: "Extension rule: a longer candidate is taken only when its tail error is\nat most this fraction of the best shorter candidate's. Default 0.9."
+              description: "Optional relative selection margin; 0 means unspecified."
             },
             HOLDOUT_HOURS: {
               type: "number",
-              description: "Hours held out at the end of the data and reported as error growth; the\nfit then ends HOLDOUT_HOURS before the data does. Absent, the data\nblock's own useable stop time decides."
+              description: "Optional holdout window length in hours."
             },
             HAS_HOLDOUT_HOURS: {
               type: "boolean",
-              description: "True when HOLDOUT_HOURS carries a value; false means absent."
+              description: "True when HOLDOUT_HOURS is explicitly provided."
             },
             ECCENTRICITY_THRESHOLD: {
               type: "number",
-              description: "Eccentricity above which the eccentric-orbit rule applies. Default 0.5."
+              description: "Optional eccentricity threshold; 0 means unspecified."
             },
             ECCENTRIC_DEFAULT_SPAN_HOURS: {
               type: "number",
-              description: "Eccentric orbits: the default span, hours. Default 24."
+              description: "Optional eccentric-orbit span in hours; 0 means unspecified."
             },
             ECCENTRIC_EXTENSION_MARGIN: {
               type: "number",
-              description: "Eccentric orbits: EXTENSION_MARGIN. Default 0.7."
+              description: "Optional eccentric-orbit relative margin; 0 means unspecified."
             },
             ECCENTRIC_MAXIMUM_PERIOD_HOURS: {
               type: "number",
-              description: "Eccentric orbits: no candidate longer than this is tried once the orbital\nperiod passes it, hours. Default 36."
+              description: "Optional eccentric-orbit period bound in hours; 0 means unspecified."
             },
             IMPLAUSIBLE_RMS_KM: {
               type: "number",
-              description: "A fit whose RMS passes this is refused as fit-implausible, km. Default\n100."
+              description: "Optional maximum acceptable RMS in km; 0 means unspecified."
             },
             DRAG_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0, sigma 0.05."
+              description: "Optional prior on drag parameter."
             },
             SRP_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.\nAbsent or without sigma: mean 0, sigma 0.05."
+              description: "Optional prior on solar radiation pressure parameter."
             },
             DRAG_PRIOR_FORM: {
               $ref: "#/definitions/pcfPriorForm",
-              description: "The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its\nMEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation\nof ln B_eff."
+              description: "Optional distribution form for DRAG_PRIOR."
             },
             SRP_PRIOR_FORM: {
               $ref: "#/definitions/pcfPriorForm",
-              description: "The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN\nthe median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of\nln AGOM."
+              description: "Optional distribution form for SRP_PRIOR."
             },
             WEATHER_HORIZON_DAYS: {
               type: "integer",
               minimum: 0,
               maximum: 65535,
-              description: "Days past the element set's epoch day through which the fit writes the\ndaily space weather into the record it emits (OCM\nPERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows\n(WEATHER_SOURCE RECORDS). The last day written is the later of the fit\narc's last day and the epoch's day plus this count; rows supplied with\nthe request must reach it, or the fit is refused by name. Default 30."
+              description: "Optional space-weather horizon in days past epoch; 0 means unspecified."
             }
           },
           additionalProperties: false
@@ -93358,7 +93364,7 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`
             },
             SOLID_TIDES: {
               $ref: "#/definitions/pcfSolidTideModel",
-              description: "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nNONE."
+              description: "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nUNSPECIFIED (the propagator's own default)."
             },
             RELATIVITY: {
               $ref: "#/definitions/pcfRelativityTerms",
@@ -107527,6 +107533,7 @@ provider's reviewed register). Never free text.`
         pcfSolidTideModel: {
           type: "string",
           enum: [
+            "UNSPECIFIED",
             "NONE",
             "IERS_2010"
           ]
@@ -111194,103 +111201,103 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`
         },
         PCFGaussianPrior: {
           type: "object",
-          description: "A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps\nthe theory's own sigma and moves only the mean.",
+          description: "Optional Gaussian parameter prior.",
           properties: {
             MEAN: {
               type: "number",
-              description: "Prior mean, in the unit of the parameter it is attached to. Default 0."
+              description: "Prior mean in the parameter's unit."
             },
             SIGMA: {
               type: "number",
-              description: "Prior standard deviation, in the same unit; > 0 when HAS_SIGMA."
+              description: "Prior standard deviation in the parameter's unit; > 0 when HAS_SIGMA is true."
             },
             HAS_SIGMA: {
               type: "boolean",
-              description: "True when SIGMA carries a value; false keeps the theory's own sigma."
+              description: "True when SIGMA is explicitly provided."
             }
           },
           additionalProperties: false
         },
         PCFFitPolicy: {
           type: "object",
-          description: "Fit policy: how long an arc a fit uses, how that is validated, and what a\nfit refuses.",
+          description: "Optional configuration parameters for orbit estimation.",
           properties: {
             DEFAULT_SPAN_HOURS: {
               type: "number",
-              description: "Fit span used when the span rule is not run, hours. Default 48."
+              description: "Optional span parameter in hours; 0 means unspecified."
             },
             MINIMUM_SPAN_HOURS: {
               type: "number",
-              description: "Shortest span a fit may take, hours. Default 24."
+              description: "Optional minimum span in hours; 0 means unspecified."
             },
             MAXIMUM_SPAN_HOURS: {
               type: "number",
-              description: "Longest span a fit may take, hours. Default 120."
+              description: "Optional maximum span in hours; 0 means unspecified."
             },
             CANDIDATE_SPANS_HOURS: {
               type: "array",
               items: {
                 type: "number"
               },
-              description: "Spans the extension rule scores, ascending, hours, each within\n[MINIMUM_SPAN_HOURS, MAXIMUM_SPAN_HOURS]. Empty: 48, 72 and 120; with\n24 in front when the eccentricity exceeds ECCENTRICITY_THRESHOLD."
+              description: "Optional candidate span list in hours."
             },
             TAIL_HOURS: {
               type: "number",
-              description: "Validation tail: each candidate is fitted to the data before the latest\nTAIL_HOURS and scored on that tail, hours. Default 24."
+              description: "Optional evaluation tail length in hours; 0 means unspecified."
             },
             EXTENSION_MARGIN: {
               type: "number",
-              description: "Extension rule: a longer candidate is taken only when its tail error is\nat most this fraction of the best shorter candidate's. Default 0.9."
+              description: "Optional relative selection margin; 0 means unspecified."
             },
             HOLDOUT_HOURS: {
               type: "number",
-              description: "Hours held out at the end of the data and reported as error growth; the\nfit then ends HOLDOUT_HOURS before the data does. Absent, the data\nblock's own useable stop time decides."
+              description: "Optional holdout window length in hours."
             },
             HAS_HOLDOUT_HOURS: {
               type: "boolean",
-              description: "True when HOLDOUT_HOURS carries a value; false means absent."
+              description: "True when HOLDOUT_HOURS is explicitly provided."
             },
             ECCENTRICITY_THRESHOLD: {
               type: "number",
-              description: "Eccentricity above which the eccentric-orbit rule applies. Default 0.5."
+              description: "Optional eccentricity threshold; 0 means unspecified."
             },
             ECCENTRIC_DEFAULT_SPAN_HOURS: {
               type: "number",
-              description: "Eccentric orbits: the default span, hours. Default 24."
+              description: "Optional eccentric-orbit span in hours; 0 means unspecified."
             },
             ECCENTRIC_EXTENSION_MARGIN: {
               type: "number",
-              description: "Eccentric orbits: EXTENSION_MARGIN. Default 0.7."
+              description: "Optional eccentric-orbit relative margin; 0 means unspecified."
             },
             ECCENTRIC_MAXIMUM_PERIOD_HOURS: {
               type: "number",
-              description: "Eccentric orbits: no candidate longer than this is tried once the orbital\nperiod passes it, hours. Default 36."
+              description: "Optional eccentric-orbit period bound in hours; 0 means unspecified."
             },
             IMPLAUSIBLE_RMS_KM: {
               type: "number",
-              description: "A fit whose RMS passes this is refused as fit-implausible, km. Default\n100."
+              description: "Optional maximum acceptable RMS in km; 0 means unspecified."
             },
             DRAG_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0, sigma 0.05."
+              description: "Optional prior on drag parameter."
             },
             SRP_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.\nAbsent or without sigma: mean 0, sigma 0.05."
+              description: "Optional prior on solar radiation pressure parameter."
             },
             DRAG_PRIOR_FORM: {
               $ref: "#/definitions/pcfPriorForm",
-              description: "The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its\nMEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation\nof ln B_eff."
+              description: "Optional distribution form for DRAG_PRIOR."
             },
             SRP_PRIOR_FORM: {
               $ref: "#/definitions/pcfPriorForm",
-              description: "The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN\nthe median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of\nln AGOM."
+              description: "Optional distribution form for SRP_PRIOR."
             },
             WEATHER_HORIZON_DAYS: {
               type: "integer",
               minimum: 0,
               maximum: 65535,
-              description: "Days past the element set's epoch day through which the fit writes the\ndaily space weather into the record it emits (OCM\nPERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows\n(WEATHER_SOURCE RECORDS). The last day written is the later of the fit\narc's last day and the epoch's day plus this count; rows supplied with\nthe request must reach it, or the fit is refused by name. Default 30."
+              description: "Optional space-weather horizon in days past epoch; 0 means unspecified."
             }
           },
           additionalProperties: false
@@ -111625,7 +111632,7 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`
             },
             SOLID_TIDES: {
               $ref: "#/definitions/pcfSolidTideModel",
-              description: "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nNONE."
+              description: "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nUNSPECIFIED (the propagator's own default)."
             },
             RELATIVITY: {
               $ref: "#/definitions/pcfRelativityTerms",
@@ -115041,7 +115048,7 @@ stated.`
               type: "integer",
               minimum: 0,
               maximum: 4294967295,
-              description: "Reference states fitted."
+              description: "Reference states reported; 0 means not stated."
             },
             FIT_RMS_KM: {
               type: "number",
@@ -115065,11 +115072,11 @@ stated.`
               type: "integer",
               minimum: 0,
               maximum: 4294967295,
-              description: "Iterations the fit took."
+              description: "Iterations reported; 0 means not stated."
             },
             CONVERGED: {
               type: "boolean",
-              description: "True when the fit converged."
+              description: "True when converged."
             },
             HELD_OUT_STOP: {
               type: "string",
@@ -115096,7 +115103,7 @@ stated.`
             },
             PCF_CID: {
               type: "string",
-              description: "CID of the $PCF the fit ran under: its span rule, priors and holdout."
+              description: "CID of the $PCF configuration associated with the record."
             },
             FIT_START: {
               type: "string",
@@ -115951,6 +115958,13 @@ stated.`
                 $ref: "#/definitions/CVR"
               },
               description: "Realism of the block's covariance: one entry per line of LINES, in order,\nor one entry for every line."
+            },
+            DENSITY_SENSITIVITY_KM: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Optional position sensitivity to a unit dimensionless log-density shift\n(dr/ds), flattened 3 doubles per line of LINES in COV_REF_FRAME, km.\nEmpty when absent."
             }
           },
           additionalProperties: false
@@ -153805,6 +153819,7 @@ format class are named by $NCD's container format.`
         pcfSolidTideModel: {
           type: "string",
           enum: [
+            "UNSPECIFIED",
             "NONE",
             "IERS_2010"
           ]
@@ -157281,103 +157296,103 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`
         },
         PCFGaussianPrior: {
           type: "object",
-          description: "A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps\nthe theory's own sigma and moves only the mean.",
+          description: "Optional Gaussian parameter prior.",
           properties: {
             MEAN: {
               type: "number",
-              description: "Prior mean, in the unit of the parameter it is attached to. Default 0."
+              description: "Prior mean in the parameter's unit."
             },
             SIGMA: {
               type: "number",
-              description: "Prior standard deviation, in the same unit; > 0 when HAS_SIGMA."
+              description: "Prior standard deviation in the parameter's unit; > 0 when HAS_SIGMA is true."
             },
             HAS_SIGMA: {
               type: "boolean",
-              description: "True when SIGMA carries a value; false keeps the theory's own sigma."
+              description: "True when SIGMA is explicitly provided."
             }
           },
           additionalProperties: false
         },
         PCFFitPolicy: {
           type: "object",
-          description: "Fit policy: how long an arc a fit uses, how that is validated, and what a\nfit refuses.",
+          description: "Optional configuration parameters for orbit estimation.",
           properties: {
             DEFAULT_SPAN_HOURS: {
               type: "number",
-              description: "Fit span used when the span rule is not run, hours. Default 48."
+              description: "Optional span parameter in hours; 0 means unspecified."
             },
             MINIMUM_SPAN_HOURS: {
               type: "number",
-              description: "Shortest span a fit may take, hours. Default 24."
+              description: "Optional minimum span in hours; 0 means unspecified."
             },
             MAXIMUM_SPAN_HOURS: {
               type: "number",
-              description: "Longest span a fit may take, hours. Default 120."
+              description: "Optional maximum span in hours; 0 means unspecified."
             },
             CANDIDATE_SPANS_HOURS: {
               type: "array",
               items: {
                 type: "number"
               },
-              description: "Spans the extension rule scores, ascending, hours, each within\n[MINIMUM_SPAN_HOURS, MAXIMUM_SPAN_HOURS]. Empty: 48, 72 and 120; with\n24 in front when the eccentricity exceeds ECCENTRICITY_THRESHOLD."
+              description: "Optional candidate span list in hours."
             },
             TAIL_HOURS: {
               type: "number",
-              description: "Validation tail: each candidate is fitted to the data before the latest\nTAIL_HOURS and scored on that tail, hours. Default 24."
+              description: "Optional evaluation tail length in hours; 0 means unspecified."
             },
             EXTENSION_MARGIN: {
               type: "number",
-              description: "Extension rule: a longer candidate is taken only when its tail error is\nat most this fraction of the best shorter candidate's. Default 0.9."
+              description: "Optional relative selection margin; 0 means unspecified."
             },
             HOLDOUT_HOURS: {
               type: "number",
-              description: "Hours held out at the end of the data and reported as error growth; the\nfit then ends HOLDOUT_HOURS before the data does. Absent, the data\nblock's own useable stop time decides."
+              description: "Optional holdout window length in hours."
             },
             HAS_HOLDOUT_HOURS: {
               type: "boolean",
-              description: "True when HOLDOUT_HOURS carries a value; false means absent."
+              description: "True when HOLDOUT_HOURS is explicitly provided."
             },
             ECCENTRICITY_THRESHOLD: {
               type: "number",
-              description: "Eccentricity above which the eccentric-orbit rule applies. Default 0.5."
+              description: "Optional eccentricity threshold; 0 means unspecified."
             },
             ECCENTRIC_DEFAULT_SPAN_HOURS: {
               type: "number",
-              description: "Eccentric orbits: the default span, hours. Default 24."
+              description: "Optional eccentric-orbit span in hours; 0 means unspecified."
             },
             ECCENTRIC_EXTENSION_MARGIN: {
               type: "number",
-              description: "Eccentric orbits: EXTENSION_MARGIN. Default 0.7."
+              description: "Optional eccentric-orbit relative margin; 0 means unspecified."
             },
             ECCENTRIC_MAXIMUM_PERIOD_HOURS: {
               type: "number",
-              description: "Eccentric orbits: no candidate longer than this is tried once the orbital\nperiod passes it, hours. Default 36."
+              description: "Optional eccentric-orbit period bound in hours; 0 means unspecified."
             },
             IMPLAUSIBLE_RMS_KM: {
               type: "number",
-              description: "A fit whose RMS passes this is refused as fit-implausible, km. Default\n100."
+              description: "Optional maximum acceptable RMS in km; 0 means unspecified."
             },
             DRAG_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0, sigma 0.05."
+              description: "Optional prior on drag parameter."
             },
             SRP_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.\nAbsent or without sigma: mean 0, sigma 0.05."
+              description: "Optional prior on solar radiation pressure parameter."
             },
             DRAG_PRIOR_FORM: {
               $ref: "#/definitions/pcfPriorForm",
-              description: "The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its\nMEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation\nof ln B_eff."
+              description: "Optional distribution form for DRAG_PRIOR."
             },
             SRP_PRIOR_FORM: {
               $ref: "#/definitions/pcfPriorForm",
-              description: "The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN\nthe median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of\nln AGOM."
+              description: "Optional distribution form for SRP_PRIOR."
             },
             WEATHER_HORIZON_DAYS: {
               type: "integer",
               minimum: 0,
               maximum: 65535,
-              description: "Days past the element set's epoch day through which the fit writes the\ndaily space weather into the record it emits (OCM\nPERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows\n(WEATHER_SOURCE RECORDS). The last day written is the later of the fit\narc's last day and the epoch's day plus this count; rows supplied with\nthe request must reach it, or the fit is refused by name. Default 30."
+              description: "Optional space-weather horizon in days past epoch; 0 means unspecified."
             }
           },
           additionalProperties: false
@@ -157712,7 +157727,7 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`
             },
             SOLID_TIDES: {
               $ref: "#/definitions/pcfSolidTideModel",
-              description: "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nNONE."
+              description: "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nUNSPECIFIED (the propagator's own default)."
             },
             RELATIVITY: {
               $ref: "#/definitions/pcfRelativityTerms",
@@ -161128,7 +161143,7 @@ stated.`
               type: "integer",
               minimum: 0,
               maximum: 4294967295,
-              description: "Reference states fitted."
+              description: "Reference states reported; 0 means not stated."
             },
             FIT_RMS_KM: {
               type: "number",
@@ -161152,11 +161167,11 @@ stated.`
               type: "integer",
               minimum: 0,
               maximum: 4294967295,
-              description: "Iterations the fit took."
+              description: "Iterations reported; 0 means not stated."
             },
             CONVERGED: {
               type: "boolean",
-              description: "True when the fit converged."
+              description: "True when converged."
             },
             HELD_OUT_STOP: {
               type: "string",
@@ -161183,7 +161198,7 @@ stated.`
             },
             PCF_CID: {
               type: "string",
-              description: "CID of the $PCF the fit ran under: its span rule, priors and holdout."
+              description: "CID of the $PCF configuration associated with the record."
             },
             FIT_START: {
               type: "string",
@@ -162038,6 +162053,13 @@ stated.`
                 $ref: "#/definitions/CVR"
               },
               description: "Realism of the block's covariance: one entry per line of LINES, in order,\nor one entry for every line."
+            },
+            DENSITY_SENSITIVITY_KM: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Optional position sensitivity to a unit dimensionless log-density shift\n(dr/ds), flattened 3 doubles per line of LINES in COV_REF_FRAME, km.\nEmpty when absent."
             }
           },
           additionalProperties: false
@@ -169476,6 +169498,7 @@ stated.`
         pcfSolidTideModel: {
           type: "string",
           enum: [
+            "UNSPECIFIED",
             "NONE",
             "IERS_2010"
           ]
@@ -169843,7 +169866,8 @@ stated.`
           enum: [
             "UNSPECIFIED",
             "INDEPENDENT",
-            "SUPPLIED_CROSS_COVARIANCE"
+            "SUPPLIED_CROSS_COVARIANCE",
+            "SHARED_DENSITY_SENSITIVITY"
           ]
         },
         cqrDocumentSyntax: {
@@ -191353,103 +191377,103 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
         },
         PCFGaussianPrior: {
           type: "object",
-          description: "A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps\nthe theory's own sigma and moves only the mean.",
+          description: "Optional Gaussian parameter prior.",
           properties: {
             MEAN: {
               type: "number",
-              description: "Prior mean, in the unit of the parameter it is attached to. Default 0."
+              description: "Prior mean in the parameter's unit."
             },
             SIGMA: {
               type: "number",
-              description: "Prior standard deviation, in the same unit; > 0 when HAS_SIGMA."
+              description: "Prior standard deviation in the parameter's unit; > 0 when HAS_SIGMA is true."
             },
             HAS_SIGMA: {
               type: "boolean",
-              description: "True when SIGMA carries a value; false keeps the theory's own sigma."
+              description: "True when SIGMA is explicitly provided."
             }
           },
           additionalProperties: false
         },
         PCFFitPolicy: {
           type: "object",
-          description: "Fit policy: how long an arc a fit uses, how that is validated, and what a\nfit refuses.",
+          description: "Optional configuration parameters for orbit estimation.",
           properties: {
             DEFAULT_SPAN_HOURS: {
               type: "number",
-              description: "Fit span used when the span rule is not run, hours. Default 48."
+              description: "Optional span parameter in hours; 0 means unspecified."
             },
             MINIMUM_SPAN_HOURS: {
               type: "number",
-              description: "Shortest span a fit may take, hours. Default 24."
+              description: "Optional minimum span in hours; 0 means unspecified."
             },
             MAXIMUM_SPAN_HOURS: {
               type: "number",
-              description: "Longest span a fit may take, hours. Default 120."
+              description: "Optional maximum span in hours; 0 means unspecified."
             },
             CANDIDATE_SPANS_HOURS: {
               type: "array",
               items: {
                 type: "number"
               },
-              description: "Spans the extension rule scores, ascending, hours, each within\n[MINIMUM_SPAN_HOURS, MAXIMUM_SPAN_HOURS]. Empty: 48, 72 and 120; with\n24 in front when the eccentricity exceeds ECCENTRICITY_THRESHOLD."
+              description: "Optional candidate span list in hours."
             },
             TAIL_HOURS: {
               type: "number",
-              description: "Validation tail: each candidate is fitted to the data before the latest\nTAIL_HOURS and scored on that tail, hours. Default 24."
+              description: "Optional evaluation tail length in hours; 0 means unspecified."
             },
             EXTENSION_MARGIN: {
               type: "number",
-              description: "Extension rule: a longer candidate is taken only when its tail error is\nat most this fraction of the best shorter candidate's. Default 0.9."
+              description: "Optional relative selection margin; 0 means unspecified."
             },
             HOLDOUT_HOURS: {
               type: "number",
-              description: "Hours held out at the end of the data and reported as error growth; the\nfit then ends HOLDOUT_HOURS before the data does. Absent, the data\nblock's own useable stop time decides."
+              description: "Optional holdout window length in hours."
             },
             HAS_HOLDOUT_HOURS: {
               type: "boolean",
-              description: "True when HOLDOUT_HOURS carries a value; false means absent."
+              description: "True when HOLDOUT_HOURS is explicitly provided."
             },
             ECCENTRICITY_THRESHOLD: {
               type: "number",
-              description: "Eccentricity above which the eccentric-orbit rule applies. Default 0.5."
+              description: "Optional eccentricity threshold; 0 means unspecified."
             },
             ECCENTRIC_DEFAULT_SPAN_HOURS: {
               type: "number",
-              description: "Eccentric orbits: the default span, hours. Default 24."
+              description: "Optional eccentric-orbit span in hours; 0 means unspecified."
             },
             ECCENTRIC_EXTENSION_MARGIN: {
               type: "number",
-              description: "Eccentric orbits: EXTENSION_MARGIN. Default 0.7."
+              description: "Optional eccentric-orbit relative margin; 0 means unspecified."
             },
             ECCENTRIC_MAXIMUM_PERIOD_HOURS: {
               type: "number",
-              description: "Eccentric orbits: no candidate longer than this is tried once the orbital\nperiod passes it, hours. Default 36."
+              description: "Optional eccentric-orbit period bound in hours; 0 means unspecified."
             },
             IMPLAUSIBLE_RMS_KM: {
               type: "number",
-              description: "A fit whose RMS passes this is refused as fit-implausible, km. Default\n100."
+              description: "Optional maximum acceptable RMS in km; 0 means unspecified."
             },
             DRAG_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0, sigma 0.05."
+              description: "Optional prior on drag parameter."
             },
             SRP_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.\nAbsent or without sigma: mean 0, sigma 0.05."
+              description: "Optional prior on solar radiation pressure parameter."
             },
             DRAG_PRIOR_FORM: {
               $ref: "#/definitions/pcfPriorForm",
-              description: "The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its\nMEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation\nof ln B_eff."
+              description: "Optional distribution form for DRAG_PRIOR."
             },
             SRP_PRIOR_FORM: {
               $ref: "#/definitions/pcfPriorForm",
-              description: "The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN\nthe median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of\nln AGOM."
+              description: "Optional distribution form for SRP_PRIOR."
             },
             WEATHER_HORIZON_DAYS: {
               type: "integer",
               minimum: 0,
               maximum: 65535,
-              description: "Days past the element set's epoch day through which the fit writes the\ndaily space weather into the record it emits (OCM\nPERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows\n(WEATHER_SOURCE RECORDS). The last day written is the later of the fit\narc's last day and the epoch's day plus this count; rows supplied with\nthe request must reach it, or the fit is refused by name. Default 30."
+              description: "Optional space-weather horizon in days past epoch; 0 means unspecified."
             }
           },
           additionalProperties: false
@@ -191784,7 +191808,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             SOLID_TIDES: {
               $ref: "#/definitions/pcfSolidTideModel",
-              description: "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nNONE."
+              description: "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nUNSPECIFIED (the propagator's own default)."
             },
             RELATIVITY: {
               $ref: "#/definitions/pcfRelativityTerms",
@@ -195199,7 +195223,7 @@ stated.`
               type: "integer",
               minimum: 0,
               maximum: 4294967295,
-              description: "Reference states fitted."
+              description: "Reference states reported; 0 means not stated."
             },
             FIT_RMS_KM: {
               type: "number",
@@ -195223,11 +195247,11 @@ stated.`
               type: "integer",
               minimum: 0,
               maximum: 4294967295,
-              description: "Iterations the fit took."
+              description: "Iterations reported; 0 means not stated."
             },
             CONVERGED: {
               type: "boolean",
-              description: "True when the fit converged."
+              description: "True when converged."
             },
             HELD_OUT_STOP: {
               type: "string",
@@ -195254,7 +195278,7 @@ stated.`
             },
             PCF_CID: {
               type: "string",
-              description: "CID of the $PCF the fit ran under: its span rule, priors and holdout."
+              description: "CID of the $PCF configuration associated with the record."
             },
             FIT_START: {
               type: "string",
@@ -196109,6 +196133,13 @@ stated.`
                 $ref: "#/definitions/CVR"
               },
               description: "Realism of the block's covariance: one entry per line of LINES, in order,\nor one entry for every line."
+            },
+            DENSITY_SENSITIVITY_KM: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Optional position sensitivity to a unit dimensionless log-density shift\n(dr/ds), flattened 3 doubles per line of LINES in COV_REF_FRAME, km.\nEmpty when absent."
             }
           },
           additionalProperties: false
@@ -196504,6 +196535,13 @@ stated.`
             CATALOG_ENTRY: {
               $ref: "#/definitions/CAT",
               description: "The object's catalog entry. Without a supplied radius, its SIZE, else\nits RCS, gives the hard-body radius (see cqrHardBodyRadiusBasis)."
+            },
+            DENSITY_SENSITIVITY_KM: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Optional position sensitivity to a unit dimensionless log-density shift\n(dr/ds) in EVALUATION_FRAME, 3 doubles in km. Empty when absent."
             }
           },
           required: [
@@ -196605,6 +196643,14 @@ stated.`
                 $ref: "#/definitions/CQRVerifiedCovarianceProducer"
               },
               description: "Builds whose AP covariance a collision probability may use. An empty or\nabsent list means no collision probability from AP covariance."
+            },
+            APPLY_DENSITY_CROSS_CORRELATION: {
+              type: "boolean",
+              description: "When true and DENSITY_LOG_SIGMA > 0 with both objects supplying\nDENSITY_SENSITIVITY_KM, apply common-mode density cross-covariance."
+            },
+            DENSITY_LOG_SIGMA: {
+              type: "number",
+              description: "Dimensionless 1-sigma common-mode log-density uncertainty (sigma_s); 0 disables."
             }
           },
           required: [
@@ -275666,6 +275712,7 @@ balance service's own rate.`
         pcfSolidTideModel: {
           type: "string",
           enum: [
+            "UNSPECIFIED",
             "NONE",
             "IERS_2010"
           ]
@@ -279094,103 +279141,103 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`
         },
         PCFGaussianPrior: {
           type: "object",
-          description: "A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps\nthe theory's own sigma and moves only the mean.",
+          description: "Optional Gaussian parameter prior.",
           properties: {
             MEAN: {
               type: "number",
-              description: "Prior mean, in the unit of the parameter it is attached to. Default 0."
+              description: "Prior mean in the parameter's unit."
             },
             SIGMA: {
               type: "number",
-              description: "Prior standard deviation, in the same unit; > 0 when HAS_SIGMA."
+              description: "Prior standard deviation in the parameter's unit; > 0 when HAS_SIGMA is true."
             },
             HAS_SIGMA: {
               type: "boolean",
-              description: "True when SIGMA carries a value; false keeps the theory's own sigma."
+              description: "True when SIGMA is explicitly provided."
             }
           },
           additionalProperties: false
         },
         PCFFitPolicy: {
           type: "object",
-          description: "Fit policy: how long an arc a fit uses, how that is validated, and what a\nfit refuses.",
+          description: "Optional configuration parameters for orbit estimation.",
           properties: {
             DEFAULT_SPAN_HOURS: {
               type: "number",
-              description: "Fit span used when the span rule is not run, hours. Default 48."
+              description: "Optional span parameter in hours; 0 means unspecified."
             },
             MINIMUM_SPAN_HOURS: {
               type: "number",
-              description: "Shortest span a fit may take, hours. Default 24."
+              description: "Optional minimum span in hours; 0 means unspecified."
             },
             MAXIMUM_SPAN_HOURS: {
               type: "number",
-              description: "Longest span a fit may take, hours. Default 120."
+              description: "Optional maximum span in hours; 0 means unspecified."
             },
             CANDIDATE_SPANS_HOURS: {
               type: "array",
               items: {
                 type: "number"
               },
-              description: "Spans the extension rule scores, ascending, hours, each within\n[MINIMUM_SPAN_HOURS, MAXIMUM_SPAN_HOURS]. Empty: 48, 72 and 120; with\n24 in front when the eccentricity exceeds ECCENTRICITY_THRESHOLD."
+              description: "Optional candidate span list in hours."
             },
             TAIL_HOURS: {
               type: "number",
-              description: "Validation tail: each candidate is fitted to the data before the latest\nTAIL_HOURS and scored on that tail, hours. Default 24."
+              description: "Optional evaluation tail length in hours; 0 means unspecified."
             },
             EXTENSION_MARGIN: {
               type: "number",
-              description: "Extension rule: a longer candidate is taken only when its tail error is\nat most this fraction of the best shorter candidate's. Default 0.9."
+              description: "Optional relative selection margin; 0 means unspecified."
             },
             HOLDOUT_HOURS: {
               type: "number",
-              description: "Hours held out at the end of the data and reported as error growth; the\nfit then ends HOLDOUT_HOURS before the data does. Absent, the data\nblock's own useable stop time decides."
+              description: "Optional holdout window length in hours."
             },
             HAS_HOLDOUT_HOURS: {
               type: "boolean",
-              description: "True when HOLDOUT_HOURS carries a value; false means absent."
+              description: "True when HOLDOUT_HOURS is explicitly provided."
             },
             ECCENTRICITY_THRESHOLD: {
               type: "number",
-              description: "Eccentricity above which the eccentric-orbit rule applies. Default 0.5."
+              description: "Optional eccentricity threshold; 0 means unspecified."
             },
             ECCENTRIC_DEFAULT_SPAN_HOURS: {
               type: "number",
-              description: "Eccentric orbits: the default span, hours. Default 24."
+              description: "Optional eccentric-orbit span in hours; 0 means unspecified."
             },
             ECCENTRIC_EXTENSION_MARGIN: {
               type: "number",
-              description: "Eccentric orbits: EXTENSION_MARGIN. Default 0.7."
+              description: "Optional eccentric-orbit relative margin; 0 means unspecified."
             },
             ECCENTRIC_MAXIMUM_PERIOD_HOURS: {
               type: "number",
-              description: "Eccentric orbits: no candidate longer than this is tried once the orbital\nperiod passes it, hours. Default 36."
+              description: "Optional eccentric-orbit period bound in hours; 0 means unspecified."
             },
             IMPLAUSIBLE_RMS_KM: {
               type: "number",
-              description: "A fit whose RMS passes this is refused as fit-implausible, km. Default\n100."
+              description: "Optional maximum acceptable RMS in km; 0 means unspecified."
             },
             DRAG_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0, sigma 0.05."
+              description: "Optional prior on drag parameter."
             },
             SRP_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.\nAbsent or without sigma: mean 0, sigma 0.05."
+              description: "Optional prior on solar radiation pressure parameter."
             },
             DRAG_PRIOR_FORM: {
               $ref: "#/definitions/pcfPriorForm",
-              description: "The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its\nMEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation\nof ln B_eff."
+              description: "Optional distribution form for DRAG_PRIOR."
             },
             SRP_PRIOR_FORM: {
               $ref: "#/definitions/pcfPriorForm",
-              description: "The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN\nthe median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of\nln AGOM."
+              description: "Optional distribution form for SRP_PRIOR."
             },
             WEATHER_HORIZON_DAYS: {
               type: "integer",
               minimum: 0,
               maximum: 65535,
-              description: "Days past the element set's epoch day through which the fit writes the\ndaily space weather into the record it emits (OCM\nPERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows\n(WEATHER_SOURCE RECORDS). The last day written is the later of the fit\narc's last day and the epoch's day plus this count; rows supplied with\nthe request must reach it, or the fit is refused by name. Default 30."
+              description: "Optional space-weather horizon in days past epoch; 0 means unspecified."
             }
           },
           additionalProperties: false
@@ -279525,7 +279572,7 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`
             },
             SOLID_TIDES: {
               $ref: "#/definitions/pcfSolidTideModel",
-              description: "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nNONE."
+              description: "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nUNSPECIFIED (the propagator's own default)."
             },
             RELATIVITY: {
               $ref: "#/definitions/pcfRelativityTerms",
@@ -314914,6 +314961,7 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`
         pcfSolidTideModel: {
           type: "string",
           enum: [
+            "UNSPECIFIED",
             "NONE",
             "IERS_2010"
           ]
@@ -315340,7 +315388,8 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`
           enum: [
             "UNSPECIFIED",
             "INDEPENDENT",
-            "SUPPLIED_CROSS_COVARIANCE"
+            "SUPPLIED_CROSS_COVARIANCE",
+            "SHARED_DENSITY_SENSITIVITY"
           ]
         },
         cqrDocumentSyntax: {
@@ -318665,103 +318714,103 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`
         },
         PCFGaussianPrior: {
           type: "object",
-          description: "A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps\nthe theory's own sigma and moves only the mean.",
+          description: "Optional Gaussian parameter prior.",
           properties: {
             MEAN: {
               type: "number",
-              description: "Prior mean, in the unit of the parameter it is attached to. Default 0."
+              description: "Prior mean in the parameter's unit."
             },
             SIGMA: {
               type: "number",
-              description: "Prior standard deviation, in the same unit; > 0 when HAS_SIGMA."
+              description: "Prior standard deviation in the parameter's unit; > 0 when HAS_SIGMA is true."
             },
             HAS_SIGMA: {
               type: "boolean",
-              description: "True when SIGMA carries a value; false keeps the theory's own sigma."
+              description: "True when SIGMA is explicitly provided."
             }
           },
           additionalProperties: false
         },
         PCFFitPolicy: {
           type: "object",
-          description: "Fit policy: how long an arc a fit uses, how that is validated, and what a\nfit refuses.",
+          description: "Optional configuration parameters for orbit estimation.",
           properties: {
             DEFAULT_SPAN_HOURS: {
               type: "number",
-              description: "Fit span used when the span rule is not run, hours. Default 48."
+              description: "Optional span parameter in hours; 0 means unspecified."
             },
             MINIMUM_SPAN_HOURS: {
               type: "number",
-              description: "Shortest span a fit may take, hours. Default 24."
+              description: "Optional minimum span in hours; 0 means unspecified."
             },
             MAXIMUM_SPAN_HOURS: {
               type: "number",
-              description: "Longest span a fit may take, hours. Default 120."
+              description: "Optional maximum span in hours; 0 means unspecified."
             },
             CANDIDATE_SPANS_HOURS: {
               type: "array",
               items: {
                 type: "number"
               },
-              description: "Spans the extension rule scores, ascending, hours, each within\n[MINIMUM_SPAN_HOURS, MAXIMUM_SPAN_HOURS]. Empty: 48, 72 and 120; with\n24 in front when the eccentricity exceeds ECCENTRICITY_THRESHOLD."
+              description: "Optional candidate span list in hours."
             },
             TAIL_HOURS: {
               type: "number",
-              description: "Validation tail: each candidate is fitted to the data before the latest\nTAIL_HOURS and scored on that tail, hours. Default 24."
+              description: "Optional evaluation tail length in hours; 0 means unspecified."
             },
             EXTENSION_MARGIN: {
               type: "number",
-              description: "Extension rule: a longer candidate is taken only when its tail error is\nat most this fraction of the best shorter candidate's. Default 0.9."
+              description: "Optional relative selection margin; 0 means unspecified."
             },
             HOLDOUT_HOURS: {
               type: "number",
-              description: "Hours held out at the end of the data and reported as error growth; the\nfit then ends HOLDOUT_HOURS before the data does. Absent, the data\nblock's own useable stop time decides."
+              description: "Optional holdout window length in hours."
             },
             HAS_HOLDOUT_HOURS: {
               type: "boolean",
-              description: "True when HOLDOUT_HOURS carries a value; false means absent."
+              description: "True when HOLDOUT_HOURS is explicitly provided."
             },
             ECCENTRICITY_THRESHOLD: {
               type: "number",
-              description: "Eccentricity above which the eccentric-orbit rule applies. Default 0.5."
+              description: "Optional eccentricity threshold; 0 means unspecified."
             },
             ECCENTRIC_DEFAULT_SPAN_HOURS: {
               type: "number",
-              description: "Eccentric orbits: the default span, hours. Default 24."
+              description: "Optional eccentric-orbit span in hours; 0 means unspecified."
             },
             ECCENTRIC_EXTENSION_MARGIN: {
               type: "number",
-              description: "Eccentric orbits: EXTENSION_MARGIN. Default 0.7."
+              description: "Optional eccentric-orbit relative margin; 0 means unspecified."
             },
             ECCENTRIC_MAXIMUM_PERIOD_HOURS: {
               type: "number",
-              description: "Eccentric orbits: no candidate longer than this is tried once the orbital\nperiod passes it, hours. Default 36."
+              description: "Optional eccentric-orbit period bound in hours; 0 means unspecified."
             },
             IMPLAUSIBLE_RMS_KM: {
               type: "number",
-              description: "A fit whose RMS passes this is refused as fit-implausible, km. Default\n100."
+              description: "Optional maximum acceptable RMS in km; 0 means unspecified."
             },
             DRAG_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0, sigma 0.05."
+              description: "Optional prior on drag parameter."
             },
             SRP_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.\nAbsent or without sigma: mean 0, sigma 0.05."
+              description: "Optional prior on solar radiation pressure parameter."
             },
             DRAG_PRIOR_FORM: {
               $ref: "#/definitions/pcfPriorForm",
-              description: "The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its\nMEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation\nof ln B_eff."
+              description: "Optional distribution form for DRAG_PRIOR."
             },
             SRP_PRIOR_FORM: {
               $ref: "#/definitions/pcfPriorForm",
-              description: "The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN\nthe median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of\nln AGOM."
+              description: "Optional distribution form for SRP_PRIOR."
             },
             WEATHER_HORIZON_DAYS: {
               type: "integer",
               minimum: 0,
               maximum: 65535,
-              description: "Days past the element set's epoch day through which the fit writes the\ndaily space weather into the record it emits (OCM\nPERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows\n(WEATHER_SOURCE RECORDS). The last day written is the later of the fit\narc's last day and the epoch's day plus this count; rows supplied with\nthe request must reach it, or the fit is refused by name. Default 30."
+              description: "Optional space-weather horizon in days past epoch; 0 means unspecified."
             }
           },
           additionalProperties: false
@@ -319096,7 +319145,7 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`
             },
             SOLID_TIDES: {
               $ref: "#/definitions/pcfSolidTideModel",
-              description: "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nNONE."
+              description: "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nUNSPECIFIED (the propagator's own default)."
             },
             RELATIVITY: {
               $ref: "#/definitions/pcfRelativityTerms",
@@ -322528,7 +322577,7 @@ stated.`
               type: "integer",
               minimum: 0,
               maximum: 4294967295,
-              description: "Reference states fitted."
+              description: "Reference states reported; 0 means not stated."
             },
             FIT_RMS_KM: {
               type: "number",
@@ -322552,11 +322601,11 @@ stated.`
               type: "integer",
               minimum: 0,
               maximum: 4294967295,
-              description: "Iterations the fit took."
+              description: "Iterations reported; 0 means not stated."
             },
             CONVERGED: {
               type: "boolean",
-              description: "True when the fit converged."
+              description: "True when converged."
             },
             HELD_OUT_STOP: {
               type: "string",
@@ -322583,7 +322632,7 @@ stated.`
             },
             PCF_CID: {
               type: "string",
-              description: "CID of the $PCF the fit ran under: its span rule, priors and holdout."
+              description: "CID of the $PCF configuration associated with the record."
             },
             FIT_START: {
               type: "string",
@@ -323438,6 +323487,13 @@ stated.`
                 $ref: "#/definitions/CVR"
               },
               description: "Realism of the block's covariance: one entry per line of LINES, in order,\nor one entry for every line."
+            },
+            DENSITY_SENSITIVITY_KM: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Optional position sensitivity to a unit dimensionless log-density shift\n(dr/ds), flattened 3 doubles per line of LINES in COV_REF_FRAME, km.\nEmpty when absent."
             }
           },
           additionalProperties: false
@@ -324479,6 +324535,13 @@ compressed). Nothing hashes the payload before the protocol hash.`
             CATALOG_ENTRY: {
               $ref: "#/definitions/CAT",
               description: "The object's catalog entry. Without a supplied radius, its SIZE, else\nits RCS, gives the hard-body radius (see cqrHardBodyRadiusBasis)."
+            },
+            DENSITY_SENSITIVITY_KM: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Optional position sensitivity to a unit dimensionless log-density shift\n(dr/ds) in EVALUATION_FRAME, 3 doubles in km. Empty when absent."
             }
           },
           required: [
@@ -324580,6 +324643,14 @@ compressed). Nothing hashes the payload before the protocol hash.`
                 $ref: "#/definitions/CQRVerifiedCovarianceProducer"
               },
               description: "Builds whose AP covariance a collision probability may use. An empty or\nabsent list means no collision probability from AP covariance."
+            },
+            APPLY_DENSITY_CROSS_CORRELATION: {
+              type: "boolean",
+              description: "When true and DENSITY_LOG_SIGMA > 0 with both objects supplying\nDENSITY_SENSITIVITY_KM, apply common-mode density cross-covariance."
+            },
+            DENSITY_LOG_SIGMA: {
+              type: "number",
+              description: "Dimensionless 1-sigma common-mode log-density uncertainty (sigma_s); 0 disables."
             }
           },
           required: [
@@ -344839,6 +344910,7 @@ compressed). Nothing hashes the payload before the protocol hash.`
         pcfSolidTideModel: {
           type: "string",
           enum: [
+            "UNSPECIFIED",
             "NONE",
             "IERS_2010"
           ]
@@ -347868,103 +347940,103 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`
         },
         PCFGaussianPrior: {
           type: "object",
-          description: "A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps\nthe theory's own sigma and moves only the mean.",
+          description: "Optional Gaussian parameter prior.",
           properties: {
             MEAN: {
               type: "number",
-              description: "Prior mean, in the unit of the parameter it is attached to. Default 0."
+              description: "Prior mean in the parameter's unit."
             },
             SIGMA: {
               type: "number",
-              description: "Prior standard deviation, in the same unit; > 0 when HAS_SIGMA."
+              description: "Prior standard deviation in the parameter's unit; > 0 when HAS_SIGMA is true."
             },
             HAS_SIGMA: {
               type: "boolean",
-              description: "True when SIGMA carries a value; false keeps the theory's own sigma."
+              description: "True when SIGMA is explicitly provided."
             }
           },
           additionalProperties: false
         },
         PCFFitPolicy: {
           type: "object",
-          description: "Fit policy: how long an arc a fit uses, how that is validated, and what a\nfit refuses.",
+          description: "Optional configuration parameters for orbit estimation.",
           properties: {
             DEFAULT_SPAN_HOURS: {
               type: "number",
-              description: "Fit span used when the span rule is not run, hours. Default 48."
+              description: "Optional span parameter in hours; 0 means unspecified."
             },
             MINIMUM_SPAN_HOURS: {
               type: "number",
-              description: "Shortest span a fit may take, hours. Default 24."
+              description: "Optional minimum span in hours; 0 means unspecified."
             },
             MAXIMUM_SPAN_HOURS: {
               type: "number",
-              description: "Longest span a fit may take, hours. Default 120."
+              description: "Optional maximum span in hours; 0 means unspecified."
             },
             CANDIDATE_SPANS_HOURS: {
               type: "array",
               items: {
                 type: "number"
               },
-              description: "Spans the extension rule scores, ascending, hours, each within\n[MINIMUM_SPAN_HOURS, MAXIMUM_SPAN_HOURS]. Empty: 48, 72 and 120; with\n24 in front when the eccentricity exceeds ECCENTRICITY_THRESHOLD."
+              description: "Optional candidate span list in hours."
             },
             TAIL_HOURS: {
               type: "number",
-              description: "Validation tail: each candidate is fitted to the data before the latest\nTAIL_HOURS and scored on that tail, hours. Default 24."
+              description: "Optional evaluation tail length in hours; 0 means unspecified."
             },
             EXTENSION_MARGIN: {
               type: "number",
-              description: "Extension rule: a longer candidate is taken only when its tail error is\nat most this fraction of the best shorter candidate's. Default 0.9."
+              description: "Optional relative selection margin; 0 means unspecified."
             },
             HOLDOUT_HOURS: {
               type: "number",
-              description: "Hours held out at the end of the data and reported as error growth; the\nfit then ends HOLDOUT_HOURS before the data does. Absent, the data\nblock's own useable stop time decides."
+              description: "Optional holdout window length in hours."
             },
             HAS_HOLDOUT_HOURS: {
               type: "boolean",
-              description: "True when HOLDOUT_HOURS carries a value; false means absent."
+              description: "True when HOLDOUT_HOURS is explicitly provided."
             },
             ECCENTRICITY_THRESHOLD: {
               type: "number",
-              description: "Eccentricity above which the eccentric-orbit rule applies. Default 0.5."
+              description: "Optional eccentricity threshold; 0 means unspecified."
             },
             ECCENTRIC_DEFAULT_SPAN_HOURS: {
               type: "number",
-              description: "Eccentric orbits: the default span, hours. Default 24."
+              description: "Optional eccentric-orbit span in hours; 0 means unspecified."
             },
             ECCENTRIC_EXTENSION_MARGIN: {
               type: "number",
-              description: "Eccentric orbits: EXTENSION_MARGIN. Default 0.7."
+              description: "Optional eccentric-orbit relative margin; 0 means unspecified."
             },
             ECCENTRIC_MAXIMUM_PERIOD_HOURS: {
               type: "number",
-              description: "Eccentric orbits: no candidate longer than this is tried once the orbital\nperiod passes it, hours. Default 36."
+              description: "Optional eccentric-orbit period bound in hours; 0 means unspecified."
             },
             IMPLAUSIBLE_RMS_KM: {
               type: "number",
-              description: "A fit whose RMS passes this is refused as fit-implausible, km. Default\n100."
+              description: "Optional maximum acceptable RMS in km; 0 means unspecified."
             },
             DRAG_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0, sigma 0.05."
+              description: "Optional prior on drag parameter."
             },
             SRP_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.\nAbsent or without sigma: mean 0, sigma 0.05."
+              description: "Optional prior on solar radiation pressure parameter."
             },
             DRAG_PRIOR_FORM: {
               $ref: "#/definitions/pcfPriorForm",
-              description: "The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its\nMEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation\nof ln B_eff."
+              description: "Optional distribution form for DRAG_PRIOR."
             },
             SRP_PRIOR_FORM: {
               $ref: "#/definitions/pcfPriorForm",
-              description: "The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN\nthe median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of\nln AGOM."
+              description: "Optional distribution form for SRP_PRIOR."
             },
             WEATHER_HORIZON_DAYS: {
               type: "integer",
               minimum: 0,
               maximum: 65535,
-              description: "Days past the element set's epoch day through which the fit writes the\ndaily space weather into the record it emits (OCM\nPERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows\n(WEATHER_SOURCE RECORDS). The last day written is the later of the fit\narc's last day and the epoch's day plus this count; rows supplied with\nthe request must reach it, or the fit is refused by name. Default 30."
+              description: "Optional space-weather horizon in days past epoch; 0 means unspecified."
             }
           },
           additionalProperties: false
@@ -348299,7 +348371,7 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`
             },
             SOLID_TIDES: {
               $ref: "#/definitions/pcfSolidTideModel",
-              description: "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nNONE."
+              description: "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nUNSPECIFIED (the propagator's own default)."
             },
             RELATIVITY: {
               $ref: "#/definitions/pcfRelativityTerms",
@@ -351715,7 +351787,7 @@ stated.`
               type: "integer",
               minimum: 0,
               maximum: 4294967295,
-              description: "Reference states fitted."
+              description: "Reference states reported; 0 means not stated."
             },
             FIT_RMS_KM: {
               type: "number",
@@ -351739,11 +351811,11 @@ stated.`
               type: "integer",
               minimum: 0,
               maximum: 4294967295,
-              description: "Iterations the fit took."
+              description: "Iterations reported; 0 means not stated."
             },
             CONVERGED: {
               type: "boolean",
-              description: "True when the fit converged."
+              description: "True when converged."
             },
             HELD_OUT_STOP: {
               type: "string",
@@ -351770,7 +351842,7 @@ stated.`
             },
             PCF_CID: {
               type: "string",
-              description: "CID of the $PCF the fit ran under: its span rule, priors and holdout."
+              description: "CID of the $PCF configuration associated with the record."
             },
             FIT_START: {
               type: "string",
@@ -352625,6 +352697,13 @@ stated.`
                 $ref: "#/definitions/CVR"
               },
               description: "Realism of the block's covariance: one entry per line of LINES, in order,\nor one entry for every line."
+            },
+            DENSITY_SENSITIVITY_KM: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Optional position sensitivity to a unit dimensionless log-density shift\n(dr/ds), flattened 3 doubles per line of LINES in COV_REF_FRAME, km.\nEmpty when absent."
             }
           },
           additionalProperties: false
@@ -367995,6 +368074,7 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`
         pcfSolidTideModel: {
           type: "string",
           enum: [
+            "UNSPECIFIED",
             "NONE",
             "IERS_2010"
           ]
@@ -372199,103 +372279,103 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`
         },
         PCFGaussianPrior: {
           type: "object",
-          description: "A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps\nthe theory's own sigma and moves only the mean.",
+          description: "Optional Gaussian parameter prior.",
           properties: {
             MEAN: {
               type: "number",
-              description: "Prior mean, in the unit of the parameter it is attached to. Default 0."
+              description: "Prior mean in the parameter's unit."
             },
             SIGMA: {
               type: "number",
-              description: "Prior standard deviation, in the same unit; > 0 when HAS_SIGMA."
+              description: "Prior standard deviation in the parameter's unit; > 0 when HAS_SIGMA is true."
             },
             HAS_SIGMA: {
               type: "boolean",
-              description: "True when SIGMA carries a value; false keeps the theory's own sigma."
+              description: "True when SIGMA is explicitly provided."
             }
           },
           additionalProperties: false
         },
         PCFFitPolicy: {
           type: "object",
-          description: "Fit policy: how long an arc a fit uses, how that is validated, and what a\nfit refuses.",
+          description: "Optional configuration parameters for orbit estimation.",
           properties: {
             DEFAULT_SPAN_HOURS: {
               type: "number",
-              description: "Fit span used when the span rule is not run, hours. Default 48."
+              description: "Optional span parameter in hours; 0 means unspecified."
             },
             MINIMUM_SPAN_HOURS: {
               type: "number",
-              description: "Shortest span a fit may take, hours. Default 24."
+              description: "Optional minimum span in hours; 0 means unspecified."
             },
             MAXIMUM_SPAN_HOURS: {
               type: "number",
-              description: "Longest span a fit may take, hours. Default 120."
+              description: "Optional maximum span in hours; 0 means unspecified."
             },
             CANDIDATE_SPANS_HOURS: {
               type: "array",
               items: {
                 type: "number"
               },
-              description: "Spans the extension rule scores, ascending, hours, each within\n[MINIMUM_SPAN_HOURS, MAXIMUM_SPAN_HOURS]. Empty: 48, 72 and 120; with\n24 in front when the eccentricity exceeds ECCENTRICITY_THRESHOLD."
+              description: "Optional candidate span list in hours."
             },
             TAIL_HOURS: {
               type: "number",
-              description: "Validation tail: each candidate is fitted to the data before the latest\nTAIL_HOURS and scored on that tail, hours. Default 24."
+              description: "Optional evaluation tail length in hours; 0 means unspecified."
             },
             EXTENSION_MARGIN: {
               type: "number",
-              description: "Extension rule: a longer candidate is taken only when its tail error is\nat most this fraction of the best shorter candidate's. Default 0.9."
+              description: "Optional relative selection margin; 0 means unspecified."
             },
             HOLDOUT_HOURS: {
               type: "number",
-              description: "Hours held out at the end of the data and reported as error growth; the\nfit then ends HOLDOUT_HOURS before the data does. Absent, the data\nblock's own useable stop time decides."
+              description: "Optional holdout window length in hours."
             },
             HAS_HOLDOUT_HOURS: {
               type: "boolean",
-              description: "True when HOLDOUT_HOURS carries a value; false means absent."
+              description: "True when HOLDOUT_HOURS is explicitly provided."
             },
             ECCENTRICITY_THRESHOLD: {
               type: "number",
-              description: "Eccentricity above which the eccentric-orbit rule applies. Default 0.5."
+              description: "Optional eccentricity threshold; 0 means unspecified."
             },
             ECCENTRIC_DEFAULT_SPAN_HOURS: {
               type: "number",
-              description: "Eccentric orbits: the default span, hours. Default 24."
+              description: "Optional eccentric-orbit span in hours; 0 means unspecified."
             },
             ECCENTRIC_EXTENSION_MARGIN: {
               type: "number",
-              description: "Eccentric orbits: EXTENSION_MARGIN. Default 0.7."
+              description: "Optional eccentric-orbit relative margin; 0 means unspecified."
             },
             ECCENTRIC_MAXIMUM_PERIOD_HOURS: {
               type: "number",
-              description: "Eccentric orbits: no candidate longer than this is tried once the orbital\nperiod passes it, hours. Default 36."
+              description: "Optional eccentric-orbit period bound in hours; 0 means unspecified."
             },
             IMPLAUSIBLE_RMS_KM: {
               type: "number",
-              description: "A fit whose RMS passes this is refused as fit-implausible, km. Default\n100."
+              description: "Optional maximum acceptable RMS in km; 0 means unspecified."
             },
             DRAG_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0, sigma 0.05."
+              description: "Optional prior on drag parameter."
             },
             SRP_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.\nAbsent or without sigma: mean 0, sigma 0.05."
+              description: "Optional prior on solar radiation pressure parameter."
             },
             DRAG_PRIOR_FORM: {
               $ref: "#/definitions/pcfPriorForm",
-              description: "The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its\nMEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation\nof ln B_eff."
+              description: "Optional distribution form for DRAG_PRIOR."
             },
             SRP_PRIOR_FORM: {
               $ref: "#/definitions/pcfPriorForm",
-              description: "The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN\nthe median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of\nln AGOM."
+              description: "Optional distribution form for SRP_PRIOR."
             },
             WEATHER_HORIZON_DAYS: {
               type: "integer",
               minimum: 0,
               maximum: 65535,
-              description: "Days past the element set's epoch day through which the fit writes the\ndaily space weather into the record it emits (OCM\nPERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows\n(WEATHER_SOURCE RECORDS). The last day written is the later of the fit\narc's last day and the epoch's day plus this count; rows supplied with\nthe request must reach it, or the fit is refused by name. Default 30."
+              description: "Optional space-weather horizon in days past epoch; 0 means unspecified."
             }
           },
           additionalProperties: false
@@ -372630,7 +372710,7 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`
             },
             SOLID_TIDES: {
               $ref: "#/definitions/pcfSolidTideModel",
-              description: "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nNONE."
+              description: "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nUNSPECIFIED (the propagator's own default)."
             },
             RELATIVITY: {
               $ref: "#/definitions/pcfRelativityTerms",
@@ -380497,13 +380577,14 @@ var fbjson_default = {
         pcfSolidTideModel: {
           type: "string",
           enum: [
+            "UNSPECIFIED",
             "NONE",
             "IERS_2010"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
           "x-flatbuffer-enum-values": {
-            NONE: {
+            UNSPECIFIED: {
               value: 0
             }
           }
@@ -380593,11 +380674,11 @@ var fbjson_default = {
           "x-flatbuffer-enum-values": {
             GAUSSIAN_SIGNED: {
               value: 0,
-              description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+              description: "Gaussian distribution on the parameter value."
             },
             LOG_NORMAL: {
               value: 1,
-              description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+              description: "Log-normal distribution on a positive parameter value."
             }
           }
         },
@@ -388443,23 +388524,23 @@ var fbjson_default = {
         },
         PCFGaussianPrior: {
           type: "object",
-          description: "A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps\nthe theory's own sigma and moves only the mean.",
+          description: "Optional Gaussian parameter prior.",
           properties: {
             MEAN: {
               type: "number",
-              description: "Prior mean, in the unit of the parameter it is attached to. Default 0.",
+              description: "Prior mean in the parameter's unit.",
               "x-flatbuffer-type": "double",
               "x-flatbuffer-default": "0"
             },
             SIGMA: {
               type: "number",
-              description: "Prior standard deviation, in the same unit; > 0 when HAS_SIGMA.",
+              description: "Prior standard deviation in the parameter's unit; > 0 when HAS_SIGMA is true.",
               "x-flatbuffer-type": "double",
               "x-flatbuffer-default": "0"
             },
             HAS_SIGMA: {
               type: "boolean",
-              description: "True when SIGMA carries a value; false keeps the theory's own sigma.",
+              description: "True when SIGMA is explicitly provided.",
               "x-flatbuffer-type": "bool",
               "x-flatbuffer-default": "false"
             }
@@ -388468,128 +388549,128 @@ var fbjson_default = {
         },
         PCFFitPolicy: {
           type: "object",
-          description: "Fit policy: how long an arc a fit uses, how that is validated, and what a\nfit refuses.",
+          description: "Optional configuration parameters for orbit estimation.",
           properties: {
             DEFAULT_SPAN_HOURS: {
               type: "number",
-              description: "Fit span used when the span rule is not run, hours. Default 48.",
+              description: "Optional span parameter in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "48"
+              "x-flatbuffer-default": "0"
             },
             MINIMUM_SPAN_HOURS: {
               type: "number",
-              description: "Shortest span a fit may take, hours. Default 24.",
+              description: "Optional minimum span in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "24"
+              "x-flatbuffer-default": "0"
             },
             MAXIMUM_SPAN_HOURS: {
               type: "number",
-              description: "Longest span a fit may take, hours. Default 120.",
+              description: "Optional maximum span in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "120"
+              "x-flatbuffer-default": "0"
             },
             CANDIDATE_SPANS_HOURS: {
               type: "array",
               items: {
                 type: "number"
               },
-              description: "Spans the extension rule scores, ascending, hours, each within\n[MINIMUM_SPAN_HOURS, MAXIMUM_SPAN_HOURS]. Empty: 48, 72 and 120; with\n24 in front when the eccentricity exceeds ECCENTRICITY_THRESHOLD.",
+              description: "Optional candidate span list in hours.",
               "x-flatbuffer-type": "[double]"
             },
             TAIL_HOURS: {
               type: "number",
-              description: "Validation tail: each candidate is fitted to the data before the latest\nTAIL_HOURS and scored on that tail, hours. Default 24.",
+              description: "Optional evaluation tail length in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "24"
+              "x-flatbuffer-default": "0"
             },
             EXTENSION_MARGIN: {
               type: "number",
-              description: "Extension rule: a longer candidate is taken only when its tail error is\nat most this fraction of the best shorter candidate's. Default 0.9.",
+              description: "Optional relative selection margin; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.9"
+              "x-flatbuffer-default": "0"
             },
             HOLDOUT_HOURS: {
               type: "number",
-              description: "Hours held out at the end of the data and reported as error growth; the\nfit then ends HOLDOUT_HOURS before the data does. Absent, the data\nblock's own useable stop time decides.",
+              description: "Optional holdout window length in hours.",
               "x-flatbuffer-type": "double",
               "x-flatbuffer-default": "0"
             },
             HAS_HOLDOUT_HOURS: {
               type: "boolean",
-              description: "True when HOLDOUT_HOURS carries a value; false means absent.",
+              description: "True when HOLDOUT_HOURS is explicitly provided.",
               "x-flatbuffer-type": "bool",
               "x-flatbuffer-default": "false"
             },
             ECCENTRICITY_THRESHOLD: {
               type: "number",
-              description: "Eccentricity above which the eccentric-orbit rule applies. Default 0.5.",
+              description: "Optional eccentricity threshold; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.5"
+              "x-flatbuffer-default": "0"
             },
             ECCENTRIC_DEFAULT_SPAN_HOURS: {
               type: "number",
-              description: "Eccentric orbits: the default span, hours. Default 24.",
+              description: "Optional eccentric-orbit span in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "24"
+              "x-flatbuffer-default": "0"
             },
             ECCENTRIC_EXTENSION_MARGIN: {
               type: "number",
-              description: "Eccentric orbits: EXTENSION_MARGIN. Default 0.7.",
+              description: "Optional eccentric-orbit relative margin; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.7"
+              "x-flatbuffer-default": "0"
             },
             ECCENTRIC_MAXIMUM_PERIOD_HOURS: {
               type: "number",
-              description: "Eccentric orbits: no candidate longer than this is tried once the orbital\nperiod passes it, hours. Default 36.",
+              description: "Optional eccentric-orbit period bound in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "36"
+              "x-flatbuffer-default": "0"
             },
             IMPLAUSIBLE_RMS_KM: {
               type: "number",
-              description: "A fit whose RMS passes this is refused as fit-implausible, km. Default\n100.",
+              description: "Optional maximum acceptable RMS in km; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "100"
+              "x-flatbuffer-default": "0"
             },
             DRAG_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0, sigma 0.05.",
+              description: "Optional prior on drag parameter.",
               "x-flatbuffer-type": "PCFGaussianPrior"
             },
             SRP_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.\nAbsent or without sigma: mean 0, sigma 0.05.",
+              description: "Optional prior on solar radiation pressure parameter.",
               "x-flatbuffer-type": "PCFGaussianPrior"
             },
             DRAG_PRIOR_FORM: {
               $ref: "#/definitions/pcfPriorForm",
-              description: "The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its\nMEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation\nof ln B_eff.",
+              description: "Optional distribution form for DRAG_PRIOR.",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 GAUSSIAN_SIGNED: {
                   value: 0,
-                  description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+                  description: "Gaussian distribution on the parameter value."
                 },
                 LOG_NORMAL: {
                   value: 1,
-                  description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+                  description: "Log-normal distribution on a positive parameter value."
                 }
               },
               "x-flatbuffer-default": "GAUSSIAN_SIGNED"
             },
             SRP_PRIOR_FORM: {
               $ref: "#/definitions/pcfPriorForm",
-              description: "The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN\nthe median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of\nln AGOM.",
+              description: "Optional distribution form for SRP_PRIOR.",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 GAUSSIAN_SIGNED: {
                   value: 0,
-                  description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+                  description: "Gaussian distribution on the parameter value."
                 },
                 LOG_NORMAL: {
                   value: 1,
-                  description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+                  description: "Log-normal distribution on a positive parameter value."
                 }
               },
               "x-flatbuffer-default": "GAUSSIAN_SIGNED"
@@ -388598,9 +388679,9 @@ var fbjson_default = {
               type: "integer",
               minimum: 0,
               maximum: 65535,
-              description: "Days past the element set's epoch day through which the fit writes the\ndaily space weather into the record it emits (OCM\nPERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows\n(WEATHER_SOURCE RECORDS). The last day written is the later of the fit\narc's last day and the epoch's day plus this count; rows supplied with\nthe request must reach it, or the fit is refused by name. Default 30.",
+              description: "Optional space-weather horizon in days past epoch; 0 means unspecified.",
               "x-flatbuffer-type": "ushort",
-              "x-flatbuffer-default": "30"
+              "x-flatbuffer-default": "0"
             }
           },
           additionalProperties: false
@@ -390041,15 +390122,15 @@ var fbjson_default = {
             },
             SOLID_TIDES: {
               $ref: "#/definitions/pcfSolidTideModel",
-              description: "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nNONE.",
+              description: "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nUNSPECIFIED (the propagator's own default).",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
-                NONE: {
+                UNSPECIFIED: {
                   value: 0
                 }
               },
-              "x-flatbuffer-default": "NONE"
+              "x-flatbuffer-default": "UNSPECIFIED"
             },
             RELATIVITY: {
               $ref: "#/definitions/pcfRelativityTerms",
@@ -441449,13 +441530,14 @@ Decoding applies the inverses from the last back.`,
         pcfSolidTideModel: {
           type: "string",
           enum: [
+            "UNSPECIFIED",
             "NONE",
             "IERS_2010"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
           "x-flatbuffer-enum-values": {
-            NONE: {
+            UNSPECIFIED: {
               value: 0
             }
           }
@@ -441545,11 +441627,11 @@ Decoding applies the inverses from the last back.`,
           "x-flatbuffer-enum-values": {
             GAUSSIAN_SIGNED: {
               value: 0,
-              description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+              description: "Gaussian distribution on the parameter value."
             },
             LOG_NORMAL: {
               value: 1,
-              description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+              description: "Log-normal distribution on a positive parameter value."
             }
           }
         },
@@ -453545,23 +453627,23 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
         },
         PCFGaussianPrior: {
           type: "object",
-          description: "A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps\nthe theory's own sigma and moves only the mean.",
+          description: "Optional Gaussian parameter prior.",
           properties: {
             MEAN: {
               type: "number",
-              description: "Prior mean, in the unit of the parameter it is attached to. Default 0.",
+              description: "Prior mean in the parameter's unit.",
               "x-flatbuffer-type": "double",
               "x-flatbuffer-default": "0"
             },
             SIGMA: {
               type: "number",
-              description: "Prior standard deviation, in the same unit; > 0 when HAS_SIGMA.",
+              description: "Prior standard deviation in the parameter's unit; > 0 when HAS_SIGMA is true.",
               "x-flatbuffer-type": "double",
               "x-flatbuffer-default": "0"
             },
             HAS_SIGMA: {
               type: "boolean",
-              description: "True when SIGMA carries a value; false keeps the theory's own sigma.",
+              description: "True when SIGMA is explicitly provided.",
               "x-flatbuffer-type": "bool",
               "x-flatbuffer-default": "false"
             }
@@ -453570,128 +453652,128 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
         },
         PCFFitPolicy: {
           type: "object",
-          description: "Fit policy: how long an arc a fit uses, how that is validated, and what a\nfit refuses.",
+          description: "Optional configuration parameters for orbit estimation.",
           properties: {
             DEFAULT_SPAN_HOURS: {
               type: "number",
-              description: "Fit span used when the span rule is not run, hours. Default 48.",
+              description: "Optional span parameter in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "48"
+              "x-flatbuffer-default": "0"
             },
             MINIMUM_SPAN_HOURS: {
               type: "number",
-              description: "Shortest span a fit may take, hours. Default 24.",
+              description: "Optional minimum span in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "24"
+              "x-flatbuffer-default": "0"
             },
             MAXIMUM_SPAN_HOURS: {
               type: "number",
-              description: "Longest span a fit may take, hours. Default 120.",
+              description: "Optional maximum span in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "120"
+              "x-flatbuffer-default": "0"
             },
             CANDIDATE_SPANS_HOURS: {
               type: "array",
               items: {
                 type: "number"
               },
-              description: "Spans the extension rule scores, ascending, hours, each within\n[MINIMUM_SPAN_HOURS, MAXIMUM_SPAN_HOURS]. Empty: 48, 72 and 120; with\n24 in front when the eccentricity exceeds ECCENTRICITY_THRESHOLD.",
+              description: "Optional candidate span list in hours.",
               "x-flatbuffer-type": "[double]"
             },
             TAIL_HOURS: {
               type: "number",
-              description: "Validation tail: each candidate is fitted to the data before the latest\nTAIL_HOURS and scored on that tail, hours. Default 24.",
+              description: "Optional evaluation tail length in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "24"
+              "x-flatbuffer-default": "0"
             },
             EXTENSION_MARGIN: {
               type: "number",
-              description: "Extension rule: a longer candidate is taken only when its tail error is\nat most this fraction of the best shorter candidate's. Default 0.9.",
+              description: "Optional relative selection margin; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.9"
+              "x-flatbuffer-default": "0"
             },
             HOLDOUT_HOURS: {
               type: "number",
-              description: "Hours held out at the end of the data and reported as error growth; the\nfit then ends HOLDOUT_HOURS before the data does. Absent, the data\nblock's own useable stop time decides.",
+              description: "Optional holdout window length in hours.",
               "x-flatbuffer-type": "double",
               "x-flatbuffer-default": "0"
             },
             HAS_HOLDOUT_HOURS: {
               type: "boolean",
-              description: "True when HOLDOUT_HOURS carries a value; false means absent.",
+              description: "True when HOLDOUT_HOURS is explicitly provided.",
               "x-flatbuffer-type": "bool",
               "x-flatbuffer-default": "false"
             },
             ECCENTRICITY_THRESHOLD: {
               type: "number",
-              description: "Eccentricity above which the eccentric-orbit rule applies. Default 0.5.",
+              description: "Optional eccentricity threshold; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.5"
+              "x-flatbuffer-default": "0"
             },
             ECCENTRIC_DEFAULT_SPAN_HOURS: {
               type: "number",
-              description: "Eccentric orbits: the default span, hours. Default 24.",
+              description: "Optional eccentric-orbit span in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "24"
+              "x-flatbuffer-default": "0"
             },
             ECCENTRIC_EXTENSION_MARGIN: {
               type: "number",
-              description: "Eccentric orbits: EXTENSION_MARGIN. Default 0.7.",
+              description: "Optional eccentric-orbit relative margin; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.7"
+              "x-flatbuffer-default": "0"
             },
             ECCENTRIC_MAXIMUM_PERIOD_HOURS: {
               type: "number",
-              description: "Eccentric orbits: no candidate longer than this is tried once the orbital\nperiod passes it, hours. Default 36.",
+              description: "Optional eccentric-orbit period bound in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "36"
+              "x-flatbuffer-default": "0"
             },
             IMPLAUSIBLE_RMS_KM: {
               type: "number",
-              description: "A fit whose RMS passes this is refused as fit-implausible, km. Default\n100.",
+              description: "Optional maximum acceptable RMS in km; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "100"
+              "x-flatbuffer-default": "0"
             },
             DRAG_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0, sigma 0.05.",
+              description: "Optional prior on drag parameter.",
               "x-flatbuffer-type": "PCFGaussianPrior"
             },
             SRP_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.\nAbsent or without sigma: mean 0, sigma 0.05.",
+              description: "Optional prior on solar radiation pressure parameter.",
               "x-flatbuffer-type": "PCFGaussianPrior"
             },
             DRAG_PRIOR_FORM: {
               $ref: "#/definitions/pcfPriorForm",
-              description: "The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its\nMEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation\nof ln B_eff.",
+              description: "Optional distribution form for DRAG_PRIOR.",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 GAUSSIAN_SIGNED: {
                   value: 0,
-                  description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+                  description: "Gaussian distribution on the parameter value."
                 },
                 LOG_NORMAL: {
                   value: 1,
-                  description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+                  description: "Log-normal distribution on a positive parameter value."
                 }
               },
               "x-flatbuffer-default": "GAUSSIAN_SIGNED"
             },
             SRP_PRIOR_FORM: {
               $ref: "#/definitions/pcfPriorForm",
-              description: "The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN\nthe median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of\nln AGOM.",
+              description: "Optional distribution form for SRP_PRIOR.",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 GAUSSIAN_SIGNED: {
                   value: 0,
-                  description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+                  description: "Gaussian distribution on the parameter value."
                 },
                 LOG_NORMAL: {
                   value: 1,
-                  description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+                  description: "Log-normal distribution on a positive parameter value."
                 }
               },
               "x-flatbuffer-default": "GAUSSIAN_SIGNED"
@@ -453700,9 +453782,9 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
               type: "integer",
               minimum: 0,
               maximum: 65535,
-              description: "Days past the element set's epoch day through which the fit writes the\ndaily space weather into the record it emits (OCM\nPERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows\n(WEATHER_SOURCE RECORDS). The last day written is the later of the fit\narc's last day and the epoch's day plus this count; rows supplied with\nthe request must reach it, or the fit is refused by name. Default 30.",
+              description: "Optional space-weather horizon in days past epoch; 0 means unspecified.",
               "x-flatbuffer-type": "ushort",
-              "x-flatbuffer-default": "30"
+              "x-flatbuffer-default": "0"
             }
           },
           additionalProperties: false
@@ -455143,15 +455225,15 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
             },
             SOLID_TIDES: {
               $ref: "#/definitions/pcfSolidTideModel",
-              description: "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nNONE.",
+              description: "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nUNSPECIFIED (the propagator's own default).",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
-                NONE: {
+                UNSPECIFIED: {
                   value: 0
                 }
               },
-              "x-flatbuffer-default": "NONE"
+              "x-flatbuffer-default": "UNSPECIFIED"
             },
             RELATIVITY: {
               $ref: "#/definitions/pcfRelativityTerms",
@@ -460116,7 +460198,7 @@ stated.`,
               type: "integer",
               minimum: 0,
               maximum: 4294967295,
-              description: "Reference states fitted.",
+              description: "Reference states reported; 0 means not stated.",
               "x-flatbuffer-type": "uint"
             },
             FIT_RMS_KM: {
@@ -460151,12 +460233,12 @@ stated.`,
               type: "integer",
               minimum: 0,
               maximum: 4294967295,
-              description: "Iterations the fit took.",
+              description: "Iterations reported; 0 means not stated.",
               "x-flatbuffer-type": "uint"
             },
             CONVERGED: {
               type: "boolean",
-              description: "True when the fit converged.",
+              description: "True when converged.",
               "x-flatbuffer-type": "bool",
               "x-flatbuffer-default": "false"
             },
@@ -460192,7 +460274,7 @@ stated.`,
             },
             PCF_CID: {
               type: "string",
-              description: "CID of the $PCF the fit ran under: its span rule, priors and holdout.",
+              description: "CID of the $PCF configuration associated with the record.",
               "x-flatbuffer-type": "string"
             },
             FIT_START: {
@@ -461400,6 +461482,14 @@ stated.`,
               },
               description: "Realism of the block's covariance: one entry per line of LINES, in order,\nor one entry for every line.",
               "x-flatbuffer-type": "[CVR]"
+            },
+            DENSITY_SENSITIVITY_KM: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Optional position sensitivity to a unit dimensionless log-density shift\n(dr/ds), flattened 3 doubles per line of LINES in COV_REF_FRAME, km.\nEmpty when absent.",
+              "x-flatbuffer-type": "[double]"
             }
           },
           additionalProperties: false
@@ -481416,13 +481506,14 @@ turned into a number.`,
         pcfSolidTideModel: {
           type: "string",
           enum: [
+            "UNSPECIFIED",
             "NONE",
             "IERS_2010"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
           "x-flatbuffer-enum-values": {
-            NONE: {
+            UNSPECIFIED: {
               value: 0
             }
           }
@@ -481512,11 +481603,11 @@ turned into a number.`,
           "x-flatbuffer-enum-values": {
             GAUSSIAN_SIGNED: {
               value: 0,
-              description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+              description: "Gaussian distribution on the parameter value."
             },
             LOG_NORMAL: {
               value: 1,
-              description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+              description: "Log-normal distribution on a positive parameter value."
             }
           }
         },
@@ -493991,23 +494082,23 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
         },
         PCFGaussianPrior: {
           type: "object",
-          description: "A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps\nthe theory's own sigma and moves only the mean.",
+          description: "Optional Gaussian parameter prior.",
           properties: {
             MEAN: {
               type: "number",
-              description: "Prior mean, in the unit of the parameter it is attached to. Default 0.",
+              description: "Prior mean in the parameter's unit.",
               "x-flatbuffer-type": "double",
               "x-flatbuffer-default": "0"
             },
             SIGMA: {
               type: "number",
-              description: "Prior standard deviation, in the same unit; > 0 when HAS_SIGMA.",
+              description: "Prior standard deviation in the parameter's unit; > 0 when HAS_SIGMA is true.",
               "x-flatbuffer-type": "double",
               "x-flatbuffer-default": "0"
             },
             HAS_SIGMA: {
               type: "boolean",
-              description: "True when SIGMA carries a value; false keeps the theory's own sigma.",
+              description: "True when SIGMA is explicitly provided.",
               "x-flatbuffer-type": "bool",
               "x-flatbuffer-default": "false"
             }
@@ -494016,128 +494107,128 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
         },
         PCFFitPolicy: {
           type: "object",
-          description: "Fit policy: how long an arc a fit uses, how that is validated, and what a\nfit refuses.",
+          description: "Optional configuration parameters for orbit estimation.",
           properties: {
             DEFAULT_SPAN_HOURS: {
               type: "number",
-              description: "Fit span used when the span rule is not run, hours. Default 48.",
+              description: "Optional span parameter in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "48"
+              "x-flatbuffer-default": "0"
             },
             MINIMUM_SPAN_HOURS: {
               type: "number",
-              description: "Shortest span a fit may take, hours. Default 24.",
+              description: "Optional minimum span in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "24"
+              "x-flatbuffer-default": "0"
             },
             MAXIMUM_SPAN_HOURS: {
               type: "number",
-              description: "Longest span a fit may take, hours. Default 120.",
+              description: "Optional maximum span in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "120"
+              "x-flatbuffer-default": "0"
             },
             CANDIDATE_SPANS_HOURS: {
               type: "array",
               items: {
                 type: "number"
               },
-              description: "Spans the extension rule scores, ascending, hours, each within\n[MINIMUM_SPAN_HOURS, MAXIMUM_SPAN_HOURS]. Empty: 48, 72 and 120; with\n24 in front when the eccentricity exceeds ECCENTRICITY_THRESHOLD.",
+              description: "Optional candidate span list in hours.",
               "x-flatbuffer-type": "[double]"
             },
             TAIL_HOURS: {
               type: "number",
-              description: "Validation tail: each candidate is fitted to the data before the latest\nTAIL_HOURS and scored on that tail, hours. Default 24.",
+              description: "Optional evaluation tail length in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "24"
+              "x-flatbuffer-default": "0"
             },
             EXTENSION_MARGIN: {
               type: "number",
-              description: "Extension rule: a longer candidate is taken only when its tail error is\nat most this fraction of the best shorter candidate's. Default 0.9.",
+              description: "Optional relative selection margin; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.9"
+              "x-flatbuffer-default": "0"
             },
             HOLDOUT_HOURS: {
               type: "number",
-              description: "Hours held out at the end of the data and reported as error growth; the\nfit then ends HOLDOUT_HOURS before the data does. Absent, the data\nblock's own useable stop time decides.",
+              description: "Optional holdout window length in hours.",
               "x-flatbuffer-type": "double",
               "x-flatbuffer-default": "0"
             },
             HAS_HOLDOUT_HOURS: {
               type: "boolean",
-              description: "True when HOLDOUT_HOURS carries a value; false means absent.",
+              description: "True when HOLDOUT_HOURS is explicitly provided.",
               "x-flatbuffer-type": "bool",
               "x-flatbuffer-default": "false"
             },
             ECCENTRICITY_THRESHOLD: {
               type: "number",
-              description: "Eccentricity above which the eccentric-orbit rule applies. Default 0.5.",
+              description: "Optional eccentricity threshold; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.5"
+              "x-flatbuffer-default": "0"
             },
             ECCENTRIC_DEFAULT_SPAN_HOURS: {
               type: "number",
-              description: "Eccentric orbits: the default span, hours. Default 24.",
+              description: "Optional eccentric-orbit span in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "24"
+              "x-flatbuffer-default": "0"
             },
             ECCENTRIC_EXTENSION_MARGIN: {
               type: "number",
-              description: "Eccentric orbits: EXTENSION_MARGIN. Default 0.7.",
+              description: "Optional eccentric-orbit relative margin; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.7"
+              "x-flatbuffer-default": "0"
             },
             ECCENTRIC_MAXIMUM_PERIOD_HOURS: {
               type: "number",
-              description: "Eccentric orbits: no candidate longer than this is tried once the orbital\nperiod passes it, hours. Default 36.",
+              description: "Optional eccentric-orbit period bound in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "36"
+              "x-flatbuffer-default": "0"
             },
             IMPLAUSIBLE_RMS_KM: {
               type: "number",
-              description: "A fit whose RMS passes this is refused as fit-implausible, km. Default\n100.",
+              description: "Optional maximum acceptable RMS in km; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "100"
+              "x-flatbuffer-default": "0"
             },
             DRAG_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0, sigma 0.05.",
+              description: "Optional prior on drag parameter.",
               "x-flatbuffer-type": "PCFGaussianPrior"
             },
             SRP_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.\nAbsent or without sigma: mean 0, sigma 0.05.",
+              description: "Optional prior on solar radiation pressure parameter.",
               "x-flatbuffer-type": "PCFGaussianPrior"
             },
             DRAG_PRIOR_FORM: {
               $ref: "#/definitions/pcfPriorForm",
-              description: "The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its\nMEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation\nof ln B_eff.",
+              description: "Optional distribution form for DRAG_PRIOR.",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 GAUSSIAN_SIGNED: {
                   value: 0,
-                  description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+                  description: "Gaussian distribution on the parameter value."
                 },
                 LOG_NORMAL: {
                   value: 1,
-                  description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+                  description: "Log-normal distribution on a positive parameter value."
                 }
               },
               "x-flatbuffer-default": "GAUSSIAN_SIGNED"
             },
             SRP_PRIOR_FORM: {
               $ref: "#/definitions/pcfPriorForm",
-              description: "The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN\nthe median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of\nln AGOM.",
+              description: "Optional distribution form for SRP_PRIOR.",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 GAUSSIAN_SIGNED: {
                   value: 0,
-                  description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+                  description: "Gaussian distribution on the parameter value."
                 },
                 LOG_NORMAL: {
                   value: 1,
-                  description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+                  description: "Log-normal distribution on a positive parameter value."
                 }
               },
               "x-flatbuffer-default": "GAUSSIAN_SIGNED"
@@ -494146,9 +494237,9 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
               type: "integer",
               minimum: 0,
               maximum: 65535,
-              description: "Days past the element set's epoch day through which the fit writes the\ndaily space weather into the record it emits (OCM\nPERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows\n(WEATHER_SOURCE RECORDS). The last day written is the later of the fit\narc's last day and the epoch's day plus this count; rows supplied with\nthe request must reach it, or the fit is refused by name. Default 30.",
+              description: "Optional space-weather horizon in days past epoch; 0 means unspecified.",
               "x-flatbuffer-type": "ushort",
-              "x-flatbuffer-default": "30"
+              "x-flatbuffer-default": "0"
             }
           },
           additionalProperties: false
@@ -495589,15 +495680,15 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
             },
             SOLID_TIDES: {
               $ref: "#/definitions/pcfSolidTideModel",
-              description: "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nNONE.",
+              description: "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nUNSPECIFIED (the propagator's own default).",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
-                NONE: {
+                UNSPECIFIED: {
                   value: 0
                 }
               },
-              "x-flatbuffer-default": "NONE"
+              "x-flatbuffer-default": "UNSPECIFIED"
             },
             RELATIVITY: {
               $ref: "#/definitions/pcfRelativityTerms",
@@ -500562,7 +500653,7 @@ stated.`,
               type: "integer",
               minimum: 0,
               maximum: 4294967295,
-              description: "Reference states fitted.",
+              description: "Reference states reported; 0 means not stated.",
               "x-flatbuffer-type": "uint"
             },
             FIT_RMS_KM: {
@@ -500597,12 +500688,12 @@ stated.`,
               type: "integer",
               minimum: 0,
               maximum: 4294967295,
-              description: "Iterations the fit took.",
+              description: "Iterations reported; 0 means not stated.",
               "x-flatbuffer-type": "uint"
             },
             CONVERGED: {
               type: "boolean",
-              description: "True when the fit converged.",
+              description: "True when converged.",
               "x-flatbuffer-type": "bool",
               "x-flatbuffer-default": "false"
             },
@@ -500638,7 +500729,7 @@ stated.`,
             },
             PCF_CID: {
               type: "string",
-              description: "CID of the $PCF the fit ran under: its span rule, priors and holdout.",
+              description: "CID of the $PCF configuration associated with the record.",
               "x-flatbuffer-type": "string"
             },
             FIT_START: {
@@ -501846,6 +501937,14 @@ stated.`,
               },
               description: "Realism of the block's covariance: one entry per line of LINES, in order,\nor one entry for every line.",
               "x-flatbuffer-type": "[CVR]"
+            },
+            DENSITY_SENSITIVITY_KM: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Optional position sensitivity to a unit dimensionless log-density shift\n(dr/ds), flattened 3 doubles per line of LINES in COV_REF_FRAME, km.\nEmpty when absent.",
+              "x-flatbuffer-type": "[double]"
             }
           },
           additionalProperties: false
@@ -514765,13 +514864,14 @@ verbatim what that source states about itself.`,
         pcfSolidTideModel: {
           type: "string",
           enum: [
+            "UNSPECIFIED",
             "NONE",
             "IERS_2010"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
           "x-flatbuffer-enum-values": {
-            NONE: {
+            UNSPECIFIED: {
               value: 0
             }
           }
@@ -514861,11 +514961,11 @@ verbatim what that source states about itself.`,
           "x-flatbuffer-enum-values": {
             GAUSSIAN_SIGNED: {
               value: 0,
-              description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+              description: "Gaussian distribution on the parameter value."
             },
             LOG_NORMAL: {
               value: 1,
-              description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+              description: "Log-normal distribution on a positive parameter value."
             }
           }
         },
@@ -527186,23 +527286,23 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
         },
         PCFGaussianPrior: {
           type: "object",
-          description: "A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps\nthe theory's own sigma and moves only the mean.",
+          description: "Optional Gaussian parameter prior.",
           properties: {
             MEAN: {
               type: "number",
-              description: "Prior mean, in the unit of the parameter it is attached to. Default 0.",
+              description: "Prior mean in the parameter's unit.",
               "x-flatbuffer-type": "double",
               "x-flatbuffer-default": "0"
             },
             SIGMA: {
               type: "number",
-              description: "Prior standard deviation, in the same unit; > 0 when HAS_SIGMA.",
+              description: "Prior standard deviation in the parameter's unit; > 0 when HAS_SIGMA is true.",
               "x-flatbuffer-type": "double",
               "x-flatbuffer-default": "0"
             },
             HAS_SIGMA: {
               type: "boolean",
-              description: "True when SIGMA carries a value; false keeps the theory's own sigma.",
+              description: "True when SIGMA is explicitly provided.",
               "x-flatbuffer-type": "bool",
               "x-flatbuffer-default": "false"
             }
@@ -527211,128 +527311,128 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
         },
         PCFFitPolicy: {
           type: "object",
-          description: "Fit policy: how long an arc a fit uses, how that is validated, and what a\nfit refuses.",
+          description: "Optional configuration parameters for orbit estimation.",
           properties: {
             DEFAULT_SPAN_HOURS: {
               type: "number",
-              description: "Fit span used when the span rule is not run, hours. Default 48.",
+              description: "Optional span parameter in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "48"
+              "x-flatbuffer-default": "0"
             },
             MINIMUM_SPAN_HOURS: {
               type: "number",
-              description: "Shortest span a fit may take, hours. Default 24.",
+              description: "Optional minimum span in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "24"
+              "x-flatbuffer-default": "0"
             },
             MAXIMUM_SPAN_HOURS: {
               type: "number",
-              description: "Longest span a fit may take, hours. Default 120.",
+              description: "Optional maximum span in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "120"
+              "x-flatbuffer-default": "0"
             },
             CANDIDATE_SPANS_HOURS: {
               type: "array",
               items: {
                 type: "number"
               },
-              description: "Spans the extension rule scores, ascending, hours, each within\n[MINIMUM_SPAN_HOURS, MAXIMUM_SPAN_HOURS]. Empty: 48, 72 and 120; with\n24 in front when the eccentricity exceeds ECCENTRICITY_THRESHOLD.",
+              description: "Optional candidate span list in hours.",
               "x-flatbuffer-type": "[double]"
             },
             TAIL_HOURS: {
               type: "number",
-              description: "Validation tail: each candidate is fitted to the data before the latest\nTAIL_HOURS and scored on that tail, hours. Default 24.",
+              description: "Optional evaluation tail length in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "24"
+              "x-flatbuffer-default": "0"
             },
             EXTENSION_MARGIN: {
               type: "number",
-              description: "Extension rule: a longer candidate is taken only when its tail error is\nat most this fraction of the best shorter candidate's. Default 0.9.",
+              description: "Optional relative selection margin; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.9"
+              "x-flatbuffer-default": "0"
             },
             HOLDOUT_HOURS: {
               type: "number",
-              description: "Hours held out at the end of the data and reported as error growth; the\nfit then ends HOLDOUT_HOURS before the data does. Absent, the data\nblock's own useable stop time decides.",
+              description: "Optional holdout window length in hours.",
               "x-flatbuffer-type": "double",
               "x-flatbuffer-default": "0"
             },
             HAS_HOLDOUT_HOURS: {
               type: "boolean",
-              description: "True when HOLDOUT_HOURS carries a value; false means absent.",
+              description: "True when HOLDOUT_HOURS is explicitly provided.",
               "x-flatbuffer-type": "bool",
               "x-flatbuffer-default": "false"
             },
             ECCENTRICITY_THRESHOLD: {
               type: "number",
-              description: "Eccentricity above which the eccentric-orbit rule applies. Default 0.5.",
+              description: "Optional eccentricity threshold; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.5"
+              "x-flatbuffer-default": "0"
             },
             ECCENTRIC_DEFAULT_SPAN_HOURS: {
               type: "number",
-              description: "Eccentric orbits: the default span, hours. Default 24.",
+              description: "Optional eccentric-orbit span in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "24"
+              "x-flatbuffer-default": "0"
             },
             ECCENTRIC_EXTENSION_MARGIN: {
               type: "number",
-              description: "Eccentric orbits: EXTENSION_MARGIN. Default 0.7.",
+              description: "Optional eccentric-orbit relative margin; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.7"
+              "x-flatbuffer-default": "0"
             },
             ECCENTRIC_MAXIMUM_PERIOD_HOURS: {
               type: "number",
-              description: "Eccentric orbits: no candidate longer than this is tried once the orbital\nperiod passes it, hours. Default 36.",
+              description: "Optional eccentric-orbit period bound in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "36"
+              "x-flatbuffer-default": "0"
             },
             IMPLAUSIBLE_RMS_KM: {
               type: "number",
-              description: "A fit whose RMS passes this is refused as fit-implausible, km. Default\n100.",
+              description: "Optional maximum acceptable RMS in km; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "100"
+              "x-flatbuffer-default": "0"
             },
             DRAG_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0, sigma 0.05.",
+              description: "Optional prior on drag parameter.",
               "x-flatbuffer-type": "PCFGaussianPrior"
             },
             SRP_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.\nAbsent or without sigma: mean 0, sigma 0.05.",
+              description: "Optional prior on solar radiation pressure parameter.",
               "x-flatbuffer-type": "PCFGaussianPrior"
             },
             DRAG_PRIOR_FORM: {
               $ref: "#/definitions/pcfPriorForm",
-              description: "The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its\nMEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation\nof ln B_eff.",
+              description: "Optional distribution form for DRAG_PRIOR.",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 GAUSSIAN_SIGNED: {
                   value: 0,
-                  description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+                  description: "Gaussian distribution on the parameter value."
                 },
                 LOG_NORMAL: {
                   value: 1,
-                  description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+                  description: "Log-normal distribution on a positive parameter value."
                 }
               },
               "x-flatbuffer-default": "GAUSSIAN_SIGNED"
             },
             SRP_PRIOR_FORM: {
               $ref: "#/definitions/pcfPriorForm",
-              description: "The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN\nthe median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of\nln AGOM.",
+              description: "Optional distribution form for SRP_PRIOR.",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 GAUSSIAN_SIGNED: {
                   value: 0,
-                  description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+                  description: "Gaussian distribution on the parameter value."
                 },
                 LOG_NORMAL: {
                   value: 1,
-                  description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+                  description: "Log-normal distribution on a positive parameter value."
                 }
               },
               "x-flatbuffer-default": "GAUSSIAN_SIGNED"
@@ -527341,9 +527441,9 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
               type: "integer",
               minimum: 0,
               maximum: 65535,
-              description: "Days past the element set's epoch day through which the fit writes the\ndaily space weather into the record it emits (OCM\nPERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows\n(WEATHER_SOURCE RECORDS). The last day written is the later of the fit\narc's last day and the epoch's day plus this count; rows supplied with\nthe request must reach it, or the fit is refused by name. Default 30.",
+              description: "Optional space-weather horizon in days past epoch; 0 means unspecified.",
               "x-flatbuffer-type": "ushort",
-              "x-flatbuffer-default": "30"
+              "x-flatbuffer-default": "0"
             }
           },
           additionalProperties: false
@@ -528784,15 +528884,15 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
             },
             SOLID_TIDES: {
               $ref: "#/definitions/pcfSolidTideModel",
-              description: "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nNONE.",
+              description: "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nUNSPECIFIED (the propagator's own default).",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
-                NONE: {
+                UNSPECIFIED: {
                   value: 0
                 }
               },
-              "x-flatbuffer-default": "NONE"
+              "x-flatbuffer-default": "UNSPECIFIED"
             },
             RELATIVITY: {
               $ref: "#/definitions/pcfRelativityTerms",
@@ -568985,13 +569085,14 @@ provider's reviewed register). Never free text.`,
         pcfSolidTideModel: {
           type: "string",
           enum: [
+            "UNSPECIFIED",
             "NONE",
             "IERS_2010"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
           "x-flatbuffer-enum-values": {
-            NONE: {
+            UNSPECIFIED: {
               value: 0
             }
           }
@@ -569081,11 +569182,11 @@ provider's reviewed register). Never free text.`,
           "x-flatbuffer-enum-values": {
             GAUSSIAN_SIGNED: {
               value: 0,
-              description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+              description: "Gaussian distribution on the parameter value."
             },
             LOG_NORMAL: {
               value: 1,
-              description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+              description: "Log-normal distribution on a positive parameter value."
             }
           }
         },
@@ -582255,23 +582356,23 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
         },
         PCFGaussianPrior: {
           type: "object",
-          description: "A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps\nthe theory's own sigma and moves only the mean.",
+          description: "Optional Gaussian parameter prior.",
           properties: {
             MEAN: {
               type: "number",
-              description: "Prior mean, in the unit of the parameter it is attached to. Default 0.",
+              description: "Prior mean in the parameter's unit.",
               "x-flatbuffer-type": "double",
               "x-flatbuffer-default": "0"
             },
             SIGMA: {
               type: "number",
-              description: "Prior standard deviation, in the same unit; > 0 when HAS_SIGMA.",
+              description: "Prior standard deviation in the parameter's unit; > 0 when HAS_SIGMA is true.",
               "x-flatbuffer-type": "double",
               "x-flatbuffer-default": "0"
             },
             HAS_SIGMA: {
               type: "boolean",
-              description: "True when SIGMA carries a value; false keeps the theory's own sigma.",
+              description: "True when SIGMA is explicitly provided.",
               "x-flatbuffer-type": "bool",
               "x-flatbuffer-default": "false"
             }
@@ -582280,128 +582381,128 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
         },
         PCFFitPolicy: {
           type: "object",
-          description: "Fit policy: how long an arc a fit uses, how that is validated, and what a\nfit refuses.",
+          description: "Optional configuration parameters for orbit estimation.",
           properties: {
             DEFAULT_SPAN_HOURS: {
               type: "number",
-              description: "Fit span used when the span rule is not run, hours. Default 48.",
+              description: "Optional span parameter in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "48"
+              "x-flatbuffer-default": "0"
             },
             MINIMUM_SPAN_HOURS: {
               type: "number",
-              description: "Shortest span a fit may take, hours. Default 24.",
+              description: "Optional minimum span in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "24"
+              "x-flatbuffer-default": "0"
             },
             MAXIMUM_SPAN_HOURS: {
               type: "number",
-              description: "Longest span a fit may take, hours. Default 120.",
+              description: "Optional maximum span in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "120"
+              "x-flatbuffer-default": "0"
             },
             CANDIDATE_SPANS_HOURS: {
               type: "array",
               items: {
                 type: "number"
               },
-              description: "Spans the extension rule scores, ascending, hours, each within\n[MINIMUM_SPAN_HOURS, MAXIMUM_SPAN_HOURS]. Empty: 48, 72 and 120; with\n24 in front when the eccentricity exceeds ECCENTRICITY_THRESHOLD.",
+              description: "Optional candidate span list in hours.",
               "x-flatbuffer-type": "[double]"
             },
             TAIL_HOURS: {
               type: "number",
-              description: "Validation tail: each candidate is fitted to the data before the latest\nTAIL_HOURS and scored on that tail, hours. Default 24.",
+              description: "Optional evaluation tail length in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "24"
+              "x-flatbuffer-default": "0"
             },
             EXTENSION_MARGIN: {
               type: "number",
-              description: "Extension rule: a longer candidate is taken only when its tail error is\nat most this fraction of the best shorter candidate's. Default 0.9.",
+              description: "Optional relative selection margin; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.9"
+              "x-flatbuffer-default": "0"
             },
             HOLDOUT_HOURS: {
               type: "number",
-              description: "Hours held out at the end of the data and reported as error growth; the\nfit then ends HOLDOUT_HOURS before the data does. Absent, the data\nblock's own useable stop time decides.",
+              description: "Optional holdout window length in hours.",
               "x-flatbuffer-type": "double",
               "x-flatbuffer-default": "0"
             },
             HAS_HOLDOUT_HOURS: {
               type: "boolean",
-              description: "True when HOLDOUT_HOURS carries a value; false means absent.",
+              description: "True when HOLDOUT_HOURS is explicitly provided.",
               "x-flatbuffer-type": "bool",
               "x-flatbuffer-default": "false"
             },
             ECCENTRICITY_THRESHOLD: {
               type: "number",
-              description: "Eccentricity above which the eccentric-orbit rule applies. Default 0.5.",
+              description: "Optional eccentricity threshold; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.5"
+              "x-flatbuffer-default": "0"
             },
             ECCENTRIC_DEFAULT_SPAN_HOURS: {
               type: "number",
-              description: "Eccentric orbits: the default span, hours. Default 24.",
+              description: "Optional eccentric-orbit span in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "24"
+              "x-flatbuffer-default": "0"
             },
             ECCENTRIC_EXTENSION_MARGIN: {
               type: "number",
-              description: "Eccentric orbits: EXTENSION_MARGIN. Default 0.7.",
+              description: "Optional eccentric-orbit relative margin; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.7"
+              "x-flatbuffer-default": "0"
             },
             ECCENTRIC_MAXIMUM_PERIOD_HOURS: {
               type: "number",
-              description: "Eccentric orbits: no candidate longer than this is tried once the orbital\nperiod passes it, hours. Default 36.",
+              description: "Optional eccentric-orbit period bound in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "36"
+              "x-flatbuffer-default": "0"
             },
             IMPLAUSIBLE_RMS_KM: {
               type: "number",
-              description: "A fit whose RMS passes this is refused as fit-implausible, km. Default\n100.",
+              description: "Optional maximum acceptable RMS in km; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "100"
+              "x-flatbuffer-default": "0"
             },
             DRAG_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0, sigma 0.05.",
+              description: "Optional prior on drag parameter.",
               "x-flatbuffer-type": "PCFGaussianPrior"
             },
             SRP_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.\nAbsent or without sigma: mean 0, sigma 0.05.",
+              description: "Optional prior on solar radiation pressure parameter.",
               "x-flatbuffer-type": "PCFGaussianPrior"
             },
             DRAG_PRIOR_FORM: {
               $ref: "#/definitions/pcfPriorForm",
-              description: "The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its\nMEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation\nof ln B_eff.",
+              description: "Optional distribution form for DRAG_PRIOR.",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 GAUSSIAN_SIGNED: {
                   value: 0,
-                  description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+                  description: "Gaussian distribution on the parameter value."
                 },
                 LOG_NORMAL: {
                   value: 1,
-                  description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+                  description: "Log-normal distribution on a positive parameter value."
                 }
               },
               "x-flatbuffer-default": "GAUSSIAN_SIGNED"
             },
             SRP_PRIOR_FORM: {
               $ref: "#/definitions/pcfPriorForm",
-              description: "The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN\nthe median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of\nln AGOM.",
+              description: "Optional distribution form for SRP_PRIOR.",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 GAUSSIAN_SIGNED: {
                   value: 0,
-                  description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+                  description: "Gaussian distribution on the parameter value."
                 },
                 LOG_NORMAL: {
                   value: 1,
-                  description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+                  description: "Log-normal distribution on a positive parameter value."
                 }
               },
               "x-flatbuffer-default": "GAUSSIAN_SIGNED"
@@ -582410,9 +582511,9 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
               type: "integer",
               minimum: 0,
               maximum: 65535,
-              description: "Days past the element set's epoch day through which the fit writes the\ndaily space weather into the record it emits (OCM\nPERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows\n(WEATHER_SOURCE RECORDS). The last day written is the later of the fit\narc's last day and the epoch's day plus this count; rows supplied with\nthe request must reach it, or the fit is refused by name. Default 30.",
+              description: "Optional space-weather horizon in days past epoch; 0 means unspecified.",
               "x-flatbuffer-type": "ushort",
-              "x-flatbuffer-default": "30"
+              "x-flatbuffer-default": "0"
             }
           },
           additionalProperties: false
@@ -583853,15 +583954,15 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
             },
             SOLID_TIDES: {
               $ref: "#/definitions/pcfSolidTideModel",
-              description: "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nNONE.",
+              description: "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nUNSPECIFIED (the propagator's own default).",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
-                NONE: {
+                UNSPECIFIED: {
                   value: 0
                 }
               },
-              "x-flatbuffer-default": "NONE"
+              "x-flatbuffer-default": "UNSPECIFIED"
             },
             RELATIVITY: {
               $ref: "#/definitions/pcfRelativityTerms",
@@ -588826,7 +588927,7 @@ stated.`,
               type: "integer",
               minimum: 0,
               maximum: 4294967295,
-              description: "Reference states fitted.",
+              description: "Reference states reported; 0 means not stated.",
               "x-flatbuffer-type": "uint"
             },
             FIT_RMS_KM: {
@@ -588861,12 +588962,12 @@ stated.`,
               type: "integer",
               minimum: 0,
               maximum: 4294967295,
-              description: "Iterations the fit took.",
+              description: "Iterations reported; 0 means not stated.",
               "x-flatbuffer-type": "uint"
             },
             CONVERGED: {
               type: "boolean",
-              description: "True when the fit converged.",
+              description: "True when converged.",
               "x-flatbuffer-type": "bool",
               "x-flatbuffer-default": "false"
             },
@@ -588902,7 +589003,7 @@ stated.`,
             },
             PCF_CID: {
               type: "string",
-              description: "CID of the $PCF the fit ran under: its span rule, priors and holdout.",
+              description: "CID of the $PCF configuration associated with the record.",
               "x-flatbuffer-type": "string"
             },
             FIT_START: {
@@ -590110,6 +590211,14 @@ stated.`,
               },
               description: "Realism of the block's covariance: one entry per line of LINES, in order,\nor one entry for every line.",
               "x-flatbuffer-type": "[CVR]"
+            },
+            DENSITY_SENSITIVITY_KM: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Optional position sensitivity to a unit dimensionless log-density shift\n(dr/ds), flattened 3 doubles per line of LINES in COV_REF_FRAME, km.\nEmpty when absent.",
+              "x-flatbuffer-type": "[double]"
             }
           },
           additionalProperties: false
@@ -669164,13 +669273,14 @@ format class are named by $NCD's container format.`,
         pcfSolidTideModel: {
           type: "string",
           enum: [
+            "UNSPECIFIED",
             "NONE",
             "IERS_2010"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
           "x-flatbuffer-enum-values": {
-            NONE: {
+            UNSPECIFIED: {
               value: 0
             }
           }
@@ -669260,11 +669370,11 @@ format class are named by $NCD's container format.`,
           "x-flatbuffer-enum-values": {
             GAUSSIAN_SIGNED: {
               value: 0,
-              description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+              description: "Gaussian distribution on the parameter value."
             },
             LOG_NORMAL: {
               value: 1,
-              description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+              description: "Log-normal distribution on a positive parameter value."
             }
           }
         },
@@ -681884,23 +681994,23 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
         },
         PCFGaussianPrior: {
           type: "object",
-          description: "A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps\nthe theory's own sigma and moves only the mean.",
+          description: "Optional Gaussian parameter prior.",
           properties: {
             MEAN: {
               type: "number",
-              description: "Prior mean, in the unit of the parameter it is attached to. Default 0.",
+              description: "Prior mean in the parameter's unit.",
               "x-flatbuffer-type": "double",
               "x-flatbuffer-default": "0"
             },
             SIGMA: {
               type: "number",
-              description: "Prior standard deviation, in the same unit; > 0 when HAS_SIGMA.",
+              description: "Prior standard deviation in the parameter's unit; > 0 when HAS_SIGMA is true.",
               "x-flatbuffer-type": "double",
               "x-flatbuffer-default": "0"
             },
             HAS_SIGMA: {
               type: "boolean",
-              description: "True when SIGMA carries a value; false keeps the theory's own sigma.",
+              description: "True when SIGMA is explicitly provided.",
               "x-flatbuffer-type": "bool",
               "x-flatbuffer-default": "false"
             }
@@ -681909,128 +682019,128 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
         },
         PCFFitPolicy: {
           type: "object",
-          description: "Fit policy: how long an arc a fit uses, how that is validated, and what a\nfit refuses.",
+          description: "Optional configuration parameters for orbit estimation.",
           properties: {
             DEFAULT_SPAN_HOURS: {
               type: "number",
-              description: "Fit span used when the span rule is not run, hours. Default 48.",
+              description: "Optional span parameter in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "48"
+              "x-flatbuffer-default": "0"
             },
             MINIMUM_SPAN_HOURS: {
               type: "number",
-              description: "Shortest span a fit may take, hours. Default 24.",
+              description: "Optional minimum span in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "24"
+              "x-flatbuffer-default": "0"
             },
             MAXIMUM_SPAN_HOURS: {
               type: "number",
-              description: "Longest span a fit may take, hours. Default 120.",
+              description: "Optional maximum span in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "120"
+              "x-flatbuffer-default": "0"
             },
             CANDIDATE_SPANS_HOURS: {
               type: "array",
               items: {
                 type: "number"
               },
-              description: "Spans the extension rule scores, ascending, hours, each within\n[MINIMUM_SPAN_HOURS, MAXIMUM_SPAN_HOURS]. Empty: 48, 72 and 120; with\n24 in front when the eccentricity exceeds ECCENTRICITY_THRESHOLD.",
+              description: "Optional candidate span list in hours.",
               "x-flatbuffer-type": "[double]"
             },
             TAIL_HOURS: {
               type: "number",
-              description: "Validation tail: each candidate is fitted to the data before the latest\nTAIL_HOURS and scored on that tail, hours. Default 24.",
+              description: "Optional evaluation tail length in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "24"
+              "x-flatbuffer-default": "0"
             },
             EXTENSION_MARGIN: {
               type: "number",
-              description: "Extension rule: a longer candidate is taken only when its tail error is\nat most this fraction of the best shorter candidate's. Default 0.9.",
+              description: "Optional relative selection margin; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.9"
+              "x-flatbuffer-default": "0"
             },
             HOLDOUT_HOURS: {
               type: "number",
-              description: "Hours held out at the end of the data and reported as error growth; the\nfit then ends HOLDOUT_HOURS before the data does. Absent, the data\nblock's own useable stop time decides.",
+              description: "Optional holdout window length in hours.",
               "x-flatbuffer-type": "double",
               "x-flatbuffer-default": "0"
             },
             HAS_HOLDOUT_HOURS: {
               type: "boolean",
-              description: "True when HOLDOUT_HOURS carries a value; false means absent.",
+              description: "True when HOLDOUT_HOURS is explicitly provided.",
               "x-flatbuffer-type": "bool",
               "x-flatbuffer-default": "false"
             },
             ECCENTRICITY_THRESHOLD: {
               type: "number",
-              description: "Eccentricity above which the eccentric-orbit rule applies. Default 0.5.",
+              description: "Optional eccentricity threshold; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.5"
+              "x-flatbuffer-default": "0"
             },
             ECCENTRIC_DEFAULT_SPAN_HOURS: {
               type: "number",
-              description: "Eccentric orbits: the default span, hours. Default 24.",
+              description: "Optional eccentric-orbit span in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "24"
+              "x-flatbuffer-default": "0"
             },
             ECCENTRIC_EXTENSION_MARGIN: {
               type: "number",
-              description: "Eccentric orbits: EXTENSION_MARGIN. Default 0.7.",
+              description: "Optional eccentric-orbit relative margin; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.7"
+              "x-flatbuffer-default": "0"
             },
             ECCENTRIC_MAXIMUM_PERIOD_HOURS: {
               type: "number",
-              description: "Eccentric orbits: no candidate longer than this is tried once the orbital\nperiod passes it, hours. Default 36.",
+              description: "Optional eccentric-orbit period bound in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "36"
+              "x-flatbuffer-default": "0"
             },
             IMPLAUSIBLE_RMS_KM: {
               type: "number",
-              description: "A fit whose RMS passes this is refused as fit-implausible, km. Default\n100.",
+              description: "Optional maximum acceptable RMS in km; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "100"
+              "x-flatbuffer-default": "0"
             },
             DRAG_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0, sigma 0.05.",
+              description: "Optional prior on drag parameter.",
               "x-flatbuffer-type": "PCFGaussianPrior"
             },
             SRP_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.\nAbsent or without sigma: mean 0, sigma 0.05.",
+              description: "Optional prior on solar radiation pressure parameter.",
               "x-flatbuffer-type": "PCFGaussianPrior"
             },
             DRAG_PRIOR_FORM: {
               $ref: "#/definitions/pcfPriorForm",
-              description: "The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its\nMEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation\nof ln B_eff.",
+              description: "Optional distribution form for DRAG_PRIOR.",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 GAUSSIAN_SIGNED: {
                   value: 0,
-                  description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+                  description: "Gaussian distribution on the parameter value."
                 },
                 LOG_NORMAL: {
                   value: 1,
-                  description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+                  description: "Log-normal distribution on a positive parameter value."
                 }
               },
               "x-flatbuffer-default": "GAUSSIAN_SIGNED"
             },
             SRP_PRIOR_FORM: {
               $ref: "#/definitions/pcfPriorForm",
-              description: "The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN\nthe median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of\nln AGOM.",
+              description: "Optional distribution form for SRP_PRIOR.",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 GAUSSIAN_SIGNED: {
                   value: 0,
-                  description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+                  description: "Gaussian distribution on the parameter value."
                 },
                 LOG_NORMAL: {
                   value: 1,
-                  description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+                  description: "Log-normal distribution on a positive parameter value."
                 }
               },
               "x-flatbuffer-default": "GAUSSIAN_SIGNED"
@@ -682039,9 +682149,9 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
               type: "integer",
               minimum: 0,
               maximum: 65535,
-              description: "Days past the element set's epoch day through which the fit writes the\ndaily space weather into the record it emits (OCM\nPERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows\n(WEATHER_SOURCE RECORDS). The last day written is the later of the fit\narc's last day and the epoch's day plus this count; rows supplied with\nthe request must reach it, or the fit is refused by name. Default 30.",
+              description: "Optional space-weather horizon in days past epoch; 0 means unspecified.",
               "x-flatbuffer-type": "ushort",
-              "x-flatbuffer-default": "30"
+              "x-flatbuffer-default": "0"
             }
           },
           additionalProperties: false
@@ -683482,15 +683592,15 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
             },
             SOLID_TIDES: {
               $ref: "#/definitions/pcfSolidTideModel",
-              description: "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nNONE.",
+              description: "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nUNSPECIFIED (the propagator's own default).",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
-                NONE: {
+                UNSPECIFIED: {
                   value: 0
                 }
               },
-              "x-flatbuffer-default": "NONE"
+              "x-flatbuffer-default": "UNSPECIFIED"
             },
             RELATIVITY: {
               $ref: "#/definitions/pcfRelativityTerms",
@@ -688455,7 +688565,7 @@ stated.`,
               type: "integer",
               minimum: 0,
               maximum: 4294967295,
-              description: "Reference states fitted.",
+              description: "Reference states reported; 0 means not stated.",
               "x-flatbuffer-type": "uint"
             },
             FIT_RMS_KM: {
@@ -688490,12 +688600,12 @@ stated.`,
               type: "integer",
               minimum: 0,
               maximum: 4294967295,
-              description: "Iterations the fit took.",
+              description: "Iterations reported; 0 means not stated.",
               "x-flatbuffer-type": "uint"
             },
             CONVERGED: {
               type: "boolean",
-              description: "True when the fit converged.",
+              description: "True when converged.",
               "x-flatbuffer-type": "bool",
               "x-flatbuffer-default": "false"
             },
@@ -688531,7 +688641,7 @@ stated.`,
             },
             PCF_CID: {
               type: "string",
-              description: "CID of the $PCF the fit ran under: its span rule, priors and holdout.",
+              description: "CID of the $PCF configuration associated with the record.",
               "x-flatbuffer-type": "string"
             },
             FIT_START: {
@@ -689739,6 +689849,14 @@ stated.`,
               },
               description: "Realism of the block's covariance: one entry per line of LINES, in order,\nor one entry for every line.",
               "x-flatbuffer-type": "[CVR]"
+            },
+            DENSITY_SENSITIVITY_KM: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Optional position sensitivity to a unit dimensionless log-density shift\n(dr/ds), flattened 3 doubles per line of LINES in COV_REF_FRAME, km.\nEmpty when absent.",
+              "x-flatbuffer-type": "[double]"
             }
           },
           additionalProperties: false
@@ -708634,13 +708752,14 @@ stated.`,
         pcfSolidTideModel: {
           type: "string",
           enum: [
+            "UNSPECIFIED",
             "NONE",
             "IERS_2010"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
           "x-flatbuffer-enum-values": {
-            NONE: {
+            UNSPECIFIED: {
               value: 0
             }
           }
@@ -708730,11 +708849,11 @@ stated.`,
           "x-flatbuffer-enum-values": {
             GAUSSIAN_SIGNED: {
               value: 0,
-              description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+              description: "Gaussian distribution on the parameter value."
             },
             LOG_NORMAL: {
               value: 1,
-              description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+              description: "Log-normal distribution on a positive parameter value."
             }
           }
         },
@@ -709597,7 +709716,8 @@ stated.`,
           enum: [
             "UNSPECIFIED",
             "INDEPENDENT",
-            "SUPPLIED_CROSS_COVARIANCE"
+            "SUPPLIED_CROSS_COVARIANCE",
+            "SHARED_DENSITY_SENSITIVITY"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
@@ -709612,6 +709732,10 @@ stated.`,
             SUPPLIED_CROSS_COVARIANCE: {
               value: 2,
               description: "A cross covariance was supplied and used."
+            },
+            SHARED_DENSITY_SENSITIVITY: {
+              value: 3,
+              description: "Cross covariance derived from per-object atmospheric density sensitivity vectors and a shared log-density uncertainty."
             }
           }
         },
@@ -760949,23 +761073,23 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
         },
         PCFGaussianPrior: {
           type: "object",
-          description: "A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps\nthe theory's own sigma and moves only the mean.",
+          description: "Optional Gaussian parameter prior.",
           properties: {
             MEAN: {
               type: "number",
-              description: "Prior mean, in the unit of the parameter it is attached to. Default 0.",
+              description: "Prior mean in the parameter's unit.",
               "x-flatbuffer-type": "double",
               "x-flatbuffer-default": "0"
             },
             SIGMA: {
               type: "number",
-              description: "Prior standard deviation, in the same unit; > 0 when HAS_SIGMA.",
+              description: "Prior standard deviation in the parameter's unit; > 0 when HAS_SIGMA is true.",
               "x-flatbuffer-type": "double",
               "x-flatbuffer-default": "0"
             },
             HAS_SIGMA: {
               type: "boolean",
-              description: "True when SIGMA carries a value; false keeps the theory's own sigma.",
+              description: "True when SIGMA is explicitly provided.",
               "x-flatbuffer-type": "bool",
               "x-flatbuffer-default": "false"
             }
@@ -760974,128 +761098,128 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
         },
         PCFFitPolicy: {
           type: "object",
-          description: "Fit policy: how long an arc a fit uses, how that is validated, and what a\nfit refuses.",
+          description: "Optional configuration parameters for orbit estimation.",
           properties: {
             DEFAULT_SPAN_HOURS: {
               type: "number",
-              description: "Fit span used when the span rule is not run, hours. Default 48.",
+              description: "Optional span parameter in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "48"
+              "x-flatbuffer-default": "0"
             },
             MINIMUM_SPAN_HOURS: {
               type: "number",
-              description: "Shortest span a fit may take, hours. Default 24.",
+              description: "Optional minimum span in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "24"
+              "x-flatbuffer-default": "0"
             },
             MAXIMUM_SPAN_HOURS: {
               type: "number",
-              description: "Longest span a fit may take, hours. Default 120.",
+              description: "Optional maximum span in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "120"
+              "x-flatbuffer-default": "0"
             },
             CANDIDATE_SPANS_HOURS: {
               type: "array",
               items: {
                 type: "number"
               },
-              description: "Spans the extension rule scores, ascending, hours, each within\n[MINIMUM_SPAN_HOURS, MAXIMUM_SPAN_HOURS]. Empty: 48, 72 and 120; with\n24 in front when the eccentricity exceeds ECCENTRICITY_THRESHOLD.",
+              description: "Optional candidate span list in hours.",
               "x-flatbuffer-type": "[double]"
             },
             TAIL_HOURS: {
               type: "number",
-              description: "Validation tail: each candidate is fitted to the data before the latest\nTAIL_HOURS and scored on that tail, hours. Default 24.",
+              description: "Optional evaluation tail length in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "24"
+              "x-flatbuffer-default": "0"
             },
             EXTENSION_MARGIN: {
               type: "number",
-              description: "Extension rule: a longer candidate is taken only when its tail error is\nat most this fraction of the best shorter candidate's. Default 0.9.",
+              description: "Optional relative selection margin; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.9"
+              "x-flatbuffer-default": "0"
             },
             HOLDOUT_HOURS: {
               type: "number",
-              description: "Hours held out at the end of the data and reported as error growth; the\nfit then ends HOLDOUT_HOURS before the data does. Absent, the data\nblock's own useable stop time decides.",
+              description: "Optional holdout window length in hours.",
               "x-flatbuffer-type": "double",
               "x-flatbuffer-default": "0"
             },
             HAS_HOLDOUT_HOURS: {
               type: "boolean",
-              description: "True when HOLDOUT_HOURS carries a value; false means absent.",
+              description: "True when HOLDOUT_HOURS is explicitly provided.",
               "x-flatbuffer-type": "bool",
               "x-flatbuffer-default": "false"
             },
             ECCENTRICITY_THRESHOLD: {
               type: "number",
-              description: "Eccentricity above which the eccentric-orbit rule applies. Default 0.5.",
+              description: "Optional eccentricity threshold; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.5"
+              "x-flatbuffer-default": "0"
             },
             ECCENTRIC_DEFAULT_SPAN_HOURS: {
               type: "number",
-              description: "Eccentric orbits: the default span, hours. Default 24.",
+              description: "Optional eccentric-orbit span in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "24"
+              "x-flatbuffer-default": "0"
             },
             ECCENTRIC_EXTENSION_MARGIN: {
               type: "number",
-              description: "Eccentric orbits: EXTENSION_MARGIN. Default 0.7.",
+              description: "Optional eccentric-orbit relative margin; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.7"
+              "x-flatbuffer-default": "0"
             },
             ECCENTRIC_MAXIMUM_PERIOD_HOURS: {
               type: "number",
-              description: "Eccentric orbits: no candidate longer than this is tried once the orbital\nperiod passes it, hours. Default 36.",
+              description: "Optional eccentric-orbit period bound in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "36"
+              "x-flatbuffer-default": "0"
             },
             IMPLAUSIBLE_RMS_KM: {
               type: "number",
-              description: "A fit whose RMS passes this is refused as fit-implausible, km. Default\n100.",
+              description: "Optional maximum acceptable RMS in km; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "100"
+              "x-flatbuffer-default": "0"
             },
             DRAG_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0, sigma 0.05.",
+              description: "Optional prior on drag parameter.",
               "x-flatbuffer-type": "PCFGaussianPrior"
             },
             SRP_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.\nAbsent or without sigma: mean 0, sigma 0.05.",
+              description: "Optional prior on solar radiation pressure parameter.",
               "x-flatbuffer-type": "PCFGaussianPrior"
             },
             DRAG_PRIOR_FORM: {
               $ref: "#/definitions/pcfPriorForm",
-              description: "The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its\nMEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation\nof ln B_eff.",
+              description: "Optional distribution form for DRAG_PRIOR.",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 GAUSSIAN_SIGNED: {
                   value: 0,
-                  description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+                  description: "Gaussian distribution on the parameter value."
                 },
                 LOG_NORMAL: {
                   value: 1,
-                  description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+                  description: "Log-normal distribution on a positive parameter value."
                 }
               },
               "x-flatbuffer-default": "GAUSSIAN_SIGNED"
             },
             SRP_PRIOR_FORM: {
               $ref: "#/definitions/pcfPriorForm",
-              description: "The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN\nthe median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of\nln AGOM.",
+              description: "Optional distribution form for SRP_PRIOR.",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 GAUSSIAN_SIGNED: {
                   value: 0,
-                  description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+                  description: "Gaussian distribution on the parameter value."
                 },
                 LOG_NORMAL: {
                   value: 1,
-                  description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+                  description: "Log-normal distribution on a positive parameter value."
                 }
               },
               "x-flatbuffer-default": "GAUSSIAN_SIGNED"
@@ -761104,9 +761228,9 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
               type: "integer",
               minimum: 0,
               maximum: 65535,
-              description: "Days past the element set's epoch day through which the fit writes the\ndaily space weather into the record it emits (OCM\nPERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows\n(WEATHER_SOURCE RECORDS). The last day written is the later of the fit\narc's last day and the epoch's day plus this count; rows supplied with\nthe request must reach it, or the fit is refused by name. Default 30.",
+              description: "Optional space-weather horizon in days past epoch; 0 means unspecified.",
               "x-flatbuffer-type": "ushort",
-              "x-flatbuffer-default": "30"
+              "x-flatbuffer-default": "0"
             }
           },
           additionalProperties: false
@@ -762547,15 +762671,15 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             SOLID_TIDES: {
               $ref: "#/definitions/pcfSolidTideModel",
-              description: "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nNONE.",
+              description: "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nUNSPECIFIED (the propagator's own default).",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
-                NONE: {
+                UNSPECIFIED: {
                   value: 0
                 }
               },
-              "x-flatbuffer-default": "NONE"
+              "x-flatbuffer-default": "UNSPECIFIED"
             },
             RELATIVITY: {
               $ref: "#/definitions/pcfRelativityTerms",
@@ -767617,7 +767741,7 @@ stated.`,
               type: "integer",
               minimum: 0,
               maximum: 4294967295,
-              description: "Reference states fitted.",
+              description: "Reference states reported; 0 means not stated.",
               "x-flatbuffer-type": "uint"
             },
             FIT_RMS_KM: {
@@ -767652,12 +767776,12 @@ stated.`,
               type: "integer",
               minimum: 0,
               maximum: 4294967295,
-              description: "Iterations the fit took.",
+              description: "Iterations reported; 0 means not stated.",
               "x-flatbuffer-type": "uint"
             },
             CONVERGED: {
               type: "boolean",
-              description: "True when the fit converged.",
+              description: "True when converged.",
               "x-flatbuffer-type": "bool",
               "x-flatbuffer-default": "false"
             },
@@ -767693,7 +767817,7 @@ stated.`,
             },
             PCF_CID: {
               type: "string",
-              description: "CID of the $PCF the fit ran under: its span rule, priors and holdout.",
+              description: "CID of the $PCF configuration associated with the record.",
               "x-flatbuffer-type": "string"
             },
             FIT_START: {
@@ -768901,6 +769025,14 @@ stated.`,
               },
               description: "Realism of the block's covariance: one entry per line of LINES, in order,\nor one entry for every line.",
               "x-flatbuffer-type": "[CVR]"
+            },
+            DENSITY_SENSITIVITY_KM: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Optional position sensitivity to a unit dimensionless log-density shift\n(dr/ds), flattened 3 doubles per line of LINES in COV_REF_FRAME, km.\nEmpty when absent.",
+              "x-flatbuffer-type": "[double]"
             }
           },
           additionalProperties: false
@@ -769507,6 +769639,14 @@ stated.`,
               $ref: "#/definitions/CAT",
               description: "The object's catalog entry. Without a supplied radius, its SIZE, else\nits RCS, gives the hard-body radius (see cqrHardBodyRadiusBasis).",
               "x-flatbuffer-type": "CAT"
+            },
+            DENSITY_SENSITIVITY_KM: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Optional position sensitivity to a unit dimensionless log-density shift\n(dr/ds) in EVALUATION_FRAME, 3 doubles in km. Empty when absent.",
+              "x-flatbuffer-type": "[double]"
             }
           },
           required: [
@@ -769685,6 +769825,18 @@ stated.`,
               },
               description: "Builds whose AP covariance a collision probability may use. An empty or\nabsent list means no collision probability from AP covariance.",
               "x-flatbuffer-type": "[CQRVerifiedCovarianceProducer]"
+            },
+            APPLY_DENSITY_CROSS_CORRELATION: {
+              type: "boolean",
+              description: "When true and DENSITY_LOG_SIGMA > 0 with both objects supplying\nDENSITY_SENSITIVITY_KM, apply common-mode density cross-covariance.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            DENSITY_LOG_SIGMA: {
+              type: "number",
+              description: "Dimensionless 1-sigma common-mode log-density uncertainty (sigma_s); 0 disables.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "0"
             }
           },
           required: [
@@ -769914,6 +770066,10 @@ assumptions".`,
                 SUPPLIED_CROSS_COVARIANCE: {
                   value: 2,
                   description: "A cross covariance was supplied and used."
+                },
+                SHARED_DENSITY_SENSITIVITY: {
+                  value: 3,
+                  description: "Cross covariance derived from per-object atmospheric density sensitivity vectors and a shared log-density uncertainty."
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"
@@ -907595,13 +907751,14 @@ balance service's own rate.`,
         pcfSolidTideModel: {
           type: "string",
           enum: [
+            "UNSPECIFIED",
             "NONE",
             "IERS_2010"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
           "x-flatbuffer-enum-values": {
-            NONE: {
+            UNSPECIFIED: {
               value: 0
             }
           }
@@ -907691,11 +907848,11 @@ balance service's own rate.`,
           "x-flatbuffer-enum-values": {
             GAUSSIAN_SIGNED: {
               value: 0,
-              description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+              description: "Gaussian distribution on the parameter value."
             },
             LOG_NORMAL: {
               value: 1,
-              description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+              description: "Log-normal distribution on a positive parameter value."
             }
           }
         },
@@ -919681,23 +919838,23 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
         },
         PCFGaussianPrior: {
           type: "object",
-          description: "A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps\nthe theory's own sigma and moves only the mean.",
+          description: "Optional Gaussian parameter prior.",
           properties: {
             MEAN: {
               type: "number",
-              description: "Prior mean, in the unit of the parameter it is attached to. Default 0.",
+              description: "Prior mean in the parameter's unit.",
               "x-flatbuffer-type": "double",
               "x-flatbuffer-default": "0"
             },
             SIGMA: {
               type: "number",
-              description: "Prior standard deviation, in the same unit; > 0 when HAS_SIGMA.",
+              description: "Prior standard deviation in the parameter's unit; > 0 when HAS_SIGMA is true.",
               "x-flatbuffer-type": "double",
               "x-flatbuffer-default": "0"
             },
             HAS_SIGMA: {
               type: "boolean",
-              description: "True when SIGMA carries a value; false keeps the theory's own sigma.",
+              description: "True when SIGMA is explicitly provided.",
               "x-flatbuffer-type": "bool",
               "x-flatbuffer-default": "false"
             }
@@ -919706,128 +919863,128 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
         },
         PCFFitPolicy: {
           type: "object",
-          description: "Fit policy: how long an arc a fit uses, how that is validated, and what a\nfit refuses.",
+          description: "Optional configuration parameters for orbit estimation.",
           properties: {
             DEFAULT_SPAN_HOURS: {
               type: "number",
-              description: "Fit span used when the span rule is not run, hours. Default 48.",
+              description: "Optional span parameter in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "48"
+              "x-flatbuffer-default": "0"
             },
             MINIMUM_SPAN_HOURS: {
               type: "number",
-              description: "Shortest span a fit may take, hours. Default 24.",
+              description: "Optional minimum span in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "24"
+              "x-flatbuffer-default": "0"
             },
             MAXIMUM_SPAN_HOURS: {
               type: "number",
-              description: "Longest span a fit may take, hours. Default 120.",
+              description: "Optional maximum span in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "120"
+              "x-flatbuffer-default": "0"
             },
             CANDIDATE_SPANS_HOURS: {
               type: "array",
               items: {
                 type: "number"
               },
-              description: "Spans the extension rule scores, ascending, hours, each within\n[MINIMUM_SPAN_HOURS, MAXIMUM_SPAN_HOURS]. Empty: 48, 72 and 120; with\n24 in front when the eccentricity exceeds ECCENTRICITY_THRESHOLD.",
+              description: "Optional candidate span list in hours.",
               "x-flatbuffer-type": "[double]"
             },
             TAIL_HOURS: {
               type: "number",
-              description: "Validation tail: each candidate is fitted to the data before the latest\nTAIL_HOURS and scored on that tail, hours. Default 24.",
+              description: "Optional evaluation tail length in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "24"
+              "x-flatbuffer-default": "0"
             },
             EXTENSION_MARGIN: {
               type: "number",
-              description: "Extension rule: a longer candidate is taken only when its tail error is\nat most this fraction of the best shorter candidate's. Default 0.9.",
+              description: "Optional relative selection margin; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.9"
+              "x-flatbuffer-default": "0"
             },
             HOLDOUT_HOURS: {
               type: "number",
-              description: "Hours held out at the end of the data and reported as error growth; the\nfit then ends HOLDOUT_HOURS before the data does. Absent, the data\nblock's own useable stop time decides.",
+              description: "Optional holdout window length in hours.",
               "x-flatbuffer-type": "double",
               "x-flatbuffer-default": "0"
             },
             HAS_HOLDOUT_HOURS: {
               type: "boolean",
-              description: "True when HOLDOUT_HOURS carries a value; false means absent.",
+              description: "True when HOLDOUT_HOURS is explicitly provided.",
               "x-flatbuffer-type": "bool",
               "x-flatbuffer-default": "false"
             },
             ECCENTRICITY_THRESHOLD: {
               type: "number",
-              description: "Eccentricity above which the eccentric-orbit rule applies. Default 0.5.",
+              description: "Optional eccentricity threshold; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.5"
+              "x-flatbuffer-default": "0"
             },
             ECCENTRIC_DEFAULT_SPAN_HOURS: {
               type: "number",
-              description: "Eccentric orbits: the default span, hours. Default 24.",
+              description: "Optional eccentric-orbit span in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "24"
+              "x-flatbuffer-default": "0"
             },
             ECCENTRIC_EXTENSION_MARGIN: {
               type: "number",
-              description: "Eccentric orbits: EXTENSION_MARGIN. Default 0.7.",
+              description: "Optional eccentric-orbit relative margin; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.7"
+              "x-flatbuffer-default": "0"
             },
             ECCENTRIC_MAXIMUM_PERIOD_HOURS: {
               type: "number",
-              description: "Eccentric orbits: no candidate longer than this is tried once the orbital\nperiod passes it, hours. Default 36.",
+              description: "Optional eccentric-orbit period bound in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "36"
+              "x-flatbuffer-default": "0"
             },
             IMPLAUSIBLE_RMS_KM: {
               type: "number",
-              description: "A fit whose RMS passes this is refused as fit-implausible, km. Default\n100.",
+              description: "Optional maximum acceptable RMS in km; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "100"
+              "x-flatbuffer-default": "0"
             },
             DRAG_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0, sigma 0.05.",
+              description: "Optional prior on drag parameter.",
               "x-flatbuffer-type": "PCFGaussianPrior"
             },
             SRP_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.\nAbsent or without sigma: mean 0, sigma 0.05.",
+              description: "Optional prior on solar radiation pressure parameter.",
               "x-flatbuffer-type": "PCFGaussianPrior"
             },
             DRAG_PRIOR_FORM: {
               $ref: "#/definitions/pcfPriorForm",
-              description: "The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its\nMEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation\nof ln B_eff.",
+              description: "Optional distribution form for DRAG_PRIOR.",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 GAUSSIAN_SIGNED: {
                   value: 0,
-                  description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+                  description: "Gaussian distribution on the parameter value."
                 },
                 LOG_NORMAL: {
                   value: 1,
-                  description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+                  description: "Log-normal distribution on a positive parameter value."
                 }
               },
               "x-flatbuffer-default": "GAUSSIAN_SIGNED"
             },
             SRP_PRIOR_FORM: {
               $ref: "#/definitions/pcfPriorForm",
-              description: "The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN\nthe median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of\nln AGOM.",
+              description: "Optional distribution form for SRP_PRIOR.",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 GAUSSIAN_SIGNED: {
                   value: 0,
-                  description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+                  description: "Gaussian distribution on the parameter value."
                 },
                 LOG_NORMAL: {
                   value: 1,
-                  description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+                  description: "Log-normal distribution on a positive parameter value."
                 }
               },
               "x-flatbuffer-default": "GAUSSIAN_SIGNED"
@@ -919836,9 +919993,9 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
               type: "integer",
               minimum: 0,
               maximum: 65535,
-              description: "Days past the element set's epoch day through which the fit writes the\ndaily space weather into the record it emits (OCM\nPERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows\n(WEATHER_SOURCE RECORDS). The last day written is the later of the fit\narc's last day and the epoch's day plus this count; rows supplied with\nthe request must reach it, or the fit is refused by name. Default 30.",
+              description: "Optional space-weather horizon in days past epoch; 0 means unspecified.",
               "x-flatbuffer-type": "ushort",
-              "x-flatbuffer-default": "30"
+              "x-flatbuffer-default": "0"
             }
           },
           additionalProperties: false
@@ -921279,15 +921436,15 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
             },
             SOLID_TIDES: {
               $ref: "#/definitions/pcfSolidTideModel",
-              description: "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nNONE.",
+              description: "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nUNSPECIFIED (the propagator's own default).",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
-                NONE: {
+                UNSPECIFIED: {
                   value: 0
                 }
               },
-              "x-flatbuffer-default": "NONE"
+              "x-flatbuffer-default": "UNSPECIFIED"
             },
             RELATIVITY: {
               $ref: "#/definitions/pcfRelativityTerms",
@@ -1003919,13 +1004076,14 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
         pcfSolidTideModel: {
           type: "string",
           enum: [
+            "UNSPECIFIED",
             "NONE",
             "IERS_2010"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
           "x-flatbuffer-enum-values": {
-            NONE: {
+            UNSPECIFIED: {
               value: 0
             }
           }
@@ -1004015,11 +1004173,11 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
           "x-flatbuffer-enum-values": {
             GAUSSIAN_SIGNED: {
               value: 0,
-              description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+              description: "Gaussian distribution on the parameter value."
             },
             LOG_NORMAL: {
               value: 1,
-              description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+              description: "Log-normal distribution on a positive parameter value."
             }
           }
         },
@@ -1005069,7 +1005227,8 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
           enum: [
             "UNSPECIFIED",
             "INDEPENDENT",
-            "SUPPLIED_CROSS_COVARIANCE"
+            "SUPPLIED_CROSS_COVARIANCE",
+            "SHARED_DENSITY_SENSITIVITY"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
@@ -1005084,6 +1005243,10 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
             SUPPLIED_CROSS_COVARIANCE: {
               value: 2,
               description: "A cross covariance was supplied and used."
+            },
+            SHARED_DENSITY_SENSITIVITY: {
+              value: 3,
+              description: "Cross covariance derived from per-object atmospheric density sensitivity vectors and a shared log-density uncertainty."
             }
           }
         },
@@ -1016972,23 +1017135,23 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
         },
         PCFGaussianPrior: {
           type: "object",
-          description: "A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps\nthe theory's own sigma and moves only the mean.",
+          description: "Optional Gaussian parameter prior.",
           properties: {
             MEAN: {
               type: "number",
-              description: "Prior mean, in the unit of the parameter it is attached to. Default 0.",
+              description: "Prior mean in the parameter's unit.",
               "x-flatbuffer-type": "double",
               "x-flatbuffer-default": "0"
             },
             SIGMA: {
               type: "number",
-              description: "Prior standard deviation, in the same unit; > 0 when HAS_SIGMA.",
+              description: "Prior standard deviation in the parameter's unit; > 0 when HAS_SIGMA is true.",
               "x-flatbuffer-type": "double",
               "x-flatbuffer-default": "0"
             },
             HAS_SIGMA: {
               type: "boolean",
-              description: "True when SIGMA carries a value; false keeps the theory's own sigma.",
+              description: "True when SIGMA is explicitly provided.",
               "x-flatbuffer-type": "bool",
               "x-flatbuffer-default": "false"
             }
@@ -1016997,128 +1017160,128 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
         },
         PCFFitPolicy: {
           type: "object",
-          description: "Fit policy: how long an arc a fit uses, how that is validated, and what a\nfit refuses.",
+          description: "Optional configuration parameters for orbit estimation.",
           properties: {
             DEFAULT_SPAN_HOURS: {
               type: "number",
-              description: "Fit span used when the span rule is not run, hours. Default 48.",
+              description: "Optional span parameter in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "48"
+              "x-flatbuffer-default": "0"
             },
             MINIMUM_SPAN_HOURS: {
               type: "number",
-              description: "Shortest span a fit may take, hours. Default 24.",
+              description: "Optional minimum span in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "24"
+              "x-flatbuffer-default": "0"
             },
             MAXIMUM_SPAN_HOURS: {
               type: "number",
-              description: "Longest span a fit may take, hours. Default 120.",
+              description: "Optional maximum span in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "120"
+              "x-flatbuffer-default": "0"
             },
             CANDIDATE_SPANS_HOURS: {
               type: "array",
               items: {
                 type: "number"
               },
-              description: "Spans the extension rule scores, ascending, hours, each within\n[MINIMUM_SPAN_HOURS, MAXIMUM_SPAN_HOURS]. Empty: 48, 72 and 120; with\n24 in front when the eccentricity exceeds ECCENTRICITY_THRESHOLD.",
+              description: "Optional candidate span list in hours.",
               "x-flatbuffer-type": "[double]"
             },
             TAIL_HOURS: {
               type: "number",
-              description: "Validation tail: each candidate is fitted to the data before the latest\nTAIL_HOURS and scored on that tail, hours. Default 24.",
+              description: "Optional evaluation tail length in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "24"
+              "x-flatbuffer-default": "0"
             },
             EXTENSION_MARGIN: {
               type: "number",
-              description: "Extension rule: a longer candidate is taken only when its tail error is\nat most this fraction of the best shorter candidate's. Default 0.9.",
+              description: "Optional relative selection margin; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.9"
+              "x-flatbuffer-default": "0"
             },
             HOLDOUT_HOURS: {
               type: "number",
-              description: "Hours held out at the end of the data and reported as error growth; the\nfit then ends HOLDOUT_HOURS before the data does. Absent, the data\nblock's own useable stop time decides.",
+              description: "Optional holdout window length in hours.",
               "x-flatbuffer-type": "double",
               "x-flatbuffer-default": "0"
             },
             HAS_HOLDOUT_HOURS: {
               type: "boolean",
-              description: "True when HOLDOUT_HOURS carries a value; false means absent.",
+              description: "True when HOLDOUT_HOURS is explicitly provided.",
               "x-flatbuffer-type": "bool",
               "x-flatbuffer-default": "false"
             },
             ECCENTRICITY_THRESHOLD: {
               type: "number",
-              description: "Eccentricity above which the eccentric-orbit rule applies. Default 0.5.",
+              description: "Optional eccentricity threshold; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.5"
+              "x-flatbuffer-default": "0"
             },
             ECCENTRIC_DEFAULT_SPAN_HOURS: {
               type: "number",
-              description: "Eccentric orbits: the default span, hours. Default 24.",
+              description: "Optional eccentric-orbit span in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "24"
+              "x-flatbuffer-default": "0"
             },
             ECCENTRIC_EXTENSION_MARGIN: {
               type: "number",
-              description: "Eccentric orbits: EXTENSION_MARGIN. Default 0.7.",
+              description: "Optional eccentric-orbit relative margin; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.7"
+              "x-flatbuffer-default": "0"
             },
             ECCENTRIC_MAXIMUM_PERIOD_HOURS: {
               type: "number",
-              description: "Eccentric orbits: no candidate longer than this is tried once the orbital\nperiod passes it, hours. Default 36.",
+              description: "Optional eccentric-orbit period bound in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "36"
+              "x-flatbuffer-default": "0"
             },
             IMPLAUSIBLE_RMS_KM: {
               type: "number",
-              description: "A fit whose RMS passes this is refused as fit-implausible, km. Default\n100.",
+              description: "Optional maximum acceptable RMS in km; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "100"
+              "x-flatbuffer-default": "0"
             },
             DRAG_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0, sigma 0.05.",
+              description: "Optional prior on drag parameter.",
               "x-flatbuffer-type": "PCFGaussianPrior"
             },
             SRP_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.\nAbsent or without sigma: mean 0, sigma 0.05.",
+              description: "Optional prior on solar radiation pressure parameter.",
               "x-flatbuffer-type": "PCFGaussianPrior"
             },
             DRAG_PRIOR_FORM: {
               $ref: "#/definitions/pcfPriorForm",
-              description: "The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its\nMEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation\nof ln B_eff.",
+              description: "Optional distribution form for DRAG_PRIOR.",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 GAUSSIAN_SIGNED: {
                   value: 0,
-                  description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+                  description: "Gaussian distribution on the parameter value."
                 },
                 LOG_NORMAL: {
                   value: 1,
-                  description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+                  description: "Log-normal distribution on a positive parameter value."
                 }
               },
               "x-flatbuffer-default": "GAUSSIAN_SIGNED"
             },
             SRP_PRIOR_FORM: {
               $ref: "#/definitions/pcfPriorForm",
-              description: "The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN\nthe median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of\nln AGOM.",
+              description: "Optional distribution form for SRP_PRIOR.",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 GAUSSIAN_SIGNED: {
                   value: 0,
-                  description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+                  description: "Gaussian distribution on the parameter value."
                 },
                 LOG_NORMAL: {
                   value: 1,
-                  description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+                  description: "Log-normal distribution on a positive parameter value."
                 }
               },
               "x-flatbuffer-default": "GAUSSIAN_SIGNED"
@@ -1017127,9 +1017290,9 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
               type: "integer",
               minimum: 0,
               maximum: 65535,
-              description: "Days past the element set's epoch day through which the fit writes the\ndaily space weather into the record it emits (OCM\nPERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows\n(WEATHER_SOURCE RECORDS). The last day written is the later of the fit\narc's last day and the epoch's day plus this count; rows supplied with\nthe request must reach it, or the fit is refused by name. Default 30.",
+              description: "Optional space-weather horizon in days past epoch; 0 means unspecified.",
               "x-flatbuffer-type": "ushort",
-              "x-flatbuffer-default": "30"
+              "x-flatbuffer-default": "0"
             }
           },
           additionalProperties: false
@@ -1018570,15 +1018733,15 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
             },
             SOLID_TIDES: {
               $ref: "#/definitions/pcfSolidTideModel",
-              description: "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nNONE.",
+              description: "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nUNSPECIFIED (the propagator's own default).",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
-                NONE: {
+                UNSPECIFIED: {
                   value: 0
                 }
               },
-              "x-flatbuffer-default": "NONE"
+              "x-flatbuffer-default": "UNSPECIFIED"
             },
             RELATIVITY: {
               $ref: "#/definitions/pcfRelativityTerms",
@@ -1023730,7 +1023893,7 @@ stated.`,
               type: "integer",
               minimum: 0,
               maximum: 4294967295,
-              description: "Reference states fitted.",
+              description: "Reference states reported; 0 means not stated.",
               "x-flatbuffer-type": "uint"
             },
             FIT_RMS_KM: {
@@ -1023765,12 +1023928,12 @@ stated.`,
               type: "integer",
               minimum: 0,
               maximum: 4294967295,
-              description: "Iterations the fit took.",
+              description: "Iterations reported; 0 means not stated.",
               "x-flatbuffer-type": "uint"
             },
             CONVERGED: {
               type: "boolean",
-              description: "True when the fit converged.",
+              description: "True when converged.",
               "x-flatbuffer-type": "bool",
               "x-flatbuffer-default": "false"
             },
@@ -1023806,7 +1023969,7 @@ stated.`,
             },
             PCF_CID: {
               type: "string",
-              description: "CID of the $PCF the fit ran under: its span rule, priors and holdout.",
+              description: "CID of the $PCF configuration associated with the record.",
               "x-flatbuffer-type": "string"
             },
             FIT_START: {
@@ -1025014,6 +1025177,14 @@ stated.`,
               },
               description: "Realism of the block's covariance: one entry per line of LINES, in order,\nor one entry for every line.",
               "x-flatbuffer-type": "[CVR]"
+            },
+            DENSITY_SENSITIVITY_KM: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Optional position sensitivity to a unit dimensionless log-density shift\n(dr/ds), flattened 3 doubles per line of LINES in COV_REF_FRAME, km.\nEmpty when absent.",
+              "x-flatbuffer-type": "[double]"
             }
           },
           additionalProperties: false
@@ -1026452,6 +1026623,14 @@ compressed). Nothing hashes the payload before the protocol hash.`,
               $ref: "#/definitions/CAT",
               description: "The object's catalog entry. Without a supplied radius, its SIZE, else\nits RCS, gives the hard-body radius (see cqrHardBodyRadiusBasis).",
               "x-flatbuffer-type": "CAT"
+            },
+            DENSITY_SENSITIVITY_KM: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Optional position sensitivity to a unit dimensionless log-density shift\n(dr/ds) in EVALUATION_FRAME, 3 doubles in km. Empty when absent.",
+              "x-flatbuffer-type": "[double]"
             }
           },
           required: [
@@ -1026630,6 +1026809,18 @@ compressed). Nothing hashes the payload before the protocol hash.`,
               },
               description: "Builds whose AP covariance a collision probability may use. An empty or\nabsent list means no collision probability from AP covariance.",
               "x-flatbuffer-type": "[CQRVerifiedCovarianceProducer]"
+            },
+            APPLY_DENSITY_CROSS_CORRELATION: {
+              type: "boolean",
+              description: "When true and DENSITY_LOG_SIGMA > 0 with both objects supplying\nDENSITY_SENSITIVITY_KM, apply common-mode density cross-covariance.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            DENSITY_LOG_SIGMA: {
+              type: "number",
+              description: "Dimensionless 1-sigma common-mode log-density uncertainty (sigma_s); 0 disables.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "0"
             }
           },
           required: [
@@ -1026859,6 +1027050,10 @@ assumptions".`,
                 SUPPLIED_CROSS_COVARIANCE: {
                   value: 2,
                   description: "A cross covariance was supplied and used."
+                },
+                SHARED_DENSITY_SENSITIVITY: {
+                  value: 3,
+                  description: "Cross covariance derived from per-object atmospheric density sensitivity vectors and a shared log-density uncertainty."
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"
@@ -1067452,13 +1067647,14 @@ compressed). Nothing hashes the payload before the protocol hash.`,
         pcfSolidTideModel: {
           type: "string",
           enum: [
+            "UNSPECIFIED",
             "NONE",
             "IERS_2010"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
           "x-flatbuffer-enum-values": {
-            NONE: {
+            UNSPECIFIED: {
               value: 0
             }
           }
@@ -1067548,11 +1067744,11 @@ compressed). Nothing hashes the payload before the protocol hash.`,
           "x-flatbuffer-enum-values": {
             GAUSSIAN_SIGNED: {
               value: 0,
-              description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+              description: "Gaussian distribution on the parameter value."
             },
             LOG_NORMAL: {
               value: 1,
-              description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+              description: "Log-normal distribution on a positive parameter value."
             }
           }
         },
@@ -1079432,23 +1079628,23 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
         },
         PCFGaussianPrior: {
           type: "object",
-          description: "A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps\nthe theory's own sigma and moves only the mean.",
+          description: "Optional Gaussian parameter prior.",
           properties: {
             MEAN: {
               type: "number",
-              description: "Prior mean, in the unit of the parameter it is attached to. Default 0.",
+              description: "Prior mean in the parameter's unit.",
               "x-flatbuffer-type": "double",
               "x-flatbuffer-default": "0"
             },
             SIGMA: {
               type: "number",
-              description: "Prior standard deviation, in the same unit; > 0 when HAS_SIGMA.",
+              description: "Prior standard deviation in the parameter's unit; > 0 when HAS_SIGMA is true.",
               "x-flatbuffer-type": "double",
               "x-flatbuffer-default": "0"
             },
             HAS_SIGMA: {
               type: "boolean",
-              description: "True when SIGMA carries a value; false keeps the theory's own sigma.",
+              description: "True when SIGMA is explicitly provided.",
               "x-flatbuffer-type": "bool",
               "x-flatbuffer-default": "false"
             }
@@ -1079457,128 +1079653,128 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
         },
         PCFFitPolicy: {
           type: "object",
-          description: "Fit policy: how long an arc a fit uses, how that is validated, and what a\nfit refuses.",
+          description: "Optional configuration parameters for orbit estimation.",
           properties: {
             DEFAULT_SPAN_HOURS: {
               type: "number",
-              description: "Fit span used when the span rule is not run, hours. Default 48.",
+              description: "Optional span parameter in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "48"
+              "x-flatbuffer-default": "0"
             },
             MINIMUM_SPAN_HOURS: {
               type: "number",
-              description: "Shortest span a fit may take, hours. Default 24.",
+              description: "Optional minimum span in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "24"
+              "x-flatbuffer-default": "0"
             },
             MAXIMUM_SPAN_HOURS: {
               type: "number",
-              description: "Longest span a fit may take, hours. Default 120.",
+              description: "Optional maximum span in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "120"
+              "x-flatbuffer-default": "0"
             },
             CANDIDATE_SPANS_HOURS: {
               type: "array",
               items: {
                 type: "number"
               },
-              description: "Spans the extension rule scores, ascending, hours, each within\n[MINIMUM_SPAN_HOURS, MAXIMUM_SPAN_HOURS]. Empty: 48, 72 and 120; with\n24 in front when the eccentricity exceeds ECCENTRICITY_THRESHOLD.",
+              description: "Optional candidate span list in hours.",
               "x-flatbuffer-type": "[double]"
             },
             TAIL_HOURS: {
               type: "number",
-              description: "Validation tail: each candidate is fitted to the data before the latest\nTAIL_HOURS and scored on that tail, hours. Default 24.",
+              description: "Optional evaluation tail length in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "24"
+              "x-flatbuffer-default": "0"
             },
             EXTENSION_MARGIN: {
               type: "number",
-              description: "Extension rule: a longer candidate is taken only when its tail error is\nat most this fraction of the best shorter candidate's. Default 0.9.",
+              description: "Optional relative selection margin; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.9"
+              "x-flatbuffer-default": "0"
             },
             HOLDOUT_HOURS: {
               type: "number",
-              description: "Hours held out at the end of the data and reported as error growth; the\nfit then ends HOLDOUT_HOURS before the data does. Absent, the data\nblock's own useable stop time decides.",
+              description: "Optional holdout window length in hours.",
               "x-flatbuffer-type": "double",
               "x-flatbuffer-default": "0"
             },
             HAS_HOLDOUT_HOURS: {
               type: "boolean",
-              description: "True when HOLDOUT_HOURS carries a value; false means absent.",
+              description: "True when HOLDOUT_HOURS is explicitly provided.",
               "x-flatbuffer-type": "bool",
               "x-flatbuffer-default": "false"
             },
             ECCENTRICITY_THRESHOLD: {
               type: "number",
-              description: "Eccentricity above which the eccentric-orbit rule applies. Default 0.5.",
+              description: "Optional eccentricity threshold; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.5"
+              "x-flatbuffer-default": "0"
             },
             ECCENTRIC_DEFAULT_SPAN_HOURS: {
               type: "number",
-              description: "Eccentric orbits: the default span, hours. Default 24.",
+              description: "Optional eccentric-orbit span in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "24"
+              "x-flatbuffer-default": "0"
             },
             ECCENTRIC_EXTENSION_MARGIN: {
               type: "number",
-              description: "Eccentric orbits: EXTENSION_MARGIN. Default 0.7.",
+              description: "Optional eccentric-orbit relative margin; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.7"
+              "x-flatbuffer-default": "0"
             },
             ECCENTRIC_MAXIMUM_PERIOD_HOURS: {
               type: "number",
-              description: "Eccentric orbits: no candidate longer than this is tried once the orbital\nperiod passes it, hours. Default 36.",
+              description: "Optional eccentric-orbit period bound in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "36"
+              "x-flatbuffer-default": "0"
             },
             IMPLAUSIBLE_RMS_KM: {
               type: "number",
-              description: "A fit whose RMS passes this is refused as fit-implausible, km. Default\n100.",
+              description: "Optional maximum acceptable RMS in km; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "100"
+              "x-flatbuffer-default": "0"
             },
             DRAG_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0, sigma 0.05.",
+              description: "Optional prior on drag parameter.",
               "x-flatbuffer-type": "PCFGaussianPrior"
             },
             SRP_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.\nAbsent or without sigma: mean 0, sigma 0.05.",
+              description: "Optional prior on solar radiation pressure parameter.",
               "x-flatbuffer-type": "PCFGaussianPrior"
             },
             DRAG_PRIOR_FORM: {
               $ref: "#/definitions/pcfPriorForm",
-              description: "The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its\nMEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation\nof ln B_eff.",
+              description: "Optional distribution form for DRAG_PRIOR.",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 GAUSSIAN_SIGNED: {
                   value: 0,
-                  description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+                  description: "Gaussian distribution on the parameter value."
                 },
                 LOG_NORMAL: {
                   value: 1,
-                  description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+                  description: "Log-normal distribution on a positive parameter value."
                 }
               },
               "x-flatbuffer-default": "GAUSSIAN_SIGNED"
             },
             SRP_PRIOR_FORM: {
               $ref: "#/definitions/pcfPriorForm",
-              description: "The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN\nthe median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of\nln AGOM.",
+              description: "Optional distribution form for SRP_PRIOR.",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 GAUSSIAN_SIGNED: {
                   value: 0,
-                  description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+                  description: "Gaussian distribution on the parameter value."
                 },
                 LOG_NORMAL: {
                   value: 1,
-                  description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+                  description: "Log-normal distribution on a positive parameter value."
                 }
               },
               "x-flatbuffer-default": "GAUSSIAN_SIGNED"
@@ -1079587,9 +1079783,9 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
               type: "integer",
               minimum: 0,
               maximum: 65535,
-              description: "Days past the element set's epoch day through which the fit writes the\ndaily space weather into the record it emits (OCM\nPERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows\n(WEATHER_SOURCE RECORDS). The last day written is the later of the fit\narc's last day and the epoch's day plus this count; rows supplied with\nthe request must reach it, or the fit is refused by name. Default 30.",
+              description: "Optional space-weather horizon in days past epoch; 0 means unspecified.",
               "x-flatbuffer-type": "ushort",
-              "x-flatbuffer-default": "30"
+              "x-flatbuffer-default": "0"
             }
           },
           additionalProperties: false
@@ -1081030,15 +1081226,15 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
             },
             SOLID_TIDES: {
               $ref: "#/definitions/pcfSolidTideModel",
-              description: "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nNONE.",
+              description: "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nUNSPECIFIED (the propagator's own default).",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
-                NONE: {
+                UNSPECIFIED: {
                   value: 0
                 }
               },
-              "x-flatbuffer-default": "NONE"
+              "x-flatbuffer-default": "UNSPECIFIED"
             },
             RELATIVITY: {
               $ref: "#/definitions/pcfRelativityTerms",
@@ -1086003,7 +1086199,7 @@ stated.`,
               type: "integer",
               minimum: 0,
               maximum: 4294967295,
-              description: "Reference states fitted.",
+              description: "Reference states reported; 0 means not stated.",
               "x-flatbuffer-type": "uint"
             },
             FIT_RMS_KM: {
@@ -1086038,12 +1086234,12 @@ stated.`,
               type: "integer",
               minimum: 0,
               maximum: 4294967295,
-              description: "Iterations the fit took.",
+              description: "Iterations reported; 0 means not stated.",
               "x-flatbuffer-type": "uint"
             },
             CONVERGED: {
               type: "boolean",
-              description: "True when the fit converged.",
+              description: "True when converged.",
               "x-flatbuffer-type": "bool",
               "x-flatbuffer-default": "false"
             },
@@ -1086079,7 +1086275,7 @@ stated.`,
             },
             PCF_CID: {
               type: "string",
-              description: "CID of the $PCF the fit ran under: its span rule, priors and holdout.",
+              description: "CID of the $PCF configuration associated with the record.",
               "x-flatbuffer-type": "string"
             },
             FIT_START: {
@@ -1087287,6 +1087483,14 @@ stated.`,
               },
               description: "Realism of the block's covariance: one entry per line of LINES, in order,\nor one entry for every line.",
               "x-flatbuffer-type": "[CVR]"
+            },
+            DENSITY_SENSITIVITY_KM: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Optional position sensitivity to a unit dimensionless log-density shift\n(dr/ds), flattened 3 doubles per line of LINES in COV_REF_FRAME, km.\nEmpty when absent.",
+              "x-flatbuffer-type": "[double]"
             }
           },
           additionalProperties: false
@@ -1119526,13 +1119730,14 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
         pcfSolidTideModel: {
           type: "string",
           enum: [
+            "UNSPECIFIED",
             "NONE",
             "IERS_2010"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
           "x-flatbuffer-enum-values": {
-            NONE: {
+            UNSPECIFIED: {
               value: 0
             }
           }
@@ -1119622,11 +1119827,11 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
           "x-flatbuffer-enum-values": {
             GAUSSIAN_SIGNED: {
               value: 0,
-              description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+              description: "Gaussian distribution on the parameter value."
             },
             LOG_NORMAL: {
               value: 1,
-              description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+              description: "Log-normal distribution on a positive parameter value."
             }
           }
         },
@@ -1132923,23 +1133128,23 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
         },
         PCFGaussianPrior: {
           type: "object",
-          description: "A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps\nthe theory's own sigma and moves only the mean.",
+          description: "Optional Gaussian parameter prior.",
           properties: {
             MEAN: {
               type: "number",
-              description: "Prior mean, in the unit of the parameter it is attached to. Default 0.",
+              description: "Prior mean in the parameter's unit.",
               "x-flatbuffer-type": "double",
               "x-flatbuffer-default": "0"
             },
             SIGMA: {
               type: "number",
-              description: "Prior standard deviation, in the same unit; > 0 when HAS_SIGMA.",
+              description: "Prior standard deviation in the parameter's unit; > 0 when HAS_SIGMA is true.",
               "x-flatbuffer-type": "double",
               "x-flatbuffer-default": "0"
             },
             HAS_SIGMA: {
               type: "boolean",
-              description: "True when SIGMA carries a value; false keeps the theory's own sigma.",
+              description: "True when SIGMA is explicitly provided.",
               "x-flatbuffer-type": "bool",
               "x-flatbuffer-default": "false"
             }
@@ -1132948,128 +1133153,128 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
         },
         PCFFitPolicy: {
           type: "object",
-          description: "Fit policy: how long an arc a fit uses, how that is validated, and what a\nfit refuses.",
+          description: "Optional configuration parameters for orbit estimation.",
           properties: {
             DEFAULT_SPAN_HOURS: {
               type: "number",
-              description: "Fit span used when the span rule is not run, hours. Default 48.",
+              description: "Optional span parameter in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "48"
+              "x-flatbuffer-default": "0"
             },
             MINIMUM_SPAN_HOURS: {
               type: "number",
-              description: "Shortest span a fit may take, hours. Default 24.",
+              description: "Optional minimum span in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "24"
+              "x-flatbuffer-default": "0"
             },
             MAXIMUM_SPAN_HOURS: {
               type: "number",
-              description: "Longest span a fit may take, hours. Default 120.",
+              description: "Optional maximum span in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "120"
+              "x-flatbuffer-default": "0"
             },
             CANDIDATE_SPANS_HOURS: {
               type: "array",
               items: {
                 type: "number"
               },
-              description: "Spans the extension rule scores, ascending, hours, each within\n[MINIMUM_SPAN_HOURS, MAXIMUM_SPAN_HOURS]. Empty: 48, 72 and 120; with\n24 in front when the eccentricity exceeds ECCENTRICITY_THRESHOLD.",
+              description: "Optional candidate span list in hours.",
               "x-flatbuffer-type": "[double]"
             },
             TAIL_HOURS: {
               type: "number",
-              description: "Validation tail: each candidate is fitted to the data before the latest\nTAIL_HOURS and scored on that tail, hours. Default 24.",
+              description: "Optional evaluation tail length in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "24"
+              "x-flatbuffer-default": "0"
             },
             EXTENSION_MARGIN: {
               type: "number",
-              description: "Extension rule: a longer candidate is taken only when its tail error is\nat most this fraction of the best shorter candidate's. Default 0.9.",
+              description: "Optional relative selection margin; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.9"
+              "x-flatbuffer-default": "0"
             },
             HOLDOUT_HOURS: {
               type: "number",
-              description: "Hours held out at the end of the data and reported as error growth; the\nfit then ends HOLDOUT_HOURS before the data does. Absent, the data\nblock's own useable stop time decides.",
+              description: "Optional holdout window length in hours.",
               "x-flatbuffer-type": "double",
               "x-flatbuffer-default": "0"
             },
             HAS_HOLDOUT_HOURS: {
               type: "boolean",
-              description: "True when HOLDOUT_HOURS carries a value; false means absent.",
+              description: "True when HOLDOUT_HOURS is explicitly provided.",
               "x-flatbuffer-type": "bool",
               "x-flatbuffer-default": "false"
             },
             ECCENTRICITY_THRESHOLD: {
               type: "number",
-              description: "Eccentricity above which the eccentric-orbit rule applies. Default 0.5.",
+              description: "Optional eccentricity threshold; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.5"
+              "x-flatbuffer-default": "0"
             },
             ECCENTRIC_DEFAULT_SPAN_HOURS: {
               type: "number",
-              description: "Eccentric orbits: the default span, hours. Default 24.",
+              description: "Optional eccentric-orbit span in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "24"
+              "x-flatbuffer-default": "0"
             },
             ECCENTRIC_EXTENSION_MARGIN: {
               type: "number",
-              description: "Eccentric orbits: EXTENSION_MARGIN. Default 0.7.",
+              description: "Optional eccentric-orbit relative margin; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.7"
+              "x-flatbuffer-default": "0"
             },
             ECCENTRIC_MAXIMUM_PERIOD_HOURS: {
               type: "number",
-              description: "Eccentric orbits: no candidate longer than this is tried once the orbital\nperiod passes it, hours. Default 36.",
+              description: "Optional eccentric-orbit period bound in hours; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "36"
+              "x-flatbuffer-default": "0"
             },
             IMPLAUSIBLE_RMS_KM: {
               type: "number",
-              description: "A fit whose RMS passes this is refused as fit-implausible, km. Default\n100.",
+              description: "Optional maximum acceptable RMS in km; 0 means unspecified.",
               "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "100"
+              "x-flatbuffer-default": "0"
             },
             DRAG_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0, sigma 0.05.",
+              description: "Optional prior on drag parameter.",
               "x-flatbuffer-type": "PCFGaussianPrior"
             },
             SRP_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.\nAbsent or without sigma: mean 0, sigma 0.05.",
+              description: "Optional prior on solar radiation pressure parameter.",
               "x-flatbuffer-type": "PCFGaussianPrior"
             },
             DRAG_PRIOR_FORM: {
               $ref: "#/definitions/pcfPriorForm",
-              description: "The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its\nMEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation\nof ln B_eff.",
+              description: "Optional distribution form for DRAG_PRIOR.",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 GAUSSIAN_SIGNED: {
                   value: 0,
-                  description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+                  description: "Gaussian distribution on the parameter value."
                 },
                 LOG_NORMAL: {
                   value: 1,
-                  description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+                  description: "Log-normal distribution on a positive parameter value."
                 }
               },
               "x-flatbuffer-default": "GAUSSIAN_SIGNED"
             },
             SRP_PRIOR_FORM: {
               $ref: "#/definitions/pcfPriorForm",
-              description: "The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN\nthe median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of\nln AGOM.",
+              description: "Optional distribution form for SRP_PRIOR.",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 GAUSSIAN_SIGNED: {
                   value: 0,
-                  description: "Gaussian on the parameter itself, which may take either sign (the default): the prior's MEAN and SIGMA are in the parameter's unit."
+                  description: "Gaussian distribution on the parameter value."
                 },
                 LOG_NORMAL: {
                   value: 1,
-                  description: "Log-normal: the fit estimates the natural log of the parameter, so the parameter is never <= 0. The prior's MEAN is the median, in the parameter's unit, and must be > 0; its SIGMA is the standard deviation of the natural log of the parameter. The prior is required (HAS_SIGMA true)."
+                  description: "Log-normal distribution on a positive parameter value."
                 }
               },
               "x-flatbuffer-default": "GAUSSIAN_SIGNED"
@@ -1133078,9 +1133283,9 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
               type: "integer",
               minimum: 0,
               maximum: 65535,
-              description: "Days past the element set's epoch day through which the fit writes the\ndaily space weather into the record it emits (OCM\nPERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows\n(WEATHER_SOURCE RECORDS). The last day written is the later of the fit\narc's last day and the epoch's day plus this count; rows supplied with\nthe request must reach it, or the fit is refused by name. Default 30.",
+              description: "Optional space-weather horizon in days past epoch; 0 means unspecified.",
               "x-flatbuffer-type": "ushort",
-              "x-flatbuffer-default": "30"
+              "x-flatbuffer-default": "0"
             }
           },
           additionalProperties: false
@@ -1134521,15 +1134726,15 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
             },
             SOLID_TIDES: {
               $ref: "#/definitions/pcfSolidTideModel",
-              description: "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nNONE.",
+              description: "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nUNSPECIFIED (the propagator's own default).",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
-                NONE: {
+                UNSPECIFIED: {
                   value: 0
                 }
               },
-              "x-flatbuffer-default": "NONE"
+              "x-flatbuffer-default": "UNSPECIFIED"
             },
             RELATIVITY: {
               $ref: "#/definitions/pcfRelativityTerms",

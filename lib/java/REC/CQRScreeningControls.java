@@ -74,6 +74,15 @@ public final class CQRScreeningControls extends com.google.flatbuffers.Table {
   public int VERIFIED_COVARIANCE_PRODUCERSLength() { int o = __offset(40); return o != 0 ? __vector_len(o) : 0; }
   public CQRVerifiedCovarianceProducer.Vector verifiedCovarianceProducersVector() { return verifiedCovarianceProducersVector(new CQRVerifiedCovarianceProducer.Vector()); }
   public CQRVerifiedCovarianceProducer.Vector verifiedCovarianceProducersVector(CQRVerifiedCovarianceProducer.Vector obj) { int o = __offset(40); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * When true and DENSITY_LOG_SIGMA > 0 with both objects supplying
+   * DENSITY_SENSITIVITY_KM, apply common-mode density cross-covariance.
+   */
+  public boolean APPLY_DENSITY_CROSS_CORRELATION() { int o = __offset(42); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Dimensionless 1-sigma common-mode log-density uncertainty (sigma_s); 0 disables.
+   */
+  public double DENSITY_LOG_SIGMA() { int o = __offset(44); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
 
   public static int createCQRScreeningControls(FlatBufferBuilder builder,
       int START_EPOCHOffset,
@@ -94,8 +103,11 @@ public final class CQRScreeningControls extends com.google.flatbuffers.Table {
       double IN_TRACK_M,
       double CROSS_TRACK_M,
       int VOLUME_CENTER,
-      int VERIFIED_COVARIANCE_PRODUCERSOffset) {
-    builder.startTable(19);
+      int VERIFIED_COVARIANCE_PRODUCERSOffset,
+      boolean APPLY_DENSITY_CROSS_CORRELATION,
+      double DENSITY_LOG_SIGMA) {
+    builder.startTable(21);
+    CQRScreeningControls.addDensityLogSigma(builder, DENSITY_LOG_SIGMA);
     CQRScreeningControls.addCrossTrackM(builder, CROSS_TRACK_M);
     CQRScreeningControls.addInTrackM(builder, IN_TRACK_M);
     CQRScreeningControls.addRadialM(builder, RADIAL_M);
@@ -108,6 +120,7 @@ public final class CQRScreeningControls extends com.google.flatbuffers.Table {
     CQRScreeningControls.addVerifiedCovarianceProducers(builder, VERIFIED_COVARIANCE_PRODUCERSOffset);
     CQRScreeningControls.addRequestedWorkers(builder, REQUESTED_WORKERS);
     CQRScreeningControls.addStartEpoch(builder, START_EPOCHOffset);
+    CQRScreeningControls.addApplyDensityCrossCorrelation(builder, APPLY_DENSITY_CROSS_CORRELATION);
     CQRScreeningControls.addVolumeCenter(builder, VOLUME_CENTER);
     CQRScreeningControls.addScreening(builder, SCREENING);
     CQRScreeningControls.addAlgorithm(builder, ALGORITHM);
@@ -118,7 +131,7 @@ public final class CQRScreeningControls extends com.google.flatbuffers.Table {
     return CQRScreeningControls.endCQRScreeningControls(builder);
   }
 
-  public static void startCQRScreeningControls(FlatBufferBuilder builder) { builder.startTable(19); }
+  public static void startCQRScreeningControls(FlatBufferBuilder builder) { builder.startTable(21); }
   public static void addStartEpoch(FlatBufferBuilder builder, int START_EPOCHOffset) { builder.addOffset(0, START_EPOCHOffset, 0); }
   public static void addDurationSeconds(FlatBufferBuilder builder, double DURATION_SECONDS) { builder.addDouble(1, DURATION_SECONDS, 604800.0); }
   public static void addThresholdM(FlatBufferBuilder builder, double THRESHOLD_M) { builder.addDouble(2, THRESHOLD_M, 5000.0); }
@@ -140,6 +153,8 @@ public final class CQRScreeningControls extends com.google.flatbuffers.Table {
   public static void addVerifiedCovarianceProducers(FlatBufferBuilder builder, int VERIFIED_COVARIANCE_PRODUCERSOffset) { builder.addOffset(18, VERIFIED_COVARIANCE_PRODUCERSOffset, 0); }
   public static int createVerifiedCovarianceProducersVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startVerifiedCovarianceProducersVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addApplyDensityCrossCorrelation(FlatBufferBuilder builder, boolean APPLY_DENSITY_CROSS_CORRELATION) { builder.addBoolean(19, APPLY_DENSITY_CROSS_CORRELATION, false); }
+  public static void addDensityLogSigma(FlatBufferBuilder builder, double DENSITY_LOG_SIGMA) { builder.addDouble(20, DENSITY_LOG_SIGMA, 0.0); }
   public static int endCQRScreeningControls(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // START_EPOCH

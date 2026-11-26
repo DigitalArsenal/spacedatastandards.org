@@ -839,7 +839,7 @@
     },
     "pcfSolidTideModel" : {
       "type" : "string",
-      "enum": ["NONE", "IERS_2010"]
+      "enum": ["UNSPECIFIED", "NONE", "IERS_2010"]
     },
     "pcfRelativityTerms" : {
       "type" : "string",
@@ -987,7 +987,7 @@
     },
     "cqrCovarianceCorrelation" : {
       "type" : "string",
-      "enum": ["UNSPECIFIED", "INDEPENDENT", "SUPPLIED_CROSS_COVARIANCE"]
+      "enum": ["UNSPECIFIED", "INDEPENDENT", "SUPPLIED_CROSS_COVARIANCE", "SHARED_DENSITY_SENSITIVITY"]
     },
     "cqrDocumentSyntax" : {
       "type" : "string",
@@ -15803,98 +15803,98 @@
     },
     "PCFGaussianPrior" : {
       "type" : "object",
-      "description" : "A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps\nthe theory's own sigma and moves only the mean.",
+      "description" : "Optional Gaussian parameter prior.",
       "properties" : {
         "MEAN" : {
                 "type" : "number",
-                "description" : "Prior mean, in the unit of the parameter it is attached to. Default 0."
+                "description" : "Prior mean in the parameter's unit."
               },
         "SIGMA" : {
                 "type" : "number",
-                "description" : "Prior standard deviation, in the same unit; > 0 when HAS_SIGMA."
+                "description" : "Prior standard deviation in the parameter's unit; > 0 when HAS_SIGMA is true."
               },
         "HAS_SIGMA" : {
                 "type" : "boolean",
-                "description" : "True when SIGMA carries a value; false keeps the theory's own sigma."
+                "description" : "True when SIGMA is explicitly provided."
               }
       },
       "additionalProperties" : false
     },
     "PCFFitPolicy" : {
       "type" : "object",
-      "description" : "Fit policy: how long an arc a fit uses, how that is validated, and what a\nfit refuses.",
+      "description" : "Optional configuration parameters for orbit estimation.",
       "properties" : {
         "DEFAULT_SPAN_HOURS" : {
                 "type" : "number",
-                "description" : "Fit span used when the span rule is not run, hours. Default 48."
+                "description" : "Optional span parameter in hours; 0 means unspecified."
               },
         "MINIMUM_SPAN_HOURS" : {
                 "type" : "number",
-                "description" : "Shortest span a fit may take, hours. Default 24."
+                "description" : "Optional minimum span in hours; 0 means unspecified."
               },
         "MAXIMUM_SPAN_HOURS" : {
                 "type" : "number",
-                "description" : "Longest span a fit may take, hours. Default 120."
+                "description" : "Optional maximum span in hours; 0 means unspecified."
               },
         "CANDIDATE_SPANS_HOURS" : {
                 "type" : "array", "items" : {"type" : "number"},
-                "description" : "Spans the extension rule scores, ascending, hours, each within\n[MINIMUM_SPAN_HOURS, MAXIMUM_SPAN_HOURS]. Empty: 48, 72 and 120; with\n24 in front when the eccentricity exceeds ECCENTRICITY_THRESHOLD."
+                "description" : "Optional candidate span list in hours."
               },
         "TAIL_HOURS" : {
                 "type" : "number",
-                "description" : "Validation tail: each candidate is fitted to the data before the latest\nTAIL_HOURS and scored on that tail, hours. Default 24."
+                "description" : "Optional evaluation tail length in hours; 0 means unspecified."
               },
         "EXTENSION_MARGIN" : {
                 "type" : "number",
-                "description" : "Extension rule: a longer candidate is taken only when its tail error is\nat most this fraction of the best shorter candidate's. Default 0.9."
+                "description" : "Optional relative selection margin; 0 means unspecified."
               },
         "HOLDOUT_HOURS" : {
                 "type" : "number",
-                "description" : "Hours held out at the end of the data and reported as error growth; the\nfit then ends HOLDOUT_HOURS before the data does. Absent, the data\nblock's own useable stop time decides."
+                "description" : "Optional holdout window length in hours."
               },
         "HAS_HOLDOUT_HOURS" : {
                 "type" : "boolean",
-                "description" : "True when HOLDOUT_HOURS carries a value; false means absent."
+                "description" : "True when HOLDOUT_HOURS is explicitly provided."
               },
         "ECCENTRICITY_THRESHOLD" : {
                 "type" : "number",
-                "description" : "Eccentricity above which the eccentric-orbit rule applies. Default 0.5."
+                "description" : "Optional eccentricity threshold; 0 means unspecified."
               },
         "ECCENTRIC_DEFAULT_SPAN_HOURS" : {
                 "type" : "number",
-                "description" : "Eccentric orbits: the default span, hours. Default 24."
+                "description" : "Optional eccentric-orbit span in hours; 0 means unspecified."
               },
         "ECCENTRIC_EXTENSION_MARGIN" : {
                 "type" : "number",
-                "description" : "Eccentric orbits: EXTENSION_MARGIN. Default 0.7."
+                "description" : "Optional eccentric-orbit relative margin; 0 means unspecified."
               },
         "ECCENTRIC_MAXIMUM_PERIOD_HOURS" : {
                 "type" : "number",
-                "description" : "Eccentric orbits: no candidate longer than this is tried once the orbital\nperiod passes it, hours. Default 36."
+                "description" : "Optional eccentric-orbit period bound in hours; 0 means unspecified."
               },
         "IMPLAUSIBLE_RMS_KM" : {
                 "type" : "number",
-                "description" : "A fit whose RMS passes this is refused as fit-implausible, km. Default\n100."
+                "description" : "Optional maximum acceptable RMS in km; 0 means unspecified."
               },
         "DRAG_PRIOR" : {
                 "$ref" : "#/definitions/PCFGaussianPrior",
-                "description" : "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0, sigma 0.05."
+                "description" : "Optional prior on drag parameter."
               },
         "SRP_PRIOR" : {
                 "$ref" : "#/definitions/PCFGaussianPrior",
-                "description" : "Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.\nAbsent or without sigma: mean 0, sigma 0.05."
+                "description" : "Optional prior on solar radiation pressure parameter."
               },
         "DRAG_PRIOR_FORM" : {
                 "$ref" : "#/definitions/pcfPriorForm",
-                "description" : "The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its\nMEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation\nof ln B_eff."
+                "description" : "Optional distribution form for DRAG_PRIOR."
               },
         "SRP_PRIOR_FORM" : {
                 "$ref" : "#/definitions/pcfPriorForm",
-                "description" : "The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit\nestimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN\nthe median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of\nln AGOM."
+                "description" : "Optional distribution form for SRP_PRIOR."
               },
         "WEATHER_HORIZON_DAYS" : {
                 "type" : "integer", "minimum" : 0, "maximum" : 65535,
-                "description" : "Days past the element set's epoch day through which the fit writes the\ndaily space weather into the record it emits (OCM\nPERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows\n(WEATHER_SOURCE RECORDS). The last day written is the later of the fit\narc's last day and the epoch's day plus this count; rows supplied with\nthe request must reach it, or the fit is refused by name. Default 30."
+                "description" : "Optional space-weather horizon in days past epoch; 0 means unspecified."
               }
       },
       "additionalProperties" : false
@@ -16201,7 +16201,7 @@
               },
         "SOLID_TIDES" : {
                 "$ref" : "#/definitions/pcfSolidTideModel",
-                "description" : "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nNONE."
+                "description" : "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nUNSPECIFIED (the propagator's own default)."
               },
         "RELATIVITY" : {
                 "$ref" : "#/definitions/pcfRelativityTerms",
@@ -19188,7 +19188,7 @@
       "properties" : {
         "FIT_STATES" : {
                 "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
-                "description" : "Reference states fitted."
+                "description" : "Reference states reported; 0 means not stated."
               },
         "FIT_RMS_KM" : {
                 "type" : "number",
@@ -19210,11 +19210,11 @@
               },
         "ITERATIONS" : {
                 "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
-                "description" : "Iterations the fit took."
+                "description" : "Iterations reported; 0 means not stated."
               },
         "CONVERGED" : {
                 "type" : "boolean",
-                "description" : "True when the fit converged."
+                "description" : "True when converged."
               },
         "HELD_OUT_STOP" : {
                 "type" : "string",
@@ -19236,7 +19236,7 @@
               },
         "PCF_CID" : {
                 "type" : "string",
-                "description" : "CID of the $PCF the fit ran under: its span rule, priors and holdout."
+                "description" : "CID of the $PCF configuration associated with the record."
               },
         "FIT_START" : {
                 "type" : "string",
@@ -19946,6 +19946,10 @@
         "COV_REALISM" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/CVR"},
                 "description" : "Realism of the block's covariance: one entry per line of LINES, in order,\nor one entry for every line."
+              },
+        "DENSITY_SENSITIVITY_KM" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Optional position sensitivity to a unit dimensionless log-density shift\n(dr/ds), flattened 3 doubles per line of LINES in COV_REF_FRAME, km.\nEmpty when absent."
               }
       },
       "additionalProperties" : false
@@ -20289,6 +20293,10 @@
         "CATALOG_ENTRY" : {
                 "$ref" : "#/definitions/CAT",
                 "description" : "The object's catalog entry. Without a supplied radius, its SIZE, else\nits RCS, gives the hard-body radius (see cqrHardBodyRadiusBasis)."
+              },
+        "DENSITY_SENSITIVITY_KM" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Optional position sensitivity to a unit dimensionless log-density shift\n(dr/ds) in EVALUATION_FRAME, 3 doubles in km. Empty when absent."
               }
       },
       "required" : ["OBJECT_ID"],
@@ -20380,6 +20388,14 @@
         "VERIFIED_COVARIANCE_PRODUCERS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/CQRVerifiedCovarianceProducer"},
                 "description" : "Builds whose AP covariance a collision probability may use. An empty or\nabsent list means no collision probability from AP covariance."
+              },
+        "APPLY_DENSITY_CROSS_CORRELATION" : {
+                "type" : "boolean",
+                "description" : "When true and DENSITY_LOG_SIGMA > 0 with both objects supplying\nDENSITY_SENSITIVITY_KM, apply common-mode density cross-covariance."
+              },
+        "DENSITY_LOG_SIGMA" : {
+                "type" : "number",
+                "description" : "Dimensionless 1-sigma common-mode log-density uncertainty (sigma_s); 0 disables."
               }
       },
       "required" : ["START_EPOCH"],

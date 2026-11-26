@@ -6,8 +6,7 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
-/// Fit policy: how long an arc a fit uses, how that is validated, and what a
-/// fit refuses.
+/// Optional configuration parameters for orbit estimation.
 public struct PCFFitPolicy : IFlatbufferObject
 {
   private Table __p;
@@ -18,15 +17,13 @@ public struct PCFFitPolicy : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public PCFFitPolicy __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  /// Fit span used when the span rule is not run, hours. Default 48.
-  public double DEFAULT_SPAN_HOURS { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)48.0; } }
-  /// Shortest span a fit may take, hours. Default 24.
-  public double MINIMUM_SPAN_HOURS { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)24.0; } }
-  /// Longest span a fit may take, hours. Default 120.
-  public double MAXIMUM_SPAN_HOURS { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)120.0; } }
-  /// Spans the extension rule scores, ascending, hours, each within
-  /// [MINIMUM_SPAN_HOURS, MAXIMUM_SPAN_HOURS]. Empty: 48, 72 and 120; with
-  /// 24 in front when the eccentricity exceeds ECCENTRICITY_THRESHOLD.
+  /// Optional span parameter in hours; 0 means unspecified.
+  public double DEFAULT_SPAN_HOURS { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Optional minimum span in hours; 0 means unspecified.
+  public double MINIMUM_SPAN_HOURS { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Optional maximum span in hours; 0 means unspecified.
+  public double MAXIMUM_SPAN_HOURS { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Optional candidate span list in hours.
   public double CANDIDATE_SPANS_HOURS(int j) { int o = __p.__offset(10); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
   public int CANDIDATE_SPANS_HOURSLength { get { int o = __p.__offset(10); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
@@ -35,73 +32,54 @@ public struct PCFFitPolicy : IFlatbufferObject
   public ArraySegment<byte>? GetCANDIDATE_SPANS_HOURSBytes() { return __p.__vector_as_arraysegment(10); }
 #endif
   public double[] GetCANDIDATE_SPANS_HOURSArray() { return __p.__vector_as_array<double>(10); }
-  /// Validation tail: each candidate is fitted to the data before the latest
-  /// TAIL_HOURS and scored on that tail, hours. Default 24.
-  public double TAIL_HOURS { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)24.0; } }
-  /// Extension rule: a longer candidate is taken only when its tail error is
-  /// at most this fraction of the best shorter candidate's. Default 0.9.
-  public double EXTENSION_MARGIN { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.9; } }
-  /// Hours held out at the end of the data and reported as error growth; the
-  /// fit then ends HOLDOUT_HOURS before the data does. Absent, the data
-  /// block's own useable stop time decides.
+  /// Optional evaluation tail length in hours; 0 means unspecified.
+  public double TAIL_HOURS { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Optional relative selection margin; 0 means unspecified.
+  public double EXTENSION_MARGIN { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Optional holdout window length in hours.
   public double HOLDOUT_HOURS { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// True when HOLDOUT_HOURS carries a value; false means absent.
+  /// True when HOLDOUT_HOURS is explicitly provided.
   public bool HAS_HOLDOUT_HOURS { get { int o = __p.__offset(18); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
-  /// Eccentricity above which the eccentric-orbit rule applies. Default 0.5.
-  public double ECCENTRICITY_THRESHOLD { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.5; } }
-  /// Eccentric orbits: the default span, hours. Default 24.
-  public double ECCENTRIC_DEFAULT_SPAN_HOURS { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)24.0; } }
-  /// Eccentric orbits: EXTENSION_MARGIN. Default 0.7.
-  public double ECCENTRIC_EXTENSION_MARGIN { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.7; } }
-  /// Eccentric orbits: no candidate longer than this is tried once the orbital
-  /// period passes it, hours. Default 36.
-  public double ECCENTRIC_MAXIMUM_PERIOD_HOURS { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)36.0; } }
-  /// A fit whose RMS passes this is refused as fit-implausible, km. Default
-  /// 100.
-  public double IMPLAUSIBLE_RMS_KM { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)100.0; } }
-  /// Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent
-  /// or without sigma: mean 0, sigma 0.05.
+  /// Optional eccentricity threshold; 0 means unspecified.
+  public double ECCENTRICITY_THRESHOLD { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Optional eccentric-orbit span in hours; 0 means unspecified.
+  public double ECCENTRIC_DEFAULT_SPAN_HOURS { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Optional eccentric-orbit relative margin; 0 means unspecified.
+  public double ECCENTRIC_EXTENSION_MARGIN { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Optional eccentric-orbit period bound in hours; 0 means unspecified.
+  public double ECCENTRIC_MAXIMUM_PERIOD_HOURS { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Optional maximum acceptable RMS in km; 0 means unspecified.
+  public double IMPLAUSIBLE_RMS_KM { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Optional prior on drag parameter.
   public PCFGaussianPrior? DRAG_PRIOR { get { int o = __p.__offset(30); return o != 0 ? (PCFGaussianPrior?)(new PCFGaussianPrior()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
-  /// Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.
-  /// Absent or without sigma: mean 0, sigma 0.05.
+  /// Optional prior on solar radiation pressure parameter.
   public PCFGaussianPrior? SRP_PRIOR { get { int o = __p.__offset(32); return o != 0 ? (PCFGaussianPrior?)(new PCFGaussianPrior()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
-  /// The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
-  /// estimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its
-  /// MEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation
-  /// of ln B_eff.
+  /// Optional distribution form for DRAG_PRIOR.
   public pcfPriorForm DRAG_PRIOR_FORM { get { int o = __p.__offset(34); return o != 0 ? (pcfPriorForm)__p.bb.Get(o + __p.bb_pos) : pcfPriorForm.GAUSSIAN_SIGNED; } }
-  /// The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
-  /// estimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN
-  /// the median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of
-  /// ln AGOM.
+  /// Optional distribution form for SRP_PRIOR.
   public pcfPriorForm SRP_PRIOR_FORM { get { int o = __p.__offset(36); return o != 0 ? (pcfPriorForm)__p.bb.Get(o + __p.bb_pos) : pcfPriorForm.GAUSSIAN_SIGNED; } }
-  /// Days past the element set's epoch day through which the fit writes the
-  /// daily space weather into the record it emits (OCM
-  /// PERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows
-  /// (WEATHER_SOURCE RECORDS). The last day written is the later of the fit
-  /// arc's last day and the epoch's day plus this count; rows supplied with
-  /// the request must reach it, or the fit is refused by name. Default 30.
-  public ushort WEATHER_HORIZON_DAYS { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)30; } }
+  /// Optional space-weather horizon in days past epoch; 0 means unspecified.
+  public ushort WEATHER_HORIZON_DAYS { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
 
   public static Offset<PCFFitPolicy> CreatePCFFitPolicy(FlatBufferBuilder builder,
-      double DEFAULT_SPAN_HOURS = 48.0,
-      double MINIMUM_SPAN_HOURS = 24.0,
-      double MAXIMUM_SPAN_HOURS = 120.0,
+      double DEFAULT_SPAN_HOURS = 0.0,
+      double MINIMUM_SPAN_HOURS = 0.0,
+      double MAXIMUM_SPAN_HOURS = 0.0,
       VectorOffset CANDIDATE_SPANS_HOURSOffset = default(VectorOffset),
-      double TAIL_HOURS = 24.0,
-      double EXTENSION_MARGIN = 0.9,
+      double TAIL_HOURS = 0.0,
+      double EXTENSION_MARGIN = 0.0,
       double HOLDOUT_HOURS = 0.0,
       bool HAS_HOLDOUT_HOURS = false,
-      double ECCENTRICITY_THRESHOLD = 0.5,
-      double ECCENTRIC_DEFAULT_SPAN_HOURS = 24.0,
-      double ECCENTRIC_EXTENSION_MARGIN = 0.7,
-      double ECCENTRIC_MAXIMUM_PERIOD_HOURS = 36.0,
-      double IMPLAUSIBLE_RMS_KM = 100.0,
+      double ECCENTRICITY_THRESHOLD = 0.0,
+      double ECCENTRIC_DEFAULT_SPAN_HOURS = 0.0,
+      double ECCENTRIC_EXTENSION_MARGIN = 0.0,
+      double ECCENTRIC_MAXIMUM_PERIOD_HOURS = 0.0,
+      double IMPLAUSIBLE_RMS_KM = 0.0,
       Offset<PCFGaussianPrior> DRAG_PRIOROffset = default(Offset<PCFGaussianPrior>),
       Offset<PCFGaussianPrior> SRP_PRIOROffset = default(Offset<PCFGaussianPrior>),
       pcfPriorForm DRAG_PRIOR_FORM = pcfPriorForm.GAUSSIAN_SIGNED,
       pcfPriorForm SRP_PRIOR_FORM = pcfPriorForm.GAUSSIAN_SIGNED,
-      ushort WEATHER_HORIZON_DAYS = 30) {
+      ushort WEATHER_HORIZON_DAYS = 0) {
     builder.StartTable(18);
     PCFFitPolicy.AddIMPLAUSIBLE_RMS_KM(builder, IMPLAUSIBLE_RMS_KM);
     PCFFitPolicy.AddECCENTRIC_MAXIMUM_PERIOD_HOURS(builder, ECCENTRIC_MAXIMUM_PERIOD_HOURS);
@@ -125,29 +103,29 @@ public struct PCFFitPolicy : IFlatbufferObject
   }
 
   public static void StartPCFFitPolicy(FlatBufferBuilder builder) { builder.StartTable(18); }
-  public static void AddDEFAULT_SPAN_HOURS(FlatBufferBuilder builder, double DEFAULT_SPAN_HOURS) { builder.AddDouble(0, DEFAULT_SPAN_HOURS, 48.0); }
-  public static void AddMINIMUM_SPAN_HOURS(FlatBufferBuilder builder, double MINIMUM_SPAN_HOURS) { builder.AddDouble(1, MINIMUM_SPAN_HOURS, 24.0); }
-  public static void AddMAXIMUM_SPAN_HOURS(FlatBufferBuilder builder, double MAXIMUM_SPAN_HOURS) { builder.AddDouble(2, MAXIMUM_SPAN_HOURS, 120.0); }
+  public static void AddDEFAULT_SPAN_HOURS(FlatBufferBuilder builder, double DEFAULT_SPAN_HOURS) { builder.AddDouble(0, DEFAULT_SPAN_HOURS, 0.0); }
+  public static void AddMINIMUM_SPAN_HOURS(FlatBufferBuilder builder, double MINIMUM_SPAN_HOURS) { builder.AddDouble(1, MINIMUM_SPAN_HOURS, 0.0); }
+  public static void AddMAXIMUM_SPAN_HOURS(FlatBufferBuilder builder, double MAXIMUM_SPAN_HOURS) { builder.AddDouble(2, MAXIMUM_SPAN_HOURS, 0.0); }
   public static void AddCANDIDATE_SPANS_HOURS(FlatBufferBuilder builder, VectorOffset CANDIDATE_SPANS_HOURSOffset) { builder.AddOffset(3, CANDIDATE_SPANS_HOURSOffset.Value, 0); }
   public static VectorOffset CreateCANDIDATE_SPANS_HOURSVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
   public static VectorOffset CreateCANDIDATE_SPANS_HOURSVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateCANDIDATE_SPANS_HOURSVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateCANDIDATE_SPANS_HOURSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartCANDIDATE_SPANS_HOURSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
-  public static void AddTAIL_HOURS(FlatBufferBuilder builder, double TAIL_HOURS) { builder.AddDouble(4, TAIL_HOURS, 24.0); }
-  public static void AddEXTENSION_MARGIN(FlatBufferBuilder builder, double EXTENSION_MARGIN) { builder.AddDouble(5, EXTENSION_MARGIN, 0.9); }
+  public static void AddTAIL_HOURS(FlatBufferBuilder builder, double TAIL_HOURS) { builder.AddDouble(4, TAIL_HOURS, 0.0); }
+  public static void AddEXTENSION_MARGIN(FlatBufferBuilder builder, double EXTENSION_MARGIN) { builder.AddDouble(5, EXTENSION_MARGIN, 0.0); }
   public static void AddHOLDOUT_HOURS(FlatBufferBuilder builder, double HOLDOUT_HOURS) { builder.AddDouble(6, HOLDOUT_HOURS, 0.0); }
   public static void AddHAS_HOLDOUT_HOURS(FlatBufferBuilder builder, bool HAS_HOLDOUT_HOURS) { builder.AddBool(7, HAS_HOLDOUT_HOURS, false); }
-  public static void AddECCENTRICITY_THRESHOLD(FlatBufferBuilder builder, double ECCENTRICITY_THRESHOLD) { builder.AddDouble(8, ECCENTRICITY_THRESHOLD, 0.5); }
-  public static void AddECCENTRIC_DEFAULT_SPAN_HOURS(FlatBufferBuilder builder, double ECCENTRIC_DEFAULT_SPAN_HOURS) { builder.AddDouble(9, ECCENTRIC_DEFAULT_SPAN_HOURS, 24.0); }
-  public static void AddECCENTRIC_EXTENSION_MARGIN(FlatBufferBuilder builder, double ECCENTRIC_EXTENSION_MARGIN) { builder.AddDouble(10, ECCENTRIC_EXTENSION_MARGIN, 0.7); }
-  public static void AddECCENTRIC_MAXIMUM_PERIOD_HOURS(FlatBufferBuilder builder, double ECCENTRIC_MAXIMUM_PERIOD_HOURS) { builder.AddDouble(11, ECCENTRIC_MAXIMUM_PERIOD_HOURS, 36.0); }
-  public static void AddIMPLAUSIBLE_RMS_KM(FlatBufferBuilder builder, double IMPLAUSIBLE_RMS_KM) { builder.AddDouble(12, IMPLAUSIBLE_RMS_KM, 100.0); }
+  public static void AddECCENTRICITY_THRESHOLD(FlatBufferBuilder builder, double ECCENTRICITY_THRESHOLD) { builder.AddDouble(8, ECCENTRICITY_THRESHOLD, 0.0); }
+  public static void AddECCENTRIC_DEFAULT_SPAN_HOURS(FlatBufferBuilder builder, double ECCENTRIC_DEFAULT_SPAN_HOURS) { builder.AddDouble(9, ECCENTRIC_DEFAULT_SPAN_HOURS, 0.0); }
+  public static void AddECCENTRIC_EXTENSION_MARGIN(FlatBufferBuilder builder, double ECCENTRIC_EXTENSION_MARGIN) { builder.AddDouble(10, ECCENTRIC_EXTENSION_MARGIN, 0.0); }
+  public static void AddECCENTRIC_MAXIMUM_PERIOD_HOURS(FlatBufferBuilder builder, double ECCENTRIC_MAXIMUM_PERIOD_HOURS) { builder.AddDouble(11, ECCENTRIC_MAXIMUM_PERIOD_HOURS, 0.0); }
+  public static void AddIMPLAUSIBLE_RMS_KM(FlatBufferBuilder builder, double IMPLAUSIBLE_RMS_KM) { builder.AddDouble(12, IMPLAUSIBLE_RMS_KM, 0.0); }
   public static void AddDRAG_PRIOR(FlatBufferBuilder builder, Offset<PCFGaussianPrior> DRAG_PRIOROffset) { builder.AddOffset(13, DRAG_PRIOROffset.Value, 0); }
   public static void AddSRP_PRIOR(FlatBufferBuilder builder, Offset<PCFGaussianPrior> SRP_PRIOROffset) { builder.AddOffset(14, SRP_PRIOROffset.Value, 0); }
   public static void AddDRAG_PRIOR_FORM(FlatBufferBuilder builder, pcfPriorForm DRAG_PRIOR_FORM) { builder.AddByte(15, (byte)DRAG_PRIOR_FORM, 0); }
   public static void AddSRP_PRIOR_FORM(FlatBufferBuilder builder, pcfPriorForm SRP_PRIOR_FORM) { builder.AddByte(16, (byte)SRP_PRIOR_FORM, 0); }
-  public static void AddWEATHER_HORIZON_DAYS(FlatBufferBuilder builder, ushort WEATHER_HORIZON_DAYS) { builder.AddUshort(17, WEATHER_HORIZON_DAYS, 30); }
+  public static void AddWEATHER_HORIZON_DAYS(FlatBufferBuilder builder, ushort WEATHER_HORIZON_DAYS) { builder.AddUshort(17, WEATHER_HORIZON_DAYS, 0); }
   public static Offset<PCFFitPolicy> EndPCFFitPolicy(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<PCFFitPolicy>(o);
@@ -232,24 +210,24 @@ public class PCFFitPolicyT
   public ushort WEATHER_HORIZON_DAYS { get; set; }
 
   public PCFFitPolicyT() {
-    this.DEFAULT_SPAN_HOURS = 48.0;
-    this.MINIMUM_SPAN_HOURS = 24.0;
-    this.MAXIMUM_SPAN_HOURS = 120.0;
+    this.DEFAULT_SPAN_HOURS = 0.0;
+    this.MINIMUM_SPAN_HOURS = 0.0;
+    this.MAXIMUM_SPAN_HOURS = 0.0;
     this.CANDIDATE_SPANS_HOURS = null;
-    this.TAIL_HOURS = 24.0;
-    this.EXTENSION_MARGIN = 0.9;
+    this.TAIL_HOURS = 0.0;
+    this.EXTENSION_MARGIN = 0.0;
     this.HOLDOUT_HOURS = 0.0;
     this.HAS_HOLDOUT_HOURS = false;
-    this.ECCENTRICITY_THRESHOLD = 0.5;
-    this.ECCENTRIC_DEFAULT_SPAN_HOURS = 24.0;
-    this.ECCENTRIC_EXTENSION_MARGIN = 0.7;
-    this.ECCENTRIC_MAXIMUM_PERIOD_HOURS = 36.0;
-    this.IMPLAUSIBLE_RMS_KM = 100.0;
+    this.ECCENTRICITY_THRESHOLD = 0.0;
+    this.ECCENTRIC_DEFAULT_SPAN_HOURS = 0.0;
+    this.ECCENTRIC_EXTENSION_MARGIN = 0.0;
+    this.ECCENTRIC_MAXIMUM_PERIOD_HOURS = 0.0;
+    this.IMPLAUSIBLE_RMS_KM = 0.0;
     this.DRAG_PRIOR = null;
     this.SRP_PRIOR = null;
     this.DRAG_PRIOR_FORM = pcfPriorForm.GAUSSIAN_SIGNED;
     this.SRP_PRIOR_FORM = pcfPriorForm.GAUSSIAN_SIGNED;
-    this.WEATHER_HORIZON_DAYS = 30;
+    this.WEATHER_HORIZON_DAYS = 0;
   }
 }
 

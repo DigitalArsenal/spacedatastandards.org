@@ -3920,7 +3920,7 @@ struct OCMFitStatistics FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_FIT_START = 32,
     VT_FIT_STOP = 34
   };
-  /// Reference states fitted.
+  /// Reference states reported; 0 means not stated.
   uint32_t FIT_STATES() const {
     return GetField<uint32_t>(VT_FIT_STATES, 0);
   }
@@ -3943,11 +3943,11 @@ struct OCMFitStatistics FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double FIT_CROSS_TRACK_RMS_KM() const {
     return GetField<double>(VT_FIT_CROSS_TRACK_RMS_KM, std::numeric_limits<double>::quiet_NaN());
   }
-  /// Iterations the fit took.
+  /// Iterations reported; 0 means not stated.
   uint32_t ITERATIONS() const {
     return GetField<uint32_t>(VT_ITERATIONS, 0);
   }
-  /// True when the fit converged.
+  /// True when converged.
   bool CONVERGED() const {
     return GetField<uint8_t>(VT_CONVERGED, 0) != 0;
   }
@@ -3969,7 +3969,7 @@ struct OCMFitStatistics FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<OCMHeldOutDay>> *HELD_OUT_DAYS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<OCMHeldOutDay>> *>(VT_HELD_OUT_DAYS);
   }
-  /// CID of the $PCF the fit ran under: its span rule, priors and holdout.
+  /// CID of the $PCF configuration associated with the record.
   const ::flatbuffers::String *PCF_CID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_PCF_CID);
   }
@@ -6564,7 +6564,8 @@ struct OCMCovarianceBlock FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
     VT_COV_ORDERING = 28,
     VT_COV_UNITS = 30,
     VT_LINES = 32,
-    VT_COV_REALISM = 34
+    VT_COV_REALISM = 34,
+    VT_DENSITY_SENSITIVITY_KM = 36
   };
   /// COMMENT lines of this block, joined by a line feed.
   const ::flatbuffers::String *COMMENT() const {
@@ -6631,6 +6632,12 @@ struct OCMCovarianceBlock FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
   const ::flatbuffers::Vector<::flatbuffers::Offset<CVR>> *COV_REALISM() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<CVR>> *>(VT_COV_REALISM);
   }
+  /// Optional position sensitivity to a unit dimensionless log-density shift
+  /// (dr/ds), flattened 3 doubles per line of LINES in COV_REF_FRAME, km.
+  /// Empty when absent.
+  const ::flatbuffers::Vector<double> *DENSITY_SENSITIVITY_KM() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_DENSITY_SENSITIVITY_KM);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -6664,6 +6671,8 @@ struct OCMCovarianceBlock FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
            VerifyOffset(verifier, VT_COV_REALISM) &&
            verifier.VerifyVector(COV_REALISM()) &&
            verifier.VerifyVectorOfTables(COV_REALISM()) &&
+           VerifyOffset(verifier, VT_DENSITY_SENSITIVITY_KM) &&
+           verifier.VerifyVector(DENSITY_SENSITIVITY_KM()) &&
            verifier.EndTable();
   }
 };
@@ -6720,6 +6729,9 @@ struct OCMCovarianceBlockBuilder {
   void add_COV_REALISM(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<CVR>>> COV_REALISM) {
     fbb_.AddOffset(OCMCovarianceBlock::VT_COV_REALISM, COV_REALISM);
   }
+  void add_DENSITY_SENSITIVITY_KM(::flatbuffers::Offset<::flatbuffers::Vector<double>> DENSITY_SENSITIVITY_KM) {
+    fbb_.AddOffset(OCMCovarianceBlock::VT_DENSITY_SENSITIVITY_KM, DENSITY_SENSITIVITY_KM);
+  }
   explicit OCMCovarianceBlockBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -6748,11 +6760,13 @@ inline ::flatbuffers::Offset<OCMCovarianceBlock> CreateOCMCovarianceBlock(
     covarianceOrdering COV_ORDERING = covarianceOrdering_LTM,
     ::flatbuffers::Offset<::flatbuffers::String> COV_UNITS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> LINES = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<CVR>>> COV_REALISM = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<CVR>>> COV_REALISM = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> DENSITY_SENSITIVITY_KM = 0) {
   OCMCovarianceBlockBuilder builder_(_fbb);
   builder_.add_COV_CONFIDENCE(COV_CONFIDENCE);
   builder_.add_COV_SCALE_MAX(COV_SCALE_MAX);
   builder_.add_COV_SCALE_MIN(COV_SCALE_MIN);
+  builder_.add_DENSITY_SENSITIVITY_KM(DENSITY_SENSITIVITY_KM);
   builder_.add_COV_REALISM(COV_REALISM);
   builder_.add_LINES(LINES);
   builder_.add_COV_UNITS(COV_UNITS);
@@ -6786,7 +6800,8 @@ inline ::flatbuffers::Offset<OCMCovarianceBlock> CreateOCMCovarianceBlockDirect(
     covarianceOrdering COV_ORDERING = covarianceOrdering_LTM,
     const char *COV_UNITS = nullptr,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *LINES = nullptr,
-    const std::vector<::flatbuffers::Offset<CVR>> *COV_REALISM = nullptr) {
+    const std::vector<::flatbuffers::Offset<CVR>> *COV_REALISM = nullptr,
+    const std::vector<double> *DENSITY_SENSITIVITY_KM = nullptr) {
   auto COMMENT__ = COMMENT ? _fbb.CreateString(COMMENT) : 0;
   auto COV_ID__ = COV_ID ? _fbb.CreateString(COV_ID) : 0;
   auto COV_PREV_ID__ = COV_PREV_ID ? _fbb.CreateString(COV_PREV_ID) : 0;
@@ -6799,6 +6814,7 @@ inline ::flatbuffers::Offset<OCMCovarianceBlock> CreateOCMCovarianceBlockDirect(
   auto COV_UNITS__ = COV_UNITS ? _fbb.CreateString(COV_UNITS) : 0;
   auto LINES__ = LINES ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*LINES) : 0;
   auto COV_REALISM__ = COV_REALISM ? _fbb.CreateVector<::flatbuffers::Offset<CVR>>(*COV_REALISM) : 0;
+  auto DENSITY_SENSITIVITY_KM__ = DENSITY_SENSITIVITY_KM ? _fbb.CreateVector<double>(*DENSITY_SENSITIVITY_KM) : 0;
   return CreateOCMCovarianceBlock(
       _fbb,
       COMMENT__,
@@ -6816,7 +6832,8 @@ inline ::flatbuffers::Offset<OCMCovarianceBlock> CreateOCMCovarianceBlockDirect(
       COV_ORDERING,
       COV_UNITS__,
       LINES__,
-      COV_REALISM__);
+      COV_REALISM__,
+      DENSITY_SENSITIVITY_KM__);
 }
 
 struct UserDefinedParameters FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {

@@ -85,8 +85,8 @@ public struct PCFForceModel : IFlatbufferObject
   public byte[] GetEPHEMERIS_SOURCEArray() { return __p.__vector_as_array<byte>(46); }
   /// Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth
   /// orientation (the request's Earth orientation rows) to apply them. Default
-  /// NONE.
-  public pcfSolidTideModel SOLID_TIDES { get { int o = __p.__offset(48); return o != 0 ? (pcfSolidTideModel)__p.bb.Get(o + __p.bb_pos) : pcfSolidTideModel.NONE; } }
+  /// UNSPECIFIED (the propagator's own default).
+  public pcfSolidTideModel SOLID_TIDES { get { int o = __p.__offset(48); return o != 0 ? (pcfSolidTideModel)__p.bb.Get(o + __p.bb_pos) : pcfSolidTideModel.UNSPECIFIED; } }
   /// Post-Newtonian terms. Default NONE.
   public pcfRelativityTerms RELATIVITY { get { int o = __p.__offset(50); return o != 0 ? (pcfRelativityTerms)__p.bb.Get(o + __p.bb_pos) : pcfRelativityTerms.NONE; } }
   /// Constant acceleration along the in-track axis, m/s2: T of RTN,
@@ -194,7 +194,7 @@ public struct PCFForceModel : IFlatbufferObject
       pcfAtmosphereFamily ATMOSPHERE_MODEL = pcfAtmosphereFamily.NRLMSISE00,
       Offset<PCFSpaceWeather> WEATHEROffset = default(Offset<PCFSpaceWeather>),
       StringOffset EPHEMERIS_SOURCEOffset = default(StringOffset),
-      pcfSolidTideModel SOLID_TIDES = pcfSolidTideModel.NONE,
+      pcfSolidTideModel SOLID_TIDES = pcfSolidTideModel.UNSPECIFIED,
       pcfRelativityTerms RELATIVITY = pcfRelativityTerms.NONE,
       double IN_TRACK_ACCELERATION_M_S2 = 0.0,
       bool HAS_IN_TRACK_ACCELERATION_M_S2 = false,
@@ -542,7 +542,7 @@ public class PCFForceModelT
     this.ATMOSPHERE_MODEL = pcfAtmosphereFamily.NRLMSISE00;
     this.WEATHER = null;
     this.EPHEMERIS_SOURCE = null;
-    this.SOLID_TIDES = pcfSolidTideModel.NONE;
+    this.SOLID_TIDES = pcfSolidTideModel.UNSPECIFIED;
     this.RELATIVITY = pcfRelativityTerms.NONE;
     this.IN_TRACK_ACCELERATION_M_S2 = 0.0;
     this.HAS_IN_TRACK_ACCELERATION_M_S2 = false;

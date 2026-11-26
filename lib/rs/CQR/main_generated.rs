@@ -508,14 +508,15 @@ impl ::flatbuffers::SimpleToVerifyInSlice for cqrCovarianceBasis {}
 pub const ENUM_MIN_CQR_COVARIANCE_CORRELATION: u8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_CQR_COVARIANCE_CORRELATION: u8 = 2;
+pub const ENUM_MAX_CQR_COVARIANCE_CORRELATION: u8 = 3;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_CQR_COVARIANCE_CORRELATION: [cqrCovarianceCorrelation; 3] = [
+pub const ENUM_VALUES_CQR_COVARIANCE_CORRELATION: [cqrCovarianceCorrelation; 4] = [
     cqrCovarianceCorrelation::UNSPECIFIED,
     cqrCovarianceCorrelation::INDEPENDENT,
     cqrCovarianceCorrelation::SUPPLIED_CROSS_COVARIANCE,
+    cqrCovarianceCorrelation::SHARED_DENSITY_SENSITIVITY,
 ];
 
 /// The assumed correlation between the two objects' position errors.
@@ -530,13 +531,17 @@ impl cqrCovarianceCorrelation {
     pub const INDEPENDENT: Self = Self(1);
     /// A cross covariance was supplied and used.
     pub const SUPPLIED_CROSS_COVARIANCE: Self = Self(2);
+    /// Cross covariance derived from per-object atmospheric density sensitivity
+    /// vectors and a shared log-density uncertainty.
+    pub const SHARED_DENSITY_SENSITIVITY: Self = Self(3);
 
     pub const ENUM_MIN: u8 = 0;
-    pub const ENUM_MAX: u8 = 2;
+    pub const ENUM_MAX: u8 = 3;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::UNSPECIFIED,
         Self::INDEPENDENT,
         Self::SUPPLIED_CROSS_COVARIANCE,
+        Self::SHARED_DENSITY_SENSITIVITY,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -545,6 +550,7 @@ impl cqrCovarianceCorrelation {
             Self::UNSPECIFIED => Some("UNSPECIFIED"),
             Self::INDEPENDENT => Some("INDEPENDENT"),
             Self::SUPPLIED_CROSS_COVARIANCE => Some("SUPPLIED_CROSS_COVARIANCE"),
+            Self::SHARED_DENSITY_SENSITIVITY => Some("SHARED_DENSITY_SENSITIVITY"),
             _ => None,
         }
     }
@@ -1902,6 +1908,7 @@ impl<'a> CQRObjectSource<'a> {
     pub const VT_HARD_BODY_RADIUS_M: ::flatbuffers::VOffsetT = 38;
     pub const VT_HAS_HARD_BODY_RADIUS_M: ::flatbuffers::VOffsetT = 40;
     pub const VT_CATALOG_ENTRY: ::flatbuffers::VOffsetT = 42;
+    pub const VT_DENSITY_SENSITIVITY_KM: ::flatbuffers::VOffsetT = 44;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1917,6 +1924,7 @@ impl<'a> CQRObjectSource<'a> {
         builder.add_HARD_BODY_RADIUS_M(args.HARD_BODY_RADIUS_M);
         builder.add_APOGEE_ALTITUDE_M(args.APOGEE_ALTITUDE_M);
         builder.add_PERIGEE_ALTITUDE_M(args.PERIGEE_ALTITUDE_M);
+        if let Some(x) = args.DENSITY_SENSITIVITY_KM { builder.add_DENSITY_SENSITIVITY_KM(x); }
         if let Some(x) = args.CATALOG_ENTRY { builder.add_CATALOG_ENTRY(x); }
         if let Some(x) = args.SOURCE_EPOCH { builder.add_SOURCE_EPOCH(x); }
         if let Some(x) = args.PROVENANCE { builder.add_PROVENANCE(x); }
@@ -1983,6 +1991,9 @@ impl<'a> CQRObjectSource<'a> {
         let CATALOG_ENTRY = self.CATALOG_ENTRY().map(|x| {
             alloc::boxed::Box::new(x.unpack())
         });
+        let DENSITY_SENSITIVITY_KM = self.DENSITY_SENSITIVITY_KM().map(|x| {
+            x.into_iter().collect()
+        });
         CQRObjectSourceT {
             OBJECT_ID,
             OBJECT_NAME,
@@ -2004,6 +2015,7 @@ impl<'a> CQRObjectSource<'a> {
             HARD_BODY_RADIUS_M,
             HAS_HARD_BODY_RADIUS_M,
             CATALOG_ENTRY,
+            DENSITY_SENSITIVITY_KM,
         }
     }
 
@@ -2175,6 +2187,16 @@ impl<'a> CQRObjectSource<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<CAT>>(CQRObjectSource::VT_CATALOG_ENTRY, None)}
     }
+
+    /// Optional position sensitivity to a unit dimensionless log-density shift
+    /// (dr/ds) in EVALUATION_FRAME, 3 doubles in km. Empty when absent.
+    #[inline]
+    pub fn DENSITY_SENSITIVITY_KM(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(CQRObjectSource::VT_DENSITY_SENSITIVITY_KM, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for CQRObjectSource<'_> {
@@ -2203,6 +2225,7 @@ impl ::flatbuffers::Verifiable for CQRObjectSource<'_> {
             .visit_field::<f64>("HARD_BODY_RADIUS_M", Self::VT_HARD_BODY_RADIUS_M, false)?
             .visit_field::<bool>("HAS_HARD_BODY_RADIUS_M", Self::VT_HAS_HARD_BODY_RADIUS_M, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<CAT>>("CATALOG_ENTRY", Self::VT_CATALOG_ENTRY, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("DENSITY_SENSITIVITY_KM", Self::VT_DENSITY_SENSITIVITY_KM, false)?
             .finish();
         Ok(())
     }
@@ -2229,6 +2252,7 @@ pub struct CQRObjectSourceArgs<'a> {
     pub HARD_BODY_RADIUS_M: f64,
     pub HAS_HARD_BODY_RADIUS_M: bool,
     pub CATALOG_ENTRY: Option<::flatbuffers::WIPOffset<CAT<'a>>>,
+    pub DENSITY_SENSITIVITY_KM: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
 }
 
 impl<'a> Default for CQRObjectSourceArgs<'a> {
@@ -2255,6 +2279,7 @@ impl<'a> Default for CQRObjectSourceArgs<'a> {
             HARD_BODY_RADIUS_M: 0.0,
             HAS_HARD_BODY_RADIUS_M: false,
             CATALOG_ENTRY: None,
+            DENSITY_SENSITIVITY_KM: None,
         }
     }
 }
@@ -2366,6 +2391,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> CQRObjectSourceBuilder<'a, 'b
     }
 
     #[inline]
+    pub fn add_DENSITY_SENSITIVITY_KM(&mut self, DENSITY_SENSITIVITY_KM: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CQRObjectSource::VT_DENSITY_SENSITIVITY_KM, DENSITY_SENSITIVITY_KM);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> CQRObjectSourceBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         CQRObjectSourceBuilder {
@@ -2405,6 +2435,7 @@ impl ::core::fmt::Debug for CQRObjectSource<'_> {
         ds.field("HARD_BODY_RADIUS_M", &self.HARD_BODY_RADIUS_M());
         ds.field("HAS_HARD_BODY_RADIUS_M", &self.HAS_HARD_BODY_RADIUS_M());
         ds.field("CATALOG_ENTRY", &self.CATALOG_ENTRY());
+        ds.field("DENSITY_SENSITIVITY_KM", &self.DENSITY_SENSITIVITY_KM());
         ds.finish()
     }
 }
@@ -2432,6 +2463,7 @@ pub struct CQRObjectSourceT {
     pub HARD_BODY_RADIUS_M: f64,
     pub HAS_HARD_BODY_RADIUS_M: bool,
     pub CATALOG_ENTRY: Option<alloc::boxed::Box<CATT>>,
+    pub DENSITY_SENSITIVITY_KM: Option<alloc::vec::Vec<f64>>,
 }
 
 impl Default for CQRObjectSourceT {
@@ -2457,6 +2489,7 @@ impl Default for CQRObjectSourceT {
             HARD_BODY_RADIUS_M: 0.0,
             HAS_HARD_BODY_RADIUS_M: false,
             CATALOG_ENTRY: None,
+            DENSITY_SENSITIVITY_KM: None,
         }
     }
 }
@@ -2511,6 +2544,9 @@ impl CQRObjectSourceT {
         let CATALOG_ENTRY = self.CATALOG_ENTRY.as_ref().map(|x|{
             x.pack(_fbb)
         });
+        let DENSITY_SENSITIVITY_KM = self.DENSITY_SENSITIVITY_KM.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
         CQRObjectSource::create(_fbb, &CQRObjectSourceArgs{
             OBJECT_ID,
             OBJECT_NAME,
@@ -2532,6 +2568,7 @@ impl CQRObjectSourceT {
             HARD_BODY_RADIUS_M,
             HAS_HARD_BODY_RADIUS_M,
             CATALOG_ENTRY,
+            DENSITY_SENSITIVITY_KM,
         })
     }
 }
@@ -2784,6 +2821,8 @@ impl<'a> CQRScreeningControls<'a> {
     pub const VT_CROSS_TRACK_M: ::flatbuffers::VOffsetT = 36;
     pub const VT_VOLUME_CENTER: ::flatbuffers::VOffsetT = 38;
     pub const VT_VERIFIED_COVARIANCE_PRODUCERS: ::flatbuffers::VOffsetT = 40;
+    pub const VT_APPLY_DENSITY_CROSS_CORRELATION: ::flatbuffers::VOffsetT = 42;
+    pub const VT_DENSITY_LOG_SIGMA: ::flatbuffers::VOffsetT = 44;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -2796,6 +2835,7 @@ impl<'a> CQRScreeningControls<'a> {
         args: &'args CQRScreeningControlsArgs<'args>
     ) -> ::flatbuffers::WIPOffset<CQRScreeningControls<'bldr>> {
         let mut builder = CQRScreeningControlsBuilder::new(_fbb);
+        builder.add_DENSITY_LOG_SIGMA(args.DENSITY_LOG_SIGMA);
         builder.add_CROSS_TRACK_M(args.CROSS_TRACK_M);
         builder.add_IN_TRACK_M(args.IN_TRACK_M);
         builder.add_RADIAL_M(args.RADIAL_M);
@@ -2808,6 +2848,7 @@ impl<'a> CQRScreeningControls<'a> {
         if let Some(x) = args.VERIFIED_COVARIANCE_PRODUCERS { builder.add_VERIFIED_COVARIANCE_PRODUCERS(x); }
         builder.add_REQUESTED_WORKERS(args.REQUESTED_WORKERS);
         if let Some(x) = args.START_EPOCH { builder.add_START_EPOCH(x); }
+        builder.add_APPLY_DENSITY_CROSS_CORRELATION(args.APPLY_DENSITY_CROSS_CORRELATION);
         builder.add_VOLUME_CENTER(args.VOLUME_CENTER);
         builder.add_SCREENING(args.SCREENING);
         builder.add_ALGORITHM(args.ALGORITHM);
@@ -2843,6 +2884,8 @@ impl<'a> CQRScreeningControls<'a> {
         let VERIFIED_COVARIANCE_PRODUCERS = self.VERIFIED_COVARIANCE_PRODUCERS().map(|x| {
             x.iter().map(|t| t.unpack()).collect()
         });
+        let APPLY_DENSITY_CROSS_CORRELATION = self.APPLY_DENSITY_CROSS_CORRELATION();
+        let DENSITY_LOG_SIGMA = self.DENSITY_LOG_SIGMA();
         CQRScreeningControlsT {
             START_EPOCH,
             DURATION_SECONDS,
@@ -2863,6 +2906,8 @@ impl<'a> CQRScreeningControls<'a> {
             CROSS_TRACK_M,
             VOLUME_CENTER,
             VERIFIED_COVARIANCE_PRODUCERS,
+            APPLY_DENSITY_CROSS_CORRELATION,
+            DENSITY_LOG_SIGMA,
         }
     }
 
@@ -3028,6 +3073,25 @@ impl<'a> CQRScreeningControls<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<CQRVerifiedCovarianceProducer>>>>(CQRScreeningControls::VT_VERIFIED_COVARIANCE_PRODUCERS, None)}
     }
+
+    /// When true and DENSITY_LOG_SIGMA > 0 with both objects supplying
+    /// DENSITY_SENSITIVITY_KM, apply common-mode density cross-covariance.
+    #[inline]
+    pub fn APPLY_DENSITY_CROSS_CORRELATION(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(CQRScreeningControls::VT_APPLY_DENSITY_CROSS_CORRELATION, Some(false)).unwrap()}
+    }
+
+    /// Dimensionless 1-sigma common-mode log-density uncertainty (sigma_s); 0 disables.
+    #[inline]
+    pub fn DENSITY_LOG_SIGMA(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(CQRScreeningControls::VT_DENSITY_LOG_SIGMA, Some(0.0)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for CQRScreeningControls<'_> {
@@ -3055,6 +3119,8 @@ impl ::flatbuffers::Verifiable for CQRScreeningControls<'_> {
             .visit_field::<f64>("CROSS_TRACK_M", Self::VT_CROSS_TRACK_M, false)?
             .visit_field::<cqrVolumeAnchor>("VOLUME_CENTER", Self::VT_VOLUME_CENTER, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<CQRVerifiedCovarianceProducer>>>>("VERIFIED_COVARIANCE_PRODUCERS", Self::VT_VERIFIED_COVARIANCE_PRODUCERS, false)?
+            .visit_field::<bool>("APPLY_DENSITY_CROSS_CORRELATION", Self::VT_APPLY_DENSITY_CROSS_CORRELATION, false)?
+            .visit_field::<f64>("DENSITY_LOG_SIGMA", Self::VT_DENSITY_LOG_SIGMA, false)?
             .finish();
         Ok(())
     }
@@ -3080,6 +3146,8 @@ pub struct CQRScreeningControlsArgs<'a> {
     pub CROSS_TRACK_M: f64,
     pub VOLUME_CENTER: cqrVolumeAnchor,
     pub VERIFIED_COVARIANCE_PRODUCERS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<CQRVerifiedCovarianceProducer<'a>>>>>,
+    pub APPLY_DENSITY_CROSS_CORRELATION: bool,
+    pub DENSITY_LOG_SIGMA: f64,
 }
 
 impl<'a> Default for CQRScreeningControlsArgs<'a> {
@@ -3105,6 +3173,8 @@ impl<'a> Default for CQRScreeningControlsArgs<'a> {
             CROSS_TRACK_M: 0.0,
             VOLUME_CENTER: cqrVolumeAnchor::PRIMARY,
             VERIFIED_COVARIANCE_PRODUCERS: None,
+            APPLY_DENSITY_CROSS_CORRELATION: false,
+            DENSITY_LOG_SIGMA: 0.0,
         }
     }
 }
@@ -3211,6 +3281,16 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> CQRScreeningControlsBuilder<'
     }
 
     #[inline]
+    pub fn add_APPLY_DENSITY_CROSS_CORRELATION(&mut self, APPLY_DENSITY_CROSS_CORRELATION: bool) {
+        self.fbb_.push_slot::<bool>(CQRScreeningControls::VT_APPLY_DENSITY_CROSS_CORRELATION, APPLY_DENSITY_CROSS_CORRELATION, false);
+    }
+
+    #[inline]
+    pub fn add_DENSITY_LOG_SIGMA(&mut self, DENSITY_LOG_SIGMA: f64) {
+        self.fbb_.push_slot::<f64>(CQRScreeningControls::VT_DENSITY_LOG_SIGMA, DENSITY_LOG_SIGMA, 0.0);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> CQRScreeningControlsBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         CQRScreeningControlsBuilder {
@@ -3249,6 +3329,8 @@ impl ::core::fmt::Debug for CQRScreeningControls<'_> {
         ds.field("CROSS_TRACK_M", &self.CROSS_TRACK_M());
         ds.field("VOLUME_CENTER", &self.VOLUME_CENTER());
         ds.field("VERIFIED_COVARIANCE_PRODUCERS", &self.VERIFIED_COVARIANCE_PRODUCERS());
+        ds.field("APPLY_DENSITY_CROSS_CORRELATION", &self.APPLY_DENSITY_CROSS_CORRELATION());
+        ds.field("DENSITY_LOG_SIGMA", &self.DENSITY_LOG_SIGMA());
         ds.finish()
     }
 }
@@ -3275,6 +3357,8 @@ pub struct CQRScreeningControlsT {
     pub CROSS_TRACK_M: f64,
     pub VOLUME_CENTER: cqrVolumeAnchor,
     pub VERIFIED_COVARIANCE_PRODUCERS: Option<alloc::vec::Vec<CQRVerifiedCovarianceProducerT>>,
+    pub APPLY_DENSITY_CROSS_CORRELATION: bool,
+    pub DENSITY_LOG_SIGMA: f64,
 }
 
 impl Default for CQRScreeningControlsT {
@@ -3299,6 +3383,8 @@ impl Default for CQRScreeningControlsT {
             CROSS_TRACK_M: 0.0,
             VOLUME_CENTER: cqrVolumeAnchor::PRIMARY,
             VERIFIED_COVARIANCE_PRODUCERS: None,
+            APPLY_DENSITY_CROSS_CORRELATION: false,
+            DENSITY_LOG_SIGMA: 0.0,
         }
     }
 }
@@ -3332,6 +3418,8 @@ impl CQRScreeningControlsT {
         let VERIFIED_COVARIANCE_PRODUCERS = self.VERIFIED_COVARIANCE_PRODUCERS.as_ref().map(|x|{
             let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
         });
+        let APPLY_DENSITY_CROSS_CORRELATION = self.APPLY_DENSITY_CROSS_CORRELATION;
+        let DENSITY_LOG_SIGMA = self.DENSITY_LOG_SIGMA;
         CQRScreeningControls::create(_fbb, &CQRScreeningControlsArgs{
             START_EPOCH,
             DURATION_SECONDS,
@@ -3352,6 +3440,8 @@ impl CQRScreeningControlsT {
             CROSS_TRACK_M,
             VOLUME_CENTER,
             VERIFIED_COVARIANCE_PRODUCERS,
+            APPLY_DENSITY_CROSS_CORRELATION,
+            DENSITY_LOG_SIGMA,
         })
     }
 }

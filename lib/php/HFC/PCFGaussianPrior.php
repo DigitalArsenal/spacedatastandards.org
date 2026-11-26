@@ -6,8 +6,7 @@ use \Google\FlatBuffers\Table;
 use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
-/// A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps
-/// the theory's own sigma and moves only the mean.
+/// Optional Gaussian parameter prior.
 class PCFGaussianPrior extends Table
 {
     /**
@@ -42,7 +41,7 @@ class PCFGaussianPrior extends Table
         return $this;
     }
 
-    /// Prior mean, in the unit of the parameter it is attached to. Default 0.
+    /// Prior mean in the parameter's unit.
     /**
      * @return double
      */
@@ -52,7 +51,7 @@ class PCFGaussianPrior extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Prior standard deviation, in the same unit; > 0 when HAS_SIGMA.
+    /// Prior standard deviation in the parameter's unit; > 0 when HAS_SIGMA is true.
     /**
      * @return double
      */
@@ -62,7 +61,7 @@ class PCFGaussianPrior extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// True when SIGMA carries a value; false keeps the theory's own sigma.
+    /// True when SIGMA is explicitly provided.
     /**
      * @return bool
      */

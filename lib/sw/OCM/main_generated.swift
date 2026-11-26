@@ -2144,7 +2144,7 @@ public struct OCMFitStatistics: FlatBufferVerifiableTable, FlatbuffersVectorInit
     static let FIT_STOP: VOffset = 34
   }
 
-  ///  Reference states fitted.
+  ///  Reference states reported; 0 means not stated.
   public var FIT_STATES: UInt32 { let o = _accessor.offset(VT.FIT_STATES); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Position RMS over the fit arc, km.
   public var FIT_RMS_KM: Double { let o = _accessor.offset(VT.FIT_RMS_KM); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
@@ -2155,9 +2155,9 @@ public struct OCMFitStatistics: FlatBufferVerifiableTable, FlatbuffersVectorInit
   public var FIT_RADIAL_RMS_KM: Double { let o = _accessor.offset(VT.FIT_RADIAL_RMS_KM); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
   public var FIT_IN_TRACK_RMS_KM: Double { let o = _accessor.offset(VT.FIT_IN_TRACK_RMS_KM); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
   public var FIT_CROSS_TRACK_RMS_KM: Double { let o = _accessor.offset(VT.FIT_CROSS_TRACK_RMS_KM); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Iterations the fit took.
+  ///  Iterations reported; 0 means not stated.
   public var ITERATIONS: UInt32 { let o = _accessor.offset(VT.ITERATIONS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  ///  True when the fit converged.
+  ///  True when converged.
   public var CONVERGED: Bool { let o = _accessor.offset(VT.CONVERGED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  End of the held-out window (ISO 8601 UTC); empty without one.
   public var HELD_OUT_STOP: String? { let o = _accessor.offset(VT.HELD_OUT_STOP); return o == 0 ? nil : _accessor.string(at: o) }
@@ -2168,7 +2168,7 @@ public struct OCMFitStatistics: FlatBufferVerifiableTable, FlatbuffersVectorInit
   public var HELD_OUT_MAX_KM: Double { let o = _accessor.offset(VT.HELD_OUT_MAX_KM); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
   ///  The held-out error by day after the fit arc.
   public var HELD_OUT_DAYS: FlatbufferVector<OCMHeldOutDay> { return _accessor.vector(at: VT.HELD_OUT_DAYS, byteSize: 4) }
-  ///  CID of the $PCF the fit ran under: its span rule, priors and holdout.
+  ///  CID of the $PCF configuration associated with the record.
   public var PCF_CID: String? { let o = _accessor.offset(VT.PCF_CID); return o == 0 ? nil : _accessor.string(at: o) }
   public var PCF_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PCF_CID) }
   ///  First epoch of the fit arc (ISO 8601 UTC).
@@ -3691,6 +3691,7 @@ public struct OCMCovarianceBlock: FlatBufferVerifiableTable, FlatbuffersVectorIn
     static let COV_UNITS: VOffset = 30
     static let LINES: VOffset = 32
     static let COV_REALISM: VOffset = 34
+    static let DENSITY_SENSITIVITY_KM: VOffset = 36
   }
 
   ///  COMMENT lines of this block, joined by a line feed.
@@ -3736,7 +3737,12 @@ public struct OCMCovarianceBlock: FlatBufferVerifiableTable, FlatbuffersVectorIn
   ///  Realism of the block's covariance: one entry per line of LINES, in order,
   ///  or one entry for every line.
   public var COV_REALISM: FlatbufferVector<CVR> { return _accessor.vector(at: VT.COV_REALISM, byteSize: 4) }
-  public static func startOCMCovarianceBlock(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 16) }
+  ///  Optional position sensitivity to a unit dimensionless log-density shift
+  ///  (dr/ds), flattened 3 doubles per line of LINES in COV_REF_FRAME, km.
+  ///  Empty when absent.
+  public var DENSITY_SENSITIVITY_KM: FlatbufferVector<Double> { return _accessor.vector(at: VT.DENSITY_SENSITIVITY_KM, byteSize: 8) }
+  public func withUnsafePointerToDensitySensitivityKm<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.DENSITY_SENSITIVITY_KM, body: body) }
+  public static func startOCMCovarianceBlock(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 17) }
   public static func add(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VT.COMMENT) }
   public static func add(COV_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_ID, at: VT.COV_ID) }
   public static func add(COV_PREV_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_PREV_ID, at: VT.COV_PREV_ID) }
@@ -3753,6 +3759,7 @@ public struct OCMCovarianceBlock: FlatBufferVerifiableTable, FlatbuffersVectorIn
   public static func add(COV_UNITS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_UNITS, at: VT.COV_UNITS) }
   public static func addVectorOf(LINES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINES, at: VT.LINES) }
   public static func addVectorOf(COV_REALISM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_REALISM, at: VT.COV_REALISM) }
+  public static func addVectorOf(DENSITY_SENSITIVITY_KM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DENSITY_SENSITIVITY_KM, at: VT.DENSITY_SENSITIVITY_KM) }
   public static func endOCMCovarianceBlock(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createOCMCovarianceBlock(
     _ fbb: inout FlatBufferBuilder,
@@ -3771,7 +3778,8 @@ public struct OCMCovarianceBlock: FlatBufferVerifiableTable, FlatbuffersVectorIn
     COV_ORDERING: covarianceOrdering = .ltm,
     COV_UNITSOffset COV_UNITS: Offset = Offset(),
     LINESVectorOffset LINES: Offset = Offset(),
-    COV_REALISMVectorOffset COV_REALISM: Offset = Offset()
+    COV_REALISMVectorOffset COV_REALISM: Offset = Offset(),
+    DENSITY_SENSITIVITY_KMVectorOffset DENSITY_SENSITIVITY_KM: Offset = Offset()
   ) -> Offset {
     let __start = OCMCovarianceBlock.startOCMCovarianceBlock(&fbb)
     OCMCovarianceBlock.add(COMMENT: COMMENT, &fbb)
@@ -3790,6 +3798,7 @@ public struct OCMCovarianceBlock: FlatBufferVerifiableTable, FlatbuffersVectorIn
     OCMCovarianceBlock.add(COV_UNITS: COV_UNITS, &fbb)
     OCMCovarianceBlock.addVectorOf(LINES: LINES, &fbb)
     OCMCovarianceBlock.addVectorOf(COV_REALISM: COV_REALISM, &fbb)
+    OCMCovarianceBlock.addVectorOf(DENSITY_SENSITIVITY_KM: DENSITY_SENSITIVITY_KM, &fbb)
     return OCMCovarianceBlock.endOCMCovarianceBlock(&fbb, start: __start)
   }
 
@@ -3811,6 +3820,7 @@ public struct OCMCovarianceBlock: FlatBufferVerifiableTable, FlatbuffersVectorIn
     try _v.visit(field: VT.COV_UNITS, fieldName: "COV_UNITS", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.LINES, fieldName: "LINES", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     try _v.visit(field: VT.COV_REALISM, fieldName: "COV_REALISM", required: false, type: ForwardOffset<Vector<ForwardOffset<CVR>, CVR>>.self)
+    try _v.visit(field: VT.DENSITY_SENSITIVITY_KM, fieldName: "DENSITY_SENSITIVITY_KM", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
     _v.finish()
   }
 }

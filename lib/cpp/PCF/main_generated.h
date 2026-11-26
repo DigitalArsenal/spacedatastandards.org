@@ -945,22 +945,25 @@ inline const char *EnumNamepcfAtmosphereFamily(pcfAtmosphereFamily e) {
   return EnumNamespcfAtmosphereFamily()[index];
 }
 
-/// Solid Earth tide model for the central body's field. NONE leaves the
-/// tides out. IERS_2010 is IERS Conventions (2010) section 6.2: the degree 2
-/// and 3 tides raised by the Sun and Moon with Table 6.3's anelastic Love
-/// numbers and the degree 4 terms through k+ (step 1, eqs. 6.6-6.7), the
-/// frequency-dependent corrections of Tables 6.5a-c (step 2, eq. 6.8), and
-/// the permanent tide handled for the field's own tide system. Pole tide is
-/// not included.
+/// Solid Earth tide model for the central body's field. UNSPECIFIED uses the
+/// propagator's own default (IERS 2010 when supported). NONE disables solid
+/// Earth tides explicitly. IERS_2010 is IERS Conventions (2010) section 6.2:
+/// degree 2 and 3 tides raised by the Sun and Moon with Table 6.3's anelastic
+/// Love numbers, degree 4 terms through k+ (step 1, eqs. 6.6-6.7),
+/// frequency-dependent corrections of Tables 6.5a-c (step 2, eq. 6.8), and the
+/// permanent tide handled for the field's own tide system. Pole tide is not
+/// included.
 enum pcfSolidTideModel : uint8_t {
-  pcfSolidTideModel_NONE = 0,
-  pcfSolidTideModel_IERS_2010 = 1,
-  pcfSolidTideModel_MIN = pcfSolidTideModel_NONE,
+  pcfSolidTideModel_UNSPECIFIED = 0,
+  pcfSolidTideModel_NONE = 1,
+  pcfSolidTideModel_IERS_2010 = 2,
+  pcfSolidTideModel_MIN = pcfSolidTideModel_UNSPECIFIED,
   pcfSolidTideModel_MAX = pcfSolidTideModel_IERS_2010
 };
 
-inline const pcfSolidTideModel (&EnumValuespcfSolidTideModel())[2] {
+inline const pcfSolidTideModel (&EnumValuespcfSolidTideModel())[3] {
   static const pcfSolidTideModel values[] = {
+    pcfSolidTideModel_UNSPECIFIED,
     pcfSolidTideModel_NONE,
     pcfSolidTideModel_IERS_2010
   };
@@ -968,7 +971,8 @@ inline const pcfSolidTideModel (&EnumValuespcfSolidTideModel())[2] {
 }
 
 inline const char * const *EnumNamespcfSolidTideModel() {
-  static const char * const names[3] = {
+  static const char * const names[4] = {
+    "UNSPECIFIED",
     "NONE",
     "IERS_2010",
     nullptr
@@ -977,7 +981,7 @@ inline const char * const *EnumNamespcfSolidTideModel() {
 }
 
 inline const char *EnumNamepcfSolidTideModel(pcfSolidTideModel e) {
-  if (::flatbuffers::IsOutRange(e, pcfSolidTideModel_NONE, pcfSolidTideModel_IERS_2010)) return "";
+  if (::flatbuffers::IsOutRange(e, pcfSolidTideModel_UNSPECIFIED, pcfSolidTideModel_IERS_2010)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamespcfSolidTideModel()[index];
 }
@@ -1166,16 +1170,11 @@ inline const char *EnumNamepcfGnssSpacecraftBlock(pcfGnssSpacecraftBlock e) {
   return EnumNamespcfGnssSpacecraftBlock()[index];
 }
 
-/// The form of a fitted parameter's prior (PCFFitPolicy DRAG_PRIOR_FORM and
-/// SRP_PRIOR_FORM). Append new values only.
+/// Prior distribution form for an optional parameter constraint.
 enum pcfPriorForm : uint8_t {
-  /// Gaussian on the parameter itself, which may take either sign (the
-  /// default): the prior's MEAN and SIGMA are in the parameter's unit.
+  /// Gaussian distribution on the parameter value.
   pcfPriorForm_GAUSSIAN_SIGNED = 0,
-  /// Log-normal: the fit estimates the natural log of the parameter, so the
-  /// parameter is never <= 0. The prior's MEAN is the median, in the
-  /// parameter's unit, and must be > 0; its SIGMA is the standard deviation of
-  /// the natural log of the parameter. The prior is required (HAS_SIGMA true).
+  /// Log-normal distribution on a positive parameter value.
   pcfPriorForm_LOG_NORMAL = 1,
   pcfPriorForm_MIN = pcfPriorForm_GAUSSIAN_SIGNED,
   pcfPriorForm_MAX = pcfPriorForm_LOG_NORMAL
@@ -1204,8 +1203,7 @@ inline const char *EnumNamepcfPriorForm(pcfPriorForm e) {
   return EnumNamespcfPriorForm()[index];
 }
 
-/// A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps
-/// the theory's own sigma and moves only the mean.
+/// Optional Gaussian parameter prior.
 struct PCFGaussianPrior FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef PCFGaussianPriorBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -1213,15 +1211,15 @@ struct PCFGaussianPrior FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_SIGMA = 6,
     VT_HAS_SIGMA = 8
   };
-  /// Prior mean, in the unit of the parameter it is attached to. Default 0.
+  /// Prior mean in the parameter's unit.
   double MEAN() const {
     return GetField<double>(VT_MEAN, 0.0);
   }
-  /// Prior standard deviation, in the same unit; > 0 when HAS_SIGMA.
+  /// Prior standard deviation in the parameter's unit; > 0 when HAS_SIGMA is true.
   double SIGMA() const {
     return GetField<double>(VT_SIGMA, 0.0);
   }
-  /// True when SIGMA carries a value; false keeps the theory's own sigma.
+  /// True when SIGMA is explicitly provided.
   bool HAS_SIGMA() const {
     return GetField<uint8_t>(VT_HAS_SIGMA, 0) != 0;
   }
@@ -1271,8 +1269,7 @@ inline ::flatbuffers::Offset<PCFGaussianPrior> CreatePCFGaussianPrior(
   return builder_.Finish();
 }
 
-/// Fit policy: how long an arc a fit uses, how that is validated, and what a
-/// fit refuses.
+/// Optional configuration parameters for orbit estimation.
 struct PCFFitPolicy FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef PCFFitPolicyBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -1295,98 +1292,77 @@ struct PCFFitPolicy FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_SRP_PRIOR_FORM = 36,
     VT_WEATHER_HORIZON_DAYS = 38
   };
-  /// Fit span used when the span rule is not run, hours. Default 48.
+  /// Optional span parameter in hours; 0 means unspecified.
   double DEFAULT_SPAN_HOURS() const {
-    return GetField<double>(VT_DEFAULT_SPAN_HOURS, 48.0);
+    return GetField<double>(VT_DEFAULT_SPAN_HOURS, 0.0);
   }
-  /// Shortest span a fit may take, hours. Default 24.
+  /// Optional minimum span in hours; 0 means unspecified.
   double MINIMUM_SPAN_HOURS() const {
-    return GetField<double>(VT_MINIMUM_SPAN_HOURS, 24.0);
+    return GetField<double>(VT_MINIMUM_SPAN_HOURS, 0.0);
   }
-  /// Longest span a fit may take, hours. Default 120.
+  /// Optional maximum span in hours; 0 means unspecified.
   double MAXIMUM_SPAN_HOURS() const {
-    return GetField<double>(VT_MAXIMUM_SPAN_HOURS, 120.0);
+    return GetField<double>(VT_MAXIMUM_SPAN_HOURS, 0.0);
   }
-  /// Spans the extension rule scores, ascending, hours, each within
-  /// [MINIMUM_SPAN_HOURS, MAXIMUM_SPAN_HOURS]. Empty: 48, 72 and 120; with
-  /// 24 in front when the eccentricity exceeds ECCENTRICITY_THRESHOLD.
+  /// Optional candidate span list in hours.
   const ::flatbuffers::Vector<double> *CANDIDATE_SPANS_HOURS() const {
     return GetPointer<const ::flatbuffers::Vector<double> *>(VT_CANDIDATE_SPANS_HOURS);
   }
-  /// Validation tail: each candidate is fitted to the data before the latest
-  /// TAIL_HOURS and scored on that tail, hours. Default 24.
+  /// Optional evaluation tail length in hours; 0 means unspecified.
   double TAIL_HOURS() const {
-    return GetField<double>(VT_TAIL_HOURS, 24.0);
+    return GetField<double>(VT_TAIL_HOURS, 0.0);
   }
-  /// Extension rule: a longer candidate is taken only when its tail error is
-  /// at most this fraction of the best shorter candidate's. Default 0.9.
+  /// Optional relative selection margin; 0 means unspecified.
   double EXTENSION_MARGIN() const {
-    return GetField<double>(VT_EXTENSION_MARGIN, 0.9);
+    return GetField<double>(VT_EXTENSION_MARGIN, 0.0);
   }
-  /// Hours held out at the end of the data and reported as error growth; the
-  /// fit then ends HOLDOUT_HOURS before the data does. Absent, the data
-  /// block's own useable stop time decides.
+  /// Optional holdout window length in hours.
   double HOLDOUT_HOURS() const {
     return GetField<double>(VT_HOLDOUT_HOURS, 0.0);
   }
-  /// True when HOLDOUT_HOURS carries a value; false means absent.
+  /// True when HOLDOUT_HOURS is explicitly provided.
   bool HAS_HOLDOUT_HOURS() const {
     return GetField<uint8_t>(VT_HAS_HOLDOUT_HOURS, 0) != 0;
   }
-  /// Eccentricity above which the eccentric-orbit rule applies. Default 0.5.
+  /// Optional eccentricity threshold; 0 means unspecified.
   double ECCENTRICITY_THRESHOLD() const {
-    return GetField<double>(VT_ECCENTRICITY_THRESHOLD, 0.5);
+    return GetField<double>(VT_ECCENTRICITY_THRESHOLD, 0.0);
   }
-  /// Eccentric orbits: the default span, hours. Default 24.
+  /// Optional eccentric-orbit span in hours; 0 means unspecified.
   double ECCENTRIC_DEFAULT_SPAN_HOURS() const {
-    return GetField<double>(VT_ECCENTRIC_DEFAULT_SPAN_HOURS, 24.0);
+    return GetField<double>(VT_ECCENTRIC_DEFAULT_SPAN_HOURS, 0.0);
   }
-  /// Eccentric orbits: EXTENSION_MARGIN. Default 0.7.
+  /// Optional eccentric-orbit relative margin; 0 means unspecified.
   double ECCENTRIC_EXTENSION_MARGIN() const {
-    return GetField<double>(VT_ECCENTRIC_EXTENSION_MARGIN, 0.7);
+    return GetField<double>(VT_ECCENTRIC_EXTENSION_MARGIN, 0.0);
   }
-  /// Eccentric orbits: no candidate longer than this is tried once the orbital
-  /// period passes it, hours. Default 36.
+  /// Optional eccentric-orbit period bound in hours; 0 means unspecified.
   double ECCENTRIC_MAXIMUM_PERIOD_HOURS() const {
-    return GetField<double>(VT_ECCENTRIC_MAXIMUM_PERIOD_HOURS, 36.0);
+    return GetField<double>(VT_ECCENTRIC_MAXIMUM_PERIOD_HOURS, 0.0);
   }
-  /// A fit whose RMS passes this is refused as fit-implausible, km. Default
-  /// 100.
+  /// Optional maximum acceptable RMS in km; 0 means unspecified.
   double IMPLAUSIBLE_RMS_KM() const {
-    return GetField<double>(VT_IMPLAUSIBLE_RMS_KM, 100.0);
+    return GetField<double>(VT_IMPLAUSIBLE_RMS_KM, 0.0);
   }
-  /// Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent
-  /// or without sigma: mean 0, sigma 0.05.
+  /// Optional prior on drag parameter.
   const PCFGaussianPrior *DRAG_PRIOR() const {
     return GetPointer<const PCFGaussianPrior *>(VT_DRAG_PRIOR);
   }
-  /// Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.
-  /// Absent or without sigma: mean 0, sigma 0.05.
+  /// Optional prior on solar radiation pressure parameter.
   const PCFGaussianPrior *SRP_PRIOR() const {
     return GetPointer<const PCFGaussianPrior *>(VT_SRP_PRIOR);
   }
-  /// The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
-  /// estimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its
-  /// MEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation
-  /// of ln B_eff.
+  /// Optional distribution form for DRAG_PRIOR.
   pcfPriorForm DRAG_PRIOR_FORM() const {
     return static_cast<pcfPriorForm>(GetField<uint8_t>(VT_DRAG_PRIOR_FORM, 0));
   }
-  /// The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
-  /// estimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN
-  /// the median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of
-  /// ln AGOM.
+  /// Optional distribution form for SRP_PRIOR.
   pcfPriorForm SRP_PRIOR_FORM() const {
     return static_cast<pcfPriorForm>(GetField<uint8_t>(VT_SRP_PRIOR_FORM, 0));
   }
-  /// Days past the element set's epoch day through which the fit writes the
-  /// daily space weather into the record it emits (OCM
-  /// PERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows
-  /// (WEATHER_SOURCE RECORDS). The last day written is the later of the fit
-  /// arc's last day and the epoch's day plus this count; rows supplied with
-  /// the request must reach it, or the fit is refused by name. Default 30.
+  /// Optional space-weather horizon in days past epoch; 0 means unspecified.
   uint16_t WEATHER_HORIZON_DAYS() const {
-    return GetField<uint16_t>(VT_WEATHER_HORIZON_DAYS, 30);
+    return GetField<uint16_t>(VT_WEATHER_HORIZON_DAYS, 0);
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
@@ -1421,22 +1397,22 @@ struct PCFFitPolicyBuilder {
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
   void add_DEFAULT_SPAN_HOURS(double DEFAULT_SPAN_HOURS) {
-    fbb_.AddElement<double>(PCFFitPolicy::VT_DEFAULT_SPAN_HOURS, DEFAULT_SPAN_HOURS, 48.0);
+    fbb_.AddElement<double>(PCFFitPolicy::VT_DEFAULT_SPAN_HOURS, DEFAULT_SPAN_HOURS, 0.0);
   }
   void add_MINIMUM_SPAN_HOURS(double MINIMUM_SPAN_HOURS) {
-    fbb_.AddElement<double>(PCFFitPolicy::VT_MINIMUM_SPAN_HOURS, MINIMUM_SPAN_HOURS, 24.0);
+    fbb_.AddElement<double>(PCFFitPolicy::VT_MINIMUM_SPAN_HOURS, MINIMUM_SPAN_HOURS, 0.0);
   }
   void add_MAXIMUM_SPAN_HOURS(double MAXIMUM_SPAN_HOURS) {
-    fbb_.AddElement<double>(PCFFitPolicy::VT_MAXIMUM_SPAN_HOURS, MAXIMUM_SPAN_HOURS, 120.0);
+    fbb_.AddElement<double>(PCFFitPolicy::VT_MAXIMUM_SPAN_HOURS, MAXIMUM_SPAN_HOURS, 0.0);
   }
   void add_CANDIDATE_SPANS_HOURS(::flatbuffers::Offset<::flatbuffers::Vector<double>> CANDIDATE_SPANS_HOURS) {
     fbb_.AddOffset(PCFFitPolicy::VT_CANDIDATE_SPANS_HOURS, CANDIDATE_SPANS_HOURS);
   }
   void add_TAIL_HOURS(double TAIL_HOURS) {
-    fbb_.AddElement<double>(PCFFitPolicy::VT_TAIL_HOURS, TAIL_HOURS, 24.0);
+    fbb_.AddElement<double>(PCFFitPolicy::VT_TAIL_HOURS, TAIL_HOURS, 0.0);
   }
   void add_EXTENSION_MARGIN(double EXTENSION_MARGIN) {
-    fbb_.AddElement<double>(PCFFitPolicy::VT_EXTENSION_MARGIN, EXTENSION_MARGIN, 0.9);
+    fbb_.AddElement<double>(PCFFitPolicy::VT_EXTENSION_MARGIN, EXTENSION_MARGIN, 0.0);
   }
   void add_HOLDOUT_HOURS(double HOLDOUT_HOURS) {
     fbb_.AddElement<double>(PCFFitPolicy::VT_HOLDOUT_HOURS, HOLDOUT_HOURS, 0.0);
@@ -1445,19 +1421,19 @@ struct PCFFitPolicyBuilder {
     fbb_.AddElement<uint8_t>(PCFFitPolicy::VT_HAS_HOLDOUT_HOURS, static_cast<uint8_t>(HAS_HOLDOUT_HOURS), 0);
   }
   void add_ECCENTRICITY_THRESHOLD(double ECCENTRICITY_THRESHOLD) {
-    fbb_.AddElement<double>(PCFFitPolicy::VT_ECCENTRICITY_THRESHOLD, ECCENTRICITY_THRESHOLD, 0.5);
+    fbb_.AddElement<double>(PCFFitPolicy::VT_ECCENTRICITY_THRESHOLD, ECCENTRICITY_THRESHOLD, 0.0);
   }
   void add_ECCENTRIC_DEFAULT_SPAN_HOURS(double ECCENTRIC_DEFAULT_SPAN_HOURS) {
-    fbb_.AddElement<double>(PCFFitPolicy::VT_ECCENTRIC_DEFAULT_SPAN_HOURS, ECCENTRIC_DEFAULT_SPAN_HOURS, 24.0);
+    fbb_.AddElement<double>(PCFFitPolicy::VT_ECCENTRIC_DEFAULT_SPAN_HOURS, ECCENTRIC_DEFAULT_SPAN_HOURS, 0.0);
   }
   void add_ECCENTRIC_EXTENSION_MARGIN(double ECCENTRIC_EXTENSION_MARGIN) {
-    fbb_.AddElement<double>(PCFFitPolicy::VT_ECCENTRIC_EXTENSION_MARGIN, ECCENTRIC_EXTENSION_MARGIN, 0.7);
+    fbb_.AddElement<double>(PCFFitPolicy::VT_ECCENTRIC_EXTENSION_MARGIN, ECCENTRIC_EXTENSION_MARGIN, 0.0);
   }
   void add_ECCENTRIC_MAXIMUM_PERIOD_HOURS(double ECCENTRIC_MAXIMUM_PERIOD_HOURS) {
-    fbb_.AddElement<double>(PCFFitPolicy::VT_ECCENTRIC_MAXIMUM_PERIOD_HOURS, ECCENTRIC_MAXIMUM_PERIOD_HOURS, 36.0);
+    fbb_.AddElement<double>(PCFFitPolicy::VT_ECCENTRIC_MAXIMUM_PERIOD_HOURS, ECCENTRIC_MAXIMUM_PERIOD_HOURS, 0.0);
   }
   void add_IMPLAUSIBLE_RMS_KM(double IMPLAUSIBLE_RMS_KM) {
-    fbb_.AddElement<double>(PCFFitPolicy::VT_IMPLAUSIBLE_RMS_KM, IMPLAUSIBLE_RMS_KM, 100.0);
+    fbb_.AddElement<double>(PCFFitPolicy::VT_IMPLAUSIBLE_RMS_KM, IMPLAUSIBLE_RMS_KM, 0.0);
   }
   void add_DRAG_PRIOR(::flatbuffers::Offset<PCFGaussianPrior> DRAG_PRIOR) {
     fbb_.AddOffset(PCFFitPolicy::VT_DRAG_PRIOR, DRAG_PRIOR);
@@ -1472,7 +1448,7 @@ struct PCFFitPolicyBuilder {
     fbb_.AddElement<uint8_t>(PCFFitPolicy::VT_SRP_PRIOR_FORM, static_cast<uint8_t>(SRP_PRIOR_FORM), 0);
   }
   void add_WEATHER_HORIZON_DAYS(uint16_t WEATHER_HORIZON_DAYS) {
-    fbb_.AddElement<uint16_t>(PCFFitPolicy::VT_WEATHER_HORIZON_DAYS, WEATHER_HORIZON_DAYS, 30);
+    fbb_.AddElement<uint16_t>(PCFFitPolicy::VT_WEATHER_HORIZON_DAYS, WEATHER_HORIZON_DAYS, 0);
   }
   explicit PCFFitPolicyBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -1487,24 +1463,24 @@ struct PCFFitPolicyBuilder {
 
 inline ::flatbuffers::Offset<PCFFitPolicy> CreatePCFFitPolicy(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    double DEFAULT_SPAN_HOURS = 48.0,
-    double MINIMUM_SPAN_HOURS = 24.0,
-    double MAXIMUM_SPAN_HOURS = 120.0,
+    double DEFAULT_SPAN_HOURS = 0.0,
+    double MINIMUM_SPAN_HOURS = 0.0,
+    double MAXIMUM_SPAN_HOURS = 0.0,
     ::flatbuffers::Offset<::flatbuffers::Vector<double>> CANDIDATE_SPANS_HOURS = 0,
-    double TAIL_HOURS = 24.0,
-    double EXTENSION_MARGIN = 0.9,
+    double TAIL_HOURS = 0.0,
+    double EXTENSION_MARGIN = 0.0,
     double HOLDOUT_HOURS = 0.0,
     bool HAS_HOLDOUT_HOURS = false,
-    double ECCENTRICITY_THRESHOLD = 0.5,
-    double ECCENTRIC_DEFAULT_SPAN_HOURS = 24.0,
-    double ECCENTRIC_EXTENSION_MARGIN = 0.7,
-    double ECCENTRIC_MAXIMUM_PERIOD_HOURS = 36.0,
-    double IMPLAUSIBLE_RMS_KM = 100.0,
+    double ECCENTRICITY_THRESHOLD = 0.0,
+    double ECCENTRIC_DEFAULT_SPAN_HOURS = 0.0,
+    double ECCENTRIC_EXTENSION_MARGIN = 0.0,
+    double ECCENTRIC_MAXIMUM_PERIOD_HOURS = 0.0,
+    double IMPLAUSIBLE_RMS_KM = 0.0,
     ::flatbuffers::Offset<PCFGaussianPrior> DRAG_PRIOR = 0,
     ::flatbuffers::Offset<PCFGaussianPrior> SRP_PRIOR = 0,
     pcfPriorForm DRAG_PRIOR_FORM = pcfPriorForm_GAUSSIAN_SIGNED,
     pcfPriorForm SRP_PRIOR_FORM = pcfPriorForm_GAUSSIAN_SIGNED,
-    uint16_t WEATHER_HORIZON_DAYS = 30) {
+    uint16_t WEATHER_HORIZON_DAYS = 0) {
   PCFFitPolicyBuilder builder_(_fbb);
   builder_.add_IMPLAUSIBLE_RMS_KM(IMPLAUSIBLE_RMS_KM);
   builder_.add_ECCENTRIC_MAXIMUM_PERIOD_HOURS(ECCENTRIC_MAXIMUM_PERIOD_HOURS);
@@ -1529,24 +1505,24 @@ inline ::flatbuffers::Offset<PCFFitPolicy> CreatePCFFitPolicy(
 
 inline ::flatbuffers::Offset<PCFFitPolicy> CreatePCFFitPolicyDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    double DEFAULT_SPAN_HOURS = 48.0,
-    double MINIMUM_SPAN_HOURS = 24.0,
-    double MAXIMUM_SPAN_HOURS = 120.0,
+    double DEFAULT_SPAN_HOURS = 0.0,
+    double MINIMUM_SPAN_HOURS = 0.0,
+    double MAXIMUM_SPAN_HOURS = 0.0,
     const std::vector<double> *CANDIDATE_SPANS_HOURS = nullptr,
-    double TAIL_HOURS = 24.0,
-    double EXTENSION_MARGIN = 0.9,
+    double TAIL_HOURS = 0.0,
+    double EXTENSION_MARGIN = 0.0,
     double HOLDOUT_HOURS = 0.0,
     bool HAS_HOLDOUT_HOURS = false,
-    double ECCENTRICITY_THRESHOLD = 0.5,
-    double ECCENTRIC_DEFAULT_SPAN_HOURS = 24.0,
-    double ECCENTRIC_EXTENSION_MARGIN = 0.7,
-    double ECCENTRIC_MAXIMUM_PERIOD_HOURS = 36.0,
-    double IMPLAUSIBLE_RMS_KM = 100.0,
+    double ECCENTRICITY_THRESHOLD = 0.0,
+    double ECCENTRIC_DEFAULT_SPAN_HOURS = 0.0,
+    double ECCENTRIC_EXTENSION_MARGIN = 0.0,
+    double ECCENTRIC_MAXIMUM_PERIOD_HOURS = 0.0,
+    double IMPLAUSIBLE_RMS_KM = 0.0,
     ::flatbuffers::Offset<PCFGaussianPrior> DRAG_PRIOR = 0,
     ::flatbuffers::Offset<PCFGaussianPrior> SRP_PRIOR = 0,
     pcfPriorForm DRAG_PRIOR_FORM = pcfPriorForm_GAUSSIAN_SIGNED,
     pcfPriorForm SRP_PRIOR_FORM = pcfPriorForm_GAUSSIAN_SIGNED,
-    uint16_t WEATHER_HORIZON_DAYS = 30) {
+    uint16_t WEATHER_HORIZON_DAYS = 0) {
   auto CANDIDATE_SPANS_HOURS__ = CANDIDATE_SPANS_HOURS ? _fbb.CreateVector<double>(*CANDIDATE_SPANS_HOURS) : 0;
   return CreatePCFFitPolicy(
       _fbb,
@@ -2515,7 +2491,7 @@ struct PCFForceModel FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
   /// Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth
   /// orientation (the request's Earth orientation rows) to apply them. Default
-  /// NONE.
+  /// UNSPECIFIED (the propagator's own default).
   pcfSolidTideModel SOLID_TIDES() const {
     return static_cast<pcfSolidTideModel>(GetField<uint8_t>(VT_SOLID_TIDES, 0));
   }
@@ -2913,7 +2889,7 @@ inline ::flatbuffers::Offset<PCFForceModel> CreatePCFForceModel(
     pcfAtmosphereFamily ATMOSPHERE_MODEL = pcfAtmosphereFamily_NRLMSISE00,
     ::flatbuffers::Offset<PCFSpaceWeather> WEATHER = 0,
     ::flatbuffers::Offset<::flatbuffers::String> EPHEMERIS_SOURCE = 0,
-    pcfSolidTideModel SOLID_TIDES = pcfSolidTideModel_NONE,
+    pcfSolidTideModel SOLID_TIDES = pcfSolidTideModel_UNSPECIFIED,
     pcfRelativityTerms RELATIVITY = pcfRelativityTerms_NONE,
     double IN_TRACK_ACCELERATION_M_S2 = 0.0,
     bool HAS_IN_TRACK_ACCELERATION_M_S2 = false,
@@ -3021,7 +2997,7 @@ inline ::flatbuffers::Offset<PCFForceModel> CreatePCFForceModelDirect(
     pcfAtmosphereFamily ATMOSPHERE_MODEL = pcfAtmosphereFamily_NRLMSISE00,
     ::flatbuffers::Offset<PCFSpaceWeather> WEATHER = 0,
     const char *EPHEMERIS_SOURCE = nullptr,
-    pcfSolidTideModel SOLID_TIDES = pcfSolidTideModel_NONE,
+    pcfSolidTideModel SOLID_TIDES = pcfSolidTideModel_UNSPECIFIED,
     pcfRelativityTerms RELATIVITY = pcfRelativityTerms_NONE,
     double IN_TRACK_ACCELERATION_M_S2 = 0.0,
     bool HAS_IN_TRACK_ACCELERATION_M_S2 = false,

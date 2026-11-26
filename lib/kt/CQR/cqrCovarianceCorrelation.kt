@@ -15,5 +15,10 @@ class cqrCovarianceCorrelation private constructor() {
          * A cross covariance was supplied and used.
          */
         const val SUPPLIED_CROSS_COVARIANCE: UByte = 2u
+        /**
+         * Cross covariance derived from per-object atmospheric density sensitivity
+         * vectors and a shared log-density uncertainty.
+         */
+        const val SHARED_DENSITY_SENSITIVITY: UByte = 3u
     }
 }

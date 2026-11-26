@@ -6,8 +6,7 @@ import flatbuffers
 from flatbuffers.compat import import_numpy
 np = import_numpy()
 
-# A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps
-# the theory's own sigma and moves only the mean.
+# Optional Gaussian parameter prior.
 class PCFGaussianPrior(object):
     __slots__ = ['_tab']
 
@@ -30,7 +29,7 @@ class PCFGaussianPrior(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
-    # Prior mean, in the unit of the parameter it is attached to. Default 0.
+    # Prior mean in the parameter's unit.
     # PCFGaussianPrior
     def MEAN(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -38,7 +37,7 @@ class PCFGaussianPrior(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Prior standard deviation, in the same unit; > 0 when HAS_SIGMA.
+    # Prior standard deviation in the parameter's unit; > 0 when HAS_SIGMA is true.
     # PCFGaussianPrior
     def SIGMA(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -46,7 +45,7 @@ class PCFGaussianPrior(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # True when SIGMA carries a value; false keeps the theory's own sigma.
+    # True when SIGMA is explicitly provided.
     # PCFGaussianPrior
     def HAS_SIGMA(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))

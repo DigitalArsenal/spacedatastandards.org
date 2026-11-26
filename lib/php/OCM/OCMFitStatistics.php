@@ -42,7 +42,7 @@ class OCMFitStatistics extends Table
         return $this;
     }
 
-    /// Reference states fitted.
+    /// Reference states reported; 0 means not stated.
     /**
      * @return uint
      */
@@ -101,7 +101,7 @@ class OCMFitStatistics extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
     }
 
-    /// Iterations the fit took.
+    /// Iterations reported; 0 means not stated.
     /**
      * @return uint
      */
@@ -111,7 +111,7 @@ class OCMFitStatistics extends Table
         return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
     }
 
-    /// True when the fit converged.
+    /// True when converged.
     /**
      * @return bool
      */
@@ -176,7 +176,7 @@ class OCMFitStatistics extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
-    /// CID of the $PCF the fit ran under: its span rule, priors and holdout.
+    /// CID of the $PCF configuration associated with the record.
     public function getPCF_CID()
     {
         $o = $this->__offset(30);

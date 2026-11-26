@@ -3712,7 +3712,7 @@ class OCMFitStatistics {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Reference states fitted.
+  ///  Reference states reported; 0 means not stated.
   int get FIT_STATES => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 4, 0);
   int get fitStates => FIT_STATES;
   ///  Position RMS over the fit arc, km.
@@ -3729,9 +3729,9 @@ class OCMFitStatistics {
   double get fitInTrackRmsKm => FIT_IN_TRACK_RMS_KM;
   double get FIT_CROSS_TRACK_RMS_KM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, double.nan);
   double get fitCrossTrackRmsKm => FIT_CROSS_TRACK_RMS_KM;
-  ///  Iterations the fit took.
+  ///  Iterations reported; 0 means not stated.
   int get ITERATIONS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 16, 0);
-  ///  True when the fit converged.
+  ///  True when converged.
   bool get CONVERGED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 18, false);
   ///  End of the held-out window (ISO 8601 UTC); empty without one.
   String? get HELD_OUT_STOP => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
@@ -3746,7 +3746,7 @@ class OCMFitStatistics {
   ///  The held-out error by day after the fit arc.
   List<OCMHeldOutDay>? get HELD_OUT_DAYS => const fb.ListReader<OCMHeldOutDay>(OCMHeldOutDay.reader).vTableGetNullable(_bc, _bcOffset, 28);
   List<OCMHeldOutDay>? get heldOutDays => HELD_OUT_DAYS;
-  ///  CID of the $PCF the fit ran under: its span rule, priors and holdout.
+  ///  CID of the $PCF configuration associated with the record.
   String? get PCF_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
   String? get pcfCid => PCF_CID;
   ///  First epoch of the fit arc (ISO 8601 UTC).
@@ -6477,10 +6477,15 @@ class OCMCovarianceBlock {
   ///  or one entry for every line.
   List<CVR>? get COV_REALISM => const fb.ListReader<CVR>(CVR.reader).vTableGetNullable(_bc, _bcOffset, 34);
   List<CVR>? get covRealism => COV_REALISM;
+  ///  Optional position sensitivity to a unit dimensionless log-density shift
+  ///  (dr/ds), flattened 3 doubles per line of LINES in COV_REF_FRAME, km.
+  ///  Empty when absent.
+  List<double>? get DENSITY_SENSITIVITY_KM => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 36);
+  List<double>? get densitySensitivityKm => DENSITY_SENSITIVITY_KM;
 
   @override
   String toString() {
-    return 'OCMCovarianceBlock{COMMENT: ${COMMENT}, covId: ${covId}, covPrevId: ${covPrevId}, covNextId: ${covNextId}, covBasis: ${covBasis}, covBasisId: ${covBasisId}, covRefFrame: ${covRefFrame}, covFrameEpoch: ${covFrameEpoch}, covScaleMin: ${covScaleMin}, covScaleMax: ${covScaleMax}, covConfidence: ${covConfidence}, covType: ${covType}, covOrdering: ${covOrdering}, covUnits: ${covUnits}, LINES: ${LINES}, covRealism: ${covRealism}}';
+    return 'OCMCovarianceBlock{COMMENT: ${COMMENT}, covId: ${covId}, covPrevId: ${covPrevId}, covNextId: ${covNextId}, covBasis: ${covBasis}, covBasisId: ${covBasisId}, covRefFrame: ${covRefFrame}, covFrameEpoch: ${covFrameEpoch}, covScaleMin: ${covScaleMin}, covScaleMax: ${covScaleMax}, covConfidence: ${covConfidence}, covType: ${covType}, covOrdering: ${covOrdering}, covUnits: ${covUnits}, LINES: ${LINES}, covRealism: ${covRealism}, densitySensitivityKm: ${densitySensitivityKm}}';
   }
 }
 
@@ -6498,7 +6503,7 @@ class OCMCovarianceBlockBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(16);
+    fbBuilder.startTable(17);
   }
 
   int addCommentOffset(int? offset) {
@@ -6565,6 +6570,10 @@ class OCMCovarianceBlockBuilder {
     fbBuilder.addOffset(15, offset);
     return fbBuilder.offset;
   }
+  int addDensitySensitivityKmOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -6588,6 +6597,7 @@ class OCMCovarianceBlockObjectBuilder extends fb.ObjectBuilder {
   final String? _COV_UNITS;
   final List<String>? _LINES;
   final List<CVRObjectBuilder>? _COV_REALISM;
+  final List<double>? _DENSITY_SENSITIVITY_KM;
 
   OCMCovarianceBlockObjectBuilder({
     String? COMMENT,
@@ -6620,6 +6630,8 @@ class OCMCovarianceBlockObjectBuilder extends fb.ObjectBuilder {
     List<String>? LINES,
     List<CVRObjectBuilder>? COV_REALISM,
     List<CVRObjectBuilder>? covRealism,
+    List<double>? DENSITY_SENSITIVITY_KM,
+    List<double>? densitySensitivityKm,
   })
       : _COMMENT = COMMENT,
         _COV_ID = covId ?? COV_ID,
@@ -6636,7 +6648,8 @@ class OCMCovarianceBlockObjectBuilder extends fb.ObjectBuilder {
         _COV_ORDERING = covOrdering ?? COV_ORDERING,
         _COV_UNITS = covUnits ?? COV_UNITS,
         _LINES = LINES,
-        _COV_REALISM = covRealism ?? COV_REALISM;
+        _COV_REALISM = covRealism ?? COV_REALISM,
+        _DENSITY_SENSITIVITY_KM = densitySensitivityKm ?? DENSITY_SENSITIVITY_KM;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -6665,7 +6678,9 @@ class OCMCovarianceBlockObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeList(_LINES!.map(fbBuilder.writeString).toList());
     final int? COV_REALISMOffset = _COV_REALISM == null ? null
         : fbBuilder.writeList(_COV_REALISM!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(16);
+    final int? DENSITY_SENSITIVITY_KMOffset = _DENSITY_SENSITIVITY_KM == null ? null
+        : fbBuilder.writeListFloat64(_DENSITY_SENSITIVITY_KM!);
+    fbBuilder.startTable(17);
     fbBuilder.addOffset(0, COMMENTOffset);
     fbBuilder.addOffset(1, COV_IDOffset);
     fbBuilder.addOffset(2, COV_PREV_IDOffset);
@@ -6682,6 +6697,7 @@ class OCMCovarianceBlockObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(13, COV_UNITSOffset);
     fbBuilder.addOffset(14, LINESOffset);
     fbBuilder.addOffset(15, COV_REALISMOffset);
+    fbBuilder.addOffset(16, DENSITY_SENSITIVITY_KMOffset);
     return fbBuilder.endTable();
   }
 

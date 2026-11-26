@@ -1,5 +1,5 @@
-// Hash: a7daf548117e22885027989c8374bf329dfdbae3b547f99a45c1cccca02dafa4
-// Version: 2.1.11
+// Hash: c3608998c28dee9d32b9b40c21224f7e46c2caa7303a408ca751eeccd13956a1
+// Version: 2.1.12
 // -----------------------------------END_HEADER
 include "../ATM/main.fbs";
 include "../CVR/main.fbs";
@@ -702,7 +702,7 @@ table OCMHeldOutDay {
 /// Position statistics of an element set fitted to a reference ephemeris, km. SDS addition:
 /// CCSDS 502.0-B-3 WEIGHTED_RMS and OD_RESIDUAL_RMS state no position unit.
 table OCMFitStatistics {
-  /// Reference states fitted.
+  /// Reference states reported; 0 means not stated.
   FIT_STATES: uint;
   /// Position RMS over the fit arc, km.
   FIT_RMS_KM: double = nan;
@@ -713,9 +713,9 @@ table OCMFitStatistics {
   FIT_RADIAL_RMS_KM: double = nan;
   FIT_IN_TRACK_RMS_KM: double = nan;
   FIT_CROSS_TRACK_RMS_KM: double = nan;
-  /// Iterations the fit took.
+  /// Iterations reported; 0 means not stated.
   ITERATIONS: uint;
-  /// True when the fit converged.
+  /// True when converged.
   CONVERGED: bool = false;
   /// End of the held-out window (ISO 8601 UTC); empty without one.
   HELD_OUT_STOP: string;
@@ -725,7 +725,7 @@ table OCMFitStatistics {
   HELD_OUT_MAX_KM: double = nan;
   /// The held-out error by day after the fit arc.
   HELD_OUT_DAYS: [OCMHeldOutDay];
-  /// CID of the $PCF the fit ran under: its span rule, priors and holdout.
+  /// CID of the $PCF configuration associated with the record.
   PCF_CID: string;
   /// First epoch of the fit arc (ISO 8601 UTC).
   FIT_START: string;
@@ -1141,6 +1141,10 @@ table OCMCovarianceBlock {
   /// Realism of the block's covariance: one entry per line of LINES, in order,
   /// or one entry for every line.
   COV_REALISM: [CVR];
+  /// Optional position sensitivity to a unit dimensionless log-density shift
+  /// (dr/ds), flattened 3 doubles per line of LINES in COV_REF_FRAME, km.
+  /// Empty when absent.
+  DENSITY_SENSITIVITY_KM: [double];
 }
 
 table UserDefinedParameters {

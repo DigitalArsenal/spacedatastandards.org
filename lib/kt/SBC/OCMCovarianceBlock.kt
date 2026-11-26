@@ -236,6 +236,25 @@ class OCMCovarianceBlock : Table() {
         get() {
             val o = __offset(34); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Optional position sensitivity to a unit dimensionless log-density shift
+     * (dr/ds), flattened 3 doubles per line of LINES in COV_REF_FRAME, km.
+     * Empty when absent.
+     */
+    fun densitySensitivityKm(j: Int) : Double {
+        val o = __offset(36)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val densitySensitivityKmLength : Int
+        get() {
+            val o = __offset(36); return if (o != 0) __vector_len(o) else 0
+        }
+    val densitySensitivityKmAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(36, 8)
+    fun densitySensitivityKmInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 36, 8)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsOCMCovarianceBlock(_bb: ByteBuffer): OCMCovarianceBlock = getRootAsOCMCovarianceBlock(_bb, OCMCovarianceBlock())
@@ -243,11 +262,12 @@ class OCMCovarianceBlock : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createOCMCovarianceBlock(builder: FlatBufferBuilder, commentOffset: Int, covIdOffset: Int, covPrevIdOffset: Int, covNextIdOffset: Int, covBasisOffset: Int, covBasisIdOffset: Int, covRefFrameOffset: Int, covFrameEpochOffset: Int, covScaleMin: Double, covScaleMax: Double, covConfidence: Double, covTypeOffset: Int, covOrdering: Byte, covUnitsOffset: Int, linesOffset: Int, covRealismOffset: Int) : Int {
-            builder.startTable(16)
+        fun createOCMCovarianceBlock(builder: FlatBufferBuilder, commentOffset: Int, covIdOffset: Int, covPrevIdOffset: Int, covNextIdOffset: Int, covBasisOffset: Int, covBasisIdOffset: Int, covRefFrameOffset: Int, covFrameEpochOffset: Int, covScaleMin: Double, covScaleMax: Double, covConfidence: Double, covTypeOffset: Int, covOrdering: Byte, covUnitsOffset: Int, linesOffset: Int, covRealismOffset: Int, densitySensitivityKmOffset: Int) : Int {
+            builder.startTable(17)
             addCOVCONFIDENCE(builder, covConfidence)
             addCOVSCALEMAX(builder, covScaleMax)
             addCOVSCALEMIN(builder, covScaleMin)
+            addDENSITYSENSITIVITYKM(builder, densitySensitivityKmOffset)
             addCOVREALISM(builder, covRealismOffset)
             addLINES(builder, linesOffset)
             addCOVUNITS(builder, covUnitsOffset)
@@ -263,7 +283,7 @@ class OCMCovarianceBlock : Table() {
             addCOVORDERING(builder, covOrdering)
             return endOCMCovarianceBlock(builder)
         }
-        fun startOCMCovarianceBlock(builder: FlatBufferBuilder) = builder.startTable(16)
+        fun startOCMCovarianceBlock(builder: FlatBufferBuilder) = builder.startTable(17)
         fun addCOMMENT(builder: FlatBufferBuilder, comment: Int) = builder.addOffset(0, comment, 0)
         fun addCOVID(builder: FlatBufferBuilder, covId: Int) = builder.addOffset(1, covId, 0)
         fun addCOVPREVID(builder: FlatBufferBuilder, covPrevId: Int) = builder.addOffset(2, covPrevId, 0)
@@ -296,6 +316,15 @@ class OCMCovarianceBlock : Table() {
             return builder.endVector()
         }
         fun startCovRealismVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addDENSITYSENSITIVITYKM(builder: FlatBufferBuilder, densitySensitivityKm: Int) = builder.addOffset(16, densitySensitivityKm, 0)
+        fun createDensitySensitivityKmVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startDensitySensitivityKmVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
         fun endOCMCovarianceBlock(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

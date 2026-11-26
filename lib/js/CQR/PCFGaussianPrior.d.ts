@@ -1,7 +1,6 @@
 import * as flatbuffers from 'flatbuffers';
 /**
- * A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps
- * the theory's own sigma and moves only the mean.
+ * Optional Gaussian parameter prior.
  */
 export declare class PCFGaussianPrior implements flatbuffers.IUnpackableObject<PCFGaussianPriorT> {
     bb: flatbuffers.ByteBuffer | null;
@@ -10,15 +9,15 @@ export declare class PCFGaussianPrior implements flatbuffers.IUnpackableObject<P
     static getRootAsPCFGaussianPrior(bb: flatbuffers.ByteBuffer, obj?: PCFGaussianPrior): PCFGaussianPrior;
     static getSizePrefixedRootAsPCFGaussianPrior(bb: flatbuffers.ByteBuffer, obj?: PCFGaussianPrior): PCFGaussianPrior;
     /**
-     * Prior mean, in the unit of the parameter it is attached to. Default 0.
+     * Prior mean in the parameter's unit.
      */
     MEAN(): number;
     /**
-     * Prior standard deviation, in the same unit; > 0 when HAS_SIGMA.
+     * Prior standard deviation in the parameter's unit; > 0 when HAS_SIGMA is true.
      */
     SIGMA(): number;
     /**
-     * True when SIGMA carries a value; false keeps the theory's own sigma.
+     * True when SIGMA is explicitly provided.
      */
     HAS_SIGMA(): boolean;
     static startPCFGaussianPrior(builder: flatbuffers.Builder): void;

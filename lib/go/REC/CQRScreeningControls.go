@@ -452,8 +452,54 @@ func (rcv *CQRScreeningControls) VerifiedCovarianceProducersLength() int {
 
 /// Builds whose AP covariance a collision probability may use. An empty or
 /// absent list means no collision probability from AP covariance.
+/// When true and DENSITY_LOG_SIGMA > 0 with both objects supplying
+/// DENSITY_SENSITIVITY_KM, apply common-mode density cross-covariance.
+func (rcv *CQRScreeningControls) APPLY_DENSITY_CROSS_CORRELATION() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *CQRScreeningControls) ApplyDensityCrossCorrelation() bool {
+	return rcv.APPLY_DENSITY_CROSS_CORRELATION()
+}
+
+/// When true and DENSITY_LOG_SIGMA > 0 with both objects supplying
+/// DENSITY_SENSITIVITY_KM, apply common-mode density cross-covariance.
+func (rcv *CQRScreeningControls) MutateAPPLY_DENSITY_CROSS_CORRELATION(n bool) bool {
+	return rcv._tab.MutateBoolSlot(42, n)
+}
+
+func (rcv *CQRScreeningControls) MutateApplyDensityCrossCorrelation(n bool) bool {
+	return rcv.MutateAPPLY_DENSITY_CROSS_CORRELATION(n)
+}
+
+/// Dimensionless 1-sigma common-mode log-density uncertainty (sigma_s); 0 disables.
+func (rcv *CQRScreeningControls) DENSITY_LOG_SIGMA() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *CQRScreeningControls) DensityLogSigma() float64 {
+	return rcv.DENSITY_LOG_SIGMA()
+}
+
+/// Dimensionless 1-sigma common-mode log-density uncertainty (sigma_s); 0 disables.
+func (rcv *CQRScreeningControls) MutateDENSITY_LOG_SIGMA(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(44, n)
+}
+
+func (rcv *CQRScreeningControls) MutateDensityLogSigma(n float64) bool {
+	return rcv.MutateDENSITY_LOG_SIGMA(n)
+}
+
 func CQRScreeningControlsStart(builder *flatbuffers.Builder) {
-	builder.StartObject(19)
+	builder.StartObject(21)
 }
 func CQRScreeningControlsAddSTART_EPOCH(builder *flatbuffers.Builder, START_EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(START_EPOCH), 0)
@@ -574,6 +620,18 @@ func CQRScreeningControlsStartVERIFIED_COVARIANCE_PRODUCERSVector(builder *flatb
 }
 func CQRScreeningControlsStartVerifiedCovarianceProducersVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return CQRScreeningControlsStartVERIFIED_COVARIANCE_PRODUCERSVector(builder, numElems)
+}
+func CQRScreeningControlsAddAPPLY_DENSITY_CROSS_CORRELATION(builder *flatbuffers.Builder, APPLY_DENSITY_CROSS_CORRELATION bool) {
+	builder.PrependBoolSlot(19, APPLY_DENSITY_CROSS_CORRELATION, false)
+}
+func CQRScreeningControlsAddApplyDensityCrossCorrelation(builder *flatbuffers.Builder, APPLY_DENSITY_CROSS_CORRELATION bool) {
+	CQRScreeningControlsAddAPPLY_DENSITY_CROSS_CORRELATION(builder, APPLY_DENSITY_CROSS_CORRELATION)
+}
+func CQRScreeningControlsAddDENSITY_LOG_SIGMA(builder *flatbuffers.Builder, DENSITY_LOG_SIGMA float64) {
+	builder.PrependFloat64Slot(20, DENSITY_LOG_SIGMA, 0.0)
+}
+func CQRScreeningControlsAddDensityLogSigma(builder *flatbuffers.Builder, DENSITY_LOG_SIGMA float64) {
+	CQRScreeningControlsAddDENSITY_LOG_SIGMA(builder, DENSITY_LOG_SIGMA)
 }
 func CQRScreeningControlsEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

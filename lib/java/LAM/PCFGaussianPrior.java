@@ -17,8 +17,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps
- * the theory's own sigma and moves only the mean.
+ * Optional Gaussian parameter prior.
  */
 @SuppressWarnings("unused")
 public final class PCFGaussianPrior extends com.google.flatbuffers.Table {
@@ -29,15 +28,15 @@ public final class PCFGaussianPrior extends com.google.flatbuffers.Table {
   public PCFGaussianPrior __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   /**
-   * Prior mean, in the unit of the parameter it is attached to. Default 0.
+   * Prior mean in the parameter's unit.
    */
   public double MEAN() { int o = __offset(4); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Prior standard deviation, in the same unit; > 0 when HAS_SIGMA.
+   * Prior standard deviation in the parameter's unit; > 0 when HAS_SIGMA is true.
    */
   public double SIGMA() { int o = __offset(6); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * True when SIGMA carries a value; false keeps the theory's own sigma.
+   * True when SIGMA is explicitly provided.
    */
   public boolean HAS_SIGMA() { int o = __offset(8); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
 

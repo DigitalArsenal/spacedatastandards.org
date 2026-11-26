@@ -1,1 +1,1 @@
-{"version":3,"file":"pcfSolidTideModel.d.ts","sourceRoot":"","sources":["../../../ts/PCF/pcfSolidTideModel.ts"],"names":[],"mappings":"AAIA;;;;;;;;GAQG;AACH,oBAAY,iBAAiB;IAC3B,IAAI,IAAI;IACR,SAAS,IAAI;CACd"}
+{"version":3,"file":"pcfSolidTideModel.d.ts","sourceRoot":"","sources":["../../../ts/PCF/pcfSolidTideModel.ts"],"names":[],"mappings":"AAIA;;;;;;;;;GASG;AACH,oBAAY,iBAAiB;IAC3B,WAAW,IAAI;IACf,IAAI,IAAI;IACR,SAAS,IAAI;CACd"}

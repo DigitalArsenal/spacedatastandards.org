@@ -66,6 +66,16 @@ public struct CQRObjectSource : IFlatbufferObject
   /// The object's catalog entry. Without a supplied radius, its SIZE, else
   /// its RCS, gives the hard-body radius (see cqrHardBodyRadiusBasis).
   public CAT? CATALOG_ENTRY { get { int o = __p.__offset(42); return o != 0 ? (CAT?)(new CAT()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Optional position sensitivity to a unit dimensionless log-density shift
+  /// (dr/ds) in EVALUATION_FRAME, 3 doubles in km. Empty when absent.
+  public double DENSITY_SENSITIVITY_KM(int j) { int o = __p.__offset(44); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int DENSITY_SENSITIVITY_KMLength { get { int o = __p.__offset(44); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetDENSITY_SENSITIVITY_KMBytes() { return __p.__vector_as_span<double>(44, 8); }
+#else
+  public ArraySegment<byte>? GetDENSITY_SENSITIVITY_KMBytes() { return __p.__vector_as_arraysegment(44); }
+#endif
+  public double[] GetDENSITY_SENSITIVITY_KMArray() { return __p.__vector_as_array<double>(44); }
 
   public static Offset<CQRObjectSource> CreateCQRObjectSource(FlatBufferBuilder builder,
       StringOffset OBJECT_IDOffset = default(StringOffset),
@@ -87,11 +97,13 @@ public struct CQRObjectSource : IFlatbufferObject
       bool HAS_APOGEE_ALTITUDE_M = false,
       double HARD_BODY_RADIUS_M = 0.0,
       bool HAS_HARD_BODY_RADIUS_M = false,
-      Offset<CAT> CATALOG_ENTRYOffset = default(Offset<CAT>)) {
-    builder.StartTable(20);
+      Offset<CAT> CATALOG_ENTRYOffset = default(Offset<CAT>),
+      VectorOffset DENSITY_SENSITIVITY_KMOffset = default(VectorOffset)) {
+    builder.StartTable(21);
     CQRObjectSource.AddHARD_BODY_RADIUS_M(builder, HARD_BODY_RADIUS_M);
     CQRObjectSource.AddAPOGEE_ALTITUDE_M(builder, APOGEE_ALTITUDE_M);
     CQRObjectSource.AddPERIGEE_ALTITUDE_M(builder, PERIGEE_ALTITUDE_M);
+    CQRObjectSource.AddDENSITY_SENSITIVITY_KM(builder, DENSITY_SENSITIVITY_KMOffset);
     CQRObjectSource.AddCATALOG_ENTRY(builder, CATALOG_ENTRYOffset);
     CQRObjectSource.AddSOURCE_EPOCH(builder, SOURCE_EPOCHOffset);
     CQRObjectSource.AddPROVENANCE(builder, PROVENANCEOffset);
@@ -112,7 +124,7 @@ public struct CQRObjectSource : IFlatbufferObject
     return CQRObjectSource.EndCQRObjectSource(builder);
   }
 
-  public static void StartCQRObjectSource(FlatBufferBuilder builder) { builder.StartTable(20); }
+  public static void StartCQRObjectSource(FlatBufferBuilder builder) { builder.StartTable(21); }
   public static void AddOBJECT_ID(FlatBufferBuilder builder, StringOffset OBJECT_IDOffset) { builder.AddOffset(0, OBJECT_IDOffset.Value, 0); }
   public static void AddOBJECT_NAME(FlatBufferBuilder builder, StringOffset OBJECT_NAMEOffset) { builder.AddOffset(1, OBJECT_NAMEOffset.Value, 0); }
   public static void AddNORAD_CATALOG_ID(FlatBufferBuilder builder, uint NORAD_CATALOG_ID) { builder.AddUint(2, NORAD_CATALOG_ID, 0); }
@@ -133,6 +145,12 @@ public struct CQRObjectSource : IFlatbufferObject
   public static void AddHARD_BODY_RADIUS_M(FlatBufferBuilder builder, double HARD_BODY_RADIUS_M) { builder.AddDouble(17, HARD_BODY_RADIUS_M, 0.0); }
   public static void AddHAS_HARD_BODY_RADIUS_M(FlatBufferBuilder builder, bool HAS_HARD_BODY_RADIUS_M) { builder.AddBool(18, HAS_HARD_BODY_RADIUS_M, false); }
   public static void AddCATALOG_ENTRY(FlatBufferBuilder builder, Offset<CAT> CATALOG_ENTRYOffset) { builder.AddOffset(19, CATALOG_ENTRYOffset.Value, 0); }
+  public static void AddDENSITY_SENSITIVITY_KM(FlatBufferBuilder builder, VectorOffset DENSITY_SENSITIVITY_KMOffset) { builder.AddOffset(20, DENSITY_SENSITIVITY_KMOffset.Value, 0); }
+  public static VectorOffset CreateDENSITY_SENSITIVITY_KMVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateDENSITY_SENSITIVITY_KMVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateDENSITY_SENSITIVITY_KMVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateDENSITY_SENSITIVITY_KMVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartDENSITY_SENSITIVITY_KMVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
   public static Offset<CQRObjectSource> EndCQRObjectSource(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // OBJECT_ID
@@ -164,6 +182,8 @@ public struct CQRObjectSource : IFlatbufferObject
     _o.HARD_BODY_RADIUS_M = this.HARD_BODY_RADIUS_M;
     _o.HAS_HARD_BODY_RADIUS_M = this.HAS_HARD_BODY_RADIUS_M;
     _o.CATALOG_ENTRY = this.CATALOG_ENTRY.HasValue ? this.CATALOG_ENTRY.Value.UnPack() : null;
+    _o.DENSITY_SENSITIVITY_KM = new List<double>();
+    for (var _j = 0; _j < this.DENSITY_SENSITIVITY_KMLength; ++_j) {_o.DENSITY_SENSITIVITY_KM.Add(this.DENSITY_SENSITIVITY_KM(_j));}
   }
   public static Offset<CQRObjectSource> Pack(FlatBufferBuilder builder, CQRObjectSourceT _o) {
     if (_o == null) return default(Offset<CQRObjectSource>);
@@ -179,6 +199,11 @@ public struct CQRObjectSource : IFlatbufferObject
     var _PROVENANCE = _o.PROVENANCE == null ? default(Offset<CQRSourceProvenance>) : CQRSourceProvenance.Pack(builder, _o.PROVENANCE);
     var _SOURCE_EPOCH = _o.SOURCE_EPOCH == null ? default(Offset<TIMInstant>) : TIMInstant.Pack(builder, _o.SOURCE_EPOCH);
     var _CATALOG_ENTRY = _o.CATALOG_ENTRY == null ? default(Offset<CAT>) : CAT.Pack(builder, _o.CATALOG_ENTRY);
+    var _DENSITY_SENSITIVITY_KM = default(VectorOffset);
+    if (_o.DENSITY_SENSITIVITY_KM != null) {
+      var __DENSITY_SENSITIVITY_KM = _o.DENSITY_SENSITIVITY_KM.ToArray();
+      _DENSITY_SENSITIVITY_KM = CreateDENSITY_SENSITIVITY_KMVector(builder, __DENSITY_SENSITIVITY_KM);
+    }
     return CreateCQRObjectSource(
       builder,
       _OBJECT_ID,
@@ -200,7 +225,8 @@ public struct CQRObjectSource : IFlatbufferObject
       _o.HAS_APOGEE_ALTITUDE_M,
       _o.HARD_BODY_RADIUS_M,
       _o.HAS_HARD_BODY_RADIUS_M,
-      _CATALOG_ENTRY);
+      _CATALOG_ENTRY,
+      _DENSITY_SENSITIVITY_KM);
   }
 }
 
@@ -226,6 +252,7 @@ public class CQRObjectSourceT
   public double HARD_BODY_RADIUS_M { get; set; }
   public bool HAS_HARD_BODY_RADIUS_M { get; set; }
   public CATT CATALOG_ENTRY { get; set; }
+  public List<double> DENSITY_SENSITIVITY_KM { get; set; }
 
   public CQRObjectSourceT() {
     this.OBJECT_ID = null;
@@ -248,6 +275,7 @@ public class CQRObjectSourceT
     this.HARD_BODY_RADIUS_M = 0.0;
     this.HAS_HARD_BODY_RADIUS_M = false;
     this.CATALOG_ENTRY = null;
+    this.DENSITY_SENSITIVITY_KM = null;
   }
 }
 
@@ -277,6 +305,7 @@ static public class CQRObjectSourceVerify
       && verifier.VerifyField(tablePos, 38 /*HARD_BODY_RADIUS_M*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 40 /*HAS_HARD_BODY_RADIUS_M*/, 1 /*bool*/, 1, false)
       && verifier.VerifyTable(tablePos, 42 /*CATALOG_ENTRY*/, CATVerify.Verify, false)
+      && verifier.VerifyVectorOfData(tablePos, 44 /*DENSITY_SENSITIVITY_KM*/, 8 /*double*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

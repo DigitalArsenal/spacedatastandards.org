@@ -310,31 +310,36 @@ enum cqrCovarianceCorrelation : uint8_t {
   cqrCovarianceCorrelation_INDEPENDENT = 1,
   /// A cross covariance was supplied and used.
   cqrCovarianceCorrelation_SUPPLIED_CROSS_COVARIANCE = 2,
+  /// Cross covariance derived from per-object atmospheric density sensitivity
+  /// vectors and a shared log-density uncertainty.
+  cqrCovarianceCorrelation_SHARED_DENSITY_SENSITIVITY = 3,
   cqrCovarianceCorrelation_MIN = cqrCovarianceCorrelation_UNSPECIFIED,
-  cqrCovarianceCorrelation_MAX = cqrCovarianceCorrelation_SUPPLIED_CROSS_COVARIANCE
+  cqrCovarianceCorrelation_MAX = cqrCovarianceCorrelation_SHARED_DENSITY_SENSITIVITY
 };
 
-inline const cqrCovarianceCorrelation (&EnumValuescqrCovarianceCorrelation())[3] {
+inline const cqrCovarianceCorrelation (&EnumValuescqrCovarianceCorrelation())[4] {
   static const cqrCovarianceCorrelation values[] = {
     cqrCovarianceCorrelation_UNSPECIFIED,
     cqrCovarianceCorrelation_INDEPENDENT,
-    cqrCovarianceCorrelation_SUPPLIED_CROSS_COVARIANCE
+    cqrCovarianceCorrelation_SUPPLIED_CROSS_COVARIANCE,
+    cqrCovarianceCorrelation_SHARED_DENSITY_SENSITIVITY
   };
   return values;
 }
 
 inline const char * const *EnumNamescqrCovarianceCorrelation() {
-  static const char * const names[4] = {
+  static const char * const names[5] = {
     "UNSPECIFIED",
     "INDEPENDENT",
     "SUPPLIED_CROSS_COVARIANCE",
+    "SHARED_DENSITY_SENSITIVITY",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamecqrCovarianceCorrelation(cqrCovarianceCorrelation e) {
-  if (::flatbuffers::IsOutRange(e, cqrCovarianceCorrelation_UNSPECIFIED, cqrCovarianceCorrelation_SUPPLIED_CROSS_COVARIANCE)) return "";
+  if (::flatbuffers::IsOutRange(e, cqrCovarianceCorrelation_UNSPECIFIED, cqrCovarianceCorrelation_SHARED_DENSITY_SENSITIVITY)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamescqrCovarianceCorrelation()[index];
 }
@@ -861,7 +866,8 @@ struct CQRObjectSource FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_HAS_APOGEE_ALTITUDE_M = 36,
     VT_HARD_BODY_RADIUS_M = 38,
     VT_HAS_HARD_BODY_RADIUS_M = 40,
-    VT_CATALOG_ENTRY = 42
+    VT_CATALOG_ENTRY = 42,
+    VT_DENSITY_SENSITIVITY_KM = 44
   };
   const ::flatbuffers::String *OBJECT_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_OBJECT_ID);
@@ -932,6 +938,11 @@ struct CQRObjectSource FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const CAT *CATALOG_ENTRY() const {
     return GetPointer<const CAT *>(VT_CATALOG_ENTRY);
   }
+  /// Optional position sensitivity to a unit dimensionless log-density shift
+  /// (dr/ds) in EVALUATION_FRAME, 3 doubles in km. Empty when absent.
+  const ::flatbuffers::Vector<double> *DENSITY_SENSITIVITY_KM() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_DENSITY_SENSITIVITY_KM);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -967,6 +978,8 @@ struct CQRObjectSource FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<uint8_t>(verifier, VT_HAS_HARD_BODY_RADIUS_M, 1) &&
            VerifyOffset(verifier, VT_CATALOG_ENTRY) &&
            verifier.VerifyTable(CATALOG_ENTRY()) &&
+           VerifyOffset(verifier, VT_DENSITY_SENSITIVITY_KM) &&
+           verifier.VerifyVector(DENSITY_SENSITIVITY_KM()) &&
            verifier.EndTable();
   }
 };
@@ -1035,6 +1048,9 @@ struct CQRObjectSourceBuilder {
   void add_CATALOG_ENTRY(::flatbuffers::Offset<CAT> CATALOG_ENTRY) {
     fbb_.AddOffset(CQRObjectSource::VT_CATALOG_ENTRY, CATALOG_ENTRY);
   }
+  void add_DENSITY_SENSITIVITY_KM(::flatbuffers::Offset<::flatbuffers::Vector<double>> DENSITY_SENSITIVITY_KM) {
+    fbb_.AddOffset(CQRObjectSource::VT_DENSITY_SENSITIVITY_KM, DENSITY_SENSITIVITY_KM);
+  }
   explicit CQRObjectSourceBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1068,11 +1084,13 @@ inline ::flatbuffers::Offset<CQRObjectSource> CreateCQRObjectSource(
     bool HAS_APOGEE_ALTITUDE_M = false,
     double HARD_BODY_RADIUS_M = 0.0,
     bool HAS_HARD_BODY_RADIUS_M = false,
-    ::flatbuffers::Offset<CAT> CATALOG_ENTRY = 0) {
+    ::flatbuffers::Offset<CAT> CATALOG_ENTRY = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> DENSITY_SENSITIVITY_KM = 0) {
   CQRObjectSourceBuilder builder_(_fbb);
   builder_.add_HARD_BODY_RADIUS_M(HARD_BODY_RADIUS_M);
   builder_.add_APOGEE_ALTITUDE_M(APOGEE_ALTITUDE_M);
   builder_.add_PERIGEE_ALTITUDE_M(PERIGEE_ALTITUDE_M);
+  builder_.add_DENSITY_SENSITIVITY_KM(DENSITY_SENSITIVITY_KM);
   builder_.add_CATALOG_ENTRY(CATALOG_ENTRY);
   builder_.add_SOURCE_EPOCH(SOURCE_EPOCH);
   builder_.add_PROVENANCE(PROVENANCE);
@@ -1114,10 +1132,12 @@ inline ::flatbuffers::Offset<CQRObjectSource> CreateCQRObjectSourceDirect(
     bool HAS_APOGEE_ALTITUDE_M = false,
     double HARD_BODY_RADIUS_M = 0.0,
     bool HAS_HARD_BODY_RADIUS_M = false,
-    ::flatbuffers::Offset<CAT> CATALOG_ENTRY = 0) {
+    ::flatbuffers::Offset<CAT> CATALOG_ENTRY = 0,
+    const std::vector<double> *DENSITY_SENSITIVITY_KM = nullptr) {
   auto OBJECT_ID__ = OBJECT_ID ? _fbb.CreateString(OBJECT_ID) : 0;
   auto OBJECT_NAME__ = OBJECT_NAME ? _fbb.CreateString(OBJECT_NAME) : 0;
   auto PROPAGATOR_PORT_ID__ = PROPAGATOR_PORT_ID ? _fbb.CreateString(PROPAGATOR_PORT_ID) : 0;
+  auto DENSITY_SENSITIVITY_KM__ = DENSITY_SENSITIVITY_KM ? _fbb.CreateVector<double>(*DENSITY_SENSITIVITY_KM) : 0;
   return CreateCQRObjectSource(
       _fbb,
       OBJECT_ID__,
@@ -1139,7 +1159,8 @@ inline ::flatbuffers::Offset<CQRObjectSource> CreateCQRObjectSourceDirect(
       HAS_APOGEE_ALTITUDE_M,
       HARD_BODY_RADIUS_M,
       HAS_HARD_BODY_RADIUS_M,
-      CATALOG_ENTRY);
+      CATALOG_ENTRY,
+      DENSITY_SENSITIVITY_KM__);
 }
 
 /// One covariance-producing build whose covariance realism was verified. A
@@ -1253,7 +1274,9 @@ struct CQRScreeningControls FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Tab
     VT_IN_TRACK_M = 34,
     VT_CROSS_TRACK_M = 36,
     VT_VOLUME_CENTER = 38,
-    VT_VERIFIED_COVARIANCE_PRODUCERS = 40
+    VT_VERIFIED_COVARIANCE_PRODUCERS = 40,
+    VT_APPLY_DENSITY_CROSS_CORRELATION = 42,
+    VT_DENSITY_LOG_SIGMA = 44
   };
   const TIMInstant *START_EPOCH() const {
     return GetPointer<const TIMInstant *>(VT_START_EPOCH);
@@ -1323,6 +1346,15 @@ struct CQRScreeningControls FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Tab
   const ::flatbuffers::Vector<::flatbuffers::Offset<CQRVerifiedCovarianceProducer>> *VERIFIED_COVARIANCE_PRODUCERS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<CQRVerifiedCovarianceProducer>> *>(VT_VERIFIED_COVARIANCE_PRODUCERS);
   }
+  /// When true and DENSITY_LOG_SIGMA > 0 with both objects supplying
+  /// DENSITY_SENSITIVITY_KM, apply common-mode density cross-covariance.
+  bool APPLY_DENSITY_CROSS_CORRELATION() const {
+    return GetField<uint8_t>(VT_APPLY_DENSITY_CROSS_CORRELATION, 0) != 0;
+  }
+  /// Dimensionless 1-sigma common-mode log-density uncertainty (sigma_s); 0 disables.
+  double DENSITY_LOG_SIGMA() const {
+    return GetField<double>(VT_DENSITY_LOG_SIGMA, 0.0);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -1348,6 +1380,8 @@ struct CQRScreeningControls FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Tab
            VerifyOffset(verifier, VT_VERIFIED_COVARIANCE_PRODUCERS) &&
            verifier.VerifyVector(VERIFIED_COVARIANCE_PRODUCERS()) &&
            verifier.VerifyVectorOfTables(VERIFIED_COVARIANCE_PRODUCERS()) &&
+           VerifyField<uint8_t>(verifier, VT_APPLY_DENSITY_CROSS_CORRELATION, 1) &&
+           VerifyField<double>(verifier, VT_DENSITY_LOG_SIGMA, 8) &&
            verifier.EndTable();
   }
 };
@@ -1413,6 +1447,12 @@ struct CQRScreeningControlsBuilder {
   void add_VERIFIED_COVARIANCE_PRODUCERS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<CQRVerifiedCovarianceProducer>>> VERIFIED_COVARIANCE_PRODUCERS) {
     fbb_.AddOffset(CQRScreeningControls::VT_VERIFIED_COVARIANCE_PRODUCERS, VERIFIED_COVARIANCE_PRODUCERS);
   }
+  void add_APPLY_DENSITY_CROSS_CORRELATION(bool APPLY_DENSITY_CROSS_CORRELATION) {
+    fbb_.AddElement<uint8_t>(CQRScreeningControls::VT_APPLY_DENSITY_CROSS_CORRELATION, static_cast<uint8_t>(APPLY_DENSITY_CROSS_CORRELATION), 0);
+  }
+  void add_DENSITY_LOG_SIGMA(double DENSITY_LOG_SIGMA) {
+    fbb_.AddElement<double>(CQRScreeningControls::VT_DENSITY_LOG_SIGMA, DENSITY_LOG_SIGMA, 0.0);
+  }
   explicit CQRScreeningControlsBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1445,8 +1485,11 @@ inline ::flatbuffers::Offset<CQRScreeningControls> CreateCQRScreeningControls(
     double IN_TRACK_M = 0.0,
     double CROSS_TRACK_M = 0.0,
     cqrVolumeAnchor VOLUME_CENTER = cqrVolumeAnchor_PRIMARY,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<CQRVerifiedCovarianceProducer>>> VERIFIED_COVARIANCE_PRODUCERS = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<CQRVerifiedCovarianceProducer>>> VERIFIED_COVARIANCE_PRODUCERS = 0,
+    bool APPLY_DENSITY_CROSS_CORRELATION = false,
+    double DENSITY_LOG_SIGMA = 0.0) {
   CQRScreeningControlsBuilder builder_(_fbb);
+  builder_.add_DENSITY_LOG_SIGMA(DENSITY_LOG_SIGMA);
   builder_.add_CROSS_TRACK_M(CROSS_TRACK_M);
   builder_.add_IN_TRACK_M(IN_TRACK_M);
   builder_.add_RADIAL_M(RADIAL_M);
@@ -1459,6 +1502,7 @@ inline ::flatbuffers::Offset<CQRScreeningControls> CreateCQRScreeningControls(
   builder_.add_VERIFIED_COVARIANCE_PRODUCERS(VERIFIED_COVARIANCE_PRODUCERS);
   builder_.add_REQUESTED_WORKERS(REQUESTED_WORKERS);
   builder_.add_START_EPOCH(START_EPOCH);
+  builder_.add_APPLY_DENSITY_CROSS_CORRELATION(APPLY_DENSITY_CROSS_CORRELATION);
   builder_.add_VOLUME_CENTER(VOLUME_CENTER);
   builder_.add_SCREENING(SCREENING);
   builder_.add_ALGORITHM(ALGORITHM);
@@ -1489,7 +1533,9 @@ inline ::flatbuffers::Offset<CQRScreeningControls> CreateCQRScreeningControlsDir
     double IN_TRACK_M = 0.0,
     double CROSS_TRACK_M = 0.0,
     cqrVolumeAnchor VOLUME_CENTER = cqrVolumeAnchor_PRIMARY,
-    const std::vector<::flatbuffers::Offset<CQRVerifiedCovarianceProducer>> *VERIFIED_COVARIANCE_PRODUCERS = nullptr) {
+    const std::vector<::flatbuffers::Offset<CQRVerifiedCovarianceProducer>> *VERIFIED_COVARIANCE_PRODUCERS = nullptr,
+    bool APPLY_DENSITY_CROSS_CORRELATION = false,
+    double DENSITY_LOG_SIGMA = 0.0) {
   auto VERIFIED_COVARIANCE_PRODUCERS__ = VERIFIED_COVARIANCE_PRODUCERS ? _fbb.CreateVector<::flatbuffers::Offset<CQRVerifiedCovarianceProducer>>(*VERIFIED_COVARIANCE_PRODUCERS) : 0;
   return CreateCQRScreeningControls(
       _fbb,
@@ -1511,7 +1557,9 @@ inline ::flatbuffers::Offset<CQRScreeningControls> CreateCQRScreeningControlsDir
       IN_TRACK_M,
       CROSS_TRACK_M,
       VOLUME_CENTER,
-      VERIFIED_COVARIANCE_PRODUCERS__);
+      VERIFIED_COVARIANCE_PRODUCERS__,
+      APPLY_DENSITY_CROSS_CORRELATION,
+      DENSITY_LOG_SIGMA);
 }
 
 /// CONTROLS.COMBINED_RADIUS_M must equal PRIMARY_RADIUS_M + SECONDARY_RADIUS_M.
