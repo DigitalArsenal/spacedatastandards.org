@@ -286,22 +286,90 @@ class ETM extends Table
         return $this->__vector_as_bytes(56);
     }
 
+    /// CAT object class (PAYLOAD, ROCKET_BODY, DEBRIS, UNKNOWN); null when absent.
+    public function getOBJECT_TYPE()
+    {
+        $o = $this->__offset(58);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// CAT decay date [YYYY-MM-DD] when decayed; null otherwise.
+    public function getDECAY_DATE()
+    {
+        $o = $this->__offset(60);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// CAT maneuverability flag.
+    /**
+     * @return bool
+     */
+    public function getMANEUVERABLE()
+    {
+        $o = $this->__offset(62);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// CAT estimated remaining maneuvering delta-V capability [m/s]; NaN when unassessed.
+    /**
+     * @return double
+     */
+    public function getESTIMATED_DELTA_V_MPS()
+    {
+        $o = $this->__offset(64);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// CAT cumulative historical maneuver delta-V magnitude [m/s]; NaN when unassessed.
+    /**
+     * @return double
+     */
+    public function getHISTORICAL_DELTA_V_MPS()
+    {
+        $o = $this->__offset(66);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// CAT count of detected or confirmed historical maneuvers.
+    /**
+     * @return uint
+     */
+    public function getMANEUVER_COUNT()
+    {
+        $o = $this->__offset(68);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// CAT ISO 8601 UTC epoch of the most recent detected or confirmed maneuver.
+    public function getLAST_MANEUVER_EPOCH()
+    {
+        $o = $this->__offset(70);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// CAT ISO 8601 UTC instant when the delta-V fields were last evaluated.
+    public function getDELTA_V_AS_OF()
+    {
+        $o = $this->__offset(72);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startETM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(27);
+        $builder->StartObject(35);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return ETM
      */
-    public static function createETM(FlatBufferBuilder $builder, $ENTITY_ID, $NAME, $KIND, $SUBTYPE, $PARENT_ENTITY_ID, $WASM_HANDLE, $NORAD_CAT_ID, $OBJECT_NAME, $OBJECT_ID, $CAT_OBJECT_NAME, $CAT_OBJECT_ID, $FACILITY_TYPE, $SEARCH_TEXT, $OWNER, $STATUS_CODE, $LAUNCH_DATE, $LAUNCH_YEAR, $ORBIT_REGIME, $PERIOD, $INCLINATION, $APOGEE, $PERIGEE, $MEAN_MOTION, $ECCENTRICITY, $BSTAR, $HAS_GP, $RESERVED)
+    public static function createETM(FlatBufferBuilder $builder, $ENTITY_ID, $NAME, $KIND, $SUBTYPE, $PARENT_ENTITY_ID, $WASM_HANDLE, $NORAD_CAT_ID, $OBJECT_NAME, $OBJECT_ID, $CAT_OBJECT_NAME, $CAT_OBJECT_ID, $FACILITY_TYPE, $SEARCH_TEXT, $OWNER, $STATUS_CODE, $LAUNCH_DATE, $LAUNCH_YEAR, $ORBIT_REGIME, $PERIOD, $INCLINATION, $APOGEE, $PERIGEE, $MEAN_MOTION, $ECCENTRICITY, $BSTAR, $HAS_GP, $RESERVED, $OBJECT_TYPE, $DECAY_DATE, $MANEUVERABLE, $ESTIMATED_DELTA_V_MPS, $HISTORICAL_DELTA_V_MPS, $MANEUVER_COUNT, $LAST_MANEUVER_EPOCH, $DELTA_V_AS_OF)
     {
-        $builder->startObject(27);
+        $builder->startObject(35);
         self::addENTITY_ID($builder, $ENTITY_ID);
         self::addNAME($builder, $NAME);
         self::addKIND($builder, $KIND);
@@ -329,6 +397,14 @@ class ETM extends Table
         self::addBSTAR($builder, $BSTAR);
         self::addHAS_GP($builder, $HAS_GP);
         self::addRESERVED($builder, $RESERVED);
+        self::addOBJECT_TYPE($builder, $OBJECT_TYPE);
+        self::addDECAY_DATE($builder, $DECAY_DATE);
+        self::addMANEUVERABLE($builder, $MANEUVERABLE);
+        self::addESTIMATED_DELTA_V_MPS($builder, $ESTIMATED_DELTA_V_MPS);
+        self::addHISTORICAL_DELTA_V_MPS($builder, $HISTORICAL_DELTA_V_MPS);
+        self::addMANEUVER_COUNT($builder, $MANEUVER_COUNT);
+        self::addLAST_MANEUVER_EPOCH($builder, $LAST_MANEUVER_EPOCH);
+        self::addDELTA_V_AS_OF($builder, $DELTA_V_AS_OF);
         $o = $builder->endObject();
         return $o;
     }
@@ -625,6 +701,86 @@ class ETM extends Table
     public static function startRESERVEDVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(1, $numElems, 1);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addOBJECT_TYPE(FlatBufferBuilder $builder, $OBJECT_TYPE)
+    {
+        $builder->addOffsetX(27, $OBJECT_TYPE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addDECAY_DATE(FlatBufferBuilder $builder, $DECAY_DATE)
+    {
+        $builder->addOffsetX(28, $DECAY_DATE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addMANEUVERABLE(FlatBufferBuilder $builder, $MANEUVERABLE)
+    {
+        $builder->addBoolX(29, $MANEUVERABLE, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addESTIMATED_DELTA_V_MPS(FlatBufferBuilder $builder, $ESTIMATED_DELTA_V_MPS)
+    {
+        $builder->addDoubleX(30, $ESTIMATED_DELTA_V_MPS, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addHISTORICAL_DELTA_V_MPS(FlatBufferBuilder $builder, $HISTORICAL_DELTA_V_MPS)
+    {
+        $builder->addDoubleX(31, $HISTORICAL_DELTA_V_MPS, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addMANEUVER_COUNT(FlatBufferBuilder $builder, $MANEUVER_COUNT)
+    {
+        $builder->addUintX(32, $MANEUVER_COUNT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addLAST_MANEUVER_EPOCH(FlatBufferBuilder $builder, $LAST_MANEUVER_EPOCH)
+    {
+        $builder->addOffsetX(33, $LAST_MANEUVER_EPOCH, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addDELTA_V_AS_OF(FlatBufferBuilder $builder, $DELTA_V_AS_OF)
+    {
+        $builder->addOffsetX(34, $DELTA_V_AS_OF, 0);
     }
 
     /**

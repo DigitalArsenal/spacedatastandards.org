@@ -346,6 +346,94 @@ class ETM : Table() {
         }
     val reservedAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(56, 1)
     fun reservedInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 56, 1)
+    /**
+     * CAT object class (PAYLOAD, ROCKET_BODY, DEBRIS, UNKNOWN); null when absent.
+     */
+    val objectType : String?
+        get() {
+            val o = __offset(58)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val objectTypeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(58, 1)
+    fun objectTypeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 58, 1)
+    /**
+     * CAT decay date [YYYY-MM-DD] when decayed; null otherwise.
+     */
+    val decayDate : String?
+        get() {
+            val o = __offset(60)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val decayDateAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(60, 1)
+    fun decayDateInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 60, 1)
+    /**
+     * CAT maneuverability flag.
+     */
+    val maneuverable : Boolean
+        get() {
+            val o = __offset(62)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * CAT estimated remaining maneuvering delta-V capability [m/s]; NaN when unassessed.
+     */
+    val estimatedDeltaVMps : Double
+        get() {
+            val o = __offset(64)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * CAT cumulative historical maneuver delta-V magnitude [m/s]; NaN when unassessed.
+     */
+    val historicalDeltaVMps : Double
+        get() {
+            val o = __offset(66)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * CAT count of detected or confirmed historical maneuvers.
+     */
+    val maneuverCount : UInt
+        get() {
+            val o = __offset(68)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * CAT ISO 8601 UTC epoch of the most recent detected or confirmed maneuver.
+     */
+    val lastManeuverEpoch : String?
+        get() {
+            val o = __offset(70)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val lastManeuverEpochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(70, 1)
+    fun lastManeuverEpochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 70, 1)
+    /**
+     * CAT ISO 8601 UTC instant when the delta-V fields were last evaluated.
+     */
+    val deltaVAsOf : String?
+        get() {
+            val o = __offset(72)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val deltaVAsOfAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(72, 1)
+    fun deltaVAsOfInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 72, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsETM(_bb: ByteBuffer): ETM = getRootAsETM(_bb, ETM())
@@ -354,8 +442,10 @@ class ETM : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun ETMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$ETM")
-        fun createETM(builder: FlatBufferBuilder, entityIdOffset: Int, nameOffset: Int, kind: Byte, subtypeOffset: Int, parentEntityIdOffset: Int, wasmHandle: UInt, noradCatId: UInt, objectNameOffset: Int, objectIdOffset: Int, catObjectNameOffset: Int, catObjectIdOffset: Int, facilityTypeOffset: Int, searchTextOffset: Int, ownerOffset: Int, statusCodeOffset: Int, launchDateOffset: Int, launchYearOffset: Int, orbitRegimeOffset: Int, period: Double, inclination: Double, apogee: Double, perigee: Double, meanMotion: Double, eccentricity: Double, bstar: Double, hasGp: Boolean, reservedOffset: Int) : Int {
-            builder.startTable(27)
+        fun createETM(builder: FlatBufferBuilder, entityIdOffset: Int, nameOffset: Int, kind: Byte, subtypeOffset: Int, parentEntityIdOffset: Int, wasmHandle: UInt, noradCatId: UInt, objectNameOffset: Int, objectIdOffset: Int, catObjectNameOffset: Int, catObjectIdOffset: Int, facilityTypeOffset: Int, searchTextOffset: Int, ownerOffset: Int, statusCodeOffset: Int, launchDateOffset: Int, launchYearOffset: Int, orbitRegimeOffset: Int, period: Double, inclination: Double, apogee: Double, perigee: Double, meanMotion: Double, eccentricity: Double, bstar: Double, hasGp: Boolean, reservedOffset: Int, objectTypeOffset: Int, decayDateOffset: Int, maneuverable: Boolean, estimatedDeltaVMps: Double, historicalDeltaVMps: Double, maneuverCount: UInt, lastManeuverEpochOffset: Int, deltaVAsOfOffset: Int) : Int {
+            builder.startTable(35)
+            addHISTORICALDELTAVMPS(builder, historicalDeltaVMps)
+            addESTIMATEDDELTAVMPS(builder, estimatedDeltaVMps)
             addBSTAR(builder, bstar)
             addECCENTRICITY(builder, eccentricity)
             addMEANMOTION(builder, meanMotion)
@@ -363,6 +453,11 @@ class ETM : Table() {
             addAPOGEE(builder, apogee)
             addINCLINATION(builder, inclination)
             addPERIOD(builder, period)
+            addDELTAVASOF(builder, deltaVAsOfOffset)
+            addLASTMANEUVEREPOCH(builder, lastManeuverEpochOffset)
+            addMANEUVERCOUNT(builder, maneuverCount)
+            addDECAYDATE(builder, decayDateOffset)
+            addOBJECTTYPE(builder, objectTypeOffset)
             addRESERVED(builder, reservedOffset)
             addORBITREGIME(builder, orbitRegimeOffset)
             addLAUNCHYEAR(builder, launchYearOffset)
@@ -381,11 +476,12 @@ class ETM : Table() {
             addSUBTYPE(builder, subtypeOffset)
             addNAME(builder, nameOffset)
             addENTITYID(builder, entityIdOffset)
+            addMANEUVERABLE(builder, maneuverable)
             addHASGP(builder, hasGp)
             addKIND(builder, kind)
             return endETM(builder)
         }
-        fun startETM(builder: FlatBufferBuilder) = builder.startTable(27)
+        fun startETM(builder: FlatBufferBuilder) = builder.startTable(35)
         fun addENTITYID(builder: FlatBufferBuilder, entityId: Int) = builder.addOffset(0, entityId, 0)
         fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(1, name, 0)
         fun addKIND(builder: FlatBufferBuilder, kind: Byte) = builder.addByte(2, kind, 0)
@@ -422,6 +518,14 @@ class ETM : Table() {
             return builder.endVector()
         }
         fun startReservedVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
+        fun addOBJECTTYPE(builder: FlatBufferBuilder, objectType: Int) = builder.addOffset(27, objectType, 0)
+        fun addDECAYDATE(builder: FlatBufferBuilder, decayDate: Int) = builder.addOffset(28, decayDate, 0)
+        fun addMANEUVERABLE(builder: FlatBufferBuilder, maneuverable: Boolean) = builder.addBoolean(29, maneuverable, false)
+        fun addESTIMATEDDELTAVMPS(builder: FlatBufferBuilder, estimatedDeltaVMps: Double) = builder.addDouble(30, estimatedDeltaVMps, 0.0)
+        fun addHISTORICALDELTAVMPS(builder: FlatBufferBuilder, historicalDeltaVMps: Double) = builder.addDouble(31, historicalDeltaVMps, 0.0)
+        fun addMANEUVERCOUNT(builder: FlatBufferBuilder, maneuverCount: UInt) = builder.addInt(32, maneuverCount.toInt(), 0)
+        fun addLASTMANEUVEREPOCH(builder: FlatBufferBuilder, lastManeuverEpoch: Int) = builder.addOffset(33, lastManeuverEpoch, 0)
+        fun addDELTAVASOF(builder: FlatBufferBuilder, deltaVAsOf: Int) = builder.addOffset(34, deltaVAsOf, 0)
         fun endETM(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

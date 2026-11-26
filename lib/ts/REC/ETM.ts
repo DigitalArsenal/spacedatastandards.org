@@ -290,8 +290,80 @@ reservedArray():Uint8Array|null {
   return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 }
 
+/**
+ * CAT object class (PAYLOAD, ROCKET_BODY, DEBRIS, UNKNOWN); null when absent.
+ */
+OBJECT_TYPE():string|null
+OBJECT_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+OBJECT_TYPE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 58);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * CAT decay date [YYYY-MM-DD] when decayed; null otherwise.
+ */
+DECAY_DATE():string|null
+DECAY_DATE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+DECAY_DATE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 60);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * CAT maneuverability flag.
+ */
+MANEUVERABLE():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 62);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * CAT estimated remaining maneuvering delta-V capability [m/s]; NaN when unassessed.
+ */
+ESTIMATED_DELTA_V_MPS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 64);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * CAT cumulative historical maneuver delta-V magnitude [m/s]; NaN when unassessed.
+ */
+HISTORICAL_DELTA_V_MPS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 66);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * CAT count of detected or confirmed historical maneuvers.
+ */
+MANEUVER_COUNT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 68);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * CAT ISO 8601 UTC epoch of the most recent detected or confirmed maneuver.
+ */
+LAST_MANEUVER_EPOCH():string|null
+LAST_MANEUVER_EPOCH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+LAST_MANEUVER_EPOCH(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 70);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * CAT ISO 8601 UTC instant when the delta-V fields were last evaluated.
+ */
+DELTA_V_AS_OF():string|null
+DELTA_V_AS_OF(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+DELTA_V_AS_OF(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 72);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startETM(builder:flatbuffers.Builder) {
-  builder.startObject(27);
+  builder.startObject(35);
 }
 
 static addEntityId(builder:flatbuffers.Builder, ENTITY_IDOffset:flatbuffers.Offset) {
@@ -414,6 +486,38 @@ static startReservedVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(1, numElems, 1);
 }
 
+static addObjectType(builder:flatbuffers.Builder, OBJECT_TYPEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(27, OBJECT_TYPEOffset, 0);
+}
+
+static addDecayDate(builder:flatbuffers.Builder, DECAY_DATEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(28, DECAY_DATEOffset, 0);
+}
+
+static addManeuverable(builder:flatbuffers.Builder, MANEUVERABLE:boolean) {
+  builder.addFieldInt8(29, +MANEUVERABLE, +false);
+}
+
+static addEstimatedDeltaVMps(builder:flatbuffers.Builder, ESTIMATED_DELTA_V_MPS:number) {
+  builder.addFieldFloat64(30, ESTIMATED_DELTA_V_MPS, 0.0);
+}
+
+static addHistoricalDeltaVMps(builder:flatbuffers.Builder, HISTORICAL_DELTA_V_MPS:number) {
+  builder.addFieldFloat64(31, HISTORICAL_DELTA_V_MPS, 0.0);
+}
+
+static addManeuverCount(builder:flatbuffers.Builder, MANEUVER_COUNT:number) {
+  builder.addFieldInt32(32, MANEUVER_COUNT, 0);
+}
+
+static addLastManeuverEpoch(builder:flatbuffers.Builder, LAST_MANEUVER_EPOCHOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(33, LAST_MANEUVER_EPOCHOffset, 0);
+}
+
+static addDeltaVAsOf(builder:flatbuffers.Builder, DELTA_V_AS_OFOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(34, DELTA_V_AS_OFOffset, 0);
+}
+
 static endETM(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -427,7 +531,7 @@ static finishSizePrefixedETMBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$ETM', true);
 }
 
-static createETM(builder:flatbuffers.Builder, ENTITY_IDOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, KIND:entityKind, SUBTYPEOffset:flatbuffers.Offset, PARENT_ENTITY_IDOffset:flatbuffers.Offset, WASM_HANDLE:number, NORAD_CAT_ID:number, OBJECT_NAMEOffset:flatbuffers.Offset, OBJECT_IDOffset:flatbuffers.Offset, CAT_OBJECT_NAMEOffset:flatbuffers.Offset, CAT_OBJECT_IDOffset:flatbuffers.Offset, FACILITY_TYPEOffset:flatbuffers.Offset, SEARCH_TEXTOffset:flatbuffers.Offset, OWNEROffset:flatbuffers.Offset, STATUS_CODEOffset:flatbuffers.Offset, LAUNCH_DATEOffset:flatbuffers.Offset, LAUNCH_YEAROffset:flatbuffers.Offset, ORBIT_REGIMEOffset:flatbuffers.Offset, PERIOD:number, INCLINATION:number, APOGEE:number, PERIGEE:number, MEAN_MOTION:number, ECCENTRICITY:number, BSTAR:number, HAS_GP:boolean, RESERVEDOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createETM(builder:flatbuffers.Builder, ENTITY_IDOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, KIND:entityKind, SUBTYPEOffset:flatbuffers.Offset, PARENT_ENTITY_IDOffset:flatbuffers.Offset, WASM_HANDLE:number, NORAD_CAT_ID:number, OBJECT_NAMEOffset:flatbuffers.Offset, OBJECT_IDOffset:flatbuffers.Offset, CAT_OBJECT_NAMEOffset:flatbuffers.Offset, CAT_OBJECT_IDOffset:flatbuffers.Offset, FACILITY_TYPEOffset:flatbuffers.Offset, SEARCH_TEXTOffset:flatbuffers.Offset, OWNEROffset:flatbuffers.Offset, STATUS_CODEOffset:flatbuffers.Offset, LAUNCH_DATEOffset:flatbuffers.Offset, LAUNCH_YEAROffset:flatbuffers.Offset, ORBIT_REGIMEOffset:flatbuffers.Offset, PERIOD:number, INCLINATION:number, APOGEE:number, PERIGEE:number, MEAN_MOTION:number, ECCENTRICITY:number, BSTAR:number, HAS_GP:boolean, RESERVEDOffset:flatbuffers.Offset, OBJECT_TYPEOffset:flatbuffers.Offset, DECAY_DATEOffset:flatbuffers.Offset, MANEUVERABLE:boolean, ESTIMATED_DELTA_V_MPS:number, HISTORICAL_DELTA_V_MPS:number, MANEUVER_COUNT:number, LAST_MANEUVER_EPOCHOffset:flatbuffers.Offset, DELTA_V_AS_OFOffset:flatbuffers.Offset):flatbuffers.Offset {
   ETM.startETM(builder);
   ETM.addEntityId(builder, ENTITY_IDOffset);
   ETM.addName(builder, NAMEOffset);
@@ -456,6 +560,14 @@ static createETM(builder:flatbuffers.Builder, ENTITY_IDOffset:flatbuffers.Offset
   ETM.addBstar(builder, BSTAR);
   ETM.addHasGp(builder, HAS_GP);
   ETM.addReserved(builder, RESERVEDOffset);
+  ETM.addObjectType(builder, OBJECT_TYPEOffset);
+  ETM.addDecayDate(builder, DECAY_DATEOffset);
+  ETM.addManeuverable(builder, MANEUVERABLE);
+  ETM.addEstimatedDeltaVMps(builder, ESTIMATED_DELTA_V_MPS);
+  ETM.addHistoricalDeltaVMps(builder, HISTORICAL_DELTA_V_MPS);
+  ETM.addManeuverCount(builder, MANEUVER_COUNT);
+  ETM.addLastManeuverEpoch(builder, LAST_MANEUVER_EPOCHOffset);
+  ETM.addDeltaVAsOf(builder, DELTA_V_AS_OFOffset);
   return ETM.endETM(builder);
 }
 
@@ -487,7 +599,15 @@ unpack(): ETMT {
     this.ECCENTRICITY(),
     this.BSTAR(),
     this.HAS_GP(),
-    this.bb!.createScalarList<number>(this.RESERVED.bind(this), this.reservedLength())
+    this.bb!.createScalarList<number>(this.RESERVED.bind(this), this.reservedLength()),
+    this.OBJECT_TYPE(),
+    this.DECAY_DATE(),
+    this.MANEUVERABLE(),
+    this.ESTIMATED_DELTA_V_MPS(),
+    this.HISTORICAL_DELTA_V_MPS(),
+    this.MANEUVER_COUNT(),
+    this.LAST_MANEUVER_EPOCH(),
+    this.DELTA_V_AS_OF()
   );
 }
 
@@ -520,6 +640,14 @@ unpackTo(_o: ETMT): void {
   _o.BSTAR = this.BSTAR();
   _o.HAS_GP = this.HAS_GP();
   _o.RESERVED = this.bb!.createScalarList<number>(this.RESERVED.bind(this), this.reservedLength());
+  _o.OBJECT_TYPE = this.OBJECT_TYPE();
+  _o.DECAY_DATE = this.DECAY_DATE();
+  _o.MANEUVERABLE = this.MANEUVERABLE();
+  _o.ESTIMATED_DELTA_V_MPS = this.ESTIMATED_DELTA_V_MPS();
+  _o.HISTORICAL_DELTA_V_MPS = this.HISTORICAL_DELTA_V_MPS();
+  _o.MANEUVER_COUNT = this.MANEUVER_COUNT();
+  _o.LAST_MANEUVER_EPOCH = this.LAST_MANEUVER_EPOCH();
+  _o.DELTA_V_AS_OF = this.DELTA_V_AS_OF();
 }
 }
 
@@ -551,7 +679,15 @@ constructor(
   public ECCENTRICITY: number = 0.0,
   public BSTAR: number = 0.0,
   public HAS_GP: boolean = false,
-  public RESERVED: (number)[] = []
+  public RESERVED: (number)[] = [],
+  public OBJECT_TYPE: string|Uint8Array|null = null,
+  public DECAY_DATE: string|Uint8Array|null = null,
+  public MANEUVERABLE: boolean = false,
+  public ESTIMATED_DELTA_V_MPS: number = 0.0,
+  public HISTORICAL_DELTA_V_MPS: number = 0.0,
+  public MANEUVER_COUNT: number = 0,
+  public LAST_MANEUVER_EPOCH: string|Uint8Array|null = null,
+  public DELTA_V_AS_OF: string|Uint8Array|null = null
 ){}
 
 
@@ -572,6 +708,10 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const LAUNCH_YEAR = (this.LAUNCH_YEAR !== null ? builder.createString(this.LAUNCH_YEAR!) : 0);
   const ORBIT_REGIME = (this.ORBIT_REGIME !== null ? builder.createString(this.ORBIT_REGIME!) : 0);
   const RESERVED = ETM.createReservedVector(builder, this.RESERVED);
+  const OBJECT_TYPE = (this.OBJECT_TYPE !== null ? builder.createString(this.OBJECT_TYPE!) : 0);
+  const DECAY_DATE = (this.DECAY_DATE !== null ? builder.createString(this.DECAY_DATE!) : 0);
+  const LAST_MANEUVER_EPOCH = (this.LAST_MANEUVER_EPOCH !== null ? builder.createString(this.LAST_MANEUVER_EPOCH!) : 0);
+  const DELTA_V_AS_OF = (this.DELTA_V_AS_OF !== null ? builder.createString(this.DELTA_V_AS_OF!) : 0);
 
   return ETM.createETM(builder,
     ENTITY_ID,
@@ -600,7 +740,15 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.ECCENTRICITY,
     this.BSTAR,
     this.HAS_GP,
-    RESERVED
+    RESERVED,
+    OBJECT_TYPE,
+    DECAY_DATE,
+    this.MANEUVERABLE,
+    this.ESTIMATED_DELTA_V_MPS,
+    this.HISTORICAL_DELTA_V_MPS,
+    this.MANEUVER_COUNT,
+    LAST_MANEUVER_EPOCH,
+    DELTA_V_AS_OF
   );
 }
 }

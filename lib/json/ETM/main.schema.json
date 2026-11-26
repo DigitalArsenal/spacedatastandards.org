@@ -116,6 +116,38 @@
         "RESERVED" : {
                 "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
                 "description" : "Reserved for forward-compatible growth."
+              },
+        "OBJECT_TYPE" : {
+                "type" : "string",
+                "description" : "CAT object class (PAYLOAD, ROCKET_BODY, DEBRIS, UNKNOWN); null when absent."
+              },
+        "DECAY_DATE" : {
+                "type" : "string",
+                "description" : "CAT decay date [YYYY-MM-DD] when decayed; null otherwise."
+              },
+        "MANEUVERABLE" : {
+                "type" : "boolean",
+                "description" : "CAT maneuverability flag."
+              },
+        "ESTIMATED_DELTA_V_MPS" : {
+                "type" : "number",
+                "description" : "CAT estimated remaining maneuvering delta-V capability [m/s]; NaN when unassessed."
+              },
+        "HISTORICAL_DELTA_V_MPS" : {
+                "type" : "number",
+                "description" : "CAT cumulative historical maneuver delta-V magnitude [m/s]; NaN when unassessed."
+              },
+        "MANEUVER_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "CAT count of detected or confirmed historical maneuvers."
+              },
+        "LAST_MANEUVER_EPOCH" : {
+                "type" : "string",
+                "description" : "CAT ISO 8601 UTC epoch of the most recent detected or confirmed maneuver."
+              },
+        "DELTA_V_AS_OF" : {
+                "type" : "string",
+                "description" : "CAT ISO 8601 UTC instant when the delta-V fields were last evaluated."
               }
       },
       "additionalProperties" : false

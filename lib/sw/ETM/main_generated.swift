@@ -70,6 +70,14 @@ public struct ETM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let BSTAR: VOffset = 52
     static let HAS_GP: VOffset = 54
     static let RESERVED: VOffset = 56
+    static let OBJECT_TYPE: VOffset = 58
+    static let DECAY_DATE: VOffset = 60
+    static let MANEUVERABLE: VOffset = 62
+    static let ESTIMATED_DELTA_V_MPS: VOffset = 64
+    static let HISTORICAL_DELTA_V_MPS: VOffset = 66
+    static let MANEUVER_COUNT: VOffset = 68
+    static let LAST_MANEUVER_EPOCH: VOffset = 70
+    static let DELTA_V_AS_OF: VOffset = 72
   }
 
   ///  Stable host-local entity identifier.
@@ -142,7 +150,27 @@ public struct ETM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  Reserved for forward-compatible growth.
   public var RESERVED: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.RESERVED, byteSize: 1) }
   public func withUnsafePointerToReserved<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.RESERVED, body: body) }
-  public static func startETM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 27) }
+  ///  CAT object class (PAYLOAD, ROCKET_BODY, DEBRIS, UNKNOWN); null when absent.
+  public var OBJECT_TYPE: String? { let o = _accessor.offset(VT.OBJECT_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBJECT_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_TYPE) }
+  ///  CAT decay date [YYYY-MM-DD] when decayed; null otherwise.
+  public var DECAY_DATE: String? { let o = _accessor.offset(VT.DECAY_DATE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DECAY_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DECAY_DATE) }
+  ///  CAT maneuverability flag.
+  public var MANEUVERABLE: Bool { let o = _accessor.offset(VT.MANEUVERABLE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  CAT estimated remaining maneuvering delta-V capability [m/s]; NaN when unassessed.
+  public var ESTIMATED_DELTA_V_MPS: Double { let o = _accessor.offset(VT.ESTIMATED_DELTA_V_MPS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  CAT cumulative historical maneuver delta-V magnitude [m/s]; NaN when unassessed.
+  public var HISTORICAL_DELTA_V_MPS: Double { let o = _accessor.offset(VT.HISTORICAL_DELTA_V_MPS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  CAT count of detected or confirmed historical maneuvers.
+  public var MANEUVER_COUNT: UInt32 { let o = _accessor.offset(VT.MANEUVER_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  CAT ISO 8601 UTC epoch of the most recent detected or confirmed maneuver.
+  public var LAST_MANEUVER_EPOCH: String? { let o = _accessor.offset(VT.LAST_MANEUVER_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LAST_MANEUVER_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LAST_MANEUVER_EPOCH) }
+  ///  CAT ISO 8601 UTC instant when the delta-V fields were last evaluated.
+  public var DELTA_V_AS_OF: String? { let o = _accessor.offset(VT.DELTA_V_AS_OF); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DELTA_V_AS_OFSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DELTA_V_AS_OF) }
+  public static func startETM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 35) }
   public static func add(ENTITY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENTITY_ID, at: VT.ENTITY_ID) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
   public static func add(KIND: entityKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KIND.rawValue, def: 0, at: VT.KIND) }
@@ -171,6 +199,15 @@ public struct ETM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func add(HAS_GP: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_GP, def: false,
    at: VT.HAS_GP) }
   public static func addVectorOf(RESERVED: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESERVED, at: VT.RESERVED) }
+  public static func add(OBJECT_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_TYPE, at: VT.OBJECT_TYPE) }
+  public static func add(DECAY_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DECAY_DATE, at: VT.DECAY_DATE) }
+  public static func add(MANEUVERABLE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MANEUVERABLE, def: false,
+   at: VT.MANEUVERABLE) }
+  public static func add(ESTIMATED_DELTA_V_MPS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ESTIMATED_DELTA_V_MPS, def: 0.0, at: VT.ESTIMATED_DELTA_V_MPS) }
+  public static func add(HISTORICAL_DELTA_V_MPS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HISTORICAL_DELTA_V_MPS, def: 0.0, at: VT.HISTORICAL_DELTA_V_MPS) }
+  public static func add(MANEUVER_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MANEUVER_COUNT, def: 0, at: VT.MANEUVER_COUNT) }
+  public static func add(LAST_MANEUVER_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAST_MANEUVER_EPOCH, at: VT.LAST_MANEUVER_EPOCH) }
+  public static func add(DELTA_V_AS_OF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DELTA_V_AS_OF, at: VT.DELTA_V_AS_OF) }
   public static func endETM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createETM(
     _ fbb: inout FlatBufferBuilder,
@@ -200,7 +237,15 @@ public struct ETM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     ECCENTRICITY: Double = 0.0,
     BSTAR: Double = 0.0,
     HAS_GP: Bool = false,
-    RESERVEDVectorOffset RESERVED: Offset = Offset()
+    RESERVEDVectorOffset RESERVED: Offset = Offset(),
+    OBJECT_TYPEOffset OBJECT_TYPE: Offset = Offset(),
+    DECAY_DATEOffset DECAY_DATE: Offset = Offset(),
+    MANEUVERABLE: Bool = false,
+    ESTIMATED_DELTA_V_MPS: Double = 0.0,
+    HISTORICAL_DELTA_V_MPS: Double = 0.0,
+    MANEUVER_COUNT: UInt32 = 0,
+    LAST_MANEUVER_EPOCHOffset LAST_MANEUVER_EPOCH: Offset = Offset(),
+    DELTA_V_AS_OFOffset DELTA_V_AS_OF: Offset = Offset()
   ) -> Offset {
     let __start = ETM.startETM(&fbb)
     ETM.add(ENTITY_ID: ENTITY_ID, &fbb)
@@ -230,6 +275,14 @@ public struct ETM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     ETM.add(BSTAR: BSTAR, &fbb)
     ETM.add(HAS_GP: HAS_GP, &fbb)
     ETM.addVectorOf(RESERVED: RESERVED, &fbb)
+    ETM.add(OBJECT_TYPE: OBJECT_TYPE, &fbb)
+    ETM.add(DECAY_DATE: DECAY_DATE, &fbb)
+    ETM.add(MANEUVERABLE: MANEUVERABLE, &fbb)
+    ETM.add(ESTIMATED_DELTA_V_MPS: ESTIMATED_DELTA_V_MPS, &fbb)
+    ETM.add(HISTORICAL_DELTA_V_MPS: HISTORICAL_DELTA_V_MPS, &fbb)
+    ETM.add(MANEUVER_COUNT: MANEUVER_COUNT, &fbb)
+    ETM.add(LAST_MANEUVER_EPOCH: LAST_MANEUVER_EPOCH, &fbb)
+    ETM.add(DELTA_V_AS_OF: DELTA_V_AS_OF, &fbb)
     return ETM.endETM(&fbb, start: __start)
   }
 
@@ -262,6 +315,14 @@ public struct ETM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.BSTAR, fieldName: "BSTAR", required: false, type: Double.self)
     try _v.visit(field: VT.HAS_GP, fieldName: "HAS_GP", required: false, type: Bool.self)
     try _v.visit(field: VT.RESERVED, fieldName: "RESERVED", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.OBJECT_TYPE, fieldName: "OBJECT_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DECAY_DATE, fieldName: "DECAY_DATE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MANEUVERABLE, fieldName: "MANEUVERABLE", required: false, type: Bool.self)
+    try _v.visit(field: VT.ESTIMATED_DELTA_V_MPS, fieldName: "ESTIMATED_DELTA_V_MPS", required: false, type: Double.self)
+    try _v.visit(field: VT.HISTORICAL_DELTA_V_MPS, fieldName: "HISTORICAL_DELTA_V_MPS", required: false, type: Double.self)
+    try _v.visit(field: VT.MANEUVER_COUNT, fieldName: "MANEUVER_COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.LAST_MANEUVER_EPOCH, fieldName: "LAST_MANEUVER_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DELTA_V_AS_OF, fieldName: "DELTA_V_AS_OF", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

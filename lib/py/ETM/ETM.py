@@ -267,8 +267,72 @@ class ETM(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
         return o == 0
 
+    # CAT object class (PAYLOAD, ROCKET_BODY, DEBRIS, UNKNOWN); null when absent.
+    # ETM
+    def OBJECT_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # CAT decay date [YYYY-MM-DD] when decayed; null otherwise.
+    # ETM
+    def DECAY_DATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # CAT maneuverability flag.
+    # ETM
+    def MANEUVERABLE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # CAT estimated remaining maneuvering delta-V capability [m/s]; NaN when unassessed.
+    # ETM
+    def ESTIMATED_DELTA_V_MPS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # CAT cumulative historical maneuver delta-V magnitude [m/s]; NaN when unassessed.
+    # ETM
+    def HISTORICAL_DELTA_V_MPS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # CAT count of detected or confirmed historical maneuvers.
+    # ETM
+    def MANEUVER_COUNT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # CAT ISO 8601 UTC epoch of the most recent detected or confirmed maneuver.
+    # ETM
+    def LAST_MANEUVER_EPOCH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # CAT ISO 8601 UTC instant when the delta-V fields were last evaluated.
+    # ETM
+    def DELTA_V_AS_OF(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def ETMStart(builder):
-    builder.StartObject(27)
+    builder.StartObject(35)
 
 def Start(builder):
     ETMStart(builder)
@@ -451,6 +515,54 @@ def ETMCreateRESERVEDVector(builder, data):
 def CreateRESERVEDVector(builder, data):
     return ETMCreateRESERVEDVector(builder, data)
 
+def ETMAddOBJECT_TYPE(builder, OBJECT_TYPE):
+    builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_TYPE), 0)
+
+def AddOBJECT_TYPE(builder, OBJECT_TYPE):
+    ETMAddOBJECT_TYPE(builder, OBJECT_TYPE)
+
+def ETMAddDECAY_DATE(builder, DECAY_DATE):
+    builder.PrependUOffsetTRelativeSlot(28, flatbuffers.number_types.UOffsetTFlags.py_type(DECAY_DATE), 0)
+
+def AddDECAY_DATE(builder, DECAY_DATE):
+    ETMAddDECAY_DATE(builder, DECAY_DATE)
+
+def ETMAddMANEUVERABLE(builder, MANEUVERABLE):
+    builder.PrependBoolSlot(29, MANEUVERABLE, 0)
+
+def AddMANEUVERABLE(builder, MANEUVERABLE):
+    ETMAddMANEUVERABLE(builder, MANEUVERABLE)
+
+def ETMAddESTIMATED_DELTA_V_MPS(builder, ESTIMATED_DELTA_V_MPS):
+    builder.PrependFloat64Slot(30, ESTIMATED_DELTA_V_MPS, 0.0)
+
+def AddESTIMATED_DELTA_V_MPS(builder, ESTIMATED_DELTA_V_MPS):
+    ETMAddESTIMATED_DELTA_V_MPS(builder, ESTIMATED_DELTA_V_MPS)
+
+def ETMAddHISTORICAL_DELTA_V_MPS(builder, HISTORICAL_DELTA_V_MPS):
+    builder.PrependFloat64Slot(31, HISTORICAL_DELTA_V_MPS, 0.0)
+
+def AddHISTORICAL_DELTA_V_MPS(builder, HISTORICAL_DELTA_V_MPS):
+    ETMAddHISTORICAL_DELTA_V_MPS(builder, HISTORICAL_DELTA_V_MPS)
+
+def ETMAddMANEUVER_COUNT(builder, MANEUVER_COUNT):
+    builder.PrependUint32Slot(32, MANEUVER_COUNT, 0)
+
+def AddMANEUVER_COUNT(builder, MANEUVER_COUNT):
+    ETMAddMANEUVER_COUNT(builder, MANEUVER_COUNT)
+
+def ETMAddLAST_MANEUVER_EPOCH(builder, LAST_MANEUVER_EPOCH):
+    builder.PrependUOffsetTRelativeSlot(33, flatbuffers.number_types.UOffsetTFlags.py_type(LAST_MANEUVER_EPOCH), 0)
+
+def AddLAST_MANEUVER_EPOCH(builder, LAST_MANEUVER_EPOCH):
+    ETMAddLAST_MANEUVER_EPOCH(builder, LAST_MANEUVER_EPOCH)
+
+def ETMAddDELTA_V_AS_OF(builder, DELTA_V_AS_OF):
+    builder.PrependUOffsetTRelativeSlot(34, flatbuffers.number_types.UOffsetTFlags.py_type(DELTA_V_AS_OF), 0)
+
+def AddDELTA_V_AS_OF(builder, DELTA_V_AS_OF):
+    ETMAddDELTA_V_AS_OF(builder, DELTA_V_AS_OF)
+
 def ETMEnd(builder):
     return builder.EndObject()
 
@@ -494,6 +606,14 @@ class ETMT(object):
         BSTAR = 0.0,
         HAS_GP = False,
         RESERVED = None,
+        OBJECT_TYPE = None,
+        DECAY_DATE = None,
+        MANEUVERABLE = False,
+        ESTIMATED_DELTA_V_MPS = 0.0,
+        HISTORICAL_DELTA_V_MPS = 0.0,
+        MANEUVER_COUNT = 0,
+        LAST_MANEUVER_EPOCH = None,
+        DELTA_V_AS_OF = None,
     ):
         self.ENTITY_ID = ENTITY_ID  # type: Optional[str]
         self.NAME = NAME  # type: Optional[str]
@@ -522,6 +642,14 @@ class ETMT(object):
         self.BSTAR = BSTAR  # type: float
         self.HAS_GP = HAS_GP  # type: bool
         self.RESERVED = RESERVED  # type: Optional[List[int]]
+        self.OBJECT_TYPE = OBJECT_TYPE  # type: Optional[str]
+        self.DECAY_DATE = DECAY_DATE  # type: Optional[str]
+        self.MANEUVERABLE = MANEUVERABLE  # type: bool
+        self.ESTIMATED_DELTA_V_MPS = ESTIMATED_DELTA_V_MPS  # type: float
+        self.HISTORICAL_DELTA_V_MPS = HISTORICAL_DELTA_V_MPS  # type: float
+        self.MANEUVER_COUNT = MANEUVER_COUNT  # type: int
+        self.LAST_MANEUVER_EPOCH = LAST_MANEUVER_EPOCH  # type: Optional[str]
+        self.DELTA_V_AS_OF = DELTA_V_AS_OF  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -577,6 +705,14 @@ class ETMT(object):
                     self.RESERVED.append(ETM.RESERVED(i))
             else:
                 self.RESERVED = ETM.RESERVEDAsNumpy()
+        self.OBJECT_TYPE = ETM.OBJECT_TYPE()
+        self.DECAY_DATE = ETM.DECAY_DATE()
+        self.MANEUVERABLE = ETM.MANEUVERABLE()
+        self.ESTIMATED_DELTA_V_MPS = ETM.ESTIMATED_DELTA_V_MPS()
+        self.HISTORICAL_DELTA_V_MPS = ETM.HISTORICAL_DELTA_V_MPS()
+        self.MANEUVER_COUNT = ETM.MANEUVER_COUNT()
+        self.LAST_MANEUVER_EPOCH = ETM.LAST_MANEUVER_EPOCH()
+        self.DELTA_V_AS_OF = ETM.DELTA_V_AS_OF()
 
     # ETMT
     def Pack(self, builder):
@@ -618,6 +754,14 @@ class ETMT(object):
                 for i in reversed(range(len(self.RESERVED))):
                     builder.PrependUint8(self.RESERVED[i])
                 RESERVED = builder.EndVector()
+        if self.OBJECT_TYPE is not None:
+            OBJECT_TYPE = builder.CreateString(self.OBJECT_TYPE)
+        if self.DECAY_DATE is not None:
+            DECAY_DATE = builder.CreateString(self.DECAY_DATE)
+        if self.LAST_MANEUVER_EPOCH is not None:
+            LAST_MANEUVER_EPOCH = builder.CreateString(self.LAST_MANEUVER_EPOCH)
+        if self.DELTA_V_AS_OF is not None:
+            DELTA_V_AS_OF = builder.CreateString(self.DELTA_V_AS_OF)
         ETMStart(builder)
         if self.ENTITY_ID is not None:
             ETMAddENTITY_ID(builder, ENTITY_ID)
@@ -662,5 +806,17 @@ class ETMT(object):
         ETMAddHAS_GP(builder, self.HAS_GP)
         if self.RESERVED is not None:
             ETMAddRESERVED(builder, RESERVED)
+        if self.OBJECT_TYPE is not None:
+            ETMAddOBJECT_TYPE(builder, OBJECT_TYPE)
+        if self.DECAY_DATE is not None:
+            ETMAddDECAY_DATE(builder, DECAY_DATE)
+        ETMAddMANEUVERABLE(builder, self.MANEUVERABLE)
+        ETMAddESTIMATED_DELTA_V_MPS(builder, self.ESTIMATED_DELTA_V_MPS)
+        ETMAddHISTORICAL_DELTA_V_MPS(builder, self.HISTORICAL_DELTA_V_MPS)
+        ETMAddMANEUVER_COUNT(builder, self.MANEUVER_COUNT)
+        if self.LAST_MANEUVER_EPOCH is not None:
+            ETMAddLAST_MANEUVER_EPOCH(builder, LAST_MANEUVER_EPOCH)
+        if self.DELTA_V_AS_OF is not None:
+            ETMAddDELTA_V_AS_OF(builder, DELTA_V_AS_OF)
         ETM = ETMEnd(builder)
         return ETM

@@ -140,10 +140,33 @@ class ETM {
   bool get hasGp => HAS_GP;
   ///  Reserved for forward-compatible growth.
   List<int>? get RESERVED => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 56);
+  ///  CAT object class (PAYLOAD, ROCKET_BODY, DEBRIS, UNKNOWN); null when absent.
+  String? get OBJECT_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 58);
+  String? get objectType => OBJECT_TYPE;
+  ///  CAT decay date [YYYY-MM-DD] when decayed; null otherwise.
+  String? get DECAY_DATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 60);
+  String? get decayDate => DECAY_DATE;
+  ///  CAT maneuverability flag.
+  bool get MANEUVERABLE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 62, false);
+  ///  CAT estimated remaining maneuvering delta-V capability [m/s]; NaN when unassessed.
+  double get ESTIMATED_DELTA_V_MPS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 64, 0.0);
+  double get estimatedDeltaVMps => ESTIMATED_DELTA_V_MPS;
+  ///  CAT cumulative historical maneuver delta-V magnitude [m/s]; NaN when unassessed.
+  double get HISTORICAL_DELTA_V_MPS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 66, 0.0);
+  double get historicalDeltaVMps => HISTORICAL_DELTA_V_MPS;
+  ///  CAT count of detected or confirmed historical maneuvers.
+  int get MANEUVER_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 68, 0);
+  int get maneuverCount => MANEUVER_COUNT;
+  ///  CAT ISO 8601 UTC epoch of the most recent detected or confirmed maneuver.
+  String? get LAST_MANEUVER_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 70);
+  String? get lastManeuverEpoch => LAST_MANEUVER_EPOCH;
+  ///  CAT ISO 8601 UTC instant when the delta-V fields were last evaluated.
+  String? get DELTA_V_AS_OF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 72);
+  String? get deltaVAsOf => DELTA_V_AS_OF;
 
   @override
   String toString() {
-    return 'ETM{entityId: ${entityId}, NAME: ${NAME}, KIND: ${KIND}, SUBTYPE: ${SUBTYPE}, parentEntityId: ${parentEntityId}, wasmHandle: ${wasmHandle}, noradCatId: ${noradCatId}, objectName: ${objectName}, objectId: ${objectId}, catObjectName: ${catObjectName}, catObjectId: ${catObjectId}, facilityType: ${facilityType}, searchText: ${searchText}, OWNER: ${OWNER}, statusCode: ${statusCode}, launchDate: ${launchDate}, launchYear: ${launchYear}, orbitRegime: ${orbitRegime}, PERIOD: ${PERIOD}, INCLINATION: ${INCLINATION}, APOGEE: ${APOGEE}, PERIGEE: ${PERIGEE}, meanMotion: ${meanMotion}, ECCENTRICITY: ${ECCENTRICITY}, BSTAR: ${BSTAR}, hasGp: ${hasGp}, RESERVED: ${RESERVED}}';
+    return 'ETM{entityId: ${entityId}, NAME: ${NAME}, KIND: ${KIND}, SUBTYPE: ${SUBTYPE}, parentEntityId: ${parentEntityId}, wasmHandle: ${wasmHandle}, noradCatId: ${noradCatId}, objectName: ${objectName}, objectId: ${objectId}, catObjectName: ${catObjectName}, catObjectId: ${catObjectId}, facilityType: ${facilityType}, searchText: ${searchText}, OWNER: ${OWNER}, statusCode: ${statusCode}, launchDate: ${launchDate}, launchYear: ${launchYear}, orbitRegime: ${orbitRegime}, PERIOD: ${PERIOD}, INCLINATION: ${INCLINATION}, APOGEE: ${APOGEE}, PERIGEE: ${PERIGEE}, meanMotion: ${meanMotion}, ECCENTRICITY: ${ECCENTRICITY}, BSTAR: ${BSTAR}, hasGp: ${hasGp}, RESERVED: ${RESERVED}, objectType: ${objectType}, decayDate: ${decayDate}, MANEUVERABLE: ${MANEUVERABLE}, estimatedDeltaVMps: ${estimatedDeltaVMps}, historicalDeltaVMps: ${historicalDeltaVMps}, maneuverCount: ${maneuverCount}, lastManeuverEpoch: ${lastManeuverEpoch}, deltaVAsOf: ${deltaVAsOf}}';
   }
 }
 
@@ -161,7 +184,7 @@ class ETMBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(27);
+    fbBuilder.startTable(35);
   }
 
   int addEntityIdOffset(int? offset) {
@@ -272,6 +295,38 @@ class ETMBuilder {
     fbBuilder.addOffset(26, offset);
     return fbBuilder.offset;
   }
+  int addObjectTypeOffset(int? offset) {
+    fbBuilder.addOffset(27, offset);
+    return fbBuilder.offset;
+  }
+  int addDecayDateOffset(int? offset) {
+    fbBuilder.addOffset(28, offset);
+    return fbBuilder.offset;
+  }
+  int addManeuverable(bool? MANEUVERABLE) {
+    fbBuilder.addBool(29, MANEUVERABLE);
+    return fbBuilder.offset;
+  }
+  int addEstimatedDeltaVMps(double? ESTIMATED_DELTA_V_MPS) {
+    fbBuilder.addFloat64(30, ESTIMATED_DELTA_V_MPS);
+    return fbBuilder.offset;
+  }
+  int addHistoricalDeltaVMps(double? HISTORICAL_DELTA_V_MPS) {
+    fbBuilder.addFloat64(31, HISTORICAL_DELTA_V_MPS);
+    return fbBuilder.offset;
+  }
+  int addManeuverCount(int? MANEUVER_COUNT) {
+    fbBuilder.addUint32(32, MANEUVER_COUNT);
+    return fbBuilder.offset;
+  }
+  int addLastManeuverEpochOffset(int? offset) {
+    fbBuilder.addOffset(33, offset);
+    return fbBuilder.offset;
+  }
+  int addDeltaVAsOfOffset(int? offset) {
+    fbBuilder.addOffset(34, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -306,6 +361,14 @@ class ETMObjectBuilder extends fb.ObjectBuilder {
   final double? _BSTAR;
   final bool? _HAS_GP;
   final List<int>? _RESERVED;
+  final String? _OBJECT_TYPE;
+  final String? _DECAY_DATE;
+  final bool? _MANEUVERABLE;
+  final double? _ESTIMATED_DELTA_V_MPS;
+  final double? _HISTORICAL_DELTA_V_MPS;
+  final int? _MANEUVER_COUNT;
+  final String? _LAST_MANEUVER_EPOCH;
+  final String? _DELTA_V_AS_OF;
 
   ETMObjectBuilder({
     String? ENTITY_ID,
@@ -351,6 +414,21 @@ class ETMObjectBuilder extends fb.ObjectBuilder {
     bool? HAS_GP,
     bool? hasGp,
     List<int>? RESERVED,
+    String? OBJECT_TYPE,
+    String? objectType,
+    String? DECAY_DATE,
+    String? decayDate,
+    bool? MANEUVERABLE,
+    double? ESTIMATED_DELTA_V_MPS,
+    double? estimatedDeltaVMps,
+    double? HISTORICAL_DELTA_V_MPS,
+    double? historicalDeltaVMps,
+    int? MANEUVER_COUNT,
+    int? maneuverCount,
+    String? LAST_MANEUVER_EPOCH,
+    String? lastManeuverEpoch,
+    String? DELTA_V_AS_OF,
+    String? deltaVAsOf,
   })
       : _ENTITY_ID = entityId ?? ENTITY_ID,
         _NAME = NAME,
@@ -378,7 +456,15 @@ class ETMObjectBuilder extends fb.ObjectBuilder {
         _ECCENTRICITY = ECCENTRICITY,
         _BSTAR = BSTAR,
         _HAS_GP = hasGp ?? HAS_GP,
-        _RESERVED = RESERVED;
+        _RESERVED = RESERVED,
+        _OBJECT_TYPE = objectType ?? OBJECT_TYPE,
+        _DECAY_DATE = decayDate ?? DECAY_DATE,
+        _MANEUVERABLE = MANEUVERABLE,
+        _ESTIMATED_DELTA_V_MPS = estimatedDeltaVMps ?? ESTIMATED_DELTA_V_MPS,
+        _HISTORICAL_DELTA_V_MPS = historicalDeltaVMps ?? HISTORICAL_DELTA_V_MPS,
+        _MANEUVER_COUNT = maneuverCount ?? MANEUVER_COUNT,
+        _LAST_MANEUVER_EPOCH = lastManeuverEpoch ?? LAST_MANEUVER_EPOCH,
+        _DELTA_V_AS_OF = deltaVAsOf ?? DELTA_V_AS_OF;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -415,7 +501,15 @@ class ETMObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_ORBIT_REGIME!);
     final int? RESERVEDOffset = _RESERVED == null ? null
         : fbBuilder.writeListUint8(_RESERVED!);
-    fbBuilder.startTable(27);
+    final int? OBJECT_TYPEOffset = _OBJECT_TYPE == null ? null
+        : fbBuilder.writeString(_OBJECT_TYPE!);
+    final int? DECAY_DATEOffset = _DECAY_DATE == null ? null
+        : fbBuilder.writeString(_DECAY_DATE!);
+    final int? LAST_MANEUVER_EPOCHOffset = _LAST_MANEUVER_EPOCH == null ? null
+        : fbBuilder.writeString(_LAST_MANEUVER_EPOCH!);
+    final int? DELTA_V_AS_OFOffset = _DELTA_V_AS_OF == null ? null
+        : fbBuilder.writeString(_DELTA_V_AS_OF!);
+    fbBuilder.startTable(35);
     fbBuilder.addOffset(0, ENTITY_IDOffset);
     fbBuilder.addOffset(1, NAMEOffset);
     fbBuilder.addInt8(2, _KIND?.value);
@@ -443,6 +537,14 @@ class ETMObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addFloat64(24, _BSTAR);
     fbBuilder.addBool(25, _HAS_GP);
     fbBuilder.addOffset(26, RESERVEDOffset);
+    fbBuilder.addOffset(27, OBJECT_TYPEOffset);
+    fbBuilder.addOffset(28, DECAY_DATEOffset);
+    fbBuilder.addBool(29, _MANEUVERABLE);
+    fbBuilder.addFloat64(30, _ESTIMATED_DELTA_V_MPS);
+    fbBuilder.addFloat64(31, _HISTORICAL_DELTA_V_MPS);
+    fbBuilder.addUint32(32, _MANEUVER_COUNT);
+    fbBuilder.addOffset(33, LAST_MANEUVER_EPOCHOffset);
+    fbBuilder.addOffset(34, DELTA_V_AS_OFOffset);
     return fbBuilder.endTable();
   }
 
