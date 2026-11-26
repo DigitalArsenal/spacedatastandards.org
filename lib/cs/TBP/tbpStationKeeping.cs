@@ -42,6 +42,14 @@ public struct tbpStationKeeping : IFlatbufferObject
   public double[] GetCYCLE_DELTA_V_KM_SArray() { return __p.__vector_as_array<double>(20); }
   /// Result: true when the orbit stays bounded over the simulation.
   public bool BOUNDED { get { int o = __p.__offset(22); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Time between correction maneuvers, s (LinearStabilityBounds).
+  public double CORRECTION_INTERVAL_S { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// 3-axis velocity execution error magnitude, km/s (LinearStabilityBounds).
+  public double DELTA_V_EXECUTION_ERROR_KM_S { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Result: linear-stability lower bound annual delta-v, km/s/yr.
+  public double LOWER_BOUND_ANNUAL_DELTA_V_KM_S { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Result: linear-stability upper bound annual delta-v, km/s/yr.
+  public double UPPER_BOUND_ANNUAL_DELTA_V_KM_S { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
 
   public static Offset<tbpStationKeeping> CreatetbpStationKeeping(FlatBufferBuilder builder,
       Offset<tbpPeriodicOrbit> ORBITOffset = default(Offset<tbpPeriodicOrbit>),
@@ -53,8 +61,16 @@ public struct tbpStationKeeping : IFlatbufferObject
       double MEAN_CYCLE_DELTA_V_KM_S = 0.0,
       double MAX_CYCLE_DELTA_V_KM_S = 0.0,
       VectorOffset CYCLE_DELTA_V_KM_SOffset = default(VectorOffset),
-      bool BOUNDED = false) {
-    builder.StartTable(10);
+      bool BOUNDED = false,
+      double CORRECTION_INTERVAL_S = 0.0,
+      double DELTA_V_EXECUTION_ERROR_KM_S = 0.0,
+      double LOWER_BOUND_ANNUAL_DELTA_V_KM_S = 0.0,
+      double UPPER_BOUND_ANNUAL_DELTA_V_KM_S = 0.0) {
+    builder.StartTable(14);
+    tbpStationKeeping.AddUPPER_BOUND_ANNUAL_DELTA_V_KM_S(builder, UPPER_BOUND_ANNUAL_DELTA_V_KM_S);
+    tbpStationKeeping.AddLOWER_BOUND_ANNUAL_DELTA_V_KM_S(builder, LOWER_BOUND_ANNUAL_DELTA_V_KM_S);
+    tbpStationKeeping.AddDELTA_V_EXECUTION_ERROR_KM_S(builder, DELTA_V_EXECUTION_ERROR_KM_S);
+    tbpStationKeeping.AddCORRECTION_INTERVAL_S(builder, CORRECTION_INTERVAL_S);
     tbpStationKeeping.AddMAX_CYCLE_DELTA_V_KM_S(builder, MAX_CYCLE_DELTA_V_KM_S);
     tbpStationKeeping.AddMEAN_CYCLE_DELTA_V_KM_S(builder, MEAN_CYCLE_DELTA_V_KM_S);
     tbpStationKeeping.AddANNUAL_DELTA_V_KM_S(builder, ANNUAL_DELTA_V_KM_S);
@@ -68,7 +84,7 @@ public struct tbpStationKeeping : IFlatbufferObject
     return tbpStationKeeping.EndtbpStationKeeping(builder);
   }
 
-  public static void StarttbpStationKeeping(FlatBufferBuilder builder) { builder.StartTable(10); }
+  public static void StarttbpStationKeeping(FlatBufferBuilder builder) { builder.StartTable(14); }
   public static void AddORBIT(FlatBufferBuilder builder, Offset<tbpPeriodicOrbit> ORBITOffset) { builder.AddOffset(0, ORBITOffset.Value, 0); }
   public static void AddSTRATEGY(FlatBufferBuilder builder, tbpStationKeepingStrategy STRATEGY) { builder.AddByte(1, (byte)STRATEGY, 0); }
   public static void AddNAVIGATION_ERROR_KM(FlatBufferBuilder builder, double NAVIGATION_ERROR_KM) { builder.AddDouble(2, NAVIGATION_ERROR_KM, 0.0); }
@@ -84,6 +100,10 @@ public struct tbpStationKeeping : IFlatbufferObject
   public static VectorOffset CreateCYCLE_DELTA_V_KM_SVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartCYCLE_DELTA_V_KM_SVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
   public static void AddBOUNDED(FlatBufferBuilder builder, bool BOUNDED) { builder.AddBool(9, BOUNDED, false); }
+  public static void AddCORRECTION_INTERVAL_S(FlatBufferBuilder builder, double CORRECTION_INTERVAL_S) { builder.AddDouble(10, CORRECTION_INTERVAL_S, 0.0); }
+  public static void AddDELTA_V_EXECUTION_ERROR_KM_S(FlatBufferBuilder builder, double DELTA_V_EXECUTION_ERROR_KM_S) { builder.AddDouble(11, DELTA_V_EXECUTION_ERROR_KM_S, 0.0); }
+  public static void AddLOWER_BOUND_ANNUAL_DELTA_V_KM_S(FlatBufferBuilder builder, double LOWER_BOUND_ANNUAL_DELTA_V_KM_S) { builder.AddDouble(12, LOWER_BOUND_ANNUAL_DELTA_V_KM_S, 0.0); }
+  public static void AddUPPER_BOUND_ANNUAL_DELTA_V_KM_S(FlatBufferBuilder builder, double UPPER_BOUND_ANNUAL_DELTA_V_KM_S) { builder.AddDouble(13, UPPER_BOUND_ANNUAL_DELTA_V_KM_S, 0.0); }
   public static Offset<tbpStationKeeping> EndtbpStationKeeping(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<tbpStationKeeping>(o);
@@ -105,6 +125,10 @@ public struct tbpStationKeeping : IFlatbufferObject
     _o.CYCLE_DELTA_V_KM_S = new List<double>();
     for (var _j = 0; _j < this.CYCLE_DELTA_V_KM_SLength; ++_j) {_o.CYCLE_DELTA_V_KM_S.Add(this.CYCLE_DELTA_V_KM_S(_j));}
     _o.BOUNDED = this.BOUNDED;
+    _o.CORRECTION_INTERVAL_S = this.CORRECTION_INTERVAL_S;
+    _o.DELTA_V_EXECUTION_ERROR_KM_S = this.DELTA_V_EXECUTION_ERROR_KM_S;
+    _o.LOWER_BOUND_ANNUAL_DELTA_V_KM_S = this.LOWER_BOUND_ANNUAL_DELTA_V_KM_S;
+    _o.UPPER_BOUND_ANNUAL_DELTA_V_KM_S = this.UPPER_BOUND_ANNUAL_DELTA_V_KM_S;
   }
   public static Offset<tbpStationKeeping> Pack(FlatBufferBuilder builder, tbpStationKeepingT _o) {
     if (_o == null) return default(Offset<tbpStationKeeping>);
@@ -125,7 +149,11 @@ public struct tbpStationKeeping : IFlatbufferObject
       _o.MEAN_CYCLE_DELTA_V_KM_S,
       _o.MAX_CYCLE_DELTA_V_KM_S,
       _CYCLE_DELTA_V_KM_S,
-      _o.BOUNDED);
+      _o.BOUNDED,
+      _o.CORRECTION_INTERVAL_S,
+      _o.DELTA_V_EXECUTION_ERROR_KM_S,
+      _o.LOWER_BOUND_ANNUAL_DELTA_V_KM_S,
+      _o.UPPER_BOUND_ANNUAL_DELTA_V_KM_S);
   }
 }
 
@@ -141,6 +169,10 @@ public class tbpStationKeepingT
   public double MAX_CYCLE_DELTA_V_KM_S { get; set; }
   public List<double> CYCLE_DELTA_V_KM_S { get; set; }
   public bool BOUNDED { get; set; }
+  public double CORRECTION_INTERVAL_S { get; set; }
+  public double DELTA_V_EXECUTION_ERROR_KM_S { get; set; }
+  public double LOWER_BOUND_ANNUAL_DELTA_V_KM_S { get; set; }
+  public double UPPER_BOUND_ANNUAL_DELTA_V_KM_S { get; set; }
 
   public tbpStationKeepingT() {
     this.ORBIT = null;
@@ -153,6 +185,10 @@ public class tbpStationKeepingT
     this.MAX_CYCLE_DELTA_V_KM_S = 0.0;
     this.CYCLE_DELTA_V_KM_S = null;
     this.BOUNDED = false;
+    this.CORRECTION_INTERVAL_S = 0.0;
+    this.DELTA_V_EXECUTION_ERROR_KM_S = 0.0;
+    this.LOWER_BOUND_ANNUAL_DELTA_V_KM_S = 0.0;
+    this.UPPER_BOUND_ANNUAL_DELTA_V_KM_S = 0.0;
   }
 }
 
@@ -172,6 +208,10 @@ static public class tbpStationKeepingVerify
       && verifier.VerifyField(tablePos, 18 /*MAX_CYCLE_DELTA_V_KM_S*/, 8 /*double*/, 8, false)
       && verifier.VerifyVectorOfData(tablePos, 20 /*CYCLE_DELTA_V_KM_S*/, 8 /*double*/, false)
       && verifier.VerifyField(tablePos, 22 /*BOUNDED*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 24 /*CORRECTION_INTERVAL_S*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 26 /*DELTA_V_EXECUTION_ERROR_KM_S*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 28 /*LOWER_BOUND_ANNUAL_DELTA_V_KM_S*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 30 /*UPPER_BOUND_ANNUAL_DELTA_V_KM_S*/, 8 /*double*/, 8, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

@@ -270,22 +270,182 @@ class tbpPeriodicOrbit extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// Tulip/pumpkin petal count Np; 0 = not applicable.
+    /**
+     * @return uint
+     */
+    public function getPETALS()
+    {
+        $o = $this->__offset(44);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// Sidereal resonance denominator p (period = q * 2*pi / p); 0 = not stated.
+    /**
+     * @return uint
+     */
+    public function getRESONANCE_P()
+    {
+        $o = $this->__offset(46);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// Sidereal resonance numerator q; 0 = not stated.
+    /**
+     * @return uint
+     */
+    public function getRESONANCE_Q()
+    {
+        $o = $this->__offset(48);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// CR3BP pseudo-potential U* at the initial state.
+    /**
+     * @return double
+     */
+    public function getPSEUDO_POTENTIAL()
+    {
+        $o = $this->__offset(50);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Minimum distance from the larger primary (P1), km; 0 = not computed.
+    /**
+     * @return double
+     */
+    public function getPERIGEE_KM()
+    {
+        $o = $this->__offset(52);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Maximum distance from the larger primary (P1), km; 0 = not computed.
+    /**
+     * @return double
+     */
+    public function getAPOGEE_KM()
+    {
+        $o = $this->__offset(54);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Instability doubling time, non-dimensional; 0 = stable or not computed.
+    /**
+     * @return double
+     */
+    public function getDOUBLING_TIME()
+    {
+        $o = $this->__offset(56);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Floquet/Lyapunov characteristic exponent, non-dimensional; 0 = not computed.
+    /**
+     * @return double
+     */
+    public function getCHARACTERISTIC_EXPONENT()
+    {
+        $o = $this->__offset(58);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Longest continuous P2 (lunar) occultation per period, s.
+    /**
+     * @return double
+     */
+    public function getMAX_LUNAR_OCCULTATION_S()
+    {
+        $o = $this->__offset(60);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Total P2 (lunar) occultation duration per period, s.
+    /**
+     * @return double
+     */
+    public function getTOTAL_LUNAR_OCCULTATION_S()
+    {
+        $o = $this->__offset(62);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Longest continuous P1 (Earth) occultation per period, s.
+    /**
+     * @return double
+     */
+    public function getMAX_EARTH_OCCULTATION_S()
+    {
+        $o = $this->__offset(64);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Total P1 (Earth) occultation duration per period, s.
+    /**
+     * @return double
+     */
+    public function getTOTAL_EARTH_OCCULTATION_S()
+    {
+        $o = $this->__offset(66);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Unit stable eigenvector of the monodromy matrix (6 values); empty = none.
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getSTABLE_EIGENVECTOR($j)
+    {
+        $o = $this->__offset(68);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSTABLE_EIGENVECTORLength()
+    {
+        $o = $this->__offset(68);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Unit unstable eigenvector of the monodromy matrix (6 values); empty = none.
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getUNSTABLE_EIGENVECTOR($j)
+    {
+        $o = $this->__offset(70);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getUNSTABLE_EIGENVECTORLength()
+    {
+        $o = $this->__offset(70);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function starttbpPeriodicOrbit(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(20);
+        $builder->StartObject(34);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return tbpPeriodicOrbit
      */
-    public static function createtbpPeriodicOrbit(FlatBufferBuilder $builder, $FAMILY, $LIBRATION_POINT, $AMPLITUDE, $PERILUNE_ALTITUDE_KM, $APOLUNE_ALTITUDE_KM, $INITIAL_STATE, $PERIOD, $PERIOD_S, $JACOBI, $CORRECTED, $CONVERGED, $ITERATIONS, $TOLERANCE, $MAX_ITERATIONS, $MONODROMY, $FLOQUET_REAL, $FLOQUET_IMAGINARY, $STABILITY_INDEX, $STABLE, $TRAJECTORY)
+    public static function createtbpPeriodicOrbit(FlatBufferBuilder $builder, $FAMILY, $LIBRATION_POINT, $AMPLITUDE, $PERILUNE_ALTITUDE_KM, $APOLUNE_ALTITUDE_KM, $INITIAL_STATE, $PERIOD, $PERIOD_S, $JACOBI, $CORRECTED, $CONVERGED, $ITERATIONS, $TOLERANCE, $MAX_ITERATIONS, $MONODROMY, $FLOQUET_REAL, $FLOQUET_IMAGINARY, $STABILITY_INDEX, $STABLE, $TRAJECTORY, $PETALS, $RESONANCE_P, $RESONANCE_Q, $PSEUDO_POTENTIAL, $PERIGEE_KM, $APOGEE_KM, $DOUBLING_TIME, $CHARACTERISTIC_EXPONENT, $MAX_LUNAR_OCCULTATION_S, $TOTAL_LUNAR_OCCULTATION_S, $MAX_EARTH_OCCULTATION_S, $TOTAL_EARTH_OCCULTATION_S, $STABLE_EIGENVECTOR, $UNSTABLE_EIGENVECTOR)
     {
-        $builder->startObject(20);
+        $builder->startObject(34);
         self::addFAMILY($builder, $FAMILY);
         self::addLIBRATION_POINT($builder, $LIBRATION_POINT);
         self::addAMPLITUDE($builder, $AMPLITUDE);
@@ -306,6 +466,20 @@ class tbpPeriodicOrbit extends Table
         self::addSTABILITY_INDEX($builder, $STABILITY_INDEX);
         self::addSTABLE($builder, $STABLE);
         self::addTRAJECTORY($builder, $TRAJECTORY);
+        self::addPETALS($builder, $PETALS);
+        self::addRESONANCE_P($builder, $RESONANCE_P);
+        self::addRESONANCE_Q($builder, $RESONANCE_Q);
+        self::addPSEUDO_POTENTIAL($builder, $PSEUDO_POTENTIAL);
+        self::addPERIGEE_KM($builder, $PERIGEE_KM);
+        self::addAPOGEE_KM($builder, $APOGEE_KM);
+        self::addDOUBLING_TIME($builder, $DOUBLING_TIME);
+        self::addCHARACTERISTIC_EXPONENT($builder, $CHARACTERISTIC_EXPONENT);
+        self::addMAX_LUNAR_OCCULTATION_S($builder, $MAX_LUNAR_OCCULTATION_S);
+        self::addTOTAL_LUNAR_OCCULTATION_S($builder, $TOTAL_LUNAR_OCCULTATION_S);
+        self::addMAX_EARTH_OCCULTATION_S($builder, $MAX_EARTH_OCCULTATION_S);
+        self::addTOTAL_EARTH_OCCULTATION_S($builder, $TOTAL_EARTH_OCCULTATION_S);
+        self::addSTABLE_EIGENVECTOR($builder, $STABLE_EIGENVECTOR);
+        self::addUNSTABLE_EIGENVECTOR($builder, $UNSTABLE_EIGENVECTOR);
         $o = $builder->endObject();
         return $o;
     }
@@ -580,6 +754,194 @@ class tbpPeriodicOrbit extends Table
     public static function addTRAJECTORY(FlatBufferBuilder $builder, $TRAJECTORY)
     {
         $builder->addOffsetX(19, $TRAJECTORY, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addPETALS(FlatBufferBuilder $builder, $PETALS)
+    {
+        $builder->addUintX(20, $PETALS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addRESONANCE_P(FlatBufferBuilder $builder, $RESONANCE_P)
+    {
+        $builder->addUintX(21, $RESONANCE_P, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addRESONANCE_Q(FlatBufferBuilder $builder, $RESONANCE_Q)
+    {
+        $builder->addUintX(22, $RESONANCE_Q, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addPSEUDO_POTENTIAL(FlatBufferBuilder $builder, $PSEUDO_POTENTIAL)
+    {
+        $builder->addDoubleX(23, $PSEUDO_POTENTIAL, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addPERIGEE_KM(FlatBufferBuilder $builder, $PERIGEE_KM)
+    {
+        $builder->addDoubleX(24, $PERIGEE_KM, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addAPOGEE_KM(FlatBufferBuilder $builder, $APOGEE_KM)
+    {
+        $builder->addDoubleX(25, $APOGEE_KM, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDOUBLING_TIME(FlatBufferBuilder $builder, $DOUBLING_TIME)
+    {
+        $builder->addDoubleX(26, $DOUBLING_TIME, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCHARACTERISTIC_EXPONENT(FlatBufferBuilder $builder, $CHARACTERISTIC_EXPONENT)
+    {
+        $builder->addDoubleX(27, $CHARACTERISTIC_EXPONENT, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addMAX_LUNAR_OCCULTATION_S(FlatBufferBuilder $builder, $MAX_LUNAR_OCCULTATION_S)
+    {
+        $builder->addDoubleX(28, $MAX_LUNAR_OCCULTATION_S, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addTOTAL_LUNAR_OCCULTATION_S(FlatBufferBuilder $builder, $TOTAL_LUNAR_OCCULTATION_S)
+    {
+        $builder->addDoubleX(29, $TOTAL_LUNAR_OCCULTATION_S, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addMAX_EARTH_OCCULTATION_S(FlatBufferBuilder $builder, $MAX_EARTH_OCCULTATION_S)
+    {
+        $builder->addDoubleX(30, $MAX_EARTH_OCCULTATION_S, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addTOTAL_EARTH_OCCULTATION_S(FlatBufferBuilder $builder, $TOTAL_EARTH_OCCULTATION_S)
+    {
+        $builder->addDoubleX(31, $TOTAL_EARTH_OCCULTATION_S, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addSTABLE_EIGENVECTOR(FlatBufferBuilder $builder, $STABLE_EIGENVECTOR)
+    {
+        $builder->addOffsetX(32, $STABLE_EIGENVECTOR, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createSTABLE_EIGENVECTORVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startSTABLE_EIGENVECTORVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addUNSTABLE_EIGENVECTOR(FlatBufferBuilder $builder, $UNSTABLE_EIGENVECTOR)
+    {
+        $builder->addOffsetX(33, $UNSTABLE_EIGENVECTOR, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createUNSTABLE_EIGENVECTORVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startUNSTABLE_EIGENVECTORVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
     }
 
     /**

@@ -307,8 +307,302 @@ func (rcv *tbpTransfer) Trajectory(obj *tbpTrajectory) *tbpTrajectory {
 }
 
 /// Result: the transfer trajectory; empty = not sampled.
+/// Departure state in synodic frame (MinEnergy, DirectLambert, MinLambert, LowThrustMinTime).
+func (rcv *tbpTransfer) INITIAL_STATE(obj *tbpState) *tbpState {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(tbpState)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *tbpTransfer) InitialState(obj *tbpState) *tbpState {
+	return rcv.INITIAL_STATE(obj)
+}
+
+/// Departure state in synodic frame (MinEnergy, DirectLambert, MinLambert, LowThrustMinTime).
+/// Arrival state in synodic frame.
+func (rcv *tbpTransfer) FINAL_STATE(obj *tbpState) *tbpState {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(tbpState)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *tbpTransfer) FinalState(obj *tbpState) *tbpState {
+	return rcv.FINAL_STATE(obj)
+}
+
+/// Arrival state in synodic frame.
+/// False = prograde (default), true = retrograde (DirectLambert).
+func (rcv *tbpTransfer) RETROGRADE() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *tbpTransfer) Retrograde() bool {
+	return rcv.RETROGRADE()
+}
+
+/// False = prograde (default), true = retrograde (DirectLambert).
+func (rcv *tbpTransfer) MutateRETROGRADE(n bool) bool {
+	return rcv._tab.MutateBoolSlot(32, n)
+}
+
+func (rcv *tbpTransfer) MutateRetrograde(n bool) bool {
+	return rcv.MutateRETROGRADE(n)
+}
+
+/// Reference primary body for Lambert seeding: 0 = auto, 1 = P1, 2 = P2.
+func (rcv *tbpTransfer) REFERENCE_PRIMARY() byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		return rcv._tab.GetByte(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *tbpTransfer) ReferencePrimary() byte {
+	return rcv.REFERENCE_PRIMARY()
+}
+
+/// Reference primary body for Lambert seeding: 0 = auto, 1 = P1, 2 = P2.
+func (rcv *tbpTransfer) MutateREFERENCE_PRIMARY(n byte) bool {
+	return rcv._tab.MutateByteSlot(34, n)
+}
+
+func (rcv *tbpTransfer) MutateReferencePrimary(n byte) bool {
+	return rcv.MutateREFERENCE_PRIMARY(n)
+}
+
+/// Low-thrust maximum thrust, N (LowThrustMinTime).
+func (rcv *tbpTransfer) MAX_THRUST_N() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *tbpTransfer) MaxThrustN() float64 {
+	return rcv.MAX_THRUST_N()
+}
+
+/// Low-thrust maximum thrust, N (LowThrustMinTime).
+func (rcv *tbpTransfer) MutateMAX_THRUST_N(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(36, n)
+}
+
+func (rcv *tbpTransfer) MutateMaxThrustN(n float64) bool {
+	return rcv.MutateMAX_THRUST_N(n)
+}
+
+/// Engine specific impulse Isp, s (LowThrustMinTime).
+func (rcv *tbpTransfer) SPECIFIC_IMPULSE_S() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *tbpTransfer) SpecificImpulseS() float64 {
+	return rcv.SPECIFIC_IMPULSE_S()
+}
+
+/// Engine specific impulse Isp, s (LowThrustMinTime).
+func (rcv *tbpTransfer) MutateSPECIFIC_IMPULSE_S(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(38, n)
+}
+
+func (rcv *tbpTransfer) MutateSpecificImpulseS(n float64) bool {
+	return rcv.MutateSPECIFIC_IMPULSE_S(n)
+}
+
+/// Initial wet spacecraft mass, kg.
+func (rcv *tbpTransfer) INITIAL_MASS_KG() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *tbpTransfer) InitialMassKg() float64 {
+	return rcv.INITIAL_MASS_KG()
+}
+
+/// Initial wet spacecraft mass, kg.
+func (rcv *tbpTransfer) MutateINITIAL_MASS_KG(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(40, n)
+}
+
+func (rcv *tbpTransfer) MutateInitialMassKg(n float64) bool {
+	return rcv.MutateINITIAL_MASS_KG(n)
+}
+
+/// Result: final spacecraft mass at arrival, kg.
+func (rcv *tbpTransfer) FINAL_MASS_KG() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *tbpTransfer) FinalMassKg() float64 {
+	return rcv.FINAL_MASS_KG()
+}
+
+/// Result: final spacecraft mass at arrival, kg.
+func (rcv *tbpTransfer) MutateFINAL_MASS_KG(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(42, n)
+}
+
+func (rcv *tbpTransfer) MutateFinalMassKg(n float64) bool {
+	return rcv.MutateFINAL_MASS_KG(n)
+}
+
+/// Result: propellant consumed, kg.
+func (rcv *tbpTransfer) PROPELLANT_MASS_KG() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *tbpTransfer) PropellantMassKg() float64 {
+	return rcv.PROPELLANT_MASS_KG()
+}
+
+/// Result: propellant consumed, kg.
+func (rcv *tbpTransfer) MutatePROPELLANT_MASS_KG(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(44, n)
+}
+
+func (rcv *tbpTransfer) MutatePropellantMassKg(n float64) bool {
+	return rcv.MutatePROPELLANT_MASS_KG(n)
+}
+
+/// Initial costates [lambda_rx, ry, rz, vx, vy, vz, m] guess or solved.
+func (rcv *tbpTransfer) INITIAL_COSTATES(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *tbpTransfer) InitialCostates(j int) float64 {
+	return rcv.INITIAL_COSTATES(j)
+}
+
+func (rcv *tbpTransfer) INITIAL_COSTATESLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *tbpTransfer) InitialCostatesLength() int {
+	return rcv.INITIAL_COSTATESLength()
+}
+
+/// Initial costates [lambda_rx, ry, rz, vx, vy, vz, m] guess or solved.
+func (rcv *tbpTransfer) MutateINITIAL_COSTATES(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+func (rcv *tbpTransfer) MutateInitialCostates(j int, n float64) bool {
+	return rcv.MutateINITIAL_COSTATES(j, n)
+}
+
+/// Result: normalized throttle [0..1] per trajectory sample.
+func (rcv *tbpTransfer) THROTTLE_HISTORY(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *tbpTransfer) ThrottleHistory(j int) float64 {
+	return rcv.THROTTLE_HISTORY(j)
+}
+
+func (rcv *tbpTransfer) THROTTLE_HISTORYLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *tbpTransfer) ThrottleHistoryLength() int {
+	return rcv.THROTTLE_HISTORYLength()
+}
+
+/// Result: normalized throttle [0..1] per trajectory sample.
+func (rcv *tbpTransfer) MutateTHROTTLE_HISTORY(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+func (rcv *tbpTransfer) MutateThrottleHistory(j int, n float64) bool {
+	return rcv.MutateTHROTTLE_HISTORY(j, n)
+}
+
+/// Result: theoretical minimum Jacobi-energy delta-v, km/s (MinEnergy).
+func (rcv *tbpTransfer) MIN_ENERGY_DELTA_V_KM_S() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *tbpTransfer) MinEnergyDeltaVKmS() float64 {
+	return rcv.MIN_ENERGY_DELTA_V_KM_S()
+}
+
+/// Result: theoretical minimum Jacobi-energy delta-v, km/s (MinEnergy).
+func (rcv *tbpTransfer) MutateMIN_ENERGY_DELTA_V_KM_S(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(50, n)
+}
+
+func (rcv *tbpTransfer) MutateMinEnergyDeltaVKmS(n float64) bool {
+	return rcv.MutateMIN_ENERGY_DELTA_V_KM_S(n)
+}
+
 func tbpTransferStart(builder *flatbuffers.Builder) {
-	builder.StartObject(12)
+	builder.StartObject(24)
 }
 func tbpTransferAddKIND(builder *flatbuffers.Builder, KIND tbpTransferKind) {
 	builder.PrependByteSlot(0, byte(KIND), 0)
@@ -387,6 +681,90 @@ func tbpTransferAddTRAJECTORY(builder *flatbuffers.Builder, TRAJECTORY flatbuffe
 }
 func tbpTransferAddTrajectory(builder *flatbuffers.Builder, TRAJECTORY flatbuffers.UOffsetT) {
 	tbpTransferAddTRAJECTORY(builder, TRAJECTORY)
+}
+func tbpTransferAddINITIAL_STATE(builder *flatbuffers.Builder, INITIAL_STATE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(INITIAL_STATE), 0)
+}
+func tbpTransferAddInitialState(builder *flatbuffers.Builder, INITIAL_STATE flatbuffers.UOffsetT) {
+	tbpTransferAddINITIAL_STATE(builder, INITIAL_STATE)
+}
+func tbpTransferAddFINAL_STATE(builder *flatbuffers.Builder, FINAL_STATE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(FINAL_STATE), 0)
+}
+func tbpTransferAddFinalState(builder *flatbuffers.Builder, FINAL_STATE flatbuffers.UOffsetT) {
+	tbpTransferAddFINAL_STATE(builder, FINAL_STATE)
+}
+func tbpTransferAddRETROGRADE(builder *flatbuffers.Builder, RETROGRADE bool) {
+	builder.PrependBoolSlot(14, RETROGRADE, false)
+}
+func tbpTransferAddRetrograde(builder *flatbuffers.Builder, RETROGRADE bool) {
+	tbpTransferAddRETROGRADE(builder, RETROGRADE)
+}
+func tbpTransferAddREFERENCE_PRIMARY(builder *flatbuffers.Builder, REFERENCE_PRIMARY byte) {
+	builder.PrependByteSlot(15, REFERENCE_PRIMARY, 0)
+}
+func tbpTransferAddReferencePrimary(builder *flatbuffers.Builder, REFERENCE_PRIMARY byte) {
+	tbpTransferAddREFERENCE_PRIMARY(builder, REFERENCE_PRIMARY)
+}
+func tbpTransferAddMAX_THRUST_N(builder *flatbuffers.Builder, MAX_THRUST_N float64) {
+	builder.PrependFloat64Slot(16, MAX_THRUST_N, 0.0)
+}
+func tbpTransferAddMaxThrustN(builder *flatbuffers.Builder, MAX_THRUST_N float64) {
+	tbpTransferAddMAX_THRUST_N(builder, MAX_THRUST_N)
+}
+func tbpTransferAddSPECIFIC_IMPULSE_S(builder *flatbuffers.Builder, SPECIFIC_IMPULSE_S float64) {
+	builder.PrependFloat64Slot(17, SPECIFIC_IMPULSE_S, 0.0)
+}
+func tbpTransferAddSpecificImpulseS(builder *flatbuffers.Builder, SPECIFIC_IMPULSE_S float64) {
+	tbpTransferAddSPECIFIC_IMPULSE_S(builder, SPECIFIC_IMPULSE_S)
+}
+func tbpTransferAddINITIAL_MASS_KG(builder *flatbuffers.Builder, INITIAL_MASS_KG float64) {
+	builder.PrependFloat64Slot(18, INITIAL_MASS_KG, 0.0)
+}
+func tbpTransferAddInitialMassKg(builder *flatbuffers.Builder, INITIAL_MASS_KG float64) {
+	tbpTransferAddINITIAL_MASS_KG(builder, INITIAL_MASS_KG)
+}
+func tbpTransferAddFINAL_MASS_KG(builder *flatbuffers.Builder, FINAL_MASS_KG float64) {
+	builder.PrependFloat64Slot(19, FINAL_MASS_KG, 0.0)
+}
+func tbpTransferAddFinalMassKg(builder *flatbuffers.Builder, FINAL_MASS_KG float64) {
+	tbpTransferAddFINAL_MASS_KG(builder, FINAL_MASS_KG)
+}
+func tbpTransferAddPROPELLANT_MASS_KG(builder *flatbuffers.Builder, PROPELLANT_MASS_KG float64) {
+	builder.PrependFloat64Slot(20, PROPELLANT_MASS_KG, 0.0)
+}
+func tbpTransferAddPropellantMassKg(builder *flatbuffers.Builder, PROPELLANT_MASS_KG float64) {
+	tbpTransferAddPROPELLANT_MASS_KG(builder, PROPELLANT_MASS_KG)
+}
+func tbpTransferAddINITIAL_COSTATES(builder *flatbuffers.Builder, INITIAL_COSTATES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(21, flatbuffers.UOffsetT(INITIAL_COSTATES), 0)
+}
+func tbpTransferAddInitialCostates(builder *flatbuffers.Builder, INITIAL_COSTATES flatbuffers.UOffsetT) {
+	tbpTransferAddINITIAL_COSTATES(builder, INITIAL_COSTATES)
+}
+func tbpTransferStartINITIAL_COSTATESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func tbpTransferStartInitialCostatesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return tbpTransferStartINITIAL_COSTATESVector(builder, numElems)
+}
+func tbpTransferAddTHROTTLE_HISTORY(builder *flatbuffers.Builder, THROTTLE_HISTORY flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(22, flatbuffers.UOffsetT(THROTTLE_HISTORY), 0)
+}
+func tbpTransferAddThrottleHistory(builder *flatbuffers.Builder, THROTTLE_HISTORY flatbuffers.UOffsetT) {
+	tbpTransferAddTHROTTLE_HISTORY(builder, THROTTLE_HISTORY)
+}
+func tbpTransferStartTHROTTLE_HISTORYVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func tbpTransferStartThrottleHistoryVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return tbpTransferStartTHROTTLE_HISTORYVector(builder, numElems)
+}
+func tbpTransferAddMIN_ENERGY_DELTA_V_KM_S(builder *flatbuffers.Builder, MIN_ENERGY_DELTA_V_KM_S float64) {
+	builder.PrependFloat64Slot(23, MIN_ENERGY_DELTA_V_KM_S, 0.0)
+}
+func tbpTransferAddMinEnergyDeltaVKmS(builder *flatbuffers.Builder, MIN_ENERGY_DELTA_V_KM_S float64) {
+	tbpTransferAddMIN_ENERGY_DELTA_V_KM_S(builder, MIN_ENERGY_DELTA_V_KM_S)
 }
 func tbpTransferEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

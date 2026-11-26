@@ -536,8 +536,352 @@ func (rcv *tbpPeriodicOrbit) Trajectory(obj *tbpTrajectory) *tbpTrajectory {
 }
 
 /// One period of the orbit; empty = not sampled.
+/// Tulip/pumpkin petal count Np; 0 = not applicable.
+func (rcv *tbpPeriodicOrbit) PETALS() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *tbpPeriodicOrbit) Petals() uint32 {
+	return rcv.PETALS()
+}
+
+/// Tulip/pumpkin petal count Np; 0 = not applicable.
+func (rcv *tbpPeriodicOrbit) MutatePETALS(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(44, n)
+}
+
+func (rcv *tbpPeriodicOrbit) MutatePetals(n uint32) bool {
+	return rcv.MutatePETALS(n)
+}
+
+/// Sidereal resonance denominator p (period = q * 2*pi / p); 0 = not stated.
+func (rcv *tbpPeriodicOrbit) RESONANCE_P() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *tbpPeriodicOrbit) ResonanceP() uint32 {
+	return rcv.RESONANCE_P()
+}
+
+/// Sidereal resonance denominator p (period = q * 2*pi / p); 0 = not stated.
+func (rcv *tbpPeriodicOrbit) MutateRESONANCE_P(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(46, n)
+}
+
+func (rcv *tbpPeriodicOrbit) MutateResonanceP(n uint32) bool {
+	return rcv.MutateRESONANCE_P(n)
+}
+
+/// Sidereal resonance numerator q; 0 = not stated.
+func (rcv *tbpPeriodicOrbit) RESONANCE_Q() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *tbpPeriodicOrbit) ResonanceQ() uint32 {
+	return rcv.RESONANCE_Q()
+}
+
+/// Sidereal resonance numerator q; 0 = not stated.
+func (rcv *tbpPeriodicOrbit) MutateRESONANCE_Q(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(48, n)
+}
+
+func (rcv *tbpPeriodicOrbit) MutateResonanceQ(n uint32) bool {
+	return rcv.MutateRESONANCE_Q(n)
+}
+
+/// CR3BP pseudo-potential U* at the initial state.
+func (rcv *tbpPeriodicOrbit) PSEUDO_POTENTIAL() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *tbpPeriodicOrbit) PseudoPotential() float64 {
+	return rcv.PSEUDO_POTENTIAL()
+}
+
+/// CR3BP pseudo-potential U* at the initial state.
+func (rcv *tbpPeriodicOrbit) MutatePSEUDO_POTENTIAL(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(50, n)
+}
+
+func (rcv *tbpPeriodicOrbit) MutatePseudoPotential(n float64) bool {
+	return rcv.MutatePSEUDO_POTENTIAL(n)
+}
+
+/// Minimum distance from the larger primary (P1), km; 0 = not computed.
+func (rcv *tbpPeriodicOrbit) PERIGEE_KM() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *tbpPeriodicOrbit) PerigeeKm() float64 {
+	return rcv.PERIGEE_KM()
+}
+
+/// Minimum distance from the larger primary (P1), km; 0 = not computed.
+func (rcv *tbpPeriodicOrbit) MutatePERIGEE_KM(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(52, n)
+}
+
+func (rcv *tbpPeriodicOrbit) MutatePerigeeKm(n float64) bool {
+	return rcv.MutatePERIGEE_KM(n)
+}
+
+/// Maximum distance from the larger primary (P1), km; 0 = not computed.
+func (rcv *tbpPeriodicOrbit) APOGEE_KM() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *tbpPeriodicOrbit) ApogeeKm() float64 {
+	return rcv.APOGEE_KM()
+}
+
+/// Maximum distance from the larger primary (P1), km; 0 = not computed.
+func (rcv *tbpPeriodicOrbit) MutateAPOGEE_KM(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(54, n)
+}
+
+func (rcv *tbpPeriodicOrbit) MutateApogeeKm(n float64) bool {
+	return rcv.MutateAPOGEE_KM(n)
+}
+
+/// Instability doubling time, non-dimensional; 0 = stable or not computed.
+func (rcv *tbpPeriodicOrbit) DOUBLING_TIME() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *tbpPeriodicOrbit) DoublingTime() float64 {
+	return rcv.DOUBLING_TIME()
+}
+
+/// Instability doubling time, non-dimensional; 0 = stable or not computed.
+func (rcv *tbpPeriodicOrbit) MutateDOUBLING_TIME(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(56, n)
+}
+
+func (rcv *tbpPeriodicOrbit) MutateDoublingTime(n float64) bool {
+	return rcv.MutateDOUBLING_TIME(n)
+}
+
+/// Floquet/Lyapunov characteristic exponent, non-dimensional; 0 = not computed.
+func (rcv *tbpPeriodicOrbit) CHARACTERISTIC_EXPONENT() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *tbpPeriodicOrbit) CharacteristicExponent() float64 {
+	return rcv.CHARACTERISTIC_EXPONENT()
+}
+
+/// Floquet/Lyapunov characteristic exponent, non-dimensional; 0 = not computed.
+func (rcv *tbpPeriodicOrbit) MutateCHARACTERISTIC_EXPONENT(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(58, n)
+}
+
+func (rcv *tbpPeriodicOrbit) MutateCharacteristicExponent(n float64) bool {
+	return rcv.MutateCHARACTERISTIC_EXPONENT(n)
+}
+
+/// Longest continuous P2 (lunar) occultation per period, s.
+func (rcv *tbpPeriodicOrbit) MAX_LUNAR_OCCULTATION_S() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *tbpPeriodicOrbit) MaxLunarOccultationS() float64 {
+	return rcv.MAX_LUNAR_OCCULTATION_S()
+}
+
+/// Longest continuous P2 (lunar) occultation per period, s.
+func (rcv *tbpPeriodicOrbit) MutateMAX_LUNAR_OCCULTATION_S(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(60, n)
+}
+
+func (rcv *tbpPeriodicOrbit) MutateMaxLunarOccultationS(n float64) bool {
+	return rcv.MutateMAX_LUNAR_OCCULTATION_S(n)
+}
+
+/// Total P2 (lunar) occultation duration per period, s.
+func (rcv *tbpPeriodicOrbit) TOTAL_LUNAR_OCCULTATION_S() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *tbpPeriodicOrbit) TotalLunarOccultationS() float64 {
+	return rcv.TOTAL_LUNAR_OCCULTATION_S()
+}
+
+/// Total P2 (lunar) occultation duration per period, s.
+func (rcv *tbpPeriodicOrbit) MutateTOTAL_LUNAR_OCCULTATION_S(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(62, n)
+}
+
+func (rcv *tbpPeriodicOrbit) MutateTotalLunarOccultationS(n float64) bool {
+	return rcv.MutateTOTAL_LUNAR_OCCULTATION_S(n)
+}
+
+/// Longest continuous P1 (Earth) occultation per period, s.
+func (rcv *tbpPeriodicOrbit) MAX_EARTH_OCCULTATION_S() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *tbpPeriodicOrbit) MaxEarthOccultationS() float64 {
+	return rcv.MAX_EARTH_OCCULTATION_S()
+}
+
+/// Longest continuous P1 (Earth) occultation per period, s.
+func (rcv *tbpPeriodicOrbit) MutateMAX_EARTH_OCCULTATION_S(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(64, n)
+}
+
+func (rcv *tbpPeriodicOrbit) MutateMaxEarthOccultationS(n float64) bool {
+	return rcv.MutateMAX_EARTH_OCCULTATION_S(n)
+}
+
+/// Total P1 (Earth) occultation duration per period, s.
+func (rcv *tbpPeriodicOrbit) TOTAL_EARTH_OCCULTATION_S() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *tbpPeriodicOrbit) TotalEarthOccultationS() float64 {
+	return rcv.TOTAL_EARTH_OCCULTATION_S()
+}
+
+/// Total P1 (Earth) occultation duration per period, s.
+func (rcv *tbpPeriodicOrbit) MutateTOTAL_EARTH_OCCULTATION_S(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(66, n)
+}
+
+func (rcv *tbpPeriodicOrbit) MutateTotalEarthOccultationS(n float64) bool {
+	return rcv.MutateTOTAL_EARTH_OCCULTATION_S(n)
+}
+
+/// Unit stable eigenvector of the monodromy matrix (6 values); empty = none.
+func (rcv *tbpPeriodicOrbit) STABLE_EIGENVECTOR(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *tbpPeriodicOrbit) StableEigenvector(j int) float64 {
+	return rcv.STABLE_EIGENVECTOR(j)
+}
+
+func (rcv *tbpPeriodicOrbit) STABLE_EIGENVECTORLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *tbpPeriodicOrbit) StableEigenvectorLength() int {
+	return rcv.STABLE_EIGENVECTORLength()
+}
+
+/// Unit stable eigenvector of the monodromy matrix (6 values); empty = none.
+func (rcv *tbpPeriodicOrbit) MutateSTABLE_EIGENVECTOR(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+func (rcv *tbpPeriodicOrbit) MutateStableEigenvector(j int, n float64) bool {
+	return rcv.MutateSTABLE_EIGENVECTOR(j, n)
+}
+
+/// Unit unstable eigenvector of the monodromy matrix (6 values); empty = none.
+func (rcv *tbpPeriodicOrbit) UNSTABLE_EIGENVECTOR(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *tbpPeriodicOrbit) UnstableEigenvector(j int) float64 {
+	return rcv.UNSTABLE_EIGENVECTOR(j)
+}
+
+func (rcv *tbpPeriodicOrbit) UNSTABLE_EIGENVECTORLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *tbpPeriodicOrbit) UnstableEigenvectorLength() int {
+	return rcv.UNSTABLE_EIGENVECTORLength()
+}
+
+/// Unit unstable eigenvector of the monodromy matrix (6 values); empty = none.
+func (rcv *tbpPeriodicOrbit) MutateUNSTABLE_EIGENVECTOR(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+func (rcv *tbpPeriodicOrbit) MutateUnstableEigenvector(j int, n float64) bool {
+	return rcv.MutateUNSTABLE_EIGENVECTOR(j, n)
+}
+
 func tbpPeriodicOrbitStart(builder *flatbuffers.Builder) {
-	builder.StartObject(20)
+	builder.StartObject(34)
 }
 func tbpPeriodicOrbitAddFAMILY(builder *flatbuffers.Builder, FAMILY tbpOrbitFamily) {
 	builder.PrependByteSlot(0, byte(FAMILY), 0)
@@ -676,6 +1020,102 @@ func tbpPeriodicOrbitAddTRAJECTORY(builder *flatbuffers.Builder, TRAJECTORY flat
 }
 func tbpPeriodicOrbitAddTrajectory(builder *flatbuffers.Builder, TRAJECTORY flatbuffers.UOffsetT) {
 	tbpPeriodicOrbitAddTRAJECTORY(builder, TRAJECTORY)
+}
+func tbpPeriodicOrbitAddPETALS(builder *flatbuffers.Builder, PETALS uint32) {
+	builder.PrependUint32Slot(20, PETALS, 0)
+}
+func tbpPeriodicOrbitAddPetals(builder *flatbuffers.Builder, PETALS uint32) {
+	tbpPeriodicOrbitAddPETALS(builder, PETALS)
+}
+func tbpPeriodicOrbitAddRESONANCE_P(builder *flatbuffers.Builder, RESONANCE_P uint32) {
+	builder.PrependUint32Slot(21, RESONANCE_P, 0)
+}
+func tbpPeriodicOrbitAddResonanceP(builder *flatbuffers.Builder, RESONANCE_P uint32) {
+	tbpPeriodicOrbitAddRESONANCE_P(builder, RESONANCE_P)
+}
+func tbpPeriodicOrbitAddRESONANCE_Q(builder *flatbuffers.Builder, RESONANCE_Q uint32) {
+	builder.PrependUint32Slot(22, RESONANCE_Q, 0)
+}
+func tbpPeriodicOrbitAddResonanceQ(builder *flatbuffers.Builder, RESONANCE_Q uint32) {
+	tbpPeriodicOrbitAddRESONANCE_Q(builder, RESONANCE_Q)
+}
+func tbpPeriodicOrbitAddPSEUDO_POTENTIAL(builder *flatbuffers.Builder, PSEUDO_POTENTIAL float64) {
+	builder.PrependFloat64Slot(23, PSEUDO_POTENTIAL, 0.0)
+}
+func tbpPeriodicOrbitAddPseudoPotential(builder *flatbuffers.Builder, PSEUDO_POTENTIAL float64) {
+	tbpPeriodicOrbitAddPSEUDO_POTENTIAL(builder, PSEUDO_POTENTIAL)
+}
+func tbpPeriodicOrbitAddPERIGEE_KM(builder *flatbuffers.Builder, PERIGEE_KM float64) {
+	builder.PrependFloat64Slot(24, PERIGEE_KM, 0.0)
+}
+func tbpPeriodicOrbitAddPerigeeKm(builder *flatbuffers.Builder, PERIGEE_KM float64) {
+	tbpPeriodicOrbitAddPERIGEE_KM(builder, PERIGEE_KM)
+}
+func tbpPeriodicOrbitAddAPOGEE_KM(builder *flatbuffers.Builder, APOGEE_KM float64) {
+	builder.PrependFloat64Slot(25, APOGEE_KM, 0.0)
+}
+func tbpPeriodicOrbitAddApogeeKm(builder *flatbuffers.Builder, APOGEE_KM float64) {
+	tbpPeriodicOrbitAddAPOGEE_KM(builder, APOGEE_KM)
+}
+func tbpPeriodicOrbitAddDOUBLING_TIME(builder *flatbuffers.Builder, DOUBLING_TIME float64) {
+	builder.PrependFloat64Slot(26, DOUBLING_TIME, 0.0)
+}
+func tbpPeriodicOrbitAddDoublingTime(builder *flatbuffers.Builder, DOUBLING_TIME float64) {
+	tbpPeriodicOrbitAddDOUBLING_TIME(builder, DOUBLING_TIME)
+}
+func tbpPeriodicOrbitAddCHARACTERISTIC_EXPONENT(builder *flatbuffers.Builder, CHARACTERISTIC_EXPONENT float64) {
+	builder.PrependFloat64Slot(27, CHARACTERISTIC_EXPONENT, 0.0)
+}
+func tbpPeriodicOrbitAddCharacteristicExponent(builder *flatbuffers.Builder, CHARACTERISTIC_EXPONENT float64) {
+	tbpPeriodicOrbitAddCHARACTERISTIC_EXPONENT(builder, CHARACTERISTIC_EXPONENT)
+}
+func tbpPeriodicOrbitAddMAX_LUNAR_OCCULTATION_S(builder *flatbuffers.Builder, MAX_LUNAR_OCCULTATION_S float64) {
+	builder.PrependFloat64Slot(28, MAX_LUNAR_OCCULTATION_S, 0.0)
+}
+func tbpPeriodicOrbitAddMaxLunarOccultationS(builder *flatbuffers.Builder, MAX_LUNAR_OCCULTATION_S float64) {
+	tbpPeriodicOrbitAddMAX_LUNAR_OCCULTATION_S(builder, MAX_LUNAR_OCCULTATION_S)
+}
+func tbpPeriodicOrbitAddTOTAL_LUNAR_OCCULTATION_S(builder *flatbuffers.Builder, TOTAL_LUNAR_OCCULTATION_S float64) {
+	builder.PrependFloat64Slot(29, TOTAL_LUNAR_OCCULTATION_S, 0.0)
+}
+func tbpPeriodicOrbitAddTotalLunarOccultationS(builder *flatbuffers.Builder, TOTAL_LUNAR_OCCULTATION_S float64) {
+	tbpPeriodicOrbitAddTOTAL_LUNAR_OCCULTATION_S(builder, TOTAL_LUNAR_OCCULTATION_S)
+}
+func tbpPeriodicOrbitAddMAX_EARTH_OCCULTATION_S(builder *flatbuffers.Builder, MAX_EARTH_OCCULTATION_S float64) {
+	builder.PrependFloat64Slot(30, MAX_EARTH_OCCULTATION_S, 0.0)
+}
+func tbpPeriodicOrbitAddMaxEarthOccultationS(builder *flatbuffers.Builder, MAX_EARTH_OCCULTATION_S float64) {
+	tbpPeriodicOrbitAddMAX_EARTH_OCCULTATION_S(builder, MAX_EARTH_OCCULTATION_S)
+}
+func tbpPeriodicOrbitAddTOTAL_EARTH_OCCULTATION_S(builder *flatbuffers.Builder, TOTAL_EARTH_OCCULTATION_S float64) {
+	builder.PrependFloat64Slot(31, TOTAL_EARTH_OCCULTATION_S, 0.0)
+}
+func tbpPeriodicOrbitAddTotalEarthOccultationS(builder *flatbuffers.Builder, TOTAL_EARTH_OCCULTATION_S float64) {
+	tbpPeriodicOrbitAddTOTAL_EARTH_OCCULTATION_S(builder, TOTAL_EARTH_OCCULTATION_S)
+}
+func tbpPeriodicOrbitAddSTABLE_EIGENVECTOR(builder *flatbuffers.Builder, STABLE_EIGENVECTOR flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(32, flatbuffers.UOffsetT(STABLE_EIGENVECTOR), 0)
+}
+func tbpPeriodicOrbitAddStableEigenvector(builder *flatbuffers.Builder, STABLE_EIGENVECTOR flatbuffers.UOffsetT) {
+	tbpPeriodicOrbitAddSTABLE_EIGENVECTOR(builder, STABLE_EIGENVECTOR)
+}
+func tbpPeriodicOrbitStartSTABLE_EIGENVECTORVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func tbpPeriodicOrbitStartStableEigenvectorVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return tbpPeriodicOrbitStartSTABLE_EIGENVECTORVector(builder, numElems)
+}
+func tbpPeriodicOrbitAddUNSTABLE_EIGENVECTOR(builder *flatbuffers.Builder, UNSTABLE_EIGENVECTOR flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(33, flatbuffers.UOffsetT(UNSTABLE_EIGENVECTOR), 0)
+}
+func tbpPeriodicOrbitAddUnstableEigenvector(builder *flatbuffers.Builder, UNSTABLE_EIGENVECTOR flatbuffers.UOffsetT) {
+	tbpPeriodicOrbitAddUNSTABLE_EIGENVECTOR(builder, UNSTABLE_EIGENVECTOR)
+}
+func tbpPeriodicOrbitStartUNSTABLE_EIGENVECTORVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func tbpPeriodicOrbitStartUnstableEigenvectorVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return tbpPeriodicOrbitStartUNSTABLE_EIGENVECTORVector(builder, numElems)
 }
 func tbpPeriodicOrbitEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -131,8 +131,40 @@ class tbpStationKeeping(object):
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # Time between correction maneuvers, s (LinearStabilityBounds).
+    # tbpStationKeeping
+    def CORRECTION_INTERVAL_S(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # 3-axis velocity execution error magnitude, km/s (LinearStabilityBounds).
+    # tbpStationKeeping
+    def DELTA_V_EXECUTION_ERROR_KM_S(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Result: linear-stability lower bound annual delta-v, km/s/yr.
+    # tbpStationKeeping
+    def LOWER_BOUND_ANNUAL_DELTA_V_KM_S(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Result: linear-stability upper bound annual delta-v, km/s/yr.
+    # tbpStationKeeping
+    def UPPER_BOUND_ANNUAL_DELTA_V_KM_S(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
 def tbpStationKeepingStart(builder):
-    builder.StartObject(10)
+    builder.StartObject(14)
 
 def Start(builder):
     tbpStationKeepingStart(builder)
@@ -213,6 +245,30 @@ def tbpStationKeepingAddBOUNDED(builder, BOUNDED):
 def AddBOUNDED(builder, BOUNDED):
     tbpStationKeepingAddBOUNDED(builder, BOUNDED)
 
+def tbpStationKeepingAddCORRECTION_INTERVAL_S(builder, CORRECTION_INTERVAL_S):
+    builder.PrependFloat64Slot(10, CORRECTION_INTERVAL_S, 0.0)
+
+def AddCORRECTION_INTERVAL_S(builder, CORRECTION_INTERVAL_S):
+    tbpStationKeepingAddCORRECTION_INTERVAL_S(builder, CORRECTION_INTERVAL_S)
+
+def tbpStationKeepingAddDELTA_V_EXECUTION_ERROR_KM_S(builder, DELTA_V_EXECUTION_ERROR_KM_S):
+    builder.PrependFloat64Slot(11, DELTA_V_EXECUTION_ERROR_KM_S, 0.0)
+
+def AddDELTA_V_EXECUTION_ERROR_KM_S(builder, DELTA_V_EXECUTION_ERROR_KM_S):
+    tbpStationKeepingAddDELTA_V_EXECUTION_ERROR_KM_S(builder, DELTA_V_EXECUTION_ERROR_KM_S)
+
+def tbpStationKeepingAddLOWER_BOUND_ANNUAL_DELTA_V_KM_S(builder, LOWER_BOUND_ANNUAL_DELTA_V_KM_S):
+    builder.PrependFloat64Slot(12, LOWER_BOUND_ANNUAL_DELTA_V_KM_S, 0.0)
+
+def AddLOWER_BOUND_ANNUAL_DELTA_V_KM_S(builder, LOWER_BOUND_ANNUAL_DELTA_V_KM_S):
+    tbpStationKeepingAddLOWER_BOUND_ANNUAL_DELTA_V_KM_S(builder, LOWER_BOUND_ANNUAL_DELTA_V_KM_S)
+
+def tbpStationKeepingAddUPPER_BOUND_ANNUAL_DELTA_V_KM_S(builder, UPPER_BOUND_ANNUAL_DELTA_V_KM_S):
+    builder.PrependFloat64Slot(13, UPPER_BOUND_ANNUAL_DELTA_V_KM_S, 0.0)
+
+def AddUPPER_BOUND_ANNUAL_DELTA_V_KM_S(builder, UPPER_BOUND_ANNUAL_DELTA_V_KM_S):
+    tbpStationKeepingAddUPPER_BOUND_ANNUAL_DELTA_V_KM_S(builder, UPPER_BOUND_ANNUAL_DELTA_V_KM_S)
+
 def tbpStationKeepingEnd(builder):
     return builder.EndObject()
 
@@ -240,6 +296,10 @@ class tbpStationKeepingT(object):
         MAX_CYCLE_DELTA_V_KM_S = 0.0,
         CYCLE_DELTA_V_KM_S = None,
         BOUNDED = False,
+        CORRECTION_INTERVAL_S = 0.0,
+        DELTA_V_EXECUTION_ERROR_KM_S = 0.0,
+        LOWER_BOUND_ANNUAL_DELTA_V_KM_S = 0.0,
+        UPPER_BOUND_ANNUAL_DELTA_V_KM_S = 0.0,
     ):
         self.ORBIT = ORBIT  # type: Optional[tbpPeriodicOrbit.tbpPeriodicOrbitT]
         self.STRATEGY = STRATEGY  # type: int
@@ -251,6 +311,10 @@ class tbpStationKeepingT(object):
         self.MAX_CYCLE_DELTA_V_KM_S = MAX_CYCLE_DELTA_V_KM_S  # type: float
         self.CYCLE_DELTA_V_KM_S = CYCLE_DELTA_V_KM_S  # type: Optional[List[float]]
         self.BOUNDED = BOUNDED  # type: bool
+        self.CORRECTION_INTERVAL_S = CORRECTION_INTERVAL_S  # type: float
+        self.DELTA_V_EXECUTION_ERROR_KM_S = DELTA_V_EXECUTION_ERROR_KM_S  # type: float
+        self.LOWER_BOUND_ANNUAL_DELTA_V_KM_S = LOWER_BOUND_ANNUAL_DELTA_V_KM_S  # type: float
+        self.UPPER_BOUND_ANNUAL_DELTA_V_KM_S = UPPER_BOUND_ANNUAL_DELTA_V_KM_S  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -290,6 +354,10 @@ class tbpStationKeepingT(object):
             else:
                 self.CYCLE_DELTA_V_KM_S = tbpStationKeeping.CYCLE_DELTA_V_KM_SAsNumpy()
         self.BOUNDED = tbpStationKeeping.BOUNDED()
+        self.CORRECTION_INTERVAL_S = tbpStationKeeping.CORRECTION_INTERVAL_S()
+        self.DELTA_V_EXECUTION_ERROR_KM_S = tbpStationKeeping.DELTA_V_EXECUTION_ERROR_KM_S()
+        self.LOWER_BOUND_ANNUAL_DELTA_V_KM_S = tbpStationKeeping.LOWER_BOUND_ANNUAL_DELTA_V_KM_S()
+        self.UPPER_BOUND_ANNUAL_DELTA_V_KM_S = tbpStationKeeping.UPPER_BOUND_ANNUAL_DELTA_V_KM_S()
 
     # tbpStationKeepingT
     def Pack(self, builder):
@@ -316,5 +384,9 @@ class tbpStationKeepingT(object):
         if self.CYCLE_DELTA_V_KM_S is not None:
             tbpStationKeepingAddCYCLE_DELTA_V_KM_S(builder, CYCLE_DELTA_V_KM_S)
         tbpStationKeepingAddBOUNDED(builder, self.BOUNDED)
+        tbpStationKeepingAddCORRECTION_INTERVAL_S(builder, self.CORRECTION_INTERVAL_S)
+        tbpStationKeepingAddDELTA_V_EXECUTION_ERROR_KM_S(builder, self.DELTA_V_EXECUTION_ERROR_KM_S)
+        tbpStationKeepingAddLOWER_BOUND_ANNUAL_DELTA_V_KM_S(builder, self.LOWER_BOUND_ANNUAL_DELTA_V_KM_S)
+        tbpStationKeepingAddUPPER_BOUND_ANNUAL_DELTA_V_KM_S(builder, self.UPPER_BOUND_ANNUAL_DELTA_V_KM_S)
         tbpStationKeeping = tbpStationKeepingEnd(builder)
         return tbpStationKeeping

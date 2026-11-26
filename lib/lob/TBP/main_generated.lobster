@@ -67,6 +67,16 @@ enum tbpProblem:
     tbpProblem_FrameConversion = 9
     /// Members of a periodic-orbit family.
     tbpProblem_Family = 10
+    /// Pseudo-arclength or natural-parameter continuation from a seed orbit.
+    tbpProblem_Continuation = 11
+    /// Stable and unstable invariant manifolds of an unstable periodic orbit.
+    tbpProblem_Manifolds = 12
+    /// Diagnostic properties of a periodic orbit (apsides, stability, occultations).
+    tbpProblem_OrbitProperties = 13
+    /// Time-phased multi-spacecraft constellation along a periodic CR3BP orbit.
+    tbpProblem_Constellation = 14
+    /// Primary-body surface coverage gaps, elevation, occultations, and DOP.
+    tbpProblem_SurfaceAnalysis = 15
 
 /// Family of a periodic orbit. Append new values only; never reorder or reuse
 /// existing values.
@@ -90,6 +100,14 @@ enum tbpOrbitFamily:
     tbpOrbitFamily_Axial = 8
     /// Short- or long-period orbit about L4 or L5.
     tbpOrbitFamily_LongShortPeriod = 9
+    /// Northern-hemisphere sidereal-resonant tulip-shaped CR3BP orbit.
+    tbpOrbitFamily_TulipNorthern = 10
+    /// Southern-hemisphere sidereal-resonant tulip-shaped CR3BP orbit.
+    tbpOrbitFamily_TulipSouthern = 11
+    /// Northern-hemisphere multi-petal pumpkin-shaped CR3BP orbit.
+    tbpOrbitFamily_PumpkinNorthern = 12
+    /// Southern-hemisphere multi-petal pumpkin-shaped CR3BP orbit.
+    tbpOrbitFamily_PumpkinSouthern = 13
 
 /// How a transfer is built. Append new values only; never reorder or reuse
 /// existing values.
@@ -109,6 +127,14 @@ enum tbpTransferKind:
     tbpTransferKind_DirectInsertion = 6
     /// Insertion into a periodic orbit (TARGET_ORBIT).
     tbpTransferKind_PeriodicOrbitInsertion = 7
+    /// Theoretical minimum Jacobi-energy delta-v between states or to surface.
+    tbpTransferKind_MinEnergy = 8
+    /// Single-revolution STM-targeted direct CR3BP Lambert transfer.
+    tbpTransferKind_DirectLambert = 9
+    /// Minimum-delta-v CR3BP Lambert across prograde/retrograde and primaries.
+    tbpTransferKind_MinLambert = 10
+    /// Minimum-time low-thrust optimal control (Pontryagin Minimum Principle).
+    tbpTransferKind_LowThrustMinTime = 11
 
 /// When station-keeping burns are placed. Append new values only; never
 /// reorder or reuse existing values.
@@ -119,12 +145,32 @@ enum tbpStationKeepingStrategy:
     tbpStationKeepingStrategy_TargetPoint = 1
     /// Suppress the unstable Floquet mode.
     tbpStationKeepingStrategy_FloquetMode = 2
+    /// Linear stability lower/upper annual delta-v bounds across intervals.
+    tbpStationKeepingStrategy_LinearStabilityBounds = 3
 
 /// Direction of a frame conversion. Append new values only; never reorder or
 /// reuse existing values.
 enum tbpConversionDirection:
     tbpConversionDirection_SynodicToInertial = 0
     tbpConversionDirection_InertialToSynodic = 1
+    tbpConversionDirection_SynodicToJ2000 = 2
+    tbpConversionDirection_J2000ToSynodic = 3
+    tbpConversionDirection_SynodicToPrimaryInertial = 4
+    tbpConversionDirection_PrimaryInertialToSynodic = 5
+    tbpConversionDirection_SynodicToLla = 6
+    tbpConversionDirection_LlaToSynodic = 7
+    tbpConversionDirection_SynodicToOrbitalElements = 8
+    tbpConversionDirection_OrbitalElementsToSynodic = 9
+
+/// Which invariant manifold branches to compute. Append new values only;
+/// never reorder or reuse existing values.
+enum tbpManifoldBranchKind:
+    /// Both stable and unstable branches (interior and exterior).
+    tbpManifoldBranchKind_Both = 0
+    /// Stable invariant manifold branches only (backward propagation).
+    tbpManifoldBranchKind_StableOnly = 1
+    /// Unstable invariant manifold branches only (forward propagation).
+    tbpManifoldBranchKind_UnstableOnly = 2
 
 /// Outcome. Append new values only; never reorder or reuse existing values.
 enum tbpStatus:
@@ -154,6 +200,16 @@ class tbpTransfer
 class tbpStationKeeping
 
 class tbpFrameConversion
+
+class tbpContinuationRequest
+
+class tbpManifoldBranch
+
+class tbpManifolds
+
+class tbpConstellation
+
+class tbpSurfaceAnalysis
 
 class TBP
 
@@ -509,13 +565,59 @@ class tbpPeriodicOrbit : flatbuffers.handle
     def TRAJECTORY() -> tbpTrajectory?:
         let o = flatbuffers.field_table(buf_, pos_, 42)
         return if o: tbpTrajectory { buf_, o } else: nil
+    /// Tulip/pumpkin petal count Np; 0 = not applicable.
+    def PETALS() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 44, 0)
+    /// Sidereal resonance denominator p (period = q * 2*pi / p); 0 = not stated.
+    def RESONANCE_P() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 46, 0)
+    /// Sidereal resonance numerator q; 0 = not stated.
+    def RESONANCE_Q() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 48, 0)
+    /// CR3BP pseudo-potential U* at the initial state.
+    def PSEUDO_POTENTIAL() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 50, 0.0)
+    /// Minimum distance from the larger primary (P1), km; 0 = not computed.
+    def PERIGEE_KM() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 52, 0.0)
+    /// Maximum distance from the larger primary (P1), km; 0 = not computed.
+    def APOGEE_KM() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 54, 0.0)
+    /// Instability doubling time, non-dimensional; 0 = stable or not computed.
+    def DOUBLING_TIME() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 56, 0.0)
+    /// Floquet/Lyapunov characteristic exponent, non-dimensional; 0 = not computed.
+    def CHARACTERISTIC_EXPONENT() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 58, 0.0)
+    /// Longest continuous P2 (lunar) occultation per period, s.
+    def MAX_LUNAR_OCCULTATION_S() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 60, 0.0)
+    /// Total P2 (lunar) occultation duration per period, s.
+    def TOTAL_LUNAR_OCCULTATION_S() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 62, 0.0)
+    /// Longest continuous P1 (Earth) occultation per period, s.
+    def MAX_EARTH_OCCULTATION_S() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 64, 0.0)
+    /// Total P1 (Earth) occultation duration per period, s.
+    def TOTAL_EARTH_OCCULTATION_S() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 66, 0.0)
+    /// Unit stable eigenvector of the monodromy matrix (6 values); empty = none.
+    def STABLE_EIGENVECTOR(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 68) + i * 8)
+    def STABLE_EIGENVECTOR_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 68)
+    /// Unit unstable eigenvector of the monodromy matrix (6 values); empty = none.
+    def UNSTABLE_EIGENVECTOR(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 70) + i * 8)
+    def UNSTABLE_EIGENVECTOR_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 70)
 
 def GetRootAstbpPeriodicOrbit(buf:string): return tbpPeriodicOrbit { buf, flatbuffers.indirect(buf, 0) }
 
 struct tbpPeriodicOrbitBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(20)
+        b_.StartObject(34)
         return this
     def add_FAMILY(FAMILY:tbpOrbitFamily):
         b_.PrependUint8Slot(0, FAMILY, 0)
@@ -577,6 +679,48 @@ struct tbpPeriodicOrbitBuilder:
     def add_TRAJECTORY(TRAJECTORY:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(19, TRAJECTORY)
         return this
+    def add_PETALS(PETALS:int):
+        b_.PrependUint32Slot(20, PETALS, 0)
+        return this
+    def add_RESONANCE_P(RESONANCE_P:int):
+        b_.PrependUint32Slot(21, RESONANCE_P, 0)
+        return this
+    def add_RESONANCE_Q(RESONANCE_Q:int):
+        b_.PrependUint32Slot(22, RESONANCE_Q, 0)
+        return this
+    def add_PSEUDO_POTENTIAL(PSEUDO_POTENTIAL:float):
+        b_.PrependFloat64Slot(23, PSEUDO_POTENTIAL, 0.0)
+        return this
+    def add_PERIGEE_KM(PERIGEE_KM:float):
+        b_.PrependFloat64Slot(24, PERIGEE_KM, 0.0)
+        return this
+    def add_APOGEE_KM(APOGEE_KM:float):
+        b_.PrependFloat64Slot(25, APOGEE_KM, 0.0)
+        return this
+    def add_DOUBLING_TIME(DOUBLING_TIME:float):
+        b_.PrependFloat64Slot(26, DOUBLING_TIME, 0.0)
+        return this
+    def add_CHARACTERISTIC_EXPONENT(CHARACTERISTIC_EXPONENT:float):
+        b_.PrependFloat64Slot(27, CHARACTERISTIC_EXPONENT, 0.0)
+        return this
+    def add_MAX_LUNAR_OCCULTATION_S(MAX_LUNAR_OCCULTATION_S:float):
+        b_.PrependFloat64Slot(28, MAX_LUNAR_OCCULTATION_S, 0.0)
+        return this
+    def add_TOTAL_LUNAR_OCCULTATION_S(TOTAL_LUNAR_OCCULTATION_S:float):
+        b_.PrependFloat64Slot(29, TOTAL_LUNAR_OCCULTATION_S, 0.0)
+        return this
+    def add_MAX_EARTH_OCCULTATION_S(MAX_EARTH_OCCULTATION_S:float):
+        b_.PrependFloat64Slot(30, MAX_EARTH_OCCULTATION_S, 0.0)
+        return this
+    def add_TOTAL_EARTH_OCCULTATION_S(TOTAL_EARTH_OCCULTATION_S:float):
+        b_.PrependFloat64Slot(31, TOTAL_EARTH_OCCULTATION_S, 0.0)
+        return this
+    def add_STABLE_EIGENVECTOR(STABLE_EIGENVECTOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(32, STABLE_EIGENVECTOR)
+        return this
+    def add_UNSTABLE_EIGENVECTOR(UNSTABLE_EIGENVECTOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(33, UNSTABLE_EIGENVECTOR)
+        return this
     def end():
         return b_.EndObject()
 
@@ -597,6 +741,20 @@ def tbpPeriodicOrbitCreateFLOQUETREALVector(b_:flatbuffers.builder, v_:[float]):
 def tbpPeriodicOrbitStartFLOQUETIMAGINARYVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
 def tbpPeriodicOrbitCreateFLOQUETIMAGINARYVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def tbpPeriodicOrbitStartSTABLEEIGENVECTORVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def tbpPeriodicOrbitCreateSTABLEEIGENVECTORVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def tbpPeriodicOrbitStartUNSTABLEEIGENVECTORVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def tbpPeriodicOrbitCreateUNSTABLEEIGENVECTORVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
@@ -684,13 +842,55 @@ class tbpTransfer : flatbuffers.handle
     def TRAJECTORY() -> tbpTrajectory?:
         let o = flatbuffers.field_table(buf_, pos_, 26)
         return if o: tbpTrajectory { buf_, o } else: nil
+    /// Departure state in synodic frame (MinEnergy, DirectLambert, MinLambert, LowThrustMinTime).
+    def INITIAL_STATE() -> tbpState?:
+        let o = flatbuffers.field_table(buf_, pos_, 28)
+        return if o: tbpState { buf_, o } else: nil
+    /// Arrival state in synodic frame.
+    def FINAL_STATE() -> tbpState?:
+        let o = flatbuffers.field_table(buf_, pos_, 30)
+        return if o: tbpState { buf_, o } else: nil
+    /// False = prograde (default), true = retrograde (DirectLambert).
+    def RETROGRADE() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 32, 0))
+    /// Reference primary body for Lambert seeding: 0 = auto, 1 = P1, 2 = P2.
+    def REFERENCE_PRIMARY() -> int:
+        return flatbuffers.field_uint8(buf_, pos_, 34, 0)
+    /// Low-thrust maximum thrust, N (LowThrustMinTime).
+    def MAX_THRUST_N() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 36, 0.0)
+    /// Engine specific impulse Isp, s (LowThrustMinTime).
+    def SPECIFIC_IMPULSE_S() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 38, 0.0)
+    /// Initial wet spacecraft mass, kg.
+    def INITIAL_MASS_KG() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 40, 0.0)
+    /// Result: final spacecraft mass at arrival, kg.
+    def FINAL_MASS_KG() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 42, 0.0)
+    /// Result: propellant consumed, kg.
+    def PROPELLANT_MASS_KG() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 44, 0.0)
+    /// Initial costates [lambda_rx, ry, rz, vx, vy, vz, m] guess or solved.
+    def INITIAL_COSTATES(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 46) + i * 8)
+    def INITIAL_COSTATES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 46)
+    /// Result: normalized throttle [0..1] per trajectory sample.
+    def THROTTLE_HISTORY(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 48) + i * 8)
+    def THROTTLE_HISTORY_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 48)
+    /// Result: theoretical minimum Jacobi-energy delta-v, km/s (MinEnergy).
+    def MIN_ENERGY_DELTA_V_KM_S() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 50, 0.0)
 
 def GetRootAstbpTransfer(buf:string): return tbpTransfer { buf, flatbuffers.indirect(buf, 0) }
 
 struct tbpTransferBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(12)
+        b_.StartObject(24)
         return this
     def add_KIND(KIND:tbpTransferKind):
         b_.PrependUint8Slot(0, KIND, 0)
@@ -728,6 +928,42 @@ struct tbpTransferBuilder:
     def add_TRAJECTORY(TRAJECTORY:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(11, TRAJECTORY)
         return this
+    def add_INITIAL_STATE(INITIAL_STATE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(12, INITIAL_STATE)
+        return this
+    def add_FINAL_STATE(FINAL_STATE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(13, FINAL_STATE)
+        return this
+    def add_RETROGRADE(RETROGRADE:bool):
+        b_.PrependBoolSlot(14, RETROGRADE, 0)
+        return this
+    def add_REFERENCE_PRIMARY(REFERENCE_PRIMARY:int):
+        b_.PrependUint8Slot(15, REFERENCE_PRIMARY, 0)
+        return this
+    def add_MAX_THRUST_N(MAX_THRUST_N:float):
+        b_.PrependFloat64Slot(16, MAX_THRUST_N, 0.0)
+        return this
+    def add_SPECIFIC_IMPULSE_S(SPECIFIC_IMPULSE_S:float):
+        b_.PrependFloat64Slot(17, SPECIFIC_IMPULSE_S, 0.0)
+        return this
+    def add_INITIAL_MASS_KG(INITIAL_MASS_KG:float):
+        b_.PrependFloat64Slot(18, INITIAL_MASS_KG, 0.0)
+        return this
+    def add_FINAL_MASS_KG(FINAL_MASS_KG:float):
+        b_.PrependFloat64Slot(19, FINAL_MASS_KG, 0.0)
+        return this
+    def add_PROPELLANT_MASS_KG(PROPELLANT_MASS_KG:float):
+        b_.PrependFloat64Slot(20, PROPELLANT_MASS_KG, 0.0)
+        return this
+    def add_INITIAL_COSTATES(INITIAL_COSTATES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(21, INITIAL_COSTATES)
+        return this
+    def add_THROTTLE_HISTORY(THROTTLE_HISTORY:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(22, THROTTLE_HISTORY)
+        return this
+    def add_MIN_ENERGY_DELTA_V_KM_S(MIN_ENERGY_DELTA_V_KM_S:float):
+        b_.PrependFloat64Slot(23, MIN_ENERGY_DELTA_V_KM_S, 0.0)
+        return this
     def end():
         return b_.EndObject()
 
@@ -736,6 +972,20 @@ def tbpTransferStartBURNSVector(b_:flatbuffers.builder, n_:int):
 def tbpTransferCreateBURNSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def tbpTransferStartINITIALCOSTATESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def tbpTransferCreateINITIALCOSTATESVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def tbpTransferStartTHROTTLEHISTORYVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def tbpTransferCreateTHROTTLEHISTORYVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
 /// Station-keeping budget for a periodic orbit.
@@ -771,13 +1021,25 @@ class tbpStationKeeping : flatbuffers.handle
     /// Result: true when the orbit stays bounded over the simulation.
     def BOUNDED() -> bool:
         return bool(flatbuffers.field_int8(buf_, pos_, 22, 0))
+    /// Time between correction maneuvers, s (LinearStabilityBounds).
+    def CORRECTION_INTERVAL_S() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 24, 0.0)
+    /// 3-axis velocity execution error magnitude, km/s (LinearStabilityBounds).
+    def DELTA_V_EXECUTION_ERROR_KM_S() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 26, 0.0)
+    /// Result: linear-stability lower bound annual delta-v, km/s/yr.
+    def LOWER_BOUND_ANNUAL_DELTA_V_KM_S() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 28, 0.0)
+    /// Result: linear-stability upper bound annual delta-v, km/s/yr.
+    def UPPER_BOUND_ANNUAL_DELTA_V_KM_S() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 30, 0.0)
 
 def GetRootAstbpStationKeeping(buf:string): return tbpStationKeeping { buf, flatbuffers.indirect(buf, 0) }
 
 struct tbpStationKeepingBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(10)
+        b_.StartObject(14)
         return this
     def add_ORBIT(ORBIT:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, ORBIT)
@@ -808,6 +1070,18 @@ struct tbpStationKeepingBuilder:
         return this
     def add_BOUNDED(BOUNDED:bool):
         b_.PrependBoolSlot(9, BOUNDED, 0)
+        return this
+    def add_CORRECTION_INTERVAL_S(CORRECTION_INTERVAL_S:float):
+        b_.PrependFloat64Slot(10, CORRECTION_INTERVAL_S, 0.0)
+        return this
+    def add_DELTA_V_EXECUTION_ERROR_KM_S(DELTA_V_EXECUTION_ERROR_KM_S:float):
+        b_.PrependFloat64Slot(11, DELTA_V_EXECUTION_ERROR_KM_S, 0.0)
+        return this
+    def add_LOWER_BOUND_ANNUAL_DELTA_V_KM_S(LOWER_BOUND_ANNUAL_DELTA_V_KM_S:float):
+        b_.PrependFloat64Slot(12, LOWER_BOUND_ANNUAL_DELTA_V_KM_S, 0.0)
+        return this
+    def add_UPPER_BOUND_ANNUAL_DELTA_V_KM_S(UPPER_BOUND_ANNUAL_DELTA_V_KM_S:float):
+        b_.PrependFloat64Slot(13, UPPER_BOUND_ANNUAL_DELTA_V_KM_S, 0.0)
         return this
     def end():
         return b_.EndObject()
@@ -842,13 +1116,39 @@ class tbpFrameConversion : flatbuffers.handle
         return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 12) + i * 8)
     def INERTIAL_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 12)
+    /// Reference primary body: 0 = barycenter, 1 = P1 (Earth), 2 = P2 (Moon).
+    def REFERENCE_PRIMARY() -> int:
+        return flatbuffers.field_uint8(buf_, pos_, 14, 0)
+    /// Epoch Julian date (days) for J2000/ephemeris conversions; 0 = from REFERENCE_EPOCH_MS.
+    def JULIAN_DATE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 16, 0.0)
+    /// Geodetic/selenodetic coordinates [lat_deg, lon_deg, alt_km] (3 values).
+    def LLA_DEG_KM(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 18) + i * 8)
+    def LLA_DEG_KM_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 18)
+    /// Classical Keplerian elements [a_km, e, inc_deg, raan_deg, argp_deg, nu_deg] (6 values).
+    def ORBITAL_ELEMENTS(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 20) + i * 8)
+    def ORBITAL_ELEMENTS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 20)
+    /// Batch synodic states (N * 6 values, non-dimensional) for vectorized conversion.
+    def BATCH_SYNODIC_STATES(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 22) + i * 8)
+    def BATCH_SYNODIC_STATES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 22)
+    /// Batch inertial/target states (N * 6 values, km and km/s) for vectorized conversion.
+    def BATCH_INERTIAL_STATES(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 24) + i * 8)
+    def BATCH_INERTIAL_STATES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 24)
 
 def GetRootAstbpFrameConversion(buf:string): return tbpFrameConversion { buf, flatbuffers.indirect(buf, 0) }
 
 struct tbpFrameConversionBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(5)
+        b_.StartObject(11)
         return this
     def add_DIRECTION(DIRECTION:tbpConversionDirection):
         b_.PrependUint8Slot(0, DIRECTION, 0)
@@ -865,6 +1165,24 @@ struct tbpFrameConversionBuilder:
     def add_INERTIAL(INERTIAL:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(4, INERTIAL)
         return this
+    def add_REFERENCE_PRIMARY(REFERENCE_PRIMARY:int):
+        b_.PrependUint8Slot(5, REFERENCE_PRIMARY, 0)
+        return this
+    def add_JULIAN_DATE(JULIAN_DATE:float):
+        b_.PrependFloat64Slot(6, JULIAN_DATE, 0.0)
+        return this
+    def add_LLA_DEG_KM(LLA_DEG_KM:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(7, LLA_DEG_KM)
+        return this
+    def add_ORBITAL_ELEMENTS(ORBITAL_ELEMENTS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(8, ORBITAL_ELEMENTS)
+        return this
+    def add_BATCH_SYNODIC_STATES(BATCH_SYNODIC_STATES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(9, BATCH_SYNODIC_STATES)
+        return this
+    def add_BATCH_INERTIAL_STATES(BATCH_INERTIAL_STATES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(10, BATCH_INERTIAL_STATES)
+        return this
     def end():
         return b_.EndObject()
 
@@ -873,6 +1191,479 @@ def tbpFrameConversionStartINERTIALVector(b_:flatbuffers.builder, n_:int):
 def tbpFrameConversionCreateINERTIALVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def tbpFrameConversionStartLLADEGKMVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def tbpFrameConversionCreateLLADEGKMVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def tbpFrameConversionStartORBITALELEMENTSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def tbpFrameConversionCreateORBITALELEMENTSVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def tbpFrameConversionStartBATCHSYNODICSTATESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def tbpFrameConversionCreateBATCHSYNODICSTATESVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def tbpFrameConversionStartBATCHINERTIALSTATESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def tbpFrameConversionCreateBATCHINERTIALSTATESVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+/// Request parameters for pseudo-arclength or natural-parameter continuation.
+class tbpContinuationRequest : flatbuffers.handle
+    /// Seed periodic orbit (INITIAL_STATE and PERIOD required).
+    def SEED_ORBIT() -> tbpPeriodicOrbit?:
+        let o = flatbuffers.field_table(buf_, pos_, 4)
+        return if o: tbpPeriodicOrbit { buf_, o } else: nil
+    /// Arclength step size ds (signed); 0 = natural-parameter fixed-period refinement.
+    def STEP_SIZE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
+    /// Number of continuation steps to generate; 0 = 1.
+    def STEPS() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 8, 0)
+    /// True = fixed-period natural parameter continuation (cont_np); false = pseudo-arclength (cont).
+    def FIXED_PERIOD() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 10, 0))
+    /// Optional 7-element previous null-vector tangent for directional continuation.
+    def NULL_VECTOR(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 12) + i * 8)
+    def NULL_VECTOR_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 12)
+    /// Convergence tolerance on periodicity residual; 0 = default (1e-10).
+    def TOLERANCE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 14, 0.0)
+    /// Maximum corrector iterations per step; 0 = default.
+    def MAX_ITERATIONS() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 16, 0)
+
+def GetRootAstbpContinuationRequest(buf:string): return tbpContinuationRequest { buf, flatbuffers.indirect(buf, 0) }
+
+struct tbpContinuationRequestBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(7)
+        return this
+    def add_SEED_ORBIT(SEED_ORBIT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, SEED_ORBIT)
+        return this
+    def add_STEP_SIZE(STEP_SIZE:float):
+        b_.PrependFloat64Slot(1, STEP_SIZE, 0.0)
+        return this
+    def add_STEPS(STEPS:int):
+        b_.PrependUint32Slot(2, STEPS, 0)
+        return this
+    def add_FIXED_PERIOD(FIXED_PERIOD:bool):
+        b_.PrependBoolSlot(3, FIXED_PERIOD, 0)
+        return this
+    def add_NULL_VECTOR(NULL_VECTOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, NULL_VECTOR)
+        return this
+    def add_TOLERANCE(TOLERANCE:float):
+        b_.PrependFloat64Slot(5, TOLERANCE, 0.0)
+        return this
+    def add_MAX_ITERATIONS(MAX_ITERATIONS:int):
+        b_.PrependUint32Slot(6, MAX_ITERATIONS, 0)
+        return this
+    def end():
+        return b_.EndObject()
+
+def tbpContinuationRequestStartNULLVECTORVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def tbpContinuationRequestCreateNULLVECTORVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+/// One stable or unstable invariant manifold branch emanating from a periodic orbit.
+class tbpManifoldBranch : flatbuffers.handle
+    /// True = stable branch (integrated backward), false = unstable branch (forward).
+    def STABLE() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 4, 0))
+    /// True = exterior (+eigenvector), false = interior (-eigenvector).
+    def EXTERIOR() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 6, 0))
+    /// Index of the seed point along the periodic orbit.
+    def SEED_INDEX() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 8, 0)
+    /// Perturbed initial state on the manifold, non-dimensional.
+    def INITIAL_STATE() -> tbpState?:
+        let o = flatbuffers.field_table(buf_, pos_, 10)
+        return if o: tbpState { buf_, o } else: nil
+    /// Propagated manifold trajectory.
+    def TRAJECTORY() -> tbpTrajectory?:
+        let o = flatbuffers.field_table(buf_, pos_, 12)
+        return if o: tbpTrajectory { buf_, o } else: nil
+
+def GetRootAstbpManifoldBranch(buf:string): return tbpManifoldBranch { buf, flatbuffers.indirect(buf, 0) }
+
+struct tbpManifoldBranchBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(5)
+        return this
+    def add_STABLE(STABLE:bool):
+        b_.PrependBoolSlot(0, STABLE, 0)
+        return this
+    def add_EXTERIOR(EXTERIOR:bool):
+        b_.PrependBoolSlot(1, EXTERIOR, 0)
+        return this
+    def add_SEED_INDEX(SEED_INDEX:int):
+        b_.PrependUint32Slot(2, SEED_INDEX, 0)
+        return this
+    def add_INITIAL_STATE(INITIAL_STATE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, INITIAL_STATE)
+        return this
+    def add_TRAJECTORY(TRAJECTORY:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, TRAJECTORY)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// Invariant manifold request and computed branches for an unstable periodic orbit.
+class tbpManifolds : flatbuffers.handle
+    /// Periodic orbit to perturb (INITIAL_STATE and PERIOD required).
+    def ORBIT() -> tbpPeriodicOrbit?:
+        let o = flatbuffers.field_table(buf_, pos_, 4)
+        return if o: tbpPeriodicOrbit { buf_, o } else: nil
+    /// Perturbation distance epsilon (non-dimensional); 0 = default (1e-5).
+    def PERTURBATION() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
+    /// Propagation duration per branch, non-dimensional; 0 = one orbit period.
+    def DURATION() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
+    /// Number of seed points along the periodic orbit; 0 = default (12).
+    def SAMPLE_POINTS() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 10, 0)
+    /// Which manifold branches to generate.
+    def BRANCH_KIND() -> tbpManifoldBranchKind:
+        return tbpManifoldBranchKind(flatbuffers.field_uint8(buf_, pos_, 12, 0))
+    /// Computed manifold branches.
+    def BRANCHES(i:int) -> tbpManifoldBranch:
+        return tbpManifoldBranch { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 14) + i * 4) }
+    def BRANCHES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 14)
+
+def GetRootAstbpManifolds(buf:string): return tbpManifolds { buf, flatbuffers.indirect(buf, 0) }
+
+struct tbpManifoldsBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(6)
+        return this
+    def add_ORBIT(ORBIT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, ORBIT)
+        return this
+    def add_PERTURBATION(PERTURBATION:float):
+        b_.PrependFloat64Slot(1, PERTURBATION, 0.0)
+        return this
+    def add_DURATION(DURATION:float):
+        b_.PrependFloat64Slot(2, DURATION, 0.0)
+        return this
+    def add_SAMPLE_POINTS(SAMPLE_POINTS:int):
+        b_.PrependUint32Slot(3, SAMPLE_POINTS, 0)
+        return this
+    def add_BRANCH_KIND(BRANCH_KIND:tbpManifoldBranchKind):
+        b_.PrependUint8Slot(4, BRANCH_KIND, 0)
+        return this
+    def add_BRANCHES(BRANCHES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, BRANCHES)
+        return this
+    def end():
+        return b_.EndObject()
+
+def tbpManifoldsStartBRANCHESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def tbpManifoldsCreateBRANCHESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+/// Multi-spacecraft time-phased CR3BP constellation along a periodic orbit.
+class tbpConstellation : flatbuffers.handle
+    /// Generating periodic orbit (FAMILY + PETALS + PERIOD or explicit INITIAL_STATE).
+    def ORBIT() -> tbpPeriodicOrbit?:
+        let o = flatbuffers.field_table(buf_, pos_, 4)
+        return if o: tbpPeriodicOrbit { buf_, o } else: nil
+    /// Number of spacecraft in the constellation.
+    def SATELLITE_COUNT() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 6, 0)
+    /// Number of orbit revolutions to propagate; 0 = 1.
+    def REVOLUTIONS() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 8, 0)
+    /// Non-dimensional phase offsets (length SATELLITE_COUNT); empty = evenly spaced.
+    def PHASE_OFFSETS(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 10) + i * 8)
+    def PHASE_OFFSETS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 10)
+    /// Uniform time samples per spacecraft trajectory; 0 = default.
+    def OUTPUT_POINTS() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 12, 0)
+    /// Result: propagated trajectory for each spacecraft in the constellation.
+    def TRAJECTORIES(i:int) -> tbpTrajectory:
+        return tbpTrajectory { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 14) + i * 4) }
+    def TRAJECTORIES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 14)
+
+def GetRootAstbpConstellation(buf:string): return tbpConstellation { buf, flatbuffers.indirect(buf, 0) }
+
+struct tbpConstellationBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(6)
+        return this
+    def add_ORBIT(ORBIT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, ORBIT)
+        return this
+    def add_SATELLITE_COUNT(SATELLITE_COUNT:int):
+        b_.PrependUint32Slot(1, SATELLITE_COUNT, 0)
+        return this
+    def add_REVOLUTIONS(REVOLUTIONS:int):
+        b_.PrependUint32Slot(2, REVOLUTIONS, 0)
+        return this
+    def add_PHASE_OFFSETS(PHASE_OFFSETS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, PHASE_OFFSETS)
+        return this
+    def add_OUTPUT_POINTS(OUTPUT_POINTS:int):
+        b_.PrependUint32Slot(4, OUTPUT_POINTS, 0)
+        return this
+    def add_TRAJECTORIES(TRAJECTORIES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, TRAJECTORIES)
+        return this
+    def end():
+        return b_.EndObject()
+
+def tbpConstellationStartPHASEOFFSETSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def tbpConstellationCreatePHASEOFFSETSVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def tbpConstellationStartTRAJECTORIESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def tbpConstellationCreateTRAJECTORIESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+/// Surface coverage gap, elevation angle, occultation, and DOP analysis on a primary body.
+class tbpSurfaceAnalysis : flatbuffers.handle
+    /// Target primary body: 0 or 2 = smaller primary (Moon), 1 = larger primary (Earth).
+    def REFERENCE_PRIMARY() -> int:
+        return flatbuffers.field_uint8(buf_, pos_, 4, 0)
+    /// Radius of target primary body, km; 0 = default body radius.
+    def PRIMARY_RADIUS_KM() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
+    /// Minimum elevation mask angle above local horizon, deg; 0 = horizon (0 deg).
+    def MIN_ELEVATION_DEG() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
+    /// Minimum simultaneous satellites in view for coverage; 0 = 1.
+    def MIN_SATELLITES() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 10, 0)
+    /// Surface observer positions in synodic frame (P * 3 non-dimensional values); empty = auto Fibonacci sphere.
+    def SURFACE_POINTS_SYNODIC(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 12) + i * 8)
+    def SURFACE_POINTS_SYNODIC_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 12)
+    /// Surface observer lat/lon pairs [lat0, lon0, ...] in deg (P * 2 values).
+    def SURFACE_LAT_LON_DEG(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 14) + i * 8)
+    def SURFACE_LAT_LON_DEG_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 14)
+    /// Number of Fibonacci surface grid points when SURFACE_POINTS_SYNODIC is empty; 0 = default.
+    def GRID_POINT_COUNT() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 16, 0)
+    /// Result: non-dimensional sample times (T values).
+    def SAMPLE_TIMES(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 18) + i * 8)
+    def SAMPLE_TIMES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 18)
+    /// Result: maximum uncovered gap duration per surface point, s (P values).
+    def MAX_GAP_S(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 20) + i * 8)
+    def MAX_GAP_S_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 20)
+    /// Result: geometric dilution of precision (T * P values, NaN/0 when <4 sats visible).
+    def GDOP(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 22) + i * 8)
+    def GDOP_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 22)
+    /// Result: position dilution of precision (T * P values).
+    def PDOP(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 24) + i * 8)
+    def PDOP_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 24)
+    /// Result: time dilution of precision (T * P values).
+    def TDOP(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 26) + i * 8)
+    def TDOP_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 26)
+    /// Result: maximum elevation angle per sample and surface point, deg (T * P values).
+    def ELEVATION_DEG(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 28) + i * 8)
+    def ELEVATION_DEG_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 28)
+    /// Result: occultation interval start times, s (M values).
+    def OCCULTATION_START_S(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 30) + i * 8)
+    def OCCULTATION_START_S_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 30)
+    /// Result: occultation interval end times, s (M values).
+    def OCCULTATION_END_S(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 32) + i * 8)
+    def OCCULTATION_END_S_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 32)
+    /// Result: occulting body index per interval (1 = P1, 2 = P2; M values).
+    def OCCULTING_PRIMARY(i:int) -> int:
+        return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 34) + i * 1)
+    def OCCULTING_PRIMARY_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 34)
+
+def GetRootAstbpSurfaceAnalysis(buf:string): return tbpSurfaceAnalysis { buf, flatbuffers.indirect(buf, 0) }
+
+struct tbpSurfaceAnalysisBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(16)
+        return this
+    def add_REFERENCE_PRIMARY(REFERENCE_PRIMARY:int):
+        b_.PrependUint8Slot(0, REFERENCE_PRIMARY, 0)
+        return this
+    def add_PRIMARY_RADIUS_KM(PRIMARY_RADIUS_KM:float):
+        b_.PrependFloat64Slot(1, PRIMARY_RADIUS_KM, 0.0)
+        return this
+    def add_MIN_ELEVATION_DEG(MIN_ELEVATION_DEG:float):
+        b_.PrependFloat64Slot(2, MIN_ELEVATION_DEG, 0.0)
+        return this
+    def add_MIN_SATELLITES(MIN_SATELLITES:int):
+        b_.PrependUint32Slot(3, MIN_SATELLITES, 0)
+        return this
+    def add_SURFACE_POINTS_SYNODIC(SURFACE_POINTS_SYNODIC:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, SURFACE_POINTS_SYNODIC)
+        return this
+    def add_SURFACE_LAT_LON_DEG(SURFACE_LAT_LON_DEG:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, SURFACE_LAT_LON_DEG)
+        return this
+    def add_GRID_POINT_COUNT(GRID_POINT_COUNT:int):
+        b_.PrependUint32Slot(6, GRID_POINT_COUNT, 0)
+        return this
+    def add_SAMPLE_TIMES(SAMPLE_TIMES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(7, SAMPLE_TIMES)
+        return this
+    def add_MAX_GAP_S(MAX_GAP_S:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(8, MAX_GAP_S)
+        return this
+    def add_GDOP(GDOP:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(9, GDOP)
+        return this
+    def add_PDOP(PDOP:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(10, PDOP)
+        return this
+    def add_TDOP(TDOP:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(11, TDOP)
+        return this
+    def add_ELEVATION_DEG(ELEVATION_DEG:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(12, ELEVATION_DEG)
+        return this
+    def add_OCCULTATION_START_S(OCCULTATION_START_S:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(13, OCCULTATION_START_S)
+        return this
+    def add_OCCULTATION_END_S(OCCULTATION_END_S:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(14, OCCULTATION_END_S)
+        return this
+    def add_OCCULTING_PRIMARY(OCCULTING_PRIMARY:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(15, OCCULTING_PRIMARY)
+        return this
+    def end():
+        return b_.EndObject()
+
+def tbpSurfaceAnalysisStartSURFACEPOINTSSYNODICVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def tbpSurfaceAnalysisCreateSURFACEPOINTSSYNODICVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def tbpSurfaceAnalysisStartSURFACELATLONDEGVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def tbpSurfaceAnalysisCreateSURFACELATLONDEGVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def tbpSurfaceAnalysisStartSAMPLETIMESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def tbpSurfaceAnalysisCreateSAMPLETIMESVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def tbpSurfaceAnalysisStartMAXGAPSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def tbpSurfaceAnalysisCreateMAXGAPSVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def tbpSurfaceAnalysisStartGDOPVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def tbpSurfaceAnalysisCreateGDOPVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def tbpSurfaceAnalysisStartPDOPVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def tbpSurfaceAnalysisCreatePDOPVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def tbpSurfaceAnalysisStartTDOPVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def tbpSurfaceAnalysisCreateTDOPVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def tbpSurfaceAnalysisStartELEVATIONDEGVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def tbpSurfaceAnalysisCreateELEVATIONDEGVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def tbpSurfaceAnalysisStartOCCULTATIONSTARTSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def tbpSurfaceAnalysisCreateOCCULTATIONSTARTSVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def tbpSurfaceAnalysisStartOCCULTATIONENDSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def tbpSurfaceAnalysisCreateOCCULTATIONENDSVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def tbpSurfaceAnalysisStartOCCULTINGPRIMARYVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(1, n_, 1)
+def tbpSurfaceAnalysisCreateOCCULTINGPRIMARYVector(b_:flatbuffers.builder, v_:[int]):
+    b_.StartVector(1, v_.length, 1)
+    reverse(v_) e_: b_.PrependUint8(e_)
     return b_.EndVector(v_.length)
 
 /// Three-Body Problem - a CR3BP system and one answer about it.
@@ -916,10 +1707,10 @@ class TBP : flatbuffers.handle
         return if o: tbpState { buf_, o } else: nil
     def JACOBI() -> float:
         return flatbuffers.field_float64(buf_, pos_, 28, 0.0)
-    /// PeriodicOrbit, HaloFirstGuess, NearRectilinearHalo: the request fields
-    /// (FAMILY, LIBRATION_POINT, AMPLITUDE or perilune/apolune, TOLERANCE,
-    /// MAX_ITERATIONS) and the result. Family: the members, ordered along the
-    /// family's continuation parameter (AMPLITUDE).
+    /// PeriodicOrbit, HaloFirstGuess, NearRectilinearHalo, OrbitProperties: the
+    /// request fields (FAMILY, LIBRATION_POINT, AMPLITUDE, PETALS, or
+    /// perilune/apolune, TOLERANCE, MAX_ITERATIONS) and the result. Family and
+    /// Continuation: the members ordered along the continuation parameter.
     def ORBITS(i:int) -> tbpPeriodicOrbit:
         return tbpPeriodicOrbit { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 30) + i * 4) }
     def ORBITS_length() -> int:
@@ -933,13 +1724,29 @@ class TBP : flatbuffers.handle
     def FRAME_CONVERSION() -> tbpFrameConversion?:
         let o = flatbuffers.field_table(buf_, pos_, 36)
         return if o: tbpFrameConversion { buf_, o } else: nil
+    /// Continuation: pseudo-arclength or natural-parameter continuation request.
+    def CONTINUATION() -> tbpContinuationRequest?:
+        let o = flatbuffers.field_table(buf_, pos_, 38)
+        return if o: tbpContinuationRequest { buf_, o } else: nil
+    /// Manifolds: invariant stable/unstable manifold request and branches.
+    def MANIFOLDS() -> tbpManifolds?:
+        let o = flatbuffers.field_table(buf_, pos_, 40)
+        return if o: tbpManifolds { buf_, o } else: nil
+    /// Constellation: time-phased multi-spacecraft CR3BP constellation.
+    def CONSTELLATION() -> tbpConstellation?:
+        let o = flatbuffers.field_table(buf_, pos_, 42)
+        return if o: tbpConstellation { buf_, o } else: nil
+    /// SurfaceAnalysis: surface coverage gaps, elevation, occultations, and DOP.
+    def SURFACE_ANALYSIS() -> tbpSurfaceAnalysis?:
+        let o = flatbuffers.field_table(buf_, pos_, 44)
+        return if o: tbpSurfaceAnalysis { buf_, o } else: nil
 
 def GetRootAsTBP(buf:string): return TBP { buf, flatbuffers.indirect(buf, 0) }
 
 struct TBPBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(17)
+        b_.StartObject(21)
         return this
     def add_ID(ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, ID)
@@ -991,6 +1798,18 @@ struct TBPBuilder:
         return this
     def add_FRAME_CONVERSION(FRAME_CONVERSION:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(16, FRAME_CONVERSION)
+        return this
+    def add_CONTINUATION(CONTINUATION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(17, CONTINUATION)
+        return this
+    def add_MANIFOLDS(MANIFOLDS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(18, MANIFOLDS)
+        return this
+    def add_CONSTELLATION(CONSTELLATION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(19, CONSTELLATION)
+        return this
+    def add_SURFACE_ANALYSIS(SURFACE_ANALYSIS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(20, SURFACE_ANALYSIS)
         return this
     def end():
         return b_.EndObject()

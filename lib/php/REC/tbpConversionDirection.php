@@ -7,10 +7,26 @@ class tbpConversionDirection
 {
     const SynodicToInertial = 0;
     const InertialToSynodic = 1;
+    const SynodicToJ2000 = 2;
+    const J2000ToSynodic = 3;
+    const SynodicToPrimaryInertial = 4;
+    const PrimaryInertialToSynodic = 5;
+    const SynodicToLla = 6;
+    const LlaToSynodic = 7;
+    const SynodicToOrbitalElements = 8;
+    const OrbitalElementsToSynodic = 9;
 
     private static $names = array(
         tbpConversionDirection::SynodicToInertial=>"SynodicToInertial",
         tbpConversionDirection::InertialToSynodic=>"InertialToSynodic",
+        tbpConversionDirection::SynodicToJ2000=>"SynodicToJ2000",
+        tbpConversionDirection::J2000ToSynodic=>"J2000ToSynodic",
+        tbpConversionDirection::SynodicToPrimaryInertial=>"SynodicToPrimaryInertial",
+        tbpConversionDirection::PrimaryInertialToSynodic=>"PrimaryInertialToSynodic",
+        tbpConversionDirection::SynodicToLla=>"SynodicToLla",
+        tbpConversionDirection::LlaToSynodic=>"LlaToSynodic",
+        tbpConversionDirection::SynodicToOrbitalElements=>"SynodicToOrbitalElements",
+        tbpConversionDirection::OrbitalElementsToSynodic=>"OrbitalElementsToSynodic",
     );
 
     public static function Name($e)

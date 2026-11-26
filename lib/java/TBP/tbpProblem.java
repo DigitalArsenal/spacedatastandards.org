@@ -78,8 +78,28 @@ public final class tbpProblem {
    * Members of a periodic-orbit family.
    */
   public static final int Family = 10;
+  /**
+   * Pseudo-arclength or natural-parameter continuation from a seed orbit.
+   */
+  public static final int Continuation = 11;
+  /**
+   * Stable and unstable invariant manifolds of an unstable periodic orbit.
+   */
+  public static final int Manifolds = 12;
+  /**
+   * Diagnostic properties of a periodic orbit (apsides, stability, occultations).
+   */
+  public static final int OrbitProperties = 13;
+  /**
+   * Time-phased multi-spacecraft constellation along a periodic CR3BP orbit.
+   */
+  public static final int Constellation = 14;
+  /**
+   * Primary-body surface coverage gaps, elevation, occultations, and DOP.
+   */
+  public static final int SurfaceAnalysis = 15;
 
-  public static final String[] names = { "Unspecified", "Propagation", "LibrationPoints", "JacobiConstant", "PeriodicOrbit", "HaloFirstGuess", "NearRectilinearHalo", "Transfer", "StationKeeping", "FrameConversion", "Family", };
+  public static final String[] names = { "Unspecified", "Propagation", "LibrationPoints", "JacobiConstant", "PeriodicOrbit", "HaloFirstGuess", "NearRectilinearHalo", "Transfer", "StationKeeping", "FrameConversion", "Family", "Continuation", "Manifolds", "OrbitProperties", "Constellation", "SurfaceAnalysis", };
 
   public static String name(int e) { return names[e]; }
 }

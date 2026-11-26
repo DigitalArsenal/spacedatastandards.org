@@ -21,4 +21,12 @@ public enum tbpTransferKind : byte
   DirectInsertion = 6,
   /// Insertion into a periodic orbit (TARGET_ORBIT).
   PeriodicOrbitInsertion = 7,
+  /// Theoretical minimum Jacobi-energy delta-v between states or to surface.
+  MinEnergy = 8,
+  /// Single-revolution STM-targeted direct CR3BP Lambert transfer.
+  DirectLambert = 9,
+  /// Minimum-delta-v CR3BP Lambert across prograde/retrograde and primaries.
+  MinLambert = 10,
+  /// Minimum-time low-thrust optimal control (Pontryagin Minimum Principle).
+  LowThrustMinTime = 11,
 };

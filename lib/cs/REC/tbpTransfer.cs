@@ -40,6 +40,44 @@ public struct tbpTransfer : IFlatbufferObject
   public double TIME_OF_FLIGHT_S { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Result: the transfer trajectory; empty = not sampled.
   public tbpTrajectory? TRAJECTORY { get { int o = __p.__offset(26); return o != 0 ? (tbpTrajectory?)(new tbpTrajectory()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Departure state in synodic frame (MinEnergy, DirectLambert, MinLambert, LowThrustMinTime).
+  public tbpState? INITIAL_STATE { get { int o = __p.__offset(28); return o != 0 ? (tbpState?)(new tbpState()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Arrival state in synodic frame.
+  public tbpState? FINAL_STATE { get { int o = __p.__offset(30); return o != 0 ? (tbpState?)(new tbpState()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// False = prograde (default), true = retrograde (DirectLambert).
+  public bool RETROGRADE { get { int o = __p.__offset(32); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Reference primary body for Lambert seeding: 0 = auto, 1 = P1, 2 = P2.
+  public byte REFERENCE_PRIMARY { get { int o = __p.__offset(34); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
+  /// Low-thrust maximum thrust, N (LowThrustMinTime).
+  public double MAX_THRUST_N { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Engine specific impulse Isp, s (LowThrustMinTime).
+  public double SPECIFIC_IMPULSE_S { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Initial wet spacecraft mass, kg.
+  public double INITIAL_MASS_KG { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Result: final spacecraft mass at arrival, kg.
+  public double FINAL_MASS_KG { get { int o = __p.__offset(42); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Result: propellant consumed, kg.
+  public double PROPELLANT_MASS_KG { get { int o = __p.__offset(44); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Initial costates [lambda_rx, ry, rz, vx, vy, vz, m] guess or solved.
+  public double INITIAL_COSTATES(int j) { int o = __p.__offset(46); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int INITIAL_COSTATESLength { get { int o = __p.__offset(46); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetINITIAL_COSTATESBytes() { return __p.__vector_as_span<double>(46, 8); }
+#else
+  public ArraySegment<byte>? GetINITIAL_COSTATESBytes() { return __p.__vector_as_arraysegment(46); }
+#endif
+  public double[] GetINITIAL_COSTATESArray() { return __p.__vector_as_array<double>(46); }
+  /// Result: normalized throttle [0..1] per trajectory sample.
+  public double THROTTLE_HISTORY(int j) { int o = __p.__offset(48); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int THROTTLE_HISTORYLength { get { int o = __p.__offset(48); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetTHROTTLE_HISTORYBytes() { return __p.__vector_as_span<double>(48, 8); }
+#else
+  public ArraySegment<byte>? GetTHROTTLE_HISTORYBytes() { return __p.__vector_as_arraysegment(48); }
+#endif
+  public double[] GetTHROTTLE_HISTORYArray() { return __p.__vector_as_array<double>(48); }
+  /// Result: theoretical minimum Jacobi-energy delta-v, km/s (MinEnergy).
+  public double MIN_ENERGY_DELTA_V_KM_S { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
 
   public static Offset<tbpTransfer> CreatetbpTransfer(FlatBufferBuilder builder,
       tbpTransferKind KIND = tbpTransferKind.Unspecified,
@@ -53,24 +91,48 @@ public struct tbpTransfer : IFlatbufferObject
       VectorOffset BURNSOffset = default(VectorOffset),
       double TOTAL_DELTA_V_KM_S = 0.0,
       double TIME_OF_FLIGHT_S = 0.0,
-      Offset<tbpTrajectory> TRAJECTORYOffset = default(Offset<tbpTrajectory>)) {
-    builder.StartTable(12);
+      Offset<tbpTrajectory> TRAJECTORYOffset = default(Offset<tbpTrajectory>),
+      Offset<tbpState> INITIAL_STATEOffset = default(Offset<tbpState>),
+      Offset<tbpState> FINAL_STATEOffset = default(Offset<tbpState>),
+      bool RETROGRADE = false,
+      byte REFERENCE_PRIMARY = 0,
+      double MAX_THRUST_N = 0.0,
+      double SPECIFIC_IMPULSE_S = 0.0,
+      double INITIAL_MASS_KG = 0.0,
+      double FINAL_MASS_KG = 0.0,
+      double PROPELLANT_MASS_KG = 0.0,
+      VectorOffset INITIAL_COSTATESOffset = default(VectorOffset),
+      VectorOffset THROTTLE_HISTORYOffset = default(VectorOffset),
+      double MIN_ENERGY_DELTA_V_KM_S = 0.0) {
+    builder.StartTable(24);
+    tbpTransfer.AddMIN_ENERGY_DELTA_V_KM_S(builder, MIN_ENERGY_DELTA_V_KM_S);
+    tbpTransfer.AddPROPELLANT_MASS_KG(builder, PROPELLANT_MASS_KG);
+    tbpTransfer.AddFINAL_MASS_KG(builder, FINAL_MASS_KG);
+    tbpTransfer.AddINITIAL_MASS_KG(builder, INITIAL_MASS_KG);
+    tbpTransfer.AddSPECIFIC_IMPULSE_S(builder, SPECIFIC_IMPULSE_S);
+    tbpTransfer.AddMAX_THRUST_N(builder, MAX_THRUST_N);
     tbpTransfer.AddTIME_OF_FLIGHT_S(builder, TIME_OF_FLIGHT_S);
     tbpTransfer.AddTOTAL_DELTA_V_KM_S(builder, TOTAL_DELTA_V_KM_S);
     tbpTransfer.AddTOLERANCE(builder, TOLERANCE);
     tbpTransfer.AddINCLINATION_DEG(builder, INCLINATION_DEG);
     tbpTransfer.AddTARGET_ALTITUDE_KM(builder, TARGET_ALTITUDE_KM);
     tbpTransfer.AddPARKING_ALTITUDE_KM(builder, PARKING_ALTITUDE_KM);
+    tbpTransfer.AddTHROTTLE_HISTORY(builder, THROTTLE_HISTORYOffset);
+    tbpTransfer.AddINITIAL_COSTATES(builder, INITIAL_COSTATESOffset);
+    tbpTransfer.AddFINAL_STATE(builder, FINAL_STATEOffset);
+    tbpTransfer.AddINITIAL_STATE(builder, INITIAL_STATEOffset);
     tbpTransfer.AddTRAJECTORY(builder, TRAJECTORYOffset);
     tbpTransfer.AddBURNS(builder, BURNSOffset);
     tbpTransfer.AddMAX_ITERATIONS(builder, MAX_ITERATIONS);
     tbpTransfer.AddTARGET_ORBIT(builder, TARGET_ORBITOffset);
+    tbpTransfer.AddREFERENCE_PRIMARY(builder, REFERENCE_PRIMARY);
+    tbpTransfer.AddRETROGRADE(builder, RETROGRADE);
     tbpTransfer.AddCONVERGED(builder, CONVERGED);
     tbpTransfer.AddKIND(builder, KIND);
     return tbpTransfer.EndtbpTransfer(builder);
   }
 
-  public static void StarttbpTransfer(FlatBufferBuilder builder) { builder.StartTable(12); }
+  public static void StarttbpTransfer(FlatBufferBuilder builder) { builder.StartTable(24); }
   public static void AddKIND(FlatBufferBuilder builder, tbpTransferKind KIND) { builder.AddByte(0, (byte)KIND, 0); }
   public static void AddPARKING_ALTITUDE_KM(FlatBufferBuilder builder, double PARKING_ALTITUDE_KM) { builder.AddDouble(1, PARKING_ALTITUDE_KM, 0.0); }
   public static void AddTARGET_ALTITUDE_KM(FlatBufferBuilder builder, double TARGET_ALTITUDE_KM) { builder.AddDouble(2, TARGET_ALTITUDE_KM, 0.0); }
@@ -88,6 +150,28 @@ public struct tbpTransfer : IFlatbufferObject
   public static void AddTOTAL_DELTA_V_KM_S(FlatBufferBuilder builder, double TOTAL_DELTA_V_KM_S) { builder.AddDouble(9, TOTAL_DELTA_V_KM_S, 0.0); }
   public static void AddTIME_OF_FLIGHT_S(FlatBufferBuilder builder, double TIME_OF_FLIGHT_S) { builder.AddDouble(10, TIME_OF_FLIGHT_S, 0.0); }
   public static void AddTRAJECTORY(FlatBufferBuilder builder, Offset<tbpTrajectory> TRAJECTORYOffset) { builder.AddOffset(11, TRAJECTORYOffset.Value, 0); }
+  public static void AddINITIAL_STATE(FlatBufferBuilder builder, Offset<tbpState> INITIAL_STATEOffset) { builder.AddOffset(12, INITIAL_STATEOffset.Value, 0); }
+  public static void AddFINAL_STATE(FlatBufferBuilder builder, Offset<tbpState> FINAL_STATEOffset) { builder.AddOffset(13, FINAL_STATEOffset.Value, 0); }
+  public static void AddRETROGRADE(FlatBufferBuilder builder, bool RETROGRADE) { builder.AddBool(14, RETROGRADE, false); }
+  public static void AddREFERENCE_PRIMARY(FlatBufferBuilder builder, byte REFERENCE_PRIMARY) { builder.AddByte(15, REFERENCE_PRIMARY, 0); }
+  public static void AddMAX_THRUST_N(FlatBufferBuilder builder, double MAX_THRUST_N) { builder.AddDouble(16, MAX_THRUST_N, 0.0); }
+  public static void AddSPECIFIC_IMPULSE_S(FlatBufferBuilder builder, double SPECIFIC_IMPULSE_S) { builder.AddDouble(17, SPECIFIC_IMPULSE_S, 0.0); }
+  public static void AddINITIAL_MASS_KG(FlatBufferBuilder builder, double INITIAL_MASS_KG) { builder.AddDouble(18, INITIAL_MASS_KG, 0.0); }
+  public static void AddFINAL_MASS_KG(FlatBufferBuilder builder, double FINAL_MASS_KG) { builder.AddDouble(19, FINAL_MASS_KG, 0.0); }
+  public static void AddPROPELLANT_MASS_KG(FlatBufferBuilder builder, double PROPELLANT_MASS_KG) { builder.AddDouble(20, PROPELLANT_MASS_KG, 0.0); }
+  public static void AddINITIAL_COSTATES(FlatBufferBuilder builder, VectorOffset INITIAL_COSTATESOffset) { builder.AddOffset(21, INITIAL_COSTATESOffset.Value, 0); }
+  public static VectorOffset CreateINITIAL_COSTATESVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateINITIAL_COSTATESVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateINITIAL_COSTATESVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateINITIAL_COSTATESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartINITIAL_COSTATESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddTHROTTLE_HISTORY(FlatBufferBuilder builder, VectorOffset THROTTLE_HISTORYOffset) { builder.AddOffset(22, THROTTLE_HISTORYOffset.Value, 0); }
+  public static VectorOffset CreateTHROTTLE_HISTORYVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateTHROTTLE_HISTORYVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateTHROTTLE_HISTORYVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateTHROTTLE_HISTORYVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartTHROTTLE_HISTORYVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddMIN_ENERGY_DELTA_V_KM_S(FlatBufferBuilder builder, double MIN_ENERGY_DELTA_V_KM_S) { builder.AddDouble(23, MIN_ENERGY_DELTA_V_KM_S, 0.0); }
   public static Offset<tbpTransfer> EndtbpTransfer(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<tbpTransfer>(o);
@@ -111,6 +195,20 @@ public struct tbpTransfer : IFlatbufferObject
     _o.TOTAL_DELTA_V_KM_S = this.TOTAL_DELTA_V_KM_S;
     _o.TIME_OF_FLIGHT_S = this.TIME_OF_FLIGHT_S;
     _o.TRAJECTORY = this.TRAJECTORY.HasValue ? this.TRAJECTORY.Value.UnPack() : null;
+    _o.INITIAL_STATE = this.INITIAL_STATE.HasValue ? this.INITIAL_STATE.Value.UnPack() : null;
+    _o.FINAL_STATE = this.FINAL_STATE.HasValue ? this.FINAL_STATE.Value.UnPack() : null;
+    _o.RETROGRADE = this.RETROGRADE;
+    _o.REFERENCE_PRIMARY = this.REFERENCE_PRIMARY;
+    _o.MAX_THRUST_N = this.MAX_THRUST_N;
+    _o.SPECIFIC_IMPULSE_S = this.SPECIFIC_IMPULSE_S;
+    _o.INITIAL_MASS_KG = this.INITIAL_MASS_KG;
+    _o.FINAL_MASS_KG = this.FINAL_MASS_KG;
+    _o.PROPELLANT_MASS_KG = this.PROPELLANT_MASS_KG;
+    _o.INITIAL_COSTATES = new List<double>();
+    for (var _j = 0; _j < this.INITIAL_COSTATESLength; ++_j) {_o.INITIAL_COSTATES.Add(this.INITIAL_COSTATES(_j));}
+    _o.THROTTLE_HISTORY = new List<double>();
+    for (var _j = 0; _j < this.THROTTLE_HISTORYLength; ++_j) {_o.THROTTLE_HISTORY.Add(this.THROTTLE_HISTORY(_j));}
+    _o.MIN_ENERGY_DELTA_V_KM_S = this.MIN_ENERGY_DELTA_V_KM_S;
   }
   public static Offset<tbpTransfer> Pack(FlatBufferBuilder builder, tbpTransferT _o) {
     if (_o == null) return default(Offset<tbpTransfer>);
@@ -122,6 +220,18 @@ public struct tbpTransfer : IFlatbufferObject
       _BURNS = CreateBURNSVector(builder, __BURNS);
     }
     var _TRAJECTORY = _o.TRAJECTORY == null ? default(Offset<tbpTrajectory>) : tbpTrajectory.Pack(builder, _o.TRAJECTORY);
+    var _INITIAL_STATE = _o.INITIAL_STATE == null ? default(Offset<tbpState>) : tbpState.Pack(builder, _o.INITIAL_STATE);
+    var _FINAL_STATE = _o.FINAL_STATE == null ? default(Offset<tbpState>) : tbpState.Pack(builder, _o.FINAL_STATE);
+    var _INITIAL_COSTATES = default(VectorOffset);
+    if (_o.INITIAL_COSTATES != null) {
+      var __INITIAL_COSTATES = _o.INITIAL_COSTATES.ToArray();
+      _INITIAL_COSTATES = CreateINITIAL_COSTATESVector(builder, __INITIAL_COSTATES);
+    }
+    var _THROTTLE_HISTORY = default(VectorOffset);
+    if (_o.THROTTLE_HISTORY != null) {
+      var __THROTTLE_HISTORY = _o.THROTTLE_HISTORY.ToArray();
+      _THROTTLE_HISTORY = CreateTHROTTLE_HISTORYVector(builder, __THROTTLE_HISTORY);
+    }
     return CreatetbpTransfer(
       builder,
       _o.KIND,
@@ -135,7 +245,19 @@ public struct tbpTransfer : IFlatbufferObject
       _BURNS,
       _o.TOTAL_DELTA_V_KM_S,
       _o.TIME_OF_FLIGHT_S,
-      _TRAJECTORY);
+      _TRAJECTORY,
+      _INITIAL_STATE,
+      _FINAL_STATE,
+      _o.RETROGRADE,
+      _o.REFERENCE_PRIMARY,
+      _o.MAX_THRUST_N,
+      _o.SPECIFIC_IMPULSE_S,
+      _o.INITIAL_MASS_KG,
+      _o.FINAL_MASS_KG,
+      _o.PROPELLANT_MASS_KG,
+      _INITIAL_COSTATES,
+      _THROTTLE_HISTORY,
+      _o.MIN_ENERGY_DELTA_V_KM_S);
   }
 }
 
@@ -153,6 +275,18 @@ public class tbpTransferT
   public double TOTAL_DELTA_V_KM_S { get; set; }
   public double TIME_OF_FLIGHT_S { get; set; }
   public tbpTrajectoryT TRAJECTORY { get; set; }
+  public tbpStateT INITIAL_STATE { get; set; }
+  public tbpStateT FINAL_STATE { get; set; }
+  public bool RETROGRADE { get; set; }
+  public byte REFERENCE_PRIMARY { get; set; }
+  public double MAX_THRUST_N { get; set; }
+  public double SPECIFIC_IMPULSE_S { get; set; }
+  public double INITIAL_MASS_KG { get; set; }
+  public double FINAL_MASS_KG { get; set; }
+  public double PROPELLANT_MASS_KG { get; set; }
+  public List<double> INITIAL_COSTATES { get; set; }
+  public List<double> THROTTLE_HISTORY { get; set; }
+  public double MIN_ENERGY_DELTA_V_KM_S { get; set; }
 
   public tbpTransferT() {
     this.KIND = tbpTransferKind.Unspecified;
@@ -167,6 +301,18 @@ public class tbpTransferT
     this.TOTAL_DELTA_V_KM_S = 0.0;
     this.TIME_OF_FLIGHT_S = 0.0;
     this.TRAJECTORY = null;
+    this.INITIAL_STATE = null;
+    this.FINAL_STATE = null;
+    this.RETROGRADE = false;
+    this.REFERENCE_PRIMARY = 0;
+    this.MAX_THRUST_N = 0.0;
+    this.SPECIFIC_IMPULSE_S = 0.0;
+    this.INITIAL_MASS_KG = 0.0;
+    this.FINAL_MASS_KG = 0.0;
+    this.PROPELLANT_MASS_KG = 0.0;
+    this.INITIAL_COSTATES = null;
+    this.THROTTLE_HISTORY = null;
+    this.MIN_ENERGY_DELTA_V_KM_S = 0.0;
   }
 }
 
@@ -188,6 +334,18 @@ static public class tbpTransferVerify
       && verifier.VerifyField(tablePos, 22 /*TOTAL_DELTA_V_KM_S*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 24 /*TIME_OF_FLIGHT_S*/, 8 /*double*/, 8, false)
       && verifier.VerifyTable(tablePos, 26 /*TRAJECTORY*/, tbpTrajectoryVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 28 /*INITIAL_STATE*/, tbpStateVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 30 /*FINAL_STATE*/, tbpStateVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 32 /*RETROGRADE*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 34 /*REFERENCE_PRIMARY*/, 1 /*byte*/, 1, false)
+      && verifier.VerifyField(tablePos, 36 /*MAX_THRUST_N*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 38 /*SPECIFIC_IMPULSE_S*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 40 /*INITIAL_MASS_KG*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 42 /*FINAL_MASS_KG*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 44 /*PROPELLANT_MASS_KG*/, 8 /*double*/, 8, false)
+      && verifier.VerifyVectorOfData(tablePos, 46 /*INITIAL_COSTATES*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 48 /*THROTTLE_HISTORY*/, 8 /*double*/, false)
+      && verifier.VerifyField(tablePos, 50 /*MIN_ENERGY_DELTA_V_KM_S*/, 8 /*double*/, 8, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

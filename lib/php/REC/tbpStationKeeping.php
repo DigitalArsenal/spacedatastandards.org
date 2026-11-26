@@ -147,22 +147,62 @@ class tbpStationKeeping extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// Time between correction maneuvers, s (LinearStabilityBounds).
+    /**
+     * @return double
+     */
+    public function getCORRECTION_INTERVAL_S()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// 3-axis velocity execution error magnitude, km/s (LinearStabilityBounds).
+    /**
+     * @return double
+     */
+    public function getDELTA_V_EXECUTION_ERROR_KM_S()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Result: linear-stability lower bound annual delta-v, km/s/yr.
+    /**
+     * @return double
+     */
+    public function getLOWER_BOUND_ANNUAL_DELTA_V_KM_S()
+    {
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Result: linear-stability upper bound annual delta-v, km/s/yr.
+    /**
+     * @return double
+     */
+    public function getUPPER_BOUND_ANNUAL_DELTA_V_KM_S()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function starttbpStationKeeping(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(10);
+        $builder->StartObject(14);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return tbpStationKeeping
      */
-    public static function createtbpStationKeeping(FlatBufferBuilder $builder, $ORBIT, $STRATEGY, $NAVIGATION_ERROR_KM, $EXECUTION_ERROR_FRACTION, $CYCLES, $ANNUAL_DELTA_V_KM_S, $MEAN_CYCLE_DELTA_V_KM_S, $MAX_CYCLE_DELTA_V_KM_S, $CYCLE_DELTA_V_KM_S, $BOUNDED)
+    public static function createtbpStationKeeping(FlatBufferBuilder $builder, $ORBIT, $STRATEGY, $NAVIGATION_ERROR_KM, $EXECUTION_ERROR_FRACTION, $CYCLES, $ANNUAL_DELTA_V_KM_S, $MEAN_CYCLE_DELTA_V_KM_S, $MAX_CYCLE_DELTA_V_KM_S, $CYCLE_DELTA_V_KM_S, $BOUNDED, $CORRECTION_INTERVAL_S, $DELTA_V_EXECUTION_ERROR_KM_S, $LOWER_BOUND_ANNUAL_DELTA_V_KM_S, $UPPER_BOUND_ANNUAL_DELTA_V_KM_S)
     {
-        $builder->startObject(10);
+        $builder->startObject(14);
         self::addORBIT($builder, $ORBIT);
         self::addSTRATEGY($builder, $STRATEGY);
         self::addNAVIGATION_ERROR_KM($builder, $NAVIGATION_ERROR_KM);
@@ -173,6 +213,10 @@ class tbpStationKeeping extends Table
         self::addMAX_CYCLE_DELTA_V_KM_S($builder, $MAX_CYCLE_DELTA_V_KM_S);
         self::addCYCLE_DELTA_V_KM_S($builder, $CYCLE_DELTA_V_KM_S);
         self::addBOUNDED($builder, $BOUNDED);
+        self::addCORRECTION_INTERVAL_S($builder, $CORRECTION_INTERVAL_S);
+        self::addDELTA_V_EXECUTION_ERROR_KM_S($builder, $DELTA_V_EXECUTION_ERROR_KM_S);
+        self::addLOWER_BOUND_ANNUAL_DELTA_V_KM_S($builder, $LOWER_BOUND_ANNUAL_DELTA_V_KM_S);
+        self::addUPPER_BOUND_ANNUAL_DELTA_V_KM_S($builder, $UPPER_BOUND_ANNUAL_DELTA_V_KM_S);
         $o = $builder->endObject();
         return $o;
     }
@@ -299,6 +343,46 @@ class tbpStationKeeping extends Table
     public static function addBOUNDED(FlatBufferBuilder $builder, $BOUNDED)
     {
         $builder->addBoolX(9, $BOUNDED, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCORRECTION_INTERVAL_S(FlatBufferBuilder $builder, $CORRECTION_INTERVAL_S)
+    {
+        $builder->addDoubleX(10, $CORRECTION_INTERVAL_S, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDELTA_V_EXECUTION_ERROR_KM_S(FlatBufferBuilder $builder, $DELTA_V_EXECUTION_ERROR_KM_S)
+    {
+        $builder->addDoubleX(11, $DELTA_V_EXECUTION_ERROR_KM_S, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addLOWER_BOUND_ANNUAL_DELTA_V_KM_S(FlatBufferBuilder $builder, $LOWER_BOUND_ANNUAL_DELTA_V_KM_S)
+    {
+        $builder->addDoubleX(12, $LOWER_BOUND_ANNUAL_DELTA_V_KM_S, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addUPPER_BOUND_ANNUAL_DELTA_V_KM_S(FlatBufferBuilder $builder, $UPPER_BOUND_ANNUAL_DELTA_V_KM_S)
+    {
+        $builder->addDoubleX(13, $UPPER_BOUND_ANNUAL_DELTA_V_KM_S, 0.0);
     }
 
     /**

@@ -73,6 +73,66 @@ public final class tbpTransfer extends com.google.flatbuffers.Table {
    */
   public tbpTrajectory TRAJECTORY() { return TRAJECTORY(new tbpTrajectory()); }
   public tbpTrajectory TRAJECTORY(tbpTrajectory obj) { int o = __offset(26); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Departure state in synodic frame (MinEnergy, DirectLambert, MinLambert, LowThrustMinTime).
+   */
+  public tbpState INITIAL_STATE() { return INITIAL_STATE(new tbpState()); }
+  public tbpState INITIAL_STATE(tbpState obj) { int o = __offset(28); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Arrival state in synodic frame.
+   */
+  public tbpState FINAL_STATE() { return FINAL_STATE(new tbpState()); }
+  public tbpState FINAL_STATE(tbpState obj) { int o = __offset(30); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * False = prograde (default), true = retrograde (DirectLambert).
+   */
+  public boolean RETROGRADE() { int o = __offset(32); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Reference primary body for Lambert seeding: 0 = auto, 1 = P1, 2 = P2.
+   */
+  public int REFERENCE_PRIMARY() { int o = __offset(34); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * Low-thrust maximum thrust, N (LowThrustMinTime).
+   */
+  public double MAX_THRUST_N() { int o = __offset(36); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Engine specific impulse Isp, s (LowThrustMinTime).
+   */
+  public double SPECIFIC_IMPULSE_S() { int o = __offset(38); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Initial wet spacecraft mass, kg.
+   */
+  public double INITIAL_MASS_KG() { int o = __offset(40); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Result: final spacecraft mass at arrival, kg.
+   */
+  public double FINAL_MASS_KG() { int o = __offset(42); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Result: propellant consumed, kg.
+   */
+  public double PROPELLANT_MASS_KG() { int o = __offset(44); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Initial costates [lambda_rx, ry, rz, vx, vy, vz, m] guess or solved.
+   */
+  public double INITIAL_COSTATES(int j) { int o = __offset(46); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int INITIAL_COSTATESLength() { int o = __offset(46); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector initialCostatesVector() { return initialCostatesVector(new DoubleVector()); }
+  public DoubleVector initialCostatesVector(DoubleVector obj) { int o = __offset(46); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer INITIAL_COSTATESAsByteBuffer() { return __vector_as_bytebuffer(46, 8); }
+  public ByteBuffer INITIAL_COSTATESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 46, 8); }
+  /**
+   * Result: normalized throttle [0..1] per trajectory sample.
+   */
+  public double THROTTLE_HISTORY(int j) { int o = __offset(48); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int THROTTLE_HISTORYLength() { int o = __offset(48); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector throttleHistoryVector() { return throttleHistoryVector(new DoubleVector()); }
+  public DoubleVector throttleHistoryVector(DoubleVector obj) { int o = __offset(48); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer THROTTLE_HISTORYAsByteBuffer() { return __vector_as_bytebuffer(48, 8); }
+  public ByteBuffer THROTTLE_HISTORYInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 48, 8); }
+  /**
+   * Result: theoretical minimum Jacobi-energy delta-v, km/s (MinEnergy).
+   */
+  public double MIN_ENERGY_DELTA_V_KM_S() { int o = __offset(50); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
 
   public static int createtbpTransfer(FlatBufferBuilder builder,
       int KIND,
@@ -86,24 +146,48 @@ public final class tbpTransfer extends com.google.flatbuffers.Table {
       int BURNSOffset,
       double TOTAL_DELTA_V_KM_S,
       double TIME_OF_FLIGHT_S,
-      int TRAJECTORYOffset) {
-    builder.startTable(12);
+      int TRAJECTORYOffset,
+      int INITIAL_STATEOffset,
+      int FINAL_STATEOffset,
+      boolean RETROGRADE,
+      int REFERENCE_PRIMARY,
+      double MAX_THRUST_N,
+      double SPECIFIC_IMPULSE_S,
+      double INITIAL_MASS_KG,
+      double FINAL_MASS_KG,
+      double PROPELLANT_MASS_KG,
+      int INITIAL_COSTATESOffset,
+      int THROTTLE_HISTORYOffset,
+      double MIN_ENERGY_DELTA_V_KM_S) {
+    builder.startTable(24);
+    tbpTransfer.addMinEnergyDeltaVKmS(builder, MIN_ENERGY_DELTA_V_KM_S);
+    tbpTransfer.addPropellantMassKg(builder, PROPELLANT_MASS_KG);
+    tbpTransfer.addFinalMassKg(builder, FINAL_MASS_KG);
+    tbpTransfer.addInitialMassKg(builder, INITIAL_MASS_KG);
+    tbpTransfer.addSpecificImpulseS(builder, SPECIFIC_IMPULSE_S);
+    tbpTransfer.addMaxThrustN(builder, MAX_THRUST_N);
     tbpTransfer.addTimeOfFlightS(builder, TIME_OF_FLIGHT_S);
     tbpTransfer.addTotalDeltaVKmS(builder, TOTAL_DELTA_V_KM_S);
     tbpTransfer.addTolerance(builder, TOLERANCE);
     tbpTransfer.addInclinationDeg(builder, INCLINATION_DEG);
     tbpTransfer.addTargetAltitudeKm(builder, TARGET_ALTITUDE_KM);
     tbpTransfer.addParkingAltitudeKm(builder, PARKING_ALTITUDE_KM);
+    tbpTransfer.addThrottleHistory(builder, THROTTLE_HISTORYOffset);
+    tbpTransfer.addInitialCostates(builder, INITIAL_COSTATESOffset);
+    tbpTransfer.addFinalState(builder, FINAL_STATEOffset);
+    tbpTransfer.addInitialState(builder, INITIAL_STATEOffset);
     tbpTransfer.addTrajectory(builder, TRAJECTORYOffset);
     tbpTransfer.addBurns(builder, BURNSOffset);
     tbpTransfer.addMaxIterations(builder, MAX_ITERATIONS);
     tbpTransfer.addTargetOrbit(builder, TARGET_ORBITOffset);
+    tbpTransfer.addReferencePrimary(builder, REFERENCE_PRIMARY);
+    tbpTransfer.addRetrograde(builder, RETROGRADE);
     tbpTransfer.addConverged(builder, CONVERGED);
     tbpTransfer.addKind(builder, KIND);
     return tbpTransfer.endtbpTransfer(builder);
   }
 
-  public static void starttbpTransfer(FlatBufferBuilder builder) { builder.startTable(12); }
+  public static void starttbpTransfer(FlatBufferBuilder builder) { builder.startTable(24); }
   public static void addKind(FlatBufferBuilder builder, int KIND) { builder.addByte(0, (byte) KIND, (byte) 0); }
   public static void addParkingAltitudeKm(FlatBufferBuilder builder, double PARKING_ALTITUDE_KM) { builder.addDouble(1, PARKING_ALTITUDE_KM, 0.0); }
   public static void addTargetAltitudeKm(FlatBufferBuilder builder, double TARGET_ALTITUDE_KM) { builder.addDouble(2, TARGET_ALTITUDE_KM, 0.0); }
@@ -118,6 +202,22 @@ public final class tbpTransfer extends com.google.flatbuffers.Table {
   public static void addTotalDeltaVKmS(FlatBufferBuilder builder, double TOTAL_DELTA_V_KM_S) { builder.addDouble(9, TOTAL_DELTA_V_KM_S, 0.0); }
   public static void addTimeOfFlightS(FlatBufferBuilder builder, double TIME_OF_FLIGHT_S) { builder.addDouble(10, TIME_OF_FLIGHT_S, 0.0); }
   public static void addTrajectory(FlatBufferBuilder builder, int TRAJECTORYOffset) { builder.addOffset(11, TRAJECTORYOffset, 0); }
+  public static void addInitialState(FlatBufferBuilder builder, int INITIAL_STATEOffset) { builder.addOffset(12, INITIAL_STATEOffset, 0); }
+  public static void addFinalState(FlatBufferBuilder builder, int FINAL_STATEOffset) { builder.addOffset(13, FINAL_STATEOffset, 0); }
+  public static void addRetrograde(FlatBufferBuilder builder, boolean RETROGRADE) { builder.addBoolean(14, RETROGRADE, false); }
+  public static void addReferencePrimary(FlatBufferBuilder builder, int REFERENCE_PRIMARY) { builder.addByte(15, (byte) REFERENCE_PRIMARY, (byte) 0); }
+  public static void addMaxThrustN(FlatBufferBuilder builder, double MAX_THRUST_N) { builder.addDouble(16, MAX_THRUST_N, 0.0); }
+  public static void addSpecificImpulseS(FlatBufferBuilder builder, double SPECIFIC_IMPULSE_S) { builder.addDouble(17, SPECIFIC_IMPULSE_S, 0.0); }
+  public static void addInitialMassKg(FlatBufferBuilder builder, double INITIAL_MASS_KG) { builder.addDouble(18, INITIAL_MASS_KG, 0.0); }
+  public static void addFinalMassKg(FlatBufferBuilder builder, double FINAL_MASS_KG) { builder.addDouble(19, FINAL_MASS_KG, 0.0); }
+  public static void addPropellantMassKg(FlatBufferBuilder builder, double PROPELLANT_MASS_KG) { builder.addDouble(20, PROPELLANT_MASS_KG, 0.0); }
+  public static void addInitialCostates(FlatBufferBuilder builder, int INITIAL_COSTATESOffset) { builder.addOffset(21, INITIAL_COSTATESOffset, 0); }
+  public static int createInitialCostatesVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startInitialCostatesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addThrottleHistory(FlatBufferBuilder builder, int THROTTLE_HISTORYOffset) { builder.addOffset(22, THROTTLE_HISTORYOffset, 0); }
+  public static int createThrottleHistoryVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startThrottleHistoryVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addMinEnergyDeltaVKmS(FlatBufferBuilder builder, double MIN_ENERGY_DELTA_V_KM_S) { builder.addDouble(23, MIN_ENERGY_DELTA_V_KM_S, 0.0); }
   public static int endtbpTransfer(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

@@ -19,5 +19,9 @@ class tbpStationKeepingStrategy private constructor() {
          * Suppress the unstable Floquet mode.
          */
         const val FloquetMode: UByte = 2u
+        /**
+         * Linear stability lower/upper annual delta-v bounds across intervals.
+         */
+        const val LinearStabilityBounds: UByte = 3u
     }
 }

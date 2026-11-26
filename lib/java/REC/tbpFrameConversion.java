@@ -54,23 +54,79 @@ public final class tbpFrameConversion extends com.google.flatbuffers.Table {
   public DoubleVector inertialVector(DoubleVector obj) { int o = __offset(12); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
   public ByteBuffer INERTIALAsByteBuffer() { return __vector_as_bytebuffer(12, 8); }
   public ByteBuffer INERTIALInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 8); }
+  /**
+   * Reference primary body: 0 = barycenter, 1 = P1 (Earth), 2 = P2 (Moon).
+   */
+  public int REFERENCE_PRIMARY() { int o = __offset(14); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * Epoch Julian date (days) for J2000/ephemeris conversions; 0 = from REFERENCE_EPOCH_MS.
+   */
+  public double JULIAN_DATE() { int o = __offset(16); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Geodetic/selenodetic coordinates [lat_deg, lon_deg, alt_km] (3 values).
+   */
+  public double LLA_DEG_KM(int j) { int o = __offset(18); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int LLA_DEG_KMLength() { int o = __offset(18); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector llaDegKmVector() { return llaDegKmVector(new DoubleVector()); }
+  public DoubleVector llaDegKmVector(DoubleVector obj) { int o = __offset(18); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer LLA_DEG_KMAsByteBuffer() { return __vector_as_bytebuffer(18, 8); }
+  public ByteBuffer LLA_DEG_KMInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 18, 8); }
+  /**
+   * Classical Keplerian elements [a_km, e, inc_deg, raan_deg, argp_deg, nu_deg] (6 values).
+   */
+  public double ORBITAL_ELEMENTS(int j) { int o = __offset(20); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int ORBITAL_ELEMENTSLength() { int o = __offset(20); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector orbitalElementsVector() { return orbitalElementsVector(new DoubleVector()); }
+  public DoubleVector orbitalElementsVector(DoubleVector obj) { int o = __offset(20); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer ORBITAL_ELEMENTSAsByteBuffer() { return __vector_as_bytebuffer(20, 8); }
+  public ByteBuffer ORBITAL_ELEMENTSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 20, 8); }
+  /**
+   * Batch synodic states (N * 6 values, non-dimensional) for vectorized conversion.
+   */
+  public double BATCH_SYNODIC_STATES(int j) { int o = __offset(22); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int BATCH_SYNODIC_STATESLength() { int o = __offset(22); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector batchSynodicStatesVector() { return batchSynodicStatesVector(new DoubleVector()); }
+  public DoubleVector batchSynodicStatesVector(DoubleVector obj) { int o = __offset(22); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer BATCH_SYNODIC_STATESAsByteBuffer() { return __vector_as_bytebuffer(22, 8); }
+  public ByteBuffer BATCH_SYNODIC_STATESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 22, 8); }
+  /**
+   * Batch inertial/target states (N * 6 values, km and km/s) for vectorized conversion.
+   */
+  public double BATCH_INERTIAL_STATES(int j) { int o = __offset(24); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int BATCH_INERTIAL_STATESLength() { int o = __offset(24); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector batchInertialStatesVector() { return batchInertialStatesVector(new DoubleVector()); }
+  public DoubleVector batchInertialStatesVector(DoubleVector obj) { int o = __offset(24); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer BATCH_INERTIAL_STATESAsByteBuffer() { return __vector_as_bytebuffer(24, 8); }
+  public ByteBuffer BATCH_INERTIAL_STATESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 24, 8); }
 
   public static int createtbpFrameConversion(FlatBufferBuilder builder,
       int DIRECTION,
       long REFERENCE_EPOCH_MS,
       double ELAPSED_S,
       int SYNODICOffset,
-      int INERTIALOffset) {
-    builder.startTable(5);
+      int INERTIALOffset,
+      int REFERENCE_PRIMARY,
+      double JULIAN_DATE,
+      int LLA_DEG_KMOffset,
+      int ORBITAL_ELEMENTSOffset,
+      int BATCH_SYNODIC_STATESOffset,
+      int BATCH_INERTIAL_STATESOffset) {
+    builder.startTable(11);
+    tbpFrameConversion.addJulianDate(builder, JULIAN_DATE);
     tbpFrameConversion.addElapsedS(builder, ELAPSED_S);
     tbpFrameConversion.addReferenceEpochMs(builder, REFERENCE_EPOCH_MS);
+    tbpFrameConversion.addBatchInertialStates(builder, BATCH_INERTIAL_STATESOffset);
+    tbpFrameConversion.addBatchSynodicStates(builder, BATCH_SYNODIC_STATESOffset);
+    tbpFrameConversion.addOrbitalElements(builder, ORBITAL_ELEMENTSOffset);
+    tbpFrameConversion.addLlaDegKm(builder, LLA_DEG_KMOffset);
     tbpFrameConversion.addInertial(builder, INERTIALOffset);
     tbpFrameConversion.addSynodic(builder, SYNODICOffset);
+    tbpFrameConversion.addReferencePrimary(builder, REFERENCE_PRIMARY);
     tbpFrameConversion.addDirection(builder, DIRECTION);
     return tbpFrameConversion.endtbpFrameConversion(builder);
   }
 
-  public static void starttbpFrameConversion(FlatBufferBuilder builder) { builder.startTable(5); }
+  public static void starttbpFrameConversion(FlatBufferBuilder builder) { builder.startTable(11); }
   public static void addDirection(FlatBufferBuilder builder, int DIRECTION) { builder.addByte(0, (byte) DIRECTION, (byte) 0); }
   public static void addReferenceEpochMs(FlatBufferBuilder builder, long REFERENCE_EPOCH_MS) { builder.addLong(1, REFERENCE_EPOCH_MS, 0L); }
   public static void addElapsedS(FlatBufferBuilder builder, double ELAPSED_S) { builder.addDouble(2, ELAPSED_S, 0.0); }
@@ -78,6 +134,20 @@ public final class tbpFrameConversion extends com.google.flatbuffers.Table {
   public static void addInertial(FlatBufferBuilder builder, int INERTIALOffset) { builder.addOffset(4, INERTIALOffset, 0); }
   public static int createInertialVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
   public static void startInertialVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addReferencePrimary(FlatBufferBuilder builder, int REFERENCE_PRIMARY) { builder.addByte(5, (byte) REFERENCE_PRIMARY, (byte) 0); }
+  public static void addJulianDate(FlatBufferBuilder builder, double JULIAN_DATE) { builder.addDouble(6, JULIAN_DATE, 0.0); }
+  public static void addLlaDegKm(FlatBufferBuilder builder, int LLA_DEG_KMOffset) { builder.addOffset(7, LLA_DEG_KMOffset, 0); }
+  public static int createLlaDegKmVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startLlaDegKmVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addOrbitalElements(FlatBufferBuilder builder, int ORBITAL_ELEMENTSOffset) { builder.addOffset(8, ORBITAL_ELEMENTSOffset, 0); }
+  public static int createOrbitalElementsVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startOrbitalElementsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addBatchSynodicStates(FlatBufferBuilder builder, int BATCH_SYNODIC_STATESOffset) { builder.addOffset(9, BATCH_SYNODIC_STATESOffset, 0); }
+  public static int createBatchSynodicStatesVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startBatchSynodicStatesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addBatchInertialStates(FlatBufferBuilder builder, int BATCH_INERTIAL_STATESOffset) { builder.addOffset(10, BATCH_INERTIAL_STATESOffset, 0); }
+  public static int createBatchInertialStatesVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startBatchInertialStatesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
   public static int endtbpFrameConversion(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

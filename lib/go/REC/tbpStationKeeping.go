@@ -273,8 +273,96 @@ func (rcv *tbpStationKeeping) MutateBounded(n bool) bool {
 	return rcv.MutateBOUNDED(n)
 }
 
+/// Time between correction maneuvers, s (LinearStabilityBounds).
+func (rcv *tbpStationKeeping) CORRECTION_INTERVAL_S() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *tbpStationKeeping) CorrectionIntervalS() float64 {
+	return rcv.CORRECTION_INTERVAL_S()
+}
+
+/// Time between correction maneuvers, s (LinearStabilityBounds).
+func (rcv *tbpStationKeeping) MutateCORRECTION_INTERVAL_S(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+func (rcv *tbpStationKeeping) MutateCorrectionIntervalS(n float64) bool {
+	return rcv.MutateCORRECTION_INTERVAL_S(n)
+}
+
+/// 3-axis velocity execution error magnitude, km/s (LinearStabilityBounds).
+func (rcv *tbpStationKeeping) DELTA_V_EXECUTION_ERROR_KM_S() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *tbpStationKeeping) DeltaVExecutionErrorKmS() float64 {
+	return rcv.DELTA_V_EXECUTION_ERROR_KM_S()
+}
+
+/// 3-axis velocity execution error magnitude, km/s (LinearStabilityBounds).
+func (rcv *tbpStationKeeping) MutateDELTA_V_EXECUTION_ERROR_KM_S(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+func (rcv *tbpStationKeeping) MutateDeltaVExecutionErrorKmS(n float64) bool {
+	return rcv.MutateDELTA_V_EXECUTION_ERROR_KM_S(n)
+}
+
+/// Result: linear-stability lower bound annual delta-v, km/s/yr.
+func (rcv *tbpStationKeeping) LOWER_BOUND_ANNUAL_DELTA_V_KM_S() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *tbpStationKeeping) LowerBoundAnnualDeltaVKmS() float64 {
+	return rcv.LOWER_BOUND_ANNUAL_DELTA_V_KM_S()
+}
+
+/// Result: linear-stability lower bound annual delta-v, km/s/yr.
+func (rcv *tbpStationKeeping) MutateLOWER_BOUND_ANNUAL_DELTA_V_KM_S(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(28, n)
+}
+
+func (rcv *tbpStationKeeping) MutateLowerBoundAnnualDeltaVKmS(n float64) bool {
+	return rcv.MutateLOWER_BOUND_ANNUAL_DELTA_V_KM_S(n)
+}
+
+/// Result: linear-stability upper bound annual delta-v, km/s/yr.
+func (rcv *tbpStationKeeping) UPPER_BOUND_ANNUAL_DELTA_V_KM_S() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *tbpStationKeeping) UpperBoundAnnualDeltaVKmS() float64 {
+	return rcv.UPPER_BOUND_ANNUAL_DELTA_V_KM_S()
+}
+
+/// Result: linear-stability upper bound annual delta-v, km/s/yr.
+func (rcv *tbpStationKeeping) MutateUPPER_BOUND_ANNUAL_DELTA_V_KM_S(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(30, n)
+}
+
+func (rcv *tbpStationKeeping) MutateUpperBoundAnnualDeltaVKmS(n float64) bool {
+	return rcv.MutateUPPER_BOUND_ANNUAL_DELTA_V_KM_S(n)
+}
+
 func tbpStationKeepingStart(builder *flatbuffers.Builder) {
-	builder.StartObject(10)
+	builder.StartObject(14)
 }
 func tbpStationKeepingAddORBIT(builder *flatbuffers.Builder, ORBIT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ORBIT), 0)
@@ -341,6 +429,30 @@ func tbpStationKeepingAddBOUNDED(builder *flatbuffers.Builder, BOUNDED bool) {
 }
 func tbpStationKeepingAddBounded(builder *flatbuffers.Builder, BOUNDED bool) {
 	tbpStationKeepingAddBOUNDED(builder, BOUNDED)
+}
+func tbpStationKeepingAddCORRECTION_INTERVAL_S(builder *flatbuffers.Builder, CORRECTION_INTERVAL_S float64) {
+	builder.PrependFloat64Slot(10, CORRECTION_INTERVAL_S, 0.0)
+}
+func tbpStationKeepingAddCorrectionIntervalS(builder *flatbuffers.Builder, CORRECTION_INTERVAL_S float64) {
+	tbpStationKeepingAddCORRECTION_INTERVAL_S(builder, CORRECTION_INTERVAL_S)
+}
+func tbpStationKeepingAddDELTA_V_EXECUTION_ERROR_KM_S(builder *flatbuffers.Builder, DELTA_V_EXECUTION_ERROR_KM_S float64) {
+	builder.PrependFloat64Slot(11, DELTA_V_EXECUTION_ERROR_KM_S, 0.0)
+}
+func tbpStationKeepingAddDeltaVExecutionErrorKmS(builder *flatbuffers.Builder, DELTA_V_EXECUTION_ERROR_KM_S float64) {
+	tbpStationKeepingAddDELTA_V_EXECUTION_ERROR_KM_S(builder, DELTA_V_EXECUTION_ERROR_KM_S)
+}
+func tbpStationKeepingAddLOWER_BOUND_ANNUAL_DELTA_V_KM_S(builder *flatbuffers.Builder, LOWER_BOUND_ANNUAL_DELTA_V_KM_S float64) {
+	builder.PrependFloat64Slot(12, LOWER_BOUND_ANNUAL_DELTA_V_KM_S, 0.0)
+}
+func tbpStationKeepingAddLowerBoundAnnualDeltaVKmS(builder *flatbuffers.Builder, LOWER_BOUND_ANNUAL_DELTA_V_KM_S float64) {
+	tbpStationKeepingAddLOWER_BOUND_ANNUAL_DELTA_V_KM_S(builder, LOWER_BOUND_ANNUAL_DELTA_V_KM_S)
+}
+func tbpStationKeepingAddUPPER_BOUND_ANNUAL_DELTA_V_KM_S(builder *flatbuffers.Builder, UPPER_BOUND_ANNUAL_DELTA_V_KM_S float64) {
+	builder.PrependFloat64Slot(13, UPPER_BOUND_ANNUAL_DELTA_V_KM_S, 0.0)
+}
+func tbpStationKeepingAddUpperBoundAnnualDeltaVKmS(builder *flatbuffers.Builder, UPPER_BOUND_ANNUAL_DELTA_V_KM_S float64) {
+	tbpStationKeepingAddUPPER_BOUND_ANNUAL_DELTA_V_KM_S(builder, UPPER_BOUND_ANNUAL_DELTA_V_KM_S)
 }
 func tbpStationKeepingEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

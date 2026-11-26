@@ -2899,23 +2899,27 @@
     },
     "tbpProblem" : {
       "type" : "string",
-      "enum": ["Unspecified", "Propagation", "LibrationPoints", "JacobiConstant", "PeriodicOrbit", "HaloFirstGuess", "NearRectilinearHalo", "Transfer", "StationKeeping", "FrameConversion", "Family"]
+      "enum": ["Unspecified", "Propagation", "LibrationPoints", "JacobiConstant", "PeriodicOrbit", "HaloFirstGuess", "NearRectilinearHalo", "Transfer", "StationKeeping", "FrameConversion", "Family", "Continuation", "Manifolds", "OrbitProperties", "Constellation", "SurfaceAnalysis"]
     },
     "tbpOrbitFamily" : {
       "type" : "string",
-      "enum": ["Unspecified", "HaloNorthern", "HaloSouthern", "PlanarLyapunov", "VerticalLyapunov", "NearRectilinearHalo", "DistantRetrograde", "Butterfly", "Axial", "LongShortPeriod"]
+      "enum": ["Unspecified", "HaloNorthern", "HaloSouthern", "PlanarLyapunov", "VerticalLyapunov", "NearRectilinearHalo", "DistantRetrograde", "Butterfly", "Axial", "LongShortPeriod", "TulipNorthern", "TulipSouthern", "PumpkinNorthern", "PumpkinSouthern"]
     },
     "tbpTransferKind" : {
       "type" : "string",
-      "enum": ["Unspecified", "HohmannLike", "LowEnergy", "FreeReturn", "PoweredFlyby", "WeakStabilityBoundary", "DirectInsertion", "PeriodicOrbitInsertion"]
+      "enum": ["Unspecified", "HohmannLike", "LowEnergy", "FreeReturn", "PoweredFlyby", "WeakStabilityBoundary", "DirectInsertion", "PeriodicOrbitInsertion", "MinEnergy", "DirectLambert", "MinLambert", "LowThrustMinTime"]
     },
     "tbpStationKeepingStrategy" : {
       "type" : "string",
-      "enum": ["PlaneCrossing", "TargetPoint", "FloquetMode"]
+      "enum": ["PlaneCrossing", "TargetPoint", "FloquetMode", "LinearStabilityBounds"]
     },
     "tbpConversionDirection" : {
       "type" : "string",
-      "enum": ["SynodicToInertial", "InertialToSynodic"]
+      "enum": ["SynodicToInertial", "InertialToSynodic", "SynodicToJ2000", "J2000ToSynodic", "SynodicToPrimaryInertial", "PrimaryInertialToSynodic", "SynodicToLla", "LlaToSynodic", "SynodicToOrbitalElements", "OrbitalElementsToSynodic"]
+    },
+    "tbpManifoldBranchKind" : {
+      "type" : "string",
+      "enum": ["Both", "StableOnly", "UnstableOnly"]
     },
     "tbpStatus" : {
       "type" : "string",
@@ -61443,6 +61447,62 @@
         "TRAJECTORY" : {
                 "$ref" : "#/definitions/tbpTrajectory",
                 "description" : "One period of the orbit; empty = not sampled."
+              },
+        "PETALS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Tulip/pumpkin petal count Np; 0 = not applicable."
+              },
+        "RESONANCE_P" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Sidereal resonance denominator p (period = q * 2*pi / p); 0 = not stated."
+              },
+        "RESONANCE_Q" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Sidereal resonance numerator q; 0 = not stated."
+              },
+        "PSEUDO_POTENTIAL" : {
+                "type" : "number",
+                "description" : "CR3BP pseudo-potential U* at the initial state."
+              },
+        "PERIGEE_KM" : {
+                "type" : "number",
+                "description" : "Minimum distance from the larger primary (P1), km; 0 = not computed."
+              },
+        "APOGEE_KM" : {
+                "type" : "number",
+                "description" : "Maximum distance from the larger primary (P1), km; 0 = not computed."
+              },
+        "DOUBLING_TIME" : {
+                "type" : "number",
+                "description" : "Instability doubling time, non-dimensional; 0 = stable or not computed."
+              },
+        "CHARACTERISTIC_EXPONENT" : {
+                "type" : "number",
+                "description" : "Floquet/Lyapunov characteristic exponent, non-dimensional; 0 = not computed."
+              },
+        "MAX_LUNAR_OCCULTATION_S" : {
+                "type" : "number",
+                "description" : "Longest continuous P2 (lunar) occultation per period, s."
+              },
+        "TOTAL_LUNAR_OCCULTATION_S" : {
+                "type" : "number",
+                "description" : "Total P2 (lunar) occultation duration per period, s."
+              },
+        "MAX_EARTH_OCCULTATION_S" : {
+                "type" : "number",
+                "description" : "Longest continuous P1 (Earth) occultation per period, s."
+              },
+        "TOTAL_EARTH_OCCULTATION_S" : {
+                "type" : "number",
+                "description" : "Total P1 (Earth) occultation duration per period, s."
+              },
+        "STABLE_EIGENVECTOR" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Unit stable eigenvector of the monodromy matrix (6 values); empty = none."
+              },
+        "UNSTABLE_EIGENVECTOR" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Unit unstable eigenvector of the monodromy matrix (6 values); empty = none."
               }
       },
       "additionalProperties" : false
@@ -61521,6 +61581,54 @@
         "TRAJECTORY" : {
                 "$ref" : "#/definitions/tbpTrajectory",
                 "description" : "Result: the transfer trajectory; empty = not sampled."
+              },
+        "INITIAL_STATE" : {
+                "$ref" : "#/definitions/tbpState",
+                "description" : "Departure state in synodic frame (MinEnergy, DirectLambert, MinLambert, LowThrustMinTime)."
+              },
+        "FINAL_STATE" : {
+                "$ref" : "#/definitions/tbpState",
+                "description" : "Arrival state in synodic frame."
+              },
+        "RETROGRADE" : {
+                "type" : "boolean",
+                "description" : "False = prograde (default), true = retrograde (DirectLambert)."
+              },
+        "REFERENCE_PRIMARY" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Reference primary body for Lambert seeding: 0 = auto, 1 = P1, 2 = P2."
+              },
+        "MAX_THRUST_N" : {
+                "type" : "number",
+                "description" : "Low-thrust maximum thrust, N (LowThrustMinTime)."
+              },
+        "SPECIFIC_IMPULSE_S" : {
+                "type" : "number",
+                "description" : "Engine specific impulse Isp, s (LowThrustMinTime)."
+              },
+        "INITIAL_MASS_KG" : {
+                "type" : "number",
+                "description" : "Initial wet spacecraft mass, kg."
+              },
+        "FINAL_MASS_KG" : {
+                "type" : "number",
+                "description" : "Result: final spacecraft mass at arrival, kg."
+              },
+        "PROPELLANT_MASS_KG" : {
+                "type" : "number",
+                "description" : "Result: propellant consumed, kg."
+              },
+        "INITIAL_COSTATES" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Initial costates [lambda_rx, ry, rz, vx, vy, vz, m] guess or solved."
+              },
+        "THROTTLE_HISTORY" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Result: normalized throttle [0..1] per trajectory sample."
+              },
+        "MIN_ENERGY_DELTA_V_KM_S" : {
+                "type" : "number",
+                "description" : "Result: theoretical minimum Jacobi-energy delta-v, km/s (MinEnergy)."
               }
       },
       "additionalProperties" : false
@@ -61566,6 +61674,22 @@
         "BOUNDED" : {
                 "type" : "boolean",
                 "description" : "Result: true when the orbit stays bounded over the simulation."
+              },
+        "CORRECTION_INTERVAL_S" : {
+                "type" : "number",
+                "description" : "Time between correction maneuvers, s (LinearStabilityBounds)."
+              },
+        "DELTA_V_EXECUTION_ERROR_KM_S" : {
+                "type" : "number",
+                "description" : "3-axis velocity execution error magnitude, km/s (LinearStabilityBounds)."
+              },
+        "LOWER_BOUND_ANNUAL_DELTA_V_KM_S" : {
+                "type" : "number",
+                "description" : "Result: linear-stability lower bound annual delta-v, km/s/yr."
+              },
+        "UPPER_BOUND_ANNUAL_DELTA_V_KM_S" : {
+                "type" : "number",
+                "description" : "Result: linear-stability upper bound annual delta-v, km/s/yr."
               }
       },
       "additionalProperties" : false
@@ -61592,6 +61716,225 @@
         "INERTIAL" : {
                 "type" : "array", "items" : {"type" : "number"},
                 "description" : "The inertial state (input or result): km and km/s, 6 values."
+              },
+        "REFERENCE_PRIMARY" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Reference primary body: 0 = barycenter, 1 = P1 (Earth), 2 = P2 (Moon)."
+              },
+        "JULIAN_DATE" : {
+                "type" : "number",
+                "description" : "Epoch Julian date (days) for J2000/ephemeris conversions; 0 = from REFERENCE_EPOCH_MS."
+              },
+        "LLA_DEG_KM" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Geodetic/selenodetic coordinates [lat_deg, lon_deg, alt_km] (3 values)."
+              },
+        "ORBITAL_ELEMENTS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Classical Keplerian elements [a_km, e, inc_deg, raan_deg, argp_deg, nu_deg] (6 values)."
+              },
+        "BATCH_SYNODIC_STATES" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Batch synodic states (N * 6 values, non-dimensional) for vectorized conversion."
+              },
+        "BATCH_INERTIAL_STATES" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Batch inertial/target states (N * 6 values, km and km/s) for vectorized conversion."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "tbpContinuationRequest" : {
+      "type" : "object",
+      "description" : "Request parameters for pseudo-arclength or natural-parameter continuation.",
+      "properties" : {
+        "SEED_ORBIT" : {
+                "$ref" : "#/definitions/tbpPeriodicOrbit",
+                "description" : "Seed periodic orbit (INITIAL_STATE and PERIOD required)."
+              },
+        "STEP_SIZE" : {
+                "type" : "number",
+                "description" : "Arclength step size ds (signed); 0 = natural-parameter fixed-period refinement."
+              },
+        "STEPS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of continuation steps to generate; 0 = 1."
+              },
+        "FIXED_PERIOD" : {
+                "type" : "boolean",
+                "description" : "True = fixed-period natural parameter continuation (cont_np); false = pseudo-arclength (cont)."
+              },
+        "NULL_VECTOR" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Optional 7-element previous null-vector tangent for directional continuation."
+              },
+        "TOLERANCE" : {
+                "type" : "number",
+                "description" : "Convergence tolerance on periodicity residual; 0 = default (1e-10)."
+              },
+        "MAX_ITERATIONS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Maximum corrector iterations per step; 0 = default."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "tbpManifoldBranch" : {
+      "type" : "object",
+      "description" : "One stable or unstable invariant manifold branch emanating from a periodic orbit.",
+      "properties" : {
+        "STABLE" : {
+                "type" : "boolean",
+                "description" : "True = stable branch (integrated backward), false = unstable branch (forward)."
+              },
+        "EXTERIOR" : {
+                "type" : "boolean",
+                "description" : "True = exterior (+eigenvector), false = interior (-eigenvector)."
+              },
+        "SEED_INDEX" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Index of the seed point along the periodic orbit."
+              },
+        "INITIAL_STATE" : {
+                "$ref" : "#/definitions/tbpState",
+                "description" : "Perturbed initial state on the manifold, non-dimensional."
+              },
+        "TRAJECTORY" : {
+                "$ref" : "#/definitions/tbpTrajectory",
+                "description" : "Propagated manifold trajectory."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "tbpManifolds" : {
+      "type" : "object",
+      "description" : "Invariant manifold request and computed branches for an unstable periodic orbit.",
+      "properties" : {
+        "ORBIT" : {
+                "$ref" : "#/definitions/tbpPeriodicOrbit",
+                "description" : "Periodic orbit to perturb (INITIAL_STATE and PERIOD required)."
+              },
+        "PERTURBATION" : {
+                "type" : "number",
+                "description" : "Perturbation distance epsilon (non-dimensional); 0 = default (1e-5)."
+              },
+        "DURATION" : {
+                "type" : "number",
+                "description" : "Propagation duration per branch, non-dimensional; 0 = one orbit period."
+              },
+        "SAMPLE_POINTS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of seed points along the periodic orbit; 0 = default (12)."
+              },
+        "BRANCH_KIND" : {
+                "$ref" : "#/definitions/tbpManifoldBranchKind",
+                "description" : "Which manifold branches to generate."
+              },
+        "BRANCHES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/tbpManifoldBranch"},
+                "description" : "Computed manifold branches."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "tbpConstellation" : {
+      "type" : "object",
+      "description" : "Multi-spacecraft time-phased CR3BP constellation along a periodic orbit.",
+      "properties" : {
+        "ORBIT" : {
+                "$ref" : "#/definitions/tbpPeriodicOrbit",
+                "description" : "Generating periodic orbit (FAMILY + PETALS + PERIOD or explicit INITIAL_STATE)."
+              },
+        "SATELLITE_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of spacecraft in the constellation."
+              },
+        "REVOLUTIONS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of orbit revolutions to propagate; 0 = 1."
+              },
+        "PHASE_OFFSETS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Non-dimensional phase offsets (length SATELLITE_COUNT); empty = evenly spaced."
+              },
+        "OUTPUT_POINTS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Uniform time samples per spacecraft trajectory; 0 = default."
+              },
+        "TRAJECTORIES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/tbpTrajectory"},
+                "description" : "Result: propagated trajectory for each spacecraft in the constellation."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "tbpSurfaceAnalysis" : {
+      "type" : "object",
+      "description" : "Surface coverage gap, elevation angle, occultation, and DOP analysis on a primary body.",
+      "properties" : {
+        "REFERENCE_PRIMARY" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Target primary body: 0 or 2 = smaller primary (Moon), 1 = larger primary (Earth)."
+              },
+        "PRIMARY_RADIUS_KM" : {
+                "type" : "number",
+                "description" : "Radius of target primary body, km; 0 = default body radius."
+              },
+        "MIN_ELEVATION_DEG" : {
+                "type" : "number",
+                "description" : "Minimum elevation mask angle above local horizon, deg; 0 = horizon (0 deg)."
+              },
+        "MIN_SATELLITES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Minimum simultaneous satellites in view for coverage; 0 = 1."
+              },
+        "SURFACE_POINTS_SYNODIC" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Surface observer positions in synodic frame (P * 3 non-dimensional values); empty = auto Fibonacci sphere."
+              },
+        "SURFACE_LAT_LON_DEG" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Surface observer lat/lon pairs [lat0, lon0, ...] in deg (P * 2 values)."
+              },
+        "GRID_POINT_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of Fibonacci surface grid points when SURFACE_POINTS_SYNODIC is empty; 0 = default."
+              },
+        "SAMPLE_TIMES" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Result: non-dimensional sample times (T values)."
+              },
+        "MAX_GAP_S" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Result: maximum uncovered gap duration per surface point, s (P values)."
+              },
+        "GDOP" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Result: geometric dilution of precision (T * P values, NaN/0 when <4 sats visible)."
+              },
+        "PDOP" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Result: position dilution of precision (T * P values)."
+              },
+        "TDOP" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Result: time dilution of precision (T * P values)."
+              },
+        "ELEVATION_DEG" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Result: maximum elevation angle per sample and surface point, deg (T * P values)."
+              },
+        "OCCULTATION_START_S" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Result: occultation interval start times, s (M values)."
+              },
+        "OCCULTATION_END_S" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Result: occultation interval end times, s (M values)."
+              },
+        "OCCULTING_PRIMARY" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Result: occulting body index per interval (1 = P1, 2 = P2; M values)."
               }
       },
       "additionalProperties" : false
@@ -61648,7 +61991,7 @@
               },
         "ORBITS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/tbpPeriodicOrbit"},
-                "description" : "PeriodicOrbit, HaloFirstGuess, NearRectilinearHalo: the request fields\n(FAMILY, LIBRATION_POINT, AMPLITUDE or perilune/apolune, TOLERANCE,\nMAX_ITERATIONS) and the result. Family: the members, ordered along the\nfamily's continuation parameter (AMPLITUDE)."
+                "description" : "PeriodicOrbit, HaloFirstGuess, NearRectilinearHalo, OrbitProperties: the\nrequest fields (FAMILY, LIBRATION_POINT, AMPLITUDE, PETALS, or\nperilune/apolune, TOLERANCE, MAX_ITERATIONS) and the result. Family and\nContinuation: the members ordered along the continuation parameter."
               },
         "TRANSFER" : {
                 "$ref" : "#/definitions/tbpTransfer"
@@ -61658,6 +62001,22 @@
               },
         "FRAME_CONVERSION" : {
                 "$ref" : "#/definitions/tbpFrameConversion"
+              },
+        "CONTINUATION" : {
+                "$ref" : "#/definitions/tbpContinuationRequest",
+                "description" : "Continuation: pseudo-arclength or natural-parameter continuation request."
+              },
+        "MANIFOLDS" : {
+                "$ref" : "#/definitions/tbpManifolds",
+                "description" : "Manifolds: invariant stable/unstable manifold request and branches."
+              },
+        "CONSTELLATION" : {
+                "$ref" : "#/definitions/tbpConstellation",
+                "description" : "Constellation: time-phased multi-spacecraft CR3BP constellation."
+              },
+        "SURFACE_ANALYSIS" : {
+                "$ref" : "#/definitions/tbpSurfaceAnalysis",
+                "description" : "SurfaceAnalysis: surface coverage gaps, elevation, occultations, and DOP."
               }
       },
       "additionalProperties" : false

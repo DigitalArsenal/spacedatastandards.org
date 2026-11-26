@@ -170,8 +170,212 @@ func (rcv *tbpFrameConversion) MutateInertial(j int, n float64) bool {
 	return rcv.MutateINERTIAL(j, n)
 }
 
+/// Reference primary body: 0 = barycenter, 1 = P1 (Earth), 2 = P2 (Moon).
+func (rcv *tbpFrameConversion) REFERENCE_PRIMARY() byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	if o != 0 {
+		return rcv._tab.GetByte(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *tbpFrameConversion) ReferencePrimary() byte {
+	return rcv.REFERENCE_PRIMARY()
+}
+
+/// Reference primary body: 0 = barycenter, 1 = P1 (Earth), 2 = P2 (Moon).
+func (rcv *tbpFrameConversion) MutateREFERENCE_PRIMARY(n byte) bool {
+	return rcv._tab.MutateByteSlot(14, n)
+}
+
+func (rcv *tbpFrameConversion) MutateReferencePrimary(n byte) bool {
+	return rcv.MutateREFERENCE_PRIMARY(n)
+}
+
+/// Epoch Julian date (days) for J2000/ephemeris conversions; 0 = from REFERENCE_EPOCH_MS.
+func (rcv *tbpFrameConversion) JULIAN_DATE() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *tbpFrameConversion) JulianDate() float64 {
+	return rcv.JULIAN_DATE()
+}
+
+/// Epoch Julian date (days) for J2000/ephemeris conversions; 0 = from REFERENCE_EPOCH_MS.
+func (rcv *tbpFrameConversion) MutateJULIAN_DATE(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *tbpFrameConversion) MutateJulianDate(n float64) bool {
+	return rcv.MutateJULIAN_DATE(n)
+}
+
+/// Geodetic/selenodetic coordinates [lat_deg, lon_deg, alt_km] (3 values).
+func (rcv *tbpFrameConversion) LLA_DEG_KM(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *tbpFrameConversion) LlaDegKm(j int) float64 {
+	return rcv.LLA_DEG_KM(j)
+}
+
+func (rcv *tbpFrameConversion) LLA_DEG_KMLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *tbpFrameConversion) LlaDegKmLength() int {
+	return rcv.LLA_DEG_KMLength()
+}
+
+/// Geodetic/selenodetic coordinates [lat_deg, lon_deg, alt_km] (3 values).
+func (rcv *tbpFrameConversion) MutateLLA_DEG_KM(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+func (rcv *tbpFrameConversion) MutateLlaDegKm(j int, n float64) bool {
+	return rcv.MutateLLA_DEG_KM(j, n)
+}
+
+/// Classical Keplerian elements [a_km, e, inc_deg, raan_deg, argp_deg, nu_deg] (6 values).
+func (rcv *tbpFrameConversion) ORBITAL_ELEMENTS(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *tbpFrameConversion) OrbitalElements(j int) float64 {
+	return rcv.ORBITAL_ELEMENTS(j)
+}
+
+func (rcv *tbpFrameConversion) ORBITAL_ELEMENTSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *tbpFrameConversion) OrbitalElementsLength() int {
+	return rcv.ORBITAL_ELEMENTSLength()
+}
+
+/// Classical Keplerian elements [a_km, e, inc_deg, raan_deg, argp_deg, nu_deg] (6 values).
+func (rcv *tbpFrameConversion) MutateORBITAL_ELEMENTS(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+func (rcv *tbpFrameConversion) MutateOrbitalElements(j int, n float64) bool {
+	return rcv.MutateORBITAL_ELEMENTS(j, n)
+}
+
+/// Batch synodic states (N * 6 values, non-dimensional) for vectorized conversion.
+func (rcv *tbpFrameConversion) BATCH_SYNODIC_STATES(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *tbpFrameConversion) BatchSynodicStates(j int) float64 {
+	return rcv.BATCH_SYNODIC_STATES(j)
+}
+
+func (rcv *tbpFrameConversion) BATCH_SYNODIC_STATESLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *tbpFrameConversion) BatchSynodicStatesLength() int {
+	return rcv.BATCH_SYNODIC_STATESLength()
+}
+
+/// Batch synodic states (N * 6 values, non-dimensional) for vectorized conversion.
+func (rcv *tbpFrameConversion) MutateBATCH_SYNODIC_STATES(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+func (rcv *tbpFrameConversion) MutateBatchSynodicStates(j int, n float64) bool {
+	return rcv.MutateBATCH_SYNODIC_STATES(j, n)
+}
+
+/// Batch inertial/target states (N * 6 values, km and km/s) for vectorized conversion.
+func (rcv *tbpFrameConversion) BATCH_INERTIAL_STATES(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *tbpFrameConversion) BatchInertialStates(j int) float64 {
+	return rcv.BATCH_INERTIAL_STATES(j)
+}
+
+func (rcv *tbpFrameConversion) BATCH_INERTIAL_STATESLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *tbpFrameConversion) BatchInertialStatesLength() int {
+	return rcv.BATCH_INERTIAL_STATESLength()
+}
+
+/// Batch inertial/target states (N * 6 values, km and km/s) for vectorized conversion.
+func (rcv *tbpFrameConversion) MutateBATCH_INERTIAL_STATES(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+func (rcv *tbpFrameConversion) MutateBatchInertialStates(j int, n float64) bool {
+	return rcv.MutateBATCH_INERTIAL_STATES(j, n)
+}
+
 func tbpFrameConversionStart(builder *flatbuffers.Builder) {
-	builder.StartObject(5)
+	builder.StartObject(11)
 }
 func tbpFrameConversionAddDIRECTION(builder *flatbuffers.Builder, DIRECTION tbpConversionDirection) {
 	builder.PrependByteSlot(0, byte(DIRECTION), 0)
@@ -208,6 +412,66 @@ func tbpFrameConversionStartINERTIALVector(builder *flatbuffers.Builder, numElem
 }
 func tbpFrameConversionStartInertialVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return tbpFrameConversionStartINERTIALVector(builder, numElems)
+}
+func tbpFrameConversionAddREFERENCE_PRIMARY(builder *flatbuffers.Builder, REFERENCE_PRIMARY byte) {
+	builder.PrependByteSlot(5, REFERENCE_PRIMARY, 0)
+}
+func tbpFrameConversionAddReferencePrimary(builder *flatbuffers.Builder, REFERENCE_PRIMARY byte) {
+	tbpFrameConversionAddREFERENCE_PRIMARY(builder, REFERENCE_PRIMARY)
+}
+func tbpFrameConversionAddJULIAN_DATE(builder *flatbuffers.Builder, JULIAN_DATE float64) {
+	builder.PrependFloat64Slot(6, JULIAN_DATE, 0.0)
+}
+func tbpFrameConversionAddJulianDate(builder *flatbuffers.Builder, JULIAN_DATE float64) {
+	tbpFrameConversionAddJULIAN_DATE(builder, JULIAN_DATE)
+}
+func tbpFrameConversionAddLLA_DEG_KM(builder *flatbuffers.Builder, LLA_DEG_KM flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(LLA_DEG_KM), 0)
+}
+func tbpFrameConversionAddLlaDegKm(builder *flatbuffers.Builder, LLA_DEG_KM flatbuffers.UOffsetT) {
+	tbpFrameConversionAddLLA_DEG_KM(builder, LLA_DEG_KM)
+}
+func tbpFrameConversionStartLLA_DEG_KMVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func tbpFrameConversionStartLlaDegKmVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return tbpFrameConversionStartLLA_DEG_KMVector(builder, numElems)
+}
+func tbpFrameConversionAddORBITAL_ELEMENTS(builder *flatbuffers.Builder, ORBITAL_ELEMENTS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(ORBITAL_ELEMENTS), 0)
+}
+func tbpFrameConversionAddOrbitalElements(builder *flatbuffers.Builder, ORBITAL_ELEMENTS flatbuffers.UOffsetT) {
+	tbpFrameConversionAddORBITAL_ELEMENTS(builder, ORBITAL_ELEMENTS)
+}
+func tbpFrameConversionStartORBITAL_ELEMENTSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func tbpFrameConversionStartOrbitalElementsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return tbpFrameConversionStartORBITAL_ELEMENTSVector(builder, numElems)
+}
+func tbpFrameConversionAddBATCH_SYNODIC_STATES(builder *flatbuffers.Builder, BATCH_SYNODIC_STATES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(BATCH_SYNODIC_STATES), 0)
+}
+func tbpFrameConversionAddBatchSynodicStates(builder *flatbuffers.Builder, BATCH_SYNODIC_STATES flatbuffers.UOffsetT) {
+	tbpFrameConversionAddBATCH_SYNODIC_STATES(builder, BATCH_SYNODIC_STATES)
+}
+func tbpFrameConversionStartBATCH_SYNODIC_STATESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func tbpFrameConversionStartBatchSynodicStatesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return tbpFrameConversionStartBATCH_SYNODIC_STATESVector(builder, numElems)
+}
+func tbpFrameConversionAddBATCH_INERTIAL_STATES(builder *flatbuffers.Builder, BATCH_INERTIAL_STATES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(BATCH_INERTIAL_STATES), 0)
+}
+func tbpFrameConversionAddBatchInertialStates(builder *flatbuffers.Builder, BATCH_INERTIAL_STATES flatbuffers.UOffsetT) {
+	tbpFrameConversionAddBATCH_INERTIAL_STATES(builder, BATCH_INERTIAL_STATES)
+}
+func tbpFrameConversionStartBATCH_INERTIAL_STATESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func tbpFrameConversionStartBatchInertialStatesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return tbpFrameConversionStartBATCH_INERTIAL_STATESVector(builder, numElems)
 }
 func tbpFrameConversionEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

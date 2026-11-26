@@ -67,6 +67,22 @@ public final class tbpStationKeeping extends com.google.flatbuffers.Table {
    * Result: true when the orbit stays bounded over the simulation.
    */
   public boolean BOUNDED() { int o = __offset(22); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Time between correction maneuvers, s (LinearStabilityBounds).
+   */
+  public double CORRECTION_INTERVAL_S() { int o = __offset(24); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * 3-axis velocity execution error magnitude, km/s (LinearStabilityBounds).
+   */
+  public double DELTA_V_EXECUTION_ERROR_KM_S() { int o = __offset(26); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Result: linear-stability lower bound annual delta-v, km/s/yr.
+   */
+  public double LOWER_BOUND_ANNUAL_DELTA_V_KM_S() { int o = __offset(28); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Result: linear-stability upper bound annual delta-v, km/s/yr.
+   */
+  public double UPPER_BOUND_ANNUAL_DELTA_V_KM_S() { int o = __offset(30); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
 
   public static int createtbpStationKeeping(FlatBufferBuilder builder,
       int ORBITOffset,
@@ -78,8 +94,16 @@ public final class tbpStationKeeping extends com.google.flatbuffers.Table {
       double MEAN_CYCLE_DELTA_V_KM_S,
       double MAX_CYCLE_DELTA_V_KM_S,
       int CYCLE_DELTA_V_KM_SOffset,
-      boolean BOUNDED) {
-    builder.startTable(10);
+      boolean BOUNDED,
+      double CORRECTION_INTERVAL_S,
+      double DELTA_V_EXECUTION_ERROR_KM_S,
+      double LOWER_BOUND_ANNUAL_DELTA_V_KM_S,
+      double UPPER_BOUND_ANNUAL_DELTA_V_KM_S) {
+    builder.startTable(14);
+    tbpStationKeeping.addUpperBoundAnnualDeltaVKmS(builder, UPPER_BOUND_ANNUAL_DELTA_V_KM_S);
+    tbpStationKeeping.addLowerBoundAnnualDeltaVKmS(builder, LOWER_BOUND_ANNUAL_DELTA_V_KM_S);
+    tbpStationKeeping.addDeltaVExecutionErrorKmS(builder, DELTA_V_EXECUTION_ERROR_KM_S);
+    tbpStationKeeping.addCorrectionIntervalS(builder, CORRECTION_INTERVAL_S);
     tbpStationKeeping.addMaxCycleDeltaVKmS(builder, MAX_CYCLE_DELTA_V_KM_S);
     tbpStationKeeping.addMeanCycleDeltaVKmS(builder, MEAN_CYCLE_DELTA_V_KM_S);
     tbpStationKeeping.addAnnualDeltaVKmS(builder, ANNUAL_DELTA_V_KM_S);
@@ -93,7 +117,7 @@ public final class tbpStationKeeping extends com.google.flatbuffers.Table {
     return tbpStationKeeping.endtbpStationKeeping(builder);
   }
 
-  public static void starttbpStationKeeping(FlatBufferBuilder builder) { builder.startTable(10); }
+  public static void starttbpStationKeeping(FlatBufferBuilder builder) { builder.startTable(14); }
   public static void addOrbit(FlatBufferBuilder builder, int ORBITOffset) { builder.addOffset(0, ORBITOffset, 0); }
   public static void addStrategy(FlatBufferBuilder builder, int STRATEGY) { builder.addByte(1, (byte) STRATEGY, (byte) 0); }
   public static void addNavigationErrorKm(FlatBufferBuilder builder, double NAVIGATION_ERROR_KM) { builder.addDouble(2, NAVIGATION_ERROR_KM, 0.0); }
@@ -106,6 +130,10 @@ public final class tbpStationKeeping extends com.google.flatbuffers.Table {
   public static int createCycleDeltaVKmSVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
   public static void startCycleDeltaVKmSVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
   public static void addBounded(FlatBufferBuilder builder, boolean BOUNDED) { builder.addBoolean(9, BOUNDED, false); }
+  public static void addCorrectionIntervalS(FlatBufferBuilder builder, double CORRECTION_INTERVAL_S) { builder.addDouble(10, CORRECTION_INTERVAL_S, 0.0); }
+  public static void addDeltaVExecutionErrorKmS(FlatBufferBuilder builder, double DELTA_V_EXECUTION_ERROR_KM_S) { builder.addDouble(11, DELTA_V_EXECUTION_ERROR_KM_S, 0.0); }
+  public static void addLowerBoundAnnualDeltaVKmS(FlatBufferBuilder builder, double LOWER_BOUND_ANNUAL_DELTA_V_KM_S) { builder.addDouble(12, LOWER_BOUND_ANNUAL_DELTA_V_KM_S, 0.0); }
+  public static void addUpperBoundAnnualDeltaVKmS(FlatBufferBuilder builder, double UPPER_BOUND_ANNUAL_DELTA_V_KM_S) { builder.addDouble(13, UPPER_BOUND_ANNUAL_DELTA_V_KM_S, 0.0); }
   public static int endtbpStationKeeping(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

@@ -24,6 +24,14 @@ const (
 	tbpTransferKindDirectInsertion        tbpTransferKind = 6
 	/// Insertion into a periodic orbit (TARGET_ORBIT).
 	tbpTransferKindPeriodicOrbitInsertion tbpTransferKind = 7
+	/// Theoretical minimum Jacobi-energy delta-v between states or to surface.
+	tbpTransferKindMinEnergy              tbpTransferKind = 8
+	/// Single-revolution STM-targeted direct CR3BP Lambert transfer.
+	tbpTransferKindDirectLambert          tbpTransferKind = 9
+	/// Minimum-delta-v CR3BP Lambert across prograde/retrograde and primaries.
+	tbpTransferKindMinLambert             tbpTransferKind = 10
+	/// Minimum-time low-thrust optimal control (Pontryagin Minimum Principle).
+	tbpTransferKindLowThrustMinTime       tbpTransferKind = 11
 )
 
 var EnumNamestbpTransferKind = map[tbpTransferKind]string{
@@ -35,6 +43,10 @@ var EnumNamestbpTransferKind = map[tbpTransferKind]string{
 	tbpTransferKindWeakStabilityBoundary:  "WeakStabilityBoundary",
 	tbpTransferKindDirectInsertion:        "DirectInsertion",
 	tbpTransferKindPeriodicOrbitInsertion: "PeriodicOrbitInsertion",
+	tbpTransferKindMinEnergy:              "MinEnergy",
+	tbpTransferKindDirectLambert:          "DirectLambert",
+	tbpTransferKindMinLambert:             "MinLambert",
+	tbpTransferKindLowThrustMinTime:       "LowThrustMinTime",
 }
 
 var EnumValuestbpTransferKind = map[string]tbpTransferKind{
@@ -46,6 +58,10 @@ var EnumValuestbpTransferKind = map[string]tbpTransferKind{
 	"WeakStabilityBoundary":  tbpTransferKindWeakStabilityBoundary,
 	"DirectInsertion":        tbpTransferKindDirectInsertion,
 	"PeriodicOrbitInsertion": tbpTransferKindPeriodicOrbitInsertion,
+	"MinEnergy":              tbpTransferKindMinEnergy,
+	"DirectLambert":          tbpTransferKindDirectLambert,
+	"MinLambert":             tbpTransferKindMinLambert,
+	"LowThrustMinTime":       tbpTransferKindLowThrustMinTime,
 }
 
 func (v tbpTransferKind) String() string {

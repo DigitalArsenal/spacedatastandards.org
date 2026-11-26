@@ -20,6 +20,14 @@ class tbpTransferKind
     const DirectInsertion = 6;
     /// Insertion into a periodic orbit (TARGET_ORBIT).
     const PeriodicOrbitInsertion = 7;
+    /// Theoretical minimum Jacobi-energy delta-v between states or to surface.
+    const MinEnergy = 8;
+    /// Single-revolution STM-targeted direct CR3BP Lambert transfer.
+    const DirectLambert = 9;
+    /// Minimum-delta-v CR3BP Lambert across prograde/retrograde and primaries.
+    const MinLambert = 10;
+    /// Minimum-time low-thrust optimal control (Pontryagin Minimum Principle).
+    const LowThrustMinTime = 11;
 
     private static $names = array(
         tbpTransferKind::Unspecified=>"Unspecified",
@@ -30,6 +38,10 @@ class tbpTransferKind
         tbpTransferKind::WeakStabilityBoundary=>"WeakStabilityBoundary",
         tbpTransferKind::DirectInsertion=>"DirectInsertion",
         tbpTransferKind::PeriodicOrbitInsertion=>"PeriodicOrbitInsertion",
+        tbpTransferKind::MinEnergy=>"MinEnergy",
+        tbpTransferKind::DirectLambert=>"DirectLambert",
+        tbpTransferKind::MinLambert=>"MinLambert",
+        tbpTransferKind::LowThrustMinTime=>"LowThrustMinTime",
     );
 
     public static function Name($e)

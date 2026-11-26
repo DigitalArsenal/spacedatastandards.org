@@ -164,10 +164,10 @@ class TBP : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * PeriodicOrbit, HaloFirstGuess, NearRectilinearHalo: the request fields
-     * (FAMILY, LIBRATION_POINT, AMPLITUDE or perilune/apolune, TOLERANCE,
-     * MAX_ITERATIONS) and the result. Family: the members, ordered along the
-     * family's continuation parameter (AMPLITUDE).
+     * PeriodicOrbit, HaloFirstGuess, NearRectilinearHalo, OrbitProperties: the
+     * request fields (FAMILY, LIBRATION_POINT, AMPLITUDE, PETALS, or
+     * perilune/apolune, TOLERANCE, MAX_ITERATIONS) and the result. Family and
+     * Continuation: the members ordered along the continuation parameter.
      */
     fun orbits(j: Int) : tbpPeriodicOrbit? = orbits(tbpPeriodicOrbit(), j)
     fun orbits(obj: tbpPeriodicOrbit, j: Int) : tbpPeriodicOrbit? {
@@ -209,6 +209,54 @@ class TBP : Table() {
             null
         }
     }
+    /**
+     * Continuation: pseudo-arclength or natural-parameter continuation request.
+     */
+    val continuation : tbpContinuationRequest? get() = continuation(tbpContinuationRequest())
+    fun continuation(obj: tbpContinuationRequest) : tbpContinuationRequest? {
+        val o = __offset(38)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Manifolds: invariant stable/unstable manifold request and branches.
+     */
+    val manifolds : tbpManifolds? get() = manifolds(tbpManifolds())
+    fun manifolds(obj: tbpManifolds) : tbpManifolds? {
+        val o = __offset(40)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Constellation: time-phased multi-spacecraft CR3BP constellation.
+     */
+    val constellation : tbpConstellation? get() = constellation(tbpConstellation())
+    fun constellation(obj: tbpConstellation) : tbpConstellation? {
+        val o = __offset(42)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * SurfaceAnalysis: surface coverage gaps, elevation, occultations, and DOP.
+     */
+    val surfaceAnalysis : tbpSurfaceAnalysis? get() = surfaceAnalysis(tbpSurfaceAnalysis())
+    fun surfaceAnalysis(obj: tbpSurfaceAnalysis) : tbpSurfaceAnalysis? {
+        val o = __offset(44)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsTBP(_bb: ByteBuffer): TBP = getRootAsTBP(_bb, TBP())
@@ -217,10 +265,14 @@ class TBP : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun TBPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$TBP")
-        fun createTBP(builder: FlatBufferBuilder, idOffset: Int, createdAtMs: Long, producerOffset: Int, problem: UByte, systemOffset: Int, status: UByte, errorCodeOffset: Int, errorMessageOffset: Int, propagationOffset: Int, trajectoryOffset: Int, librationPointsOffset: Int, stateOffset: Int, jacobi: Double, orbitsOffset: Int, transferOffset: Int, stationKeepingOffset: Int, frameConversionOffset: Int) : Int {
-            builder.startTable(17)
+        fun createTBP(builder: FlatBufferBuilder, idOffset: Int, createdAtMs: Long, producerOffset: Int, problem: UByte, systemOffset: Int, status: UByte, errorCodeOffset: Int, errorMessageOffset: Int, propagationOffset: Int, trajectoryOffset: Int, librationPointsOffset: Int, stateOffset: Int, jacobi: Double, orbitsOffset: Int, transferOffset: Int, stationKeepingOffset: Int, frameConversionOffset: Int, continuationOffset: Int, manifoldsOffset: Int, constellationOffset: Int, surfaceAnalysisOffset: Int) : Int {
+            builder.startTable(21)
             addJACOBI(builder, jacobi)
             addCREATEDATMS(builder, createdAtMs)
+            addSURFACEANALYSIS(builder, surfaceAnalysisOffset)
+            addCONSTELLATION(builder, constellationOffset)
+            addMANIFOLDS(builder, manifoldsOffset)
+            addCONTINUATION(builder, continuationOffset)
             addFRAMECONVERSION(builder, frameConversionOffset)
             addSTATIONKEEPING(builder, stationKeepingOffset)
             addTRANSFER(builder, transferOffset)
@@ -238,7 +290,7 @@ class TBP : Table() {
             addPROBLEM(builder, problem)
             return endTBP(builder)
         }
-        fun startTBP(builder: FlatBufferBuilder) = builder.startTable(17)
+        fun startTBP(builder: FlatBufferBuilder) = builder.startTable(21)
         fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
         fun addCREATEDATMS(builder: FlatBufferBuilder, createdAtMs: Long) = builder.addLong(1, createdAtMs, 0L)
         fun addPRODUCER(builder: FlatBufferBuilder, producer: Int) = builder.addOffset(2, producer, 0)
@@ -272,6 +324,10 @@ class TBP : Table() {
         fun addTRANSFER(builder: FlatBufferBuilder, transfer: Int) = builder.addOffset(14, transfer, 0)
         fun addSTATIONKEEPING(builder: FlatBufferBuilder, stationKeeping: Int) = builder.addOffset(15, stationKeeping, 0)
         fun addFRAMECONVERSION(builder: FlatBufferBuilder, frameConversion: Int) = builder.addOffset(16, frameConversion, 0)
+        fun addCONTINUATION(builder: FlatBufferBuilder, continuation: Int) = builder.addOffset(17, continuation, 0)
+        fun addMANIFOLDS(builder: FlatBufferBuilder, manifolds: Int) = builder.addOffset(18, manifolds, 0)
+        fun addCONSTELLATION(builder: FlatBufferBuilder, constellation: Int) = builder.addOffset(19, constellation, 0)
+        fun addSURFACEANALYSIS(builder: FlatBufferBuilder, surfaceAnalysis: Int) = builder.addOffset(20, surfaceAnalysis, 0)
         fun endTBP(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

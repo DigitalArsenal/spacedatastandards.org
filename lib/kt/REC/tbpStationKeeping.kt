@@ -116,6 +116,38 @@ class tbpStationKeeping : Table() {
             val o = __offset(22)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
+    /**
+     * Time between correction maneuvers, s (LinearStabilityBounds).
+     */
+    val correctionIntervalS : Double
+        get() {
+            val o = __offset(24)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * 3-axis velocity execution error magnitude, km/s (LinearStabilityBounds).
+     */
+    val deltaVExecutionErrorKmS : Double
+        get() {
+            val o = __offset(26)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Result: linear-stability lower bound annual delta-v, km/s/yr.
+     */
+    val lowerBoundAnnualDeltaVKmS : Double
+        get() {
+            val o = __offset(28)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Result: linear-stability upper bound annual delta-v, km/s/yr.
+     */
+    val upperBoundAnnualDeltaVKmS : Double
+        get() {
+            val o = __offset(30)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAstbpStationKeeping(_bb: ByteBuffer): tbpStationKeeping = getRootAstbpStationKeeping(_bb, tbpStationKeeping())
@@ -123,8 +155,12 @@ class tbpStationKeeping : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createtbpStationKeeping(builder: FlatBufferBuilder, orbitOffset: Int, strategy: UByte, navigationErrorKm: Double, executionErrorFraction: Double, cycles: UInt, annualDeltaVKmS: Double, meanCycleDeltaVKmS: Double, maxCycleDeltaVKmS: Double, cycleDeltaVKmSOffset: Int, bounded: Boolean) : Int {
-            builder.startTable(10)
+        fun createtbpStationKeeping(builder: FlatBufferBuilder, orbitOffset: Int, strategy: UByte, navigationErrorKm: Double, executionErrorFraction: Double, cycles: UInt, annualDeltaVKmS: Double, meanCycleDeltaVKmS: Double, maxCycleDeltaVKmS: Double, cycleDeltaVKmSOffset: Int, bounded: Boolean, correctionIntervalS: Double, deltaVExecutionErrorKmS: Double, lowerBoundAnnualDeltaVKmS: Double, upperBoundAnnualDeltaVKmS: Double) : Int {
+            builder.startTable(14)
+            addUPPERBOUNDANNUALDELTAVKMS(builder, upperBoundAnnualDeltaVKmS)
+            addLOWERBOUNDANNUALDELTAVKMS(builder, lowerBoundAnnualDeltaVKmS)
+            addDELTAVEXECUTIONERRORKMS(builder, deltaVExecutionErrorKmS)
+            addCORRECTIONINTERVALS(builder, correctionIntervalS)
             addMAXCYCLEDELTAVKMS(builder, maxCycleDeltaVKmS)
             addMEANCYCLEDELTAVKMS(builder, meanCycleDeltaVKmS)
             addANNUALDELTAVKMS(builder, annualDeltaVKmS)
@@ -137,7 +173,7 @@ class tbpStationKeeping : Table() {
             addSTRATEGY(builder, strategy)
             return endtbpStationKeeping(builder)
         }
-        fun starttbpStationKeeping(builder: FlatBufferBuilder) = builder.startTable(10)
+        fun starttbpStationKeeping(builder: FlatBufferBuilder) = builder.startTable(14)
         fun addORBIT(builder: FlatBufferBuilder, orbit: Int) = builder.addOffset(0, orbit, 0)
         fun addSTRATEGY(builder: FlatBufferBuilder, strategy: UByte) = builder.addByte(1, strategy.toByte(), 0)
         fun addNAVIGATIONERRORKM(builder: FlatBufferBuilder, navigationErrorKm: Double) = builder.addDouble(2, navigationErrorKm, 0.0)
@@ -156,6 +192,10 @@ class tbpStationKeeping : Table() {
         }
         fun startCycleDeltaVKmSVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
         fun addBOUNDED(builder: FlatBufferBuilder, bounded: Boolean) = builder.addBoolean(9, bounded, false)
+        fun addCORRECTIONINTERVALS(builder: FlatBufferBuilder, correctionIntervalS: Double) = builder.addDouble(10, correctionIntervalS, 0.0)
+        fun addDELTAVEXECUTIONERRORKMS(builder: FlatBufferBuilder, deltaVExecutionErrorKmS: Double) = builder.addDouble(11, deltaVExecutionErrorKmS, 0.0)
+        fun addLOWERBOUNDANNUALDELTAVKMS(builder: FlatBufferBuilder, lowerBoundAnnualDeltaVKmS: Double) = builder.addDouble(12, lowerBoundAnnualDeltaVKmS, 0.0)
+        fun addUPPERBOUNDANNUALDELTAVKMS(builder: FlatBufferBuilder, upperBoundAnnualDeltaVKmS: Double) = builder.addDouble(13, upperBoundAnnualDeltaVKmS, 0.0)
         fun endtbpStationKeeping(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

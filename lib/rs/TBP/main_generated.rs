@@ -20,11 +20,11 @@ extern crate alloc;
 pub const ENUM_MIN_TBP_PROBLEM: u8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_TBP_PROBLEM: u8 = 10;
+pub const ENUM_MAX_TBP_PROBLEM: u8 = 15;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_TBP_PROBLEM: [tbpProblem; 11] = [
+pub const ENUM_VALUES_TBP_PROBLEM: [tbpProblem; 16] = [
     tbpProblem::Unspecified,
     tbpProblem::Propagation,
     tbpProblem::LibrationPoints,
@@ -36,6 +36,11 @@ pub const ENUM_VALUES_TBP_PROBLEM: [tbpProblem; 11] = [
     tbpProblem::StationKeeping,
     tbpProblem::FrameConversion,
     tbpProblem::Family,
+    tbpProblem::Continuation,
+    tbpProblem::Manifolds,
+    tbpProblem::OrbitProperties,
+    tbpProblem::Constellation,
+    tbpProblem::SurfaceAnalysis,
 ];
 
 /// Three-Body Problem (TBP)
@@ -95,9 +100,19 @@ impl tbpProblem {
     pub const FrameConversion: Self = Self(9);
     /// Members of a periodic-orbit family.
     pub const Family: Self = Self(10);
+    /// Pseudo-arclength or natural-parameter continuation from a seed orbit.
+    pub const Continuation: Self = Self(11);
+    /// Stable and unstable invariant manifolds of an unstable periodic orbit.
+    pub const Manifolds: Self = Self(12);
+    /// Diagnostic properties of a periodic orbit (apsides, stability, occultations).
+    pub const OrbitProperties: Self = Self(13);
+    /// Time-phased multi-spacecraft constellation along a periodic CR3BP orbit.
+    pub const Constellation: Self = Self(14);
+    /// Primary-body surface coverage gaps, elevation, occultations, and DOP.
+    pub const SurfaceAnalysis: Self = Self(15);
 
     pub const ENUM_MIN: u8 = 0;
-    pub const ENUM_MAX: u8 = 10;
+    pub const ENUM_MAX: u8 = 15;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::Unspecified,
         Self::Propagation,
@@ -110,6 +125,11 @@ impl tbpProblem {
         Self::StationKeeping,
         Self::FrameConversion,
         Self::Family,
+        Self::Continuation,
+        Self::Manifolds,
+        Self::OrbitProperties,
+        Self::Constellation,
+        Self::SurfaceAnalysis,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -126,6 +146,11 @@ impl tbpProblem {
             Self::StationKeeping => Some("StationKeeping"),
             Self::FrameConversion => Some("FrameConversion"),
             Self::Family => Some("Family"),
+            Self::Continuation => Some("Continuation"),
+            Self::Manifolds => Some("Manifolds"),
+            Self::OrbitProperties => Some("OrbitProperties"),
+            Self::Constellation => Some("Constellation"),
+            Self::SurfaceAnalysis => Some("SurfaceAnalysis"),
             _ => None,
         }
     }
@@ -191,11 +216,11 @@ impl ::flatbuffers::SimpleToVerifyInSlice for tbpProblem {}
 pub const ENUM_MIN_TBP_ORBIT_FAMILY: u8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_TBP_ORBIT_FAMILY: u8 = 9;
+pub const ENUM_MAX_TBP_ORBIT_FAMILY: u8 = 13;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_TBP_ORBIT_FAMILY: [tbpOrbitFamily; 10] = [
+pub const ENUM_VALUES_TBP_ORBIT_FAMILY: [tbpOrbitFamily; 14] = [
     tbpOrbitFamily::Unspecified,
     tbpOrbitFamily::HaloNorthern,
     tbpOrbitFamily::HaloSouthern,
@@ -206,6 +231,10 @@ pub const ENUM_VALUES_TBP_ORBIT_FAMILY: [tbpOrbitFamily; 10] = [
     tbpOrbitFamily::Butterfly,
     tbpOrbitFamily::Axial,
     tbpOrbitFamily::LongShortPeriod,
+    tbpOrbitFamily::TulipNorthern,
+    tbpOrbitFamily::TulipSouthern,
+    tbpOrbitFamily::PumpkinNorthern,
+    tbpOrbitFamily::PumpkinSouthern,
 ];
 
 /// Family of a periodic orbit. Append new values only; never reorder or reuse
@@ -235,9 +264,17 @@ impl tbpOrbitFamily {
     pub const Axial: Self = Self(8);
     /// Short- or long-period orbit about L4 or L5.
     pub const LongShortPeriod: Self = Self(9);
+    /// Northern-hemisphere sidereal-resonant tulip-shaped CR3BP orbit.
+    pub const TulipNorthern: Self = Self(10);
+    /// Southern-hemisphere sidereal-resonant tulip-shaped CR3BP orbit.
+    pub const TulipSouthern: Self = Self(11);
+    /// Northern-hemisphere multi-petal pumpkin-shaped CR3BP orbit.
+    pub const PumpkinNorthern: Self = Self(12);
+    /// Southern-hemisphere multi-petal pumpkin-shaped CR3BP orbit.
+    pub const PumpkinSouthern: Self = Self(13);
 
     pub const ENUM_MIN: u8 = 0;
-    pub const ENUM_MAX: u8 = 9;
+    pub const ENUM_MAX: u8 = 13;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::Unspecified,
         Self::HaloNorthern,
@@ -249,6 +286,10 @@ impl tbpOrbitFamily {
         Self::Butterfly,
         Self::Axial,
         Self::LongShortPeriod,
+        Self::TulipNorthern,
+        Self::TulipSouthern,
+        Self::PumpkinNorthern,
+        Self::PumpkinSouthern,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -264,6 +305,10 @@ impl tbpOrbitFamily {
             Self::Butterfly => Some("Butterfly"),
             Self::Axial => Some("Axial"),
             Self::LongShortPeriod => Some("LongShortPeriod"),
+            Self::TulipNorthern => Some("TulipNorthern"),
+            Self::TulipSouthern => Some("TulipSouthern"),
+            Self::PumpkinNorthern => Some("PumpkinNorthern"),
+            Self::PumpkinSouthern => Some("PumpkinSouthern"),
             _ => None,
         }
     }
@@ -329,11 +374,11 @@ impl ::flatbuffers::SimpleToVerifyInSlice for tbpOrbitFamily {}
 pub const ENUM_MIN_TBP_TRANSFER_KIND: u8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_TBP_TRANSFER_KIND: u8 = 7;
+pub const ENUM_MAX_TBP_TRANSFER_KIND: u8 = 11;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_TBP_TRANSFER_KIND: [tbpTransferKind; 8] = [
+pub const ENUM_VALUES_TBP_TRANSFER_KIND: [tbpTransferKind; 12] = [
     tbpTransferKind::Unspecified,
     tbpTransferKind::HohmannLike,
     tbpTransferKind::LowEnergy,
@@ -342,6 +387,10 @@ pub const ENUM_VALUES_TBP_TRANSFER_KIND: [tbpTransferKind; 8] = [
     tbpTransferKind::WeakStabilityBoundary,
     tbpTransferKind::DirectInsertion,
     tbpTransferKind::PeriodicOrbitInsertion,
+    tbpTransferKind::MinEnergy,
+    tbpTransferKind::DirectLambert,
+    tbpTransferKind::MinLambert,
+    tbpTransferKind::LowThrustMinTime,
 ];
 
 /// How a transfer is built. Append new values only; never reorder or reuse
@@ -367,9 +416,17 @@ impl tbpTransferKind {
     pub const DirectInsertion: Self = Self(6);
     /// Insertion into a periodic orbit (TARGET_ORBIT).
     pub const PeriodicOrbitInsertion: Self = Self(7);
+    /// Theoretical minimum Jacobi-energy delta-v between states or to surface.
+    pub const MinEnergy: Self = Self(8);
+    /// Single-revolution STM-targeted direct CR3BP Lambert transfer.
+    pub const DirectLambert: Self = Self(9);
+    /// Minimum-delta-v CR3BP Lambert across prograde/retrograde and primaries.
+    pub const MinLambert: Self = Self(10);
+    /// Minimum-time low-thrust optimal control (Pontryagin Minimum Principle).
+    pub const LowThrustMinTime: Self = Self(11);
 
     pub const ENUM_MIN: u8 = 0;
-    pub const ENUM_MAX: u8 = 7;
+    pub const ENUM_MAX: u8 = 11;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::Unspecified,
         Self::HohmannLike,
@@ -379,6 +436,10 @@ impl tbpTransferKind {
         Self::WeakStabilityBoundary,
         Self::DirectInsertion,
         Self::PeriodicOrbitInsertion,
+        Self::MinEnergy,
+        Self::DirectLambert,
+        Self::MinLambert,
+        Self::LowThrustMinTime,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -392,6 +453,10 @@ impl tbpTransferKind {
             Self::WeakStabilityBoundary => Some("WeakStabilityBoundary"),
             Self::DirectInsertion => Some("DirectInsertion"),
             Self::PeriodicOrbitInsertion => Some("PeriodicOrbitInsertion"),
+            Self::MinEnergy => Some("MinEnergy"),
+            Self::DirectLambert => Some("DirectLambert"),
+            Self::MinLambert => Some("MinLambert"),
+            Self::LowThrustMinTime => Some("LowThrustMinTime"),
             _ => None,
         }
     }
@@ -457,14 +522,15 @@ impl ::flatbuffers::SimpleToVerifyInSlice for tbpTransferKind {}
 pub const ENUM_MIN_TBP_STATION_KEEPING_STRATEGY: u8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_TBP_STATION_KEEPING_STRATEGY: u8 = 2;
+pub const ENUM_MAX_TBP_STATION_KEEPING_STRATEGY: u8 = 3;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_TBP_STATION_KEEPING_STRATEGY: [tbpStationKeepingStrategy; 3] = [
+pub const ENUM_VALUES_TBP_STATION_KEEPING_STRATEGY: [tbpStationKeepingStrategy; 4] = [
     tbpStationKeepingStrategy::PlaneCrossing,
     tbpStationKeepingStrategy::TargetPoint,
     tbpStationKeepingStrategy::FloquetMode,
+    tbpStationKeepingStrategy::LinearStabilityBounds,
 ];
 
 /// When station-keeping burns are placed. Append new values only; never
@@ -481,13 +547,16 @@ impl tbpStationKeepingStrategy {
     pub const TargetPoint: Self = Self(1);
     /// Suppress the unstable Floquet mode.
     pub const FloquetMode: Self = Self(2);
+    /// Linear stability lower/upper annual delta-v bounds across intervals.
+    pub const LinearStabilityBounds: Self = Self(3);
 
     pub const ENUM_MIN: u8 = 0;
-    pub const ENUM_MAX: u8 = 2;
+    pub const ENUM_MAX: u8 = 3;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::PlaneCrossing,
         Self::TargetPoint,
         Self::FloquetMode,
+        Self::LinearStabilityBounds,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -496,6 +565,7 @@ impl tbpStationKeepingStrategy {
             Self::PlaneCrossing => Some("PlaneCrossing"),
             Self::TargetPoint => Some("TargetPoint"),
             Self::FloquetMode => Some("FloquetMode"),
+            Self::LinearStabilityBounds => Some("LinearStabilityBounds"),
             _ => None,
         }
     }
@@ -561,13 +631,21 @@ impl ::flatbuffers::SimpleToVerifyInSlice for tbpStationKeepingStrategy {}
 pub const ENUM_MIN_TBP_CONVERSION_DIRECTION: u8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_TBP_CONVERSION_DIRECTION: u8 = 1;
+pub const ENUM_MAX_TBP_CONVERSION_DIRECTION: u8 = 9;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_TBP_CONVERSION_DIRECTION: [tbpConversionDirection; 2] = [
+pub const ENUM_VALUES_TBP_CONVERSION_DIRECTION: [tbpConversionDirection; 10] = [
     tbpConversionDirection::SynodicToInertial,
     tbpConversionDirection::InertialToSynodic,
+    tbpConversionDirection::SynodicToJ2000,
+    tbpConversionDirection::J2000ToSynodic,
+    tbpConversionDirection::SynodicToPrimaryInertial,
+    tbpConversionDirection::PrimaryInertialToSynodic,
+    tbpConversionDirection::SynodicToLla,
+    tbpConversionDirection::LlaToSynodic,
+    tbpConversionDirection::SynodicToOrbitalElements,
+    tbpConversionDirection::OrbitalElementsToSynodic,
 ];
 
 /// Direction of a frame conversion. Append new values only; never reorder or
@@ -580,12 +658,28 @@ pub struct tbpConversionDirection(pub u8);
 impl tbpConversionDirection {
     pub const SynodicToInertial: Self = Self(0);
     pub const InertialToSynodic: Self = Self(1);
+    pub const SynodicToJ2000: Self = Self(2);
+    pub const J2000ToSynodic: Self = Self(3);
+    pub const SynodicToPrimaryInertial: Self = Self(4);
+    pub const PrimaryInertialToSynodic: Self = Self(5);
+    pub const SynodicToLla: Self = Self(6);
+    pub const LlaToSynodic: Self = Self(7);
+    pub const SynodicToOrbitalElements: Self = Self(8);
+    pub const OrbitalElementsToSynodic: Self = Self(9);
 
     pub const ENUM_MIN: u8 = 0;
-    pub const ENUM_MAX: u8 = 1;
+    pub const ENUM_MAX: u8 = 9;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::SynodicToInertial,
         Self::InertialToSynodic,
+        Self::SynodicToJ2000,
+        Self::J2000ToSynodic,
+        Self::SynodicToPrimaryInertial,
+        Self::PrimaryInertialToSynodic,
+        Self::SynodicToLla,
+        Self::LlaToSynodic,
+        Self::SynodicToOrbitalElements,
+        Self::OrbitalElementsToSynodic,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -593,6 +687,14 @@ impl tbpConversionDirection {
         match self {
             Self::SynodicToInertial => Some("SynodicToInertial"),
             Self::InertialToSynodic => Some("InertialToSynodic"),
+            Self::SynodicToJ2000 => Some("SynodicToJ2000"),
+            Self::J2000ToSynodic => Some("J2000ToSynodic"),
+            Self::SynodicToPrimaryInertial => Some("SynodicToPrimaryInertial"),
+            Self::PrimaryInertialToSynodic => Some("PrimaryInertialToSynodic"),
+            Self::SynodicToLla => Some("SynodicToLla"),
+            Self::LlaToSynodic => Some("LlaToSynodic"),
+            Self::SynodicToOrbitalElements => Some("SynodicToOrbitalElements"),
+            Self::OrbitalElementsToSynodic => Some("OrbitalElementsToSynodic"),
             _ => None,
         }
     }
@@ -653,6 +755,110 @@ impl<'a> ::flatbuffers::Verifiable for tbpConversionDirection {
 }
 
 impl ::flatbuffers::SimpleToVerifyInSlice for tbpConversionDirection {}
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_TBP_MANIFOLD_BRANCH_KIND: u8 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_TBP_MANIFOLD_BRANCH_KIND: u8 = 2;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_TBP_MANIFOLD_BRANCH_KIND: [tbpManifoldBranchKind; 3] = [
+    tbpManifoldBranchKind::Both,
+    tbpManifoldBranchKind::StableOnly,
+    tbpManifoldBranchKind::UnstableOnly,
+];
+
+/// Which invariant manifold branches to compute. Append new values only;
+/// never reorder or reuse existing values.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct tbpManifoldBranchKind(pub u8);
+
+#[allow(non_upper_case_globals)]
+impl tbpManifoldBranchKind {
+    /// Both stable and unstable branches (interior and exterior).
+    pub const Both: Self = Self(0);
+    /// Stable invariant manifold branches only (backward propagation).
+    pub const StableOnly: Self = Self(1);
+    /// Unstable invariant manifold branches only (forward propagation).
+    pub const UnstableOnly: Self = Self(2);
+
+    pub const ENUM_MIN: u8 = 0;
+    pub const ENUM_MAX: u8 = 2;
+    pub const ENUM_VALUES: &'static [Self] = &[
+        Self::Both,
+        Self::StableOnly,
+        Self::UnstableOnly,
+    ];
+
+    /// Returns the variant's name or "" if unknown.
+    pub fn variant_name(self) -> Option<&'static str> {
+        match self {
+            Self::Both => Some("Both"),
+            Self::StableOnly => Some("StableOnly"),
+            Self::UnstableOnly => Some("UnstableOnly"),
+            _ => None,
+        }
+    }
+}
+
+impl ::core::fmt::Debug for tbpManifoldBranchKind {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        if let Some(name) = self.variant_name() {
+            f.write_str(name)
+        } else {
+            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+        }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for tbpManifoldBranchKind {
+    type Inner = Self;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+        Self(b)
+    }
+}
+
+impl ::flatbuffers::Push for tbpManifoldBranchKind {
+    type Output = tbpManifoldBranchKind;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for tbpManifoldBranchKind {
+    type Scalar = u8;
+
+    #[inline]
+    fn to_little_endian(self) -> u8 {
+        self.0.to_le()
+    }
+
+    #[inline]
+    #[allow(clippy::wrong_self_convention)]
+    fn from_little_endian(v: u8) -> Self {
+        let b = u8::from_le(v);
+        Self(b)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for tbpManifoldBranchKind {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        u8::run_verifier(v, pos)
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for tbpManifoldBranchKind {}
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_TBP_STATUS: u8 = 0;
@@ -2083,6 +2289,20 @@ impl<'a> tbpPeriodicOrbit<'a> {
     pub const VT_STABILITY_INDEX: ::flatbuffers::VOffsetT = 38;
     pub const VT_STABLE: ::flatbuffers::VOffsetT = 40;
     pub const VT_TRAJECTORY: ::flatbuffers::VOffsetT = 42;
+    pub const VT_PETALS: ::flatbuffers::VOffsetT = 44;
+    pub const VT_RESONANCE_P: ::flatbuffers::VOffsetT = 46;
+    pub const VT_RESONANCE_Q: ::flatbuffers::VOffsetT = 48;
+    pub const VT_PSEUDO_POTENTIAL: ::flatbuffers::VOffsetT = 50;
+    pub const VT_PERIGEE_KM: ::flatbuffers::VOffsetT = 52;
+    pub const VT_APOGEE_KM: ::flatbuffers::VOffsetT = 54;
+    pub const VT_DOUBLING_TIME: ::flatbuffers::VOffsetT = 56;
+    pub const VT_CHARACTERISTIC_EXPONENT: ::flatbuffers::VOffsetT = 58;
+    pub const VT_MAX_LUNAR_OCCULTATION_S: ::flatbuffers::VOffsetT = 60;
+    pub const VT_TOTAL_LUNAR_OCCULTATION_S: ::flatbuffers::VOffsetT = 62;
+    pub const VT_MAX_EARTH_OCCULTATION_S: ::flatbuffers::VOffsetT = 64;
+    pub const VT_TOTAL_EARTH_OCCULTATION_S: ::flatbuffers::VOffsetT = 66;
+    pub const VT_STABLE_EIGENVECTOR: ::flatbuffers::VOffsetT = 68;
+    pub const VT_UNSTABLE_EIGENVECTOR: ::flatbuffers::VOffsetT = 70;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -2095,6 +2315,15 @@ impl<'a> tbpPeriodicOrbit<'a> {
         args: &'args tbpPeriodicOrbitArgs<'args>
     ) -> ::flatbuffers::WIPOffset<tbpPeriodicOrbit<'bldr>> {
         let mut builder = tbpPeriodicOrbitBuilder::new(_fbb);
+        builder.add_TOTAL_EARTH_OCCULTATION_S(args.TOTAL_EARTH_OCCULTATION_S);
+        builder.add_MAX_EARTH_OCCULTATION_S(args.MAX_EARTH_OCCULTATION_S);
+        builder.add_TOTAL_LUNAR_OCCULTATION_S(args.TOTAL_LUNAR_OCCULTATION_S);
+        builder.add_MAX_LUNAR_OCCULTATION_S(args.MAX_LUNAR_OCCULTATION_S);
+        builder.add_CHARACTERISTIC_EXPONENT(args.CHARACTERISTIC_EXPONENT);
+        builder.add_DOUBLING_TIME(args.DOUBLING_TIME);
+        builder.add_APOGEE_KM(args.APOGEE_KM);
+        builder.add_PERIGEE_KM(args.PERIGEE_KM);
+        builder.add_PSEUDO_POTENTIAL(args.PSEUDO_POTENTIAL);
         builder.add_STABILITY_INDEX(args.STABILITY_INDEX);
         builder.add_TOLERANCE(args.TOLERANCE);
         builder.add_JACOBI(args.JACOBI);
@@ -2103,6 +2332,11 @@ impl<'a> tbpPeriodicOrbit<'a> {
         builder.add_APOLUNE_ALTITUDE_KM(args.APOLUNE_ALTITUDE_KM);
         builder.add_PERILUNE_ALTITUDE_KM(args.PERILUNE_ALTITUDE_KM);
         builder.add_AMPLITUDE(args.AMPLITUDE);
+        if let Some(x) = args.UNSTABLE_EIGENVECTOR { builder.add_UNSTABLE_EIGENVECTOR(x); }
+        if let Some(x) = args.STABLE_EIGENVECTOR { builder.add_STABLE_EIGENVECTOR(x); }
+        builder.add_RESONANCE_Q(args.RESONANCE_Q);
+        builder.add_RESONANCE_P(args.RESONANCE_P);
+        builder.add_PETALS(args.PETALS);
         if let Some(x) = args.TRAJECTORY { builder.add_TRAJECTORY(x); }
         if let Some(x) = args.FLOQUET_IMAGINARY { builder.add_FLOQUET_IMAGINARY(x); }
         if let Some(x) = args.FLOQUET_REAL { builder.add_FLOQUET_REAL(x); }
@@ -2149,6 +2383,24 @@ impl<'a> tbpPeriodicOrbit<'a> {
         let TRAJECTORY = self.TRAJECTORY().map(|x| {
             alloc::boxed::Box::new(x.unpack())
         });
+        let PETALS = self.PETALS();
+        let RESONANCE_P = self.RESONANCE_P();
+        let RESONANCE_Q = self.RESONANCE_Q();
+        let PSEUDO_POTENTIAL = self.PSEUDO_POTENTIAL();
+        let PERIGEE_KM = self.PERIGEE_KM();
+        let APOGEE_KM = self.APOGEE_KM();
+        let DOUBLING_TIME = self.DOUBLING_TIME();
+        let CHARACTERISTIC_EXPONENT = self.CHARACTERISTIC_EXPONENT();
+        let MAX_LUNAR_OCCULTATION_S = self.MAX_LUNAR_OCCULTATION_S();
+        let TOTAL_LUNAR_OCCULTATION_S = self.TOTAL_LUNAR_OCCULTATION_S();
+        let MAX_EARTH_OCCULTATION_S = self.MAX_EARTH_OCCULTATION_S();
+        let TOTAL_EARTH_OCCULTATION_S = self.TOTAL_EARTH_OCCULTATION_S();
+        let STABLE_EIGENVECTOR = self.STABLE_EIGENVECTOR().map(|x| {
+            x.into_iter().collect()
+        });
+        let UNSTABLE_EIGENVECTOR = self.UNSTABLE_EIGENVECTOR().map(|x| {
+            x.into_iter().collect()
+        });
         tbpPeriodicOrbitT {
             FAMILY,
             LIBRATION_POINT,
@@ -2170,6 +2422,20 @@ impl<'a> tbpPeriodicOrbit<'a> {
             STABILITY_INDEX,
             STABLE,
             TRAJECTORY,
+            PETALS,
+            RESONANCE_P,
+            RESONANCE_Q,
+            PSEUDO_POTENTIAL,
+            PERIGEE_KM,
+            APOGEE_KM,
+            DOUBLING_TIME,
+            CHARACTERISTIC_EXPONENT,
+            MAX_LUNAR_OCCULTATION_S,
+            TOTAL_LUNAR_OCCULTATION_S,
+            MAX_EARTH_OCCULTATION_S,
+            TOTAL_EARTH_OCCULTATION_S,
+            STABLE_EIGENVECTOR,
+            UNSTABLE_EIGENVECTOR,
         }
     }
 
@@ -2355,6 +2621,132 @@ impl<'a> tbpPeriodicOrbit<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<tbpTrajectory>>(tbpPeriodicOrbit::VT_TRAJECTORY, None)}
     }
+
+    /// Tulip/pumpkin petal count Np; 0 = not applicable.
+    #[inline]
+    pub fn PETALS(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(tbpPeriodicOrbit::VT_PETALS, Some(0)).unwrap()}
+    }
+
+    /// Sidereal resonance denominator p (period = q * 2*pi / p); 0 = not stated.
+    #[inline]
+    pub fn RESONANCE_P(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(tbpPeriodicOrbit::VT_RESONANCE_P, Some(0)).unwrap()}
+    }
+
+    /// Sidereal resonance numerator q; 0 = not stated.
+    #[inline]
+    pub fn RESONANCE_Q(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(tbpPeriodicOrbit::VT_RESONANCE_Q, Some(0)).unwrap()}
+    }
+
+    /// CR3BP pseudo-potential U* at the initial state.
+    #[inline]
+    pub fn PSEUDO_POTENTIAL(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(tbpPeriodicOrbit::VT_PSEUDO_POTENTIAL, Some(0.0)).unwrap()}
+    }
+
+    /// Minimum distance from the larger primary (P1), km; 0 = not computed.
+    #[inline]
+    pub fn PERIGEE_KM(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(tbpPeriodicOrbit::VT_PERIGEE_KM, Some(0.0)).unwrap()}
+    }
+
+    /// Maximum distance from the larger primary (P1), km; 0 = not computed.
+    #[inline]
+    pub fn APOGEE_KM(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(tbpPeriodicOrbit::VT_APOGEE_KM, Some(0.0)).unwrap()}
+    }
+
+    /// Instability doubling time, non-dimensional; 0 = stable or not computed.
+    #[inline]
+    pub fn DOUBLING_TIME(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(tbpPeriodicOrbit::VT_DOUBLING_TIME, Some(0.0)).unwrap()}
+    }
+
+    /// Floquet/Lyapunov characteristic exponent, non-dimensional; 0 = not computed.
+    #[inline]
+    pub fn CHARACTERISTIC_EXPONENT(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(tbpPeriodicOrbit::VT_CHARACTERISTIC_EXPONENT, Some(0.0)).unwrap()}
+    }
+
+    /// Longest continuous P2 (lunar) occultation per period, s.
+    #[inline]
+    pub fn MAX_LUNAR_OCCULTATION_S(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(tbpPeriodicOrbit::VT_MAX_LUNAR_OCCULTATION_S, Some(0.0)).unwrap()}
+    }
+
+    /// Total P2 (lunar) occultation duration per period, s.
+    #[inline]
+    pub fn TOTAL_LUNAR_OCCULTATION_S(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(tbpPeriodicOrbit::VT_TOTAL_LUNAR_OCCULTATION_S, Some(0.0)).unwrap()}
+    }
+
+    /// Longest continuous P1 (Earth) occultation per period, s.
+    #[inline]
+    pub fn MAX_EARTH_OCCULTATION_S(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(tbpPeriodicOrbit::VT_MAX_EARTH_OCCULTATION_S, Some(0.0)).unwrap()}
+    }
+
+    /// Total P1 (Earth) occultation duration per period, s.
+    #[inline]
+    pub fn TOTAL_EARTH_OCCULTATION_S(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(tbpPeriodicOrbit::VT_TOTAL_EARTH_OCCULTATION_S, Some(0.0)).unwrap()}
+    }
+
+    /// Unit stable eigenvector of the monodromy matrix (6 values); empty = none.
+    #[inline]
+    pub fn STABLE_EIGENVECTOR(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(tbpPeriodicOrbit::VT_STABLE_EIGENVECTOR, None)}
+    }
+
+    /// Unit unstable eigenvector of the monodromy matrix (6 values); empty = none.
+    #[inline]
+    pub fn UNSTABLE_EIGENVECTOR(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(tbpPeriodicOrbit::VT_UNSTABLE_EIGENVECTOR, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for tbpPeriodicOrbit<'_> {
@@ -2383,6 +2775,20 @@ impl ::flatbuffers::Verifiable for tbpPeriodicOrbit<'_> {
             .visit_field::<f64>("STABILITY_INDEX", Self::VT_STABILITY_INDEX, false)?
             .visit_field::<bool>("STABLE", Self::VT_STABLE, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<tbpTrajectory>>("TRAJECTORY", Self::VT_TRAJECTORY, false)?
+            .visit_field::<u32>("PETALS", Self::VT_PETALS, false)?
+            .visit_field::<u32>("RESONANCE_P", Self::VT_RESONANCE_P, false)?
+            .visit_field::<u32>("RESONANCE_Q", Self::VT_RESONANCE_Q, false)?
+            .visit_field::<f64>("PSEUDO_POTENTIAL", Self::VT_PSEUDO_POTENTIAL, false)?
+            .visit_field::<f64>("PERIGEE_KM", Self::VT_PERIGEE_KM, false)?
+            .visit_field::<f64>("APOGEE_KM", Self::VT_APOGEE_KM, false)?
+            .visit_field::<f64>("DOUBLING_TIME", Self::VT_DOUBLING_TIME, false)?
+            .visit_field::<f64>("CHARACTERISTIC_EXPONENT", Self::VT_CHARACTERISTIC_EXPONENT, false)?
+            .visit_field::<f64>("MAX_LUNAR_OCCULTATION_S", Self::VT_MAX_LUNAR_OCCULTATION_S, false)?
+            .visit_field::<f64>("TOTAL_LUNAR_OCCULTATION_S", Self::VT_TOTAL_LUNAR_OCCULTATION_S, false)?
+            .visit_field::<f64>("MAX_EARTH_OCCULTATION_S", Self::VT_MAX_EARTH_OCCULTATION_S, false)?
+            .visit_field::<f64>("TOTAL_EARTH_OCCULTATION_S", Self::VT_TOTAL_EARTH_OCCULTATION_S, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("STABLE_EIGENVECTOR", Self::VT_STABLE_EIGENVECTOR, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("UNSTABLE_EIGENVECTOR", Self::VT_UNSTABLE_EIGENVECTOR, false)?
             .finish();
         Ok(())
     }
@@ -2409,6 +2815,20 @@ pub struct tbpPeriodicOrbitArgs<'a> {
     pub STABILITY_INDEX: f64,
     pub STABLE: bool,
     pub TRAJECTORY: Option<::flatbuffers::WIPOffset<tbpTrajectory<'a>>>,
+    pub PETALS: u32,
+    pub RESONANCE_P: u32,
+    pub RESONANCE_Q: u32,
+    pub PSEUDO_POTENTIAL: f64,
+    pub PERIGEE_KM: f64,
+    pub APOGEE_KM: f64,
+    pub DOUBLING_TIME: f64,
+    pub CHARACTERISTIC_EXPONENT: f64,
+    pub MAX_LUNAR_OCCULTATION_S: f64,
+    pub TOTAL_LUNAR_OCCULTATION_S: f64,
+    pub MAX_EARTH_OCCULTATION_S: f64,
+    pub TOTAL_EARTH_OCCULTATION_S: f64,
+    pub STABLE_EIGENVECTOR: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub UNSTABLE_EIGENVECTOR: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
 }
 
 impl<'a> Default for tbpPeriodicOrbitArgs<'a> {
@@ -2435,6 +2855,20 @@ impl<'a> Default for tbpPeriodicOrbitArgs<'a> {
             STABILITY_INDEX: 0.0,
             STABLE: false,
             TRAJECTORY: None,
+            PETALS: 0,
+            RESONANCE_P: 0,
+            RESONANCE_Q: 0,
+            PSEUDO_POTENTIAL: 0.0,
+            PERIGEE_KM: 0.0,
+            APOGEE_KM: 0.0,
+            DOUBLING_TIME: 0.0,
+            CHARACTERISTIC_EXPONENT: 0.0,
+            MAX_LUNAR_OCCULTATION_S: 0.0,
+            TOTAL_LUNAR_OCCULTATION_S: 0.0,
+            MAX_EARTH_OCCULTATION_S: 0.0,
+            TOTAL_EARTH_OCCULTATION_S: 0.0,
+            STABLE_EIGENVECTOR: None,
+            UNSTABLE_EIGENVECTOR: None,
         }
     }
 }
@@ -2546,6 +2980,76 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> tbpPeriodicOrbitBuilder<'a, '
     }
 
     #[inline]
+    pub fn add_PETALS(&mut self, PETALS: u32) {
+        self.fbb_.push_slot::<u32>(tbpPeriodicOrbit::VT_PETALS, PETALS, 0);
+    }
+
+    #[inline]
+    pub fn add_RESONANCE_P(&mut self, RESONANCE_P: u32) {
+        self.fbb_.push_slot::<u32>(tbpPeriodicOrbit::VT_RESONANCE_P, RESONANCE_P, 0);
+    }
+
+    #[inline]
+    pub fn add_RESONANCE_Q(&mut self, RESONANCE_Q: u32) {
+        self.fbb_.push_slot::<u32>(tbpPeriodicOrbit::VT_RESONANCE_Q, RESONANCE_Q, 0);
+    }
+
+    #[inline]
+    pub fn add_PSEUDO_POTENTIAL(&mut self, PSEUDO_POTENTIAL: f64) {
+        self.fbb_.push_slot::<f64>(tbpPeriodicOrbit::VT_PSEUDO_POTENTIAL, PSEUDO_POTENTIAL, 0.0);
+    }
+
+    #[inline]
+    pub fn add_PERIGEE_KM(&mut self, PERIGEE_KM: f64) {
+        self.fbb_.push_slot::<f64>(tbpPeriodicOrbit::VT_PERIGEE_KM, PERIGEE_KM, 0.0);
+    }
+
+    #[inline]
+    pub fn add_APOGEE_KM(&mut self, APOGEE_KM: f64) {
+        self.fbb_.push_slot::<f64>(tbpPeriodicOrbit::VT_APOGEE_KM, APOGEE_KM, 0.0);
+    }
+
+    #[inline]
+    pub fn add_DOUBLING_TIME(&mut self, DOUBLING_TIME: f64) {
+        self.fbb_.push_slot::<f64>(tbpPeriodicOrbit::VT_DOUBLING_TIME, DOUBLING_TIME, 0.0);
+    }
+
+    #[inline]
+    pub fn add_CHARACTERISTIC_EXPONENT(&mut self, CHARACTERISTIC_EXPONENT: f64) {
+        self.fbb_.push_slot::<f64>(tbpPeriodicOrbit::VT_CHARACTERISTIC_EXPONENT, CHARACTERISTIC_EXPONENT, 0.0);
+    }
+
+    #[inline]
+    pub fn add_MAX_LUNAR_OCCULTATION_S(&mut self, MAX_LUNAR_OCCULTATION_S: f64) {
+        self.fbb_.push_slot::<f64>(tbpPeriodicOrbit::VT_MAX_LUNAR_OCCULTATION_S, MAX_LUNAR_OCCULTATION_S, 0.0);
+    }
+
+    #[inline]
+    pub fn add_TOTAL_LUNAR_OCCULTATION_S(&mut self, TOTAL_LUNAR_OCCULTATION_S: f64) {
+        self.fbb_.push_slot::<f64>(tbpPeriodicOrbit::VT_TOTAL_LUNAR_OCCULTATION_S, TOTAL_LUNAR_OCCULTATION_S, 0.0);
+    }
+
+    #[inline]
+    pub fn add_MAX_EARTH_OCCULTATION_S(&mut self, MAX_EARTH_OCCULTATION_S: f64) {
+        self.fbb_.push_slot::<f64>(tbpPeriodicOrbit::VT_MAX_EARTH_OCCULTATION_S, MAX_EARTH_OCCULTATION_S, 0.0);
+    }
+
+    #[inline]
+    pub fn add_TOTAL_EARTH_OCCULTATION_S(&mut self, TOTAL_EARTH_OCCULTATION_S: f64) {
+        self.fbb_.push_slot::<f64>(tbpPeriodicOrbit::VT_TOTAL_EARTH_OCCULTATION_S, TOTAL_EARTH_OCCULTATION_S, 0.0);
+    }
+
+    #[inline]
+    pub fn add_STABLE_EIGENVECTOR(&mut self, STABLE_EIGENVECTOR: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(tbpPeriodicOrbit::VT_STABLE_EIGENVECTOR, STABLE_EIGENVECTOR);
+    }
+
+    #[inline]
+    pub fn add_UNSTABLE_EIGENVECTOR(&mut self, UNSTABLE_EIGENVECTOR: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(tbpPeriodicOrbit::VT_UNSTABLE_EIGENVECTOR, UNSTABLE_EIGENVECTOR);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> tbpPeriodicOrbitBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         tbpPeriodicOrbitBuilder {
@@ -2584,6 +3088,20 @@ impl ::core::fmt::Debug for tbpPeriodicOrbit<'_> {
         ds.field("STABILITY_INDEX", &self.STABILITY_INDEX());
         ds.field("STABLE", &self.STABLE());
         ds.field("TRAJECTORY", &self.TRAJECTORY());
+        ds.field("PETALS", &self.PETALS());
+        ds.field("RESONANCE_P", &self.RESONANCE_P());
+        ds.field("RESONANCE_Q", &self.RESONANCE_Q());
+        ds.field("PSEUDO_POTENTIAL", &self.PSEUDO_POTENTIAL());
+        ds.field("PERIGEE_KM", &self.PERIGEE_KM());
+        ds.field("APOGEE_KM", &self.APOGEE_KM());
+        ds.field("DOUBLING_TIME", &self.DOUBLING_TIME());
+        ds.field("CHARACTERISTIC_EXPONENT", &self.CHARACTERISTIC_EXPONENT());
+        ds.field("MAX_LUNAR_OCCULTATION_S", &self.MAX_LUNAR_OCCULTATION_S());
+        ds.field("TOTAL_LUNAR_OCCULTATION_S", &self.TOTAL_LUNAR_OCCULTATION_S());
+        ds.field("MAX_EARTH_OCCULTATION_S", &self.MAX_EARTH_OCCULTATION_S());
+        ds.field("TOTAL_EARTH_OCCULTATION_S", &self.TOTAL_EARTH_OCCULTATION_S());
+        ds.field("STABLE_EIGENVECTOR", &self.STABLE_EIGENVECTOR());
+        ds.field("UNSTABLE_EIGENVECTOR", &self.UNSTABLE_EIGENVECTOR());
         ds.finish()
     }
 }
@@ -2611,6 +3129,20 @@ pub struct tbpPeriodicOrbitT {
     pub STABILITY_INDEX: f64,
     pub STABLE: bool,
     pub TRAJECTORY: Option<alloc::boxed::Box<tbpTrajectoryT>>,
+    pub PETALS: u32,
+    pub RESONANCE_P: u32,
+    pub RESONANCE_Q: u32,
+    pub PSEUDO_POTENTIAL: f64,
+    pub PERIGEE_KM: f64,
+    pub APOGEE_KM: f64,
+    pub DOUBLING_TIME: f64,
+    pub CHARACTERISTIC_EXPONENT: f64,
+    pub MAX_LUNAR_OCCULTATION_S: f64,
+    pub TOTAL_LUNAR_OCCULTATION_S: f64,
+    pub MAX_EARTH_OCCULTATION_S: f64,
+    pub TOTAL_EARTH_OCCULTATION_S: f64,
+    pub STABLE_EIGENVECTOR: Option<alloc::vec::Vec<f64>>,
+    pub UNSTABLE_EIGENVECTOR: Option<alloc::vec::Vec<f64>>,
 }
 
 impl Default for tbpPeriodicOrbitT {
@@ -2636,6 +3168,20 @@ impl Default for tbpPeriodicOrbitT {
             STABILITY_INDEX: 0.0,
             STABLE: false,
             TRAJECTORY: None,
+            PETALS: 0,
+            RESONANCE_P: 0,
+            RESONANCE_Q: 0,
+            PSEUDO_POTENTIAL: 0.0,
+            PERIGEE_KM: 0.0,
+            APOGEE_KM: 0.0,
+            DOUBLING_TIME: 0.0,
+            CHARACTERISTIC_EXPONENT: 0.0,
+            MAX_LUNAR_OCCULTATION_S: 0.0,
+            TOTAL_LUNAR_OCCULTATION_S: 0.0,
+            MAX_EARTH_OCCULTATION_S: 0.0,
+            TOTAL_EARTH_OCCULTATION_S: 0.0,
+            STABLE_EIGENVECTOR: None,
+            UNSTABLE_EIGENVECTOR: None,
         }
     }
 }
@@ -2675,6 +3221,24 @@ impl tbpPeriodicOrbitT {
         let TRAJECTORY = self.TRAJECTORY.as_ref().map(|x|{
             x.pack(_fbb)
         });
+        let PETALS = self.PETALS;
+        let RESONANCE_P = self.RESONANCE_P;
+        let RESONANCE_Q = self.RESONANCE_Q;
+        let PSEUDO_POTENTIAL = self.PSEUDO_POTENTIAL;
+        let PERIGEE_KM = self.PERIGEE_KM;
+        let APOGEE_KM = self.APOGEE_KM;
+        let DOUBLING_TIME = self.DOUBLING_TIME;
+        let CHARACTERISTIC_EXPONENT = self.CHARACTERISTIC_EXPONENT;
+        let MAX_LUNAR_OCCULTATION_S = self.MAX_LUNAR_OCCULTATION_S;
+        let TOTAL_LUNAR_OCCULTATION_S = self.TOTAL_LUNAR_OCCULTATION_S;
+        let MAX_EARTH_OCCULTATION_S = self.MAX_EARTH_OCCULTATION_S;
+        let TOTAL_EARTH_OCCULTATION_S = self.TOTAL_EARTH_OCCULTATION_S;
+        let STABLE_EIGENVECTOR = self.STABLE_EIGENVECTOR.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let UNSTABLE_EIGENVECTOR = self.UNSTABLE_EIGENVECTOR.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
         tbpPeriodicOrbit::create(_fbb, &tbpPeriodicOrbitArgs{
             FAMILY,
             LIBRATION_POINT,
@@ -2696,6 +3260,20 @@ impl tbpPeriodicOrbitT {
             STABILITY_INDEX,
             STABLE,
             TRAJECTORY,
+            PETALS,
+            RESONANCE_P,
+            RESONANCE_Q,
+            PSEUDO_POTENTIAL,
+            PERIGEE_KM,
+            APOGEE_KM,
+            DOUBLING_TIME,
+            CHARACTERISTIC_EXPONENT,
+            MAX_LUNAR_OCCULTATION_S,
+            TOTAL_LUNAR_OCCULTATION_S,
+            MAX_EARTH_OCCULTATION_S,
+            TOTAL_EARTH_OCCULTATION_S,
+            STABLE_EIGENVECTOR,
+            UNSTABLE_EIGENVECTOR,
         })
     }
 }
@@ -2975,6 +3553,18 @@ impl<'a> tbpTransfer<'a> {
     pub const VT_TOTAL_DELTA_V_KM_S: ::flatbuffers::VOffsetT = 22;
     pub const VT_TIME_OF_FLIGHT_S: ::flatbuffers::VOffsetT = 24;
     pub const VT_TRAJECTORY: ::flatbuffers::VOffsetT = 26;
+    pub const VT_INITIAL_STATE: ::flatbuffers::VOffsetT = 28;
+    pub const VT_FINAL_STATE: ::flatbuffers::VOffsetT = 30;
+    pub const VT_RETROGRADE: ::flatbuffers::VOffsetT = 32;
+    pub const VT_REFERENCE_PRIMARY: ::flatbuffers::VOffsetT = 34;
+    pub const VT_MAX_THRUST_N: ::flatbuffers::VOffsetT = 36;
+    pub const VT_SPECIFIC_IMPULSE_S: ::flatbuffers::VOffsetT = 38;
+    pub const VT_INITIAL_MASS_KG: ::flatbuffers::VOffsetT = 40;
+    pub const VT_FINAL_MASS_KG: ::flatbuffers::VOffsetT = 42;
+    pub const VT_PROPELLANT_MASS_KG: ::flatbuffers::VOffsetT = 44;
+    pub const VT_INITIAL_COSTATES: ::flatbuffers::VOffsetT = 46;
+    pub const VT_THROTTLE_HISTORY: ::flatbuffers::VOffsetT = 48;
+    pub const VT_MIN_ENERGY_DELTA_V_KM_S: ::flatbuffers::VOffsetT = 50;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -2987,16 +3577,28 @@ impl<'a> tbpTransfer<'a> {
         args: &'args tbpTransferArgs<'args>
     ) -> ::flatbuffers::WIPOffset<tbpTransfer<'bldr>> {
         let mut builder = tbpTransferBuilder::new(_fbb);
+        builder.add_MIN_ENERGY_DELTA_V_KM_S(args.MIN_ENERGY_DELTA_V_KM_S);
+        builder.add_PROPELLANT_MASS_KG(args.PROPELLANT_MASS_KG);
+        builder.add_FINAL_MASS_KG(args.FINAL_MASS_KG);
+        builder.add_INITIAL_MASS_KG(args.INITIAL_MASS_KG);
+        builder.add_SPECIFIC_IMPULSE_S(args.SPECIFIC_IMPULSE_S);
+        builder.add_MAX_THRUST_N(args.MAX_THRUST_N);
         builder.add_TIME_OF_FLIGHT_S(args.TIME_OF_FLIGHT_S);
         builder.add_TOTAL_DELTA_V_KM_S(args.TOTAL_DELTA_V_KM_S);
         builder.add_TOLERANCE(args.TOLERANCE);
         builder.add_INCLINATION_DEG(args.INCLINATION_DEG);
         builder.add_TARGET_ALTITUDE_KM(args.TARGET_ALTITUDE_KM);
         builder.add_PARKING_ALTITUDE_KM(args.PARKING_ALTITUDE_KM);
+        if let Some(x) = args.THROTTLE_HISTORY { builder.add_THROTTLE_HISTORY(x); }
+        if let Some(x) = args.INITIAL_COSTATES { builder.add_INITIAL_COSTATES(x); }
+        if let Some(x) = args.FINAL_STATE { builder.add_FINAL_STATE(x); }
+        if let Some(x) = args.INITIAL_STATE { builder.add_INITIAL_STATE(x); }
         if let Some(x) = args.TRAJECTORY { builder.add_TRAJECTORY(x); }
         if let Some(x) = args.BURNS { builder.add_BURNS(x); }
         builder.add_MAX_ITERATIONS(args.MAX_ITERATIONS);
         if let Some(x) = args.TARGET_ORBIT { builder.add_TARGET_ORBIT(x); }
+        builder.add_REFERENCE_PRIMARY(args.REFERENCE_PRIMARY);
+        builder.add_RETROGRADE(args.RETROGRADE);
         builder.add_CONVERGED(args.CONVERGED);
         builder.add_KIND(args.KIND);
         builder.finish()
@@ -3021,6 +3623,26 @@ impl<'a> tbpTransfer<'a> {
         let TRAJECTORY = self.TRAJECTORY().map(|x| {
             alloc::boxed::Box::new(x.unpack())
         });
+        let INITIAL_STATE = self.INITIAL_STATE().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
+        let FINAL_STATE = self.FINAL_STATE().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
+        let RETROGRADE = self.RETROGRADE();
+        let REFERENCE_PRIMARY = self.REFERENCE_PRIMARY();
+        let MAX_THRUST_N = self.MAX_THRUST_N();
+        let SPECIFIC_IMPULSE_S = self.SPECIFIC_IMPULSE_S();
+        let INITIAL_MASS_KG = self.INITIAL_MASS_KG();
+        let FINAL_MASS_KG = self.FINAL_MASS_KG();
+        let PROPELLANT_MASS_KG = self.PROPELLANT_MASS_KG();
+        let INITIAL_COSTATES = self.INITIAL_COSTATES().map(|x| {
+            x.into_iter().collect()
+        });
+        let THROTTLE_HISTORY = self.THROTTLE_HISTORY().map(|x| {
+            x.into_iter().collect()
+        });
+        let MIN_ENERGY_DELTA_V_KM_S = self.MIN_ENERGY_DELTA_V_KM_S();
         tbpTransferT {
             KIND,
             PARKING_ALTITUDE_KM,
@@ -3034,6 +3656,18 @@ impl<'a> tbpTransfer<'a> {
             TOTAL_DELTA_V_KM_S,
             TIME_OF_FLIGHT_S,
             TRAJECTORY,
+            INITIAL_STATE,
+            FINAL_STATE,
+            RETROGRADE,
+            REFERENCE_PRIMARY,
+            MAX_THRUST_N,
+            SPECIFIC_IMPULSE_S,
+            INITIAL_MASS_KG,
+            FINAL_MASS_KG,
+            PROPELLANT_MASS_KG,
+            INITIAL_COSTATES,
+            THROTTLE_HISTORY,
+            MIN_ENERGY_DELTA_V_KM_S,
         }
     }
 
@@ -3142,6 +3776,114 @@ impl<'a> tbpTransfer<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<tbpTrajectory>>(tbpTransfer::VT_TRAJECTORY, None)}
     }
+
+    /// Departure state in synodic frame (MinEnergy, DirectLambert, MinLambert, LowThrustMinTime).
+    #[inline]
+    pub fn INITIAL_STATE(&self) -> Option<tbpState<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<tbpState>>(tbpTransfer::VT_INITIAL_STATE, None)}
+    }
+
+    /// Arrival state in synodic frame.
+    #[inline]
+    pub fn FINAL_STATE(&self) -> Option<tbpState<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<tbpState>>(tbpTransfer::VT_FINAL_STATE, None)}
+    }
+
+    /// False = prograde (default), true = retrograde (DirectLambert).
+    #[inline]
+    pub fn RETROGRADE(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(tbpTransfer::VT_RETROGRADE, Some(false)).unwrap()}
+    }
+
+    /// Reference primary body for Lambert seeding: 0 = auto, 1 = P1, 2 = P2.
+    #[inline]
+    pub fn REFERENCE_PRIMARY(&self) -> u8 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u8>(tbpTransfer::VT_REFERENCE_PRIMARY, Some(0)).unwrap()}
+    }
+
+    /// Low-thrust maximum thrust, N (LowThrustMinTime).
+    #[inline]
+    pub fn MAX_THRUST_N(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(tbpTransfer::VT_MAX_THRUST_N, Some(0.0)).unwrap()}
+    }
+
+    /// Engine specific impulse Isp, s (LowThrustMinTime).
+    #[inline]
+    pub fn SPECIFIC_IMPULSE_S(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(tbpTransfer::VT_SPECIFIC_IMPULSE_S, Some(0.0)).unwrap()}
+    }
+
+    /// Initial wet spacecraft mass, kg.
+    #[inline]
+    pub fn INITIAL_MASS_KG(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(tbpTransfer::VT_INITIAL_MASS_KG, Some(0.0)).unwrap()}
+    }
+
+    /// Result: final spacecraft mass at arrival, kg.
+    #[inline]
+    pub fn FINAL_MASS_KG(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(tbpTransfer::VT_FINAL_MASS_KG, Some(0.0)).unwrap()}
+    }
+
+    /// Result: propellant consumed, kg.
+    #[inline]
+    pub fn PROPELLANT_MASS_KG(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(tbpTransfer::VT_PROPELLANT_MASS_KG, Some(0.0)).unwrap()}
+    }
+
+    /// Initial costates [lambda_rx, ry, rz, vx, vy, vz, m] guess or solved.
+    #[inline]
+    pub fn INITIAL_COSTATES(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(tbpTransfer::VT_INITIAL_COSTATES, None)}
+    }
+
+    /// Result: normalized throttle [0..1] per trajectory sample.
+    #[inline]
+    pub fn THROTTLE_HISTORY(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(tbpTransfer::VT_THROTTLE_HISTORY, None)}
+    }
+
+    /// Result: theoretical minimum Jacobi-energy delta-v, km/s (MinEnergy).
+    #[inline]
+    pub fn MIN_ENERGY_DELTA_V_KM_S(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(tbpTransfer::VT_MIN_ENERGY_DELTA_V_KM_S, Some(0.0)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for tbpTransfer<'_> {
@@ -3162,6 +3904,18 @@ impl ::flatbuffers::Verifiable for tbpTransfer<'_> {
             .visit_field::<f64>("TOTAL_DELTA_V_KM_S", Self::VT_TOTAL_DELTA_V_KM_S, false)?
             .visit_field::<f64>("TIME_OF_FLIGHT_S", Self::VT_TIME_OF_FLIGHT_S, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<tbpTrajectory>>("TRAJECTORY", Self::VT_TRAJECTORY, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<tbpState>>("INITIAL_STATE", Self::VT_INITIAL_STATE, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<tbpState>>("FINAL_STATE", Self::VT_FINAL_STATE, false)?
+            .visit_field::<bool>("RETROGRADE", Self::VT_RETROGRADE, false)?
+            .visit_field::<u8>("REFERENCE_PRIMARY", Self::VT_REFERENCE_PRIMARY, false)?
+            .visit_field::<f64>("MAX_THRUST_N", Self::VT_MAX_THRUST_N, false)?
+            .visit_field::<f64>("SPECIFIC_IMPULSE_S", Self::VT_SPECIFIC_IMPULSE_S, false)?
+            .visit_field::<f64>("INITIAL_MASS_KG", Self::VT_INITIAL_MASS_KG, false)?
+            .visit_field::<f64>("FINAL_MASS_KG", Self::VT_FINAL_MASS_KG, false)?
+            .visit_field::<f64>("PROPELLANT_MASS_KG", Self::VT_PROPELLANT_MASS_KG, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("INITIAL_COSTATES", Self::VT_INITIAL_COSTATES, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("THROTTLE_HISTORY", Self::VT_THROTTLE_HISTORY, false)?
+            .visit_field::<f64>("MIN_ENERGY_DELTA_V_KM_S", Self::VT_MIN_ENERGY_DELTA_V_KM_S, false)?
             .finish();
         Ok(())
     }
@@ -3180,6 +3934,18 @@ pub struct tbpTransferArgs<'a> {
     pub TOTAL_DELTA_V_KM_S: f64,
     pub TIME_OF_FLIGHT_S: f64,
     pub TRAJECTORY: Option<::flatbuffers::WIPOffset<tbpTrajectory<'a>>>,
+    pub INITIAL_STATE: Option<::flatbuffers::WIPOffset<tbpState<'a>>>,
+    pub FINAL_STATE: Option<::flatbuffers::WIPOffset<tbpState<'a>>>,
+    pub RETROGRADE: bool,
+    pub REFERENCE_PRIMARY: u8,
+    pub MAX_THRUST_N: f64,
+    pub SPECIFIC_IMPULSE_S: f64,
+    pub INITIAL_MASS_KG: f64,
+    pub FINAL_MASS_KG: f64,
+    pub PROPELLANT_MASS_KG: f64,
+    pub INITIAL_COSTATES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub THROTTLE_HISTORY: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub MIN_ENERGY_DELTA_V_KM_S: f64,
 }
 
 impl<'a> Default for tbpTransferArgs<'a> {
@@ -3198,6 +3964,18 @@ impl<'a> Default for tbpTransferArgs<'a> {
             TOTAL_DELTA_V_KM_S: 0.0,
             TIME_OF_FLIGHT_S: 0.0,
             TRAJECTORY: None,
+            INITIAL_STATE: None,
+            FINAL_STATE: None,
+            RETROGRADE: false,
+            REFERENCE_PRIMARY: 0,
+            MAX_THRUST_N: 0.0,
+            SPECIFIC_IMPULSE_S: 0.0,
+            INITIAL_MASS_KG: 0.0,
+            FINAL_MASS_KG: 0.0,
+            PROPELLANT_MASS_KG: 0.0,
+            INITIAL_COSTATES: None,
+            THROTTLE_HISTORY: None,
+            MIN_ENERGY_DELTA_V_KM_S: 0.0,
         }
     }
 }
@@ -3269,6 +4047,66 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> tbpTransferBuilder<'a, 'b, A>
     }
 
     #[inline]
+    pub fn add_INITIAL_STATE(&mut self, INITIAL_STATE: ::flatbuffers::WIPOffset<tbpState<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<tbpState>>(tbpTransfer::VT_INITIAL_STATE, INITIAL_STATE);
+    }
+
+    #[inline]
+    pub fn add_FINAL_STATE(&mut self, FINAL_STATE: ::flatbuffers::WIPOffset<tbpState<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<tbpState>>(tbpTransfer::VT_FINAL_STATE, FINAL_STATE);
+    }
+
+    #[inline]
+    pub fn add_RETROGRADE(&mut self, RETROGRADE: bool) {
+        self.fbb_.push_slot::<bool>(tbpTransfer::VT_RETROGRADE, RETROGRADE, false);
+    }
+
+    #[inline]
+    pub fn add_REFERENCE_PRIMARY(&mut self, REFERENCE_PRIMARY: u8) {
+        self.fbb_.push_slot::<u8>(tbpTransfer::VT_REFERENCE_PRIMARY, REFERENCE_PRIMARY, 0);
+    }
+
+    #[inline]
+    pub fn add_MAX_THRUST_N(&mut self, MAX_THRUST_N: f64) {
+        self.fbb_.push_slot::<f64>(tbpTransfer::VT_MAX_THRUST_N, MAX_THRUST_N, 0.0);
+    }
+
+    #[inline]
+    pub fn add_SPECIFIC_IMPULSE_S(&mut self, SPECIFIC_IMPULSE_S: f64) {
+        self.fbb_.push_slot::<f64>(tbpTransfer::VT_SPECIFIC_IMPULSE_S, SPECIFIC_IMPULSE_S, 0.0);
+    }
+
+    #[inline]
+    pub fn add_INITIAL_MASS_KG(&mut self, INITIAL_MASS_KG: f64) {
+        self.fbb_.push_slot::<f64>(tbpTransfer::VT_INITIAL_MASS_KG, INITIAL_MASS_KG, 0.0);
+    }
+
+    #[inline]
+    pub fn add_FINAL_MASS_KG(&mut self, FINAL_MASS_KG: f64) {
+        self.fbb_.push_slot::<f64>(tbpTransfer::VT_FINAL_MASS_KG, FINAL_MASS_KG, 0.0);
+    }
+
+    #[inline]
+    pub fn add_PROPELLANT_MASS_KG(&mut self, PROPELLANT_MASS_KG: f64) {
+        self.fbb_.push_slot::<f64>(tbpTransfer::VT_PROPELLANT_MASS_KG, PROPELLANT_MASS_KG, 0.0);
+    }
+
+    #[inline]
+    pub fn add_INITIAL_COSTATES(&mut self, INITIAL_COSTATES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(tbpTransfer::VT_INITIAL_COSTATES, INITIAL_COSTATES);
+    }
+
+    #[inline]
+    pub fn add_THROTTLE_HISTORY(&mut self, THROTTLE_HISTORY: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(tbpTransfer::VT_THROTTLE_HISTORY, THROTTLE_HISTORY);
+    }
+
+    #[inline]
+    pub fn add_MIN_ENERGY_DELTA_V_KM_S(&mut self, MIN_ENERGY_DELTA_V_KM_S: f64) {
+        self.fbb_.push_slot::<f64>(tbpTransfer::VT_MIN_ENERGY_DELTA_V_KM_S, MIN_ENERGY_DELTA_V_KM_S, 0.0);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> tbpTransferBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         tbpTransferBuilder {
@@ -3299,6 +4137,18 @@ impl ::core::fmt::Debug for tbpTransfer<'_> {
         ds.field("TOTAL_DELTA_V_KM_S", &self.TOTAL_DELTA_V_KM_S());
         ds.field("TIME_OF_FLIGHT_S", &self.TIME_OF_FLIGHT_S());
         ds.field("TRAJECTORY", &self.TRAJECTORY());
+        ds.field("INITIAL_STATE", &self.INITIAL_STATE());
+        ds.field("FINAL_STATE", &self.FINAL_STATE());
+        ds.field("RETROGRADE", &self.RETROGRADE());
+        ds.field("REFERENCE_PRIMARY", &self.REFERENCE_PRIMARY());
+        ds.field("MAX_THRUST_N", &self.MAX_THRUST_N());
+        ds.field("SPECIFIC_IMPULSE_S", &self.SPECIFIC_IMPULSE_S());
+        ds.field("INITIAL_MASS_KG", &self.INITIAL_MASS_KG());
+        ds.field("FINAL_MASS_KG", &self.FINAL_MASS_KG());
+        ds.field("PROPELLANT_MASS_KG", &self.PROPELLANT_MASS_KG());
+        ds.field("INITIAL_COSTATES", &self.INITIAL_COSTATES());
+        ds.field("THROTTLE_HISTORY", &self.THROTTLE_HISTORY());
+        ds.field("MIN_ENERGY_DELTA_V_KM_S", &self.MIN_ENERGY_DELTA_V_KM_S());
         ds.finish()
     }
 }
@@ -3318,6 +4168,18 @@ pub struct tbpTransferT {
     pub TOTAL_DELTA_V_KM_S: f64,
     pub TIME_OF_FLIGHT_S: f64,
     pub TRAJECTORY: Option<alloc::boxed::Box<tbpTrajectoryT>>,
+    pub INITIAL_STATE: Option<alloc::boxed::Box<tbpStateT>>,
+    pub FINAL_STATE: Option<alloc::boxed::Box<tbpStateT>>,
+    pub RETROGRADE: bool,
+    pub REFERENCE_PRIMARY: u8,
+    pub MAX_THRUST_N: f64,
+    pub SPECIFIC_IMPULSE_S: f64,
+    pub INITIAL_MASS_KG: f64,
+    pub FINAL_MASS_KG: f64,
+    pub PROPELLANT_MASS_KG: f64,
+    pub INITIAL_COSTATES: Option<alloc::vec::Vec<f64>>,
+    pub THROTTLE_HISTORY: Option<alloc::vec::Vec<f64>>,
+    pub MIN_ENERGY_DELTA_V_KM_S: f64,
 }
 
 impl Default for tbpTransferT {
@@ -3335,6 +4197,18 @@ impl Default for tbpTransferT {
             TOTAL_DELTA_V_KM_S: 0.0,
             TIME_OF_FLIGHT_S: 0.0,
             TRAJECTORY: None,
+            INITIAL_STATE: None,
+            FINAL_STATE: None,
+            RETROGRADE: false,
+            REFERENCE_PRIMARY: 0,
+            MAX_THRUST_N: 0.0,
+            SPECIFIC_IMPULSE_S: 0.0,
+            INITIAL_MASS_KG: 0.0,
+            FINAL_MASS_KG: 0.0,
+            PROPELLANT_MASS_KG: 0.0,
+            INITIAL_COSTATES: None,
+            THROTTLE_HISTORY: None,
+            MIN_ENERGY_DELTA_V_KM_S: 0.0,
         }
     }
 }
@@ -3362,6 +4236,26 @@ impl tbpTransferT {
         let TRAJECTORY = self.TRAJECTORY.as_ref().map(|x|{
             x.pack(_fbb)
         });
+        let INITIAL_STATE = self.INITIAL_STATE.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
+        let FINAL_STATE = self.FINAL_STATE.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
+        let RETROGRADE = self.RETROGRADE;
+        let REFERENCE_PRIMARY = self.REFERENCE_PRIMARY;
+        let MAX_THRUST_N = self.MAX_THRUST_N;
+        let SPECIFIC_IMPULSE_S = self.SPECIFIC_IMPULSE_S;
+        let INITIAL_MASS_KG = self.INITIAL_MASS_KG;
+        let FINAL_MASS_KG = self.FINAL_MASS_KG;
+        let PROPELLANT_MASS_KG = self.PROPELLANT_MASS_KG;
+        let INITIAL_COSTATES = self.INITIAL_COSTATES.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let THROTTLE_HISTORY = self.THROTTLE_HISTORY.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let MIN_ENERGY_DELTA_V_KM_S = self.MIN_ENERGY_DELTA_V_KM_S;
         tbpTransfer::create(_fbb, &tbpTransferArgs{
             KIND,
             PARKING_ALTITUDE_KM,
@@ -3375,6 +4269,18 @@ impl tbpTransferT {
             TOTAL_DELTA_V_KM_S,
             TIME_OF_FLIGHT_S,
             TRAJECTORY,
+            INITIAL_STATE,
+            FINAL_STATE,
+            RETROGRADE,
+            REFERENCE_PRIMARY,
+            MAX_THRUST_N,
+            SPECIFIC_IMPULSE_S,
+            INITIAL_MASS_KG,
+            FINAL_MASS_KG,
+            PROPELLANT_MASS_KG,
+            INITIAL_COSTATES,
+            THROTTLE_HISTORY,
+            MIN_ENERGY_DELTA_V_KM_S,
         })
     }
 }
@@ -3407,6 +4313,10 @@ impl<'a> tbpStationKeeping<'a> {
     pub const VT_MAX_CYCLE_DELTA_V_KM_S: ::flatbuffers::VOffsetT = 18;
     pub const VT_CYCLE_DELTA_V_KM_S: ::flatbuffers::VOffsetT = 20;
     pub const VT_BOUNDED: ::flatbuffers::VOffsetT = 22;
+    pub const VT_CORRECTION_INTERVAL_S: ::flatbuffers::VOffsetT = 24;
+    pub const VT_DELTA_V_EXECUTION_ERROR_KM_S: ::flatbuffers::VOffsetT = 26;
+    pub const VT_LOWER_BOUND_ANNUAL_DELTA_V_KM_S: ::flatbuffers::VOffsetT = 28;
+    pub const VT_UPPER_BOUND_ANNUAL_DELTA_V_KM_S: ::flatbuffers::VOffsetT = 30;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -3419,6 +4329,10 @@ impl<'a> tbpStationKeeping<'a> {
         args: &'args tbpStationKeepingArgs<'args>
     ) -> ::flatbuffers::WIPOffset<tbpStationKeeping<'bldr>> {
         let mut builder = tbpStationKeepingBuilder::new(_fbb);
+        builder.add_UPPER_BOUND_ANNUAL_DELTA_V_KM_S(args.UPPER_BOUND_ANNUAL_DELTA_V_KM_S);
+        builder.add_LOWER_BOUND_ANNUAL_DELTA_V_KM_S(args.LOWER_BOUND_ANNUAL_DELTA_V_KM_S);
+        builder.add_DELTA_V_EXECUTION_ERROR_KM_S(args.DELTA_V_EXECUTION_ERROR_KM_S);
+        builder.add_CORRECTION_INTERVAL_S(args.CORRECTION_INTERVAL_S);
         builder.add_MAX_CYCLE_DELTA_V_KM_S(args.MAX_CYCLE_DELTA_V_KM_S);
         builder.add_MEAN_CYCLE_DELTA_V_KM_S(args.MEAN_CYCLE_DELTA_V_KM_S);
         builder.add_ANNUAL_DELTA_V_KM_S(args.ANNUAL_DELTA_V_KM_S);
@@ -3447,6 +4361,10 @@ impl<'a> tbpStationKeeping<'a> {
             x.into_iter().collect()
         });
         let BOUNDED = self.BOUNDED();
+        let CORRECTION_INTERVAL_S = self.CORRECTION_INTERVAL_S();
+        let DELTA_V_EXECUTION_ERROR_KM_S = self.DELTA_V_EXECUTION_ERROR_KM_S();
+        let LOWER_BOUND_ANNUAL_DELTA_V_KM_S = self.LOWER_BOUND_ANNUAL_DELTA_V_KM_S();
+        let UPPER_BOUND_ANNUAL_DELTA_V_KM_S = self.UPPER_BOUND_ANNUAL_DELTA_V_KM_S();
         tbpStationKeepingT {
             ORBIT,
             STRATEGY,
@@ -3458,6 +4376,10 @@ impl<'a> tbpStationKeeping<'a> {
             MAX_CYCLE_DELTA_V_KM_S,
             CYCLE_DELTA_V_KM_S,
             BOUNDED,
+            CORRECTION_INTERVAL_S,
+            DELTA_V_EXECUTION_ERROR_KM_S,
+            LOWER_BOUND_ANNUAL_DELTA_V_KM_S,
+            UPPER_BOUND_ANNUAL_DELTA_V_KM_S,
         }
     }
 
@@ -3548,6 +4470,42 @@ impl<'a> tbpStationKeeping<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<bool>(tbpStationKeeping::VT_BOUNDED, Some(false)).unwrap()}
     }
+
+    /// Time between correction maneuvers, s (LinearStabilityBounds).
+    #[inline]
+    pub fn CORRECTION_INTERVAL_S(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(tbpStationKeeping::VT_CORRECTION_INTERVAL_S, Some(0.0)).unwrap()}
+    }
+
+    /// 3-axis velocity execution error magnitude, km/s (LinearStabilityBounds).
+    #[inline]
+    pub fn DELTA_V_EXECUTION_ERROR_KM_S(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(tbpStationKeeping::VT_DELTA_V_EXECUTION_ERROR_KM_S, Some(0.0)).unwrap()}
+    }
+
+    /// Result: linear-stability lower bound annual delta-v, km/s/yr.
+    #[inline]
+    pub fn LOWER_BOUND_ANNUAL_DELTA_V_KM_S(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(tbpStationKeeping::VT_LOWER_BOUND_ANNUAL_DELTA_V_KM_S, Some(0.0)).unwrap()}
+    }
+
+    /// Result: linear-stability upper bound annual delta-v, km/s/yr.
+    #[inline]
+    pub fn UPPER_BOUND_ANNUAL_DELTA_V_KM_S(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(tbpStationKeeping::VT_UPPER_BOUND_ANNUAL_DELTA_V_KM_S, Some(0.0)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for tbpStationKeeping<'_> {
@@ -3566,6 +4524,10 @@ impl ::flatbuffers::Verifiable for tbpStationKeeping<'_> {
             .visit_field::<f64>("MAX_CYCLE_DELTA_V_KM_S", Self::VT_MAX_CYCLE_DELTA_V_KM_S, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("CYCLE_DELTA_V_KM_S", Self::VT_CYCLE_DELTA_V_KM_S, false)?
             .visit_field::<bool>("BOUNDED", Self::VT_BOUNDED, false)?
+            .visit_field::<f64>("CORRECTION_INTERVAL_S", Self::VT_CORRECTION_INTERVAL_S, false)?
+            .visit_field::<f64>("DELTA_V_EXECUTION_ERROR_KM_S", Self::VT_DELTA_V_EXECUTION_ERROR_KM_S, false)?
+            .visit_field::<f64>("LOWER_BOUND_ANNUAL_DELTA_V_KM_S", Self::VT_LOWER_BOUND_ANNUAL_DELTA_V_KM_S, false)?
+            .visit_field::<f64>("UPPER_BOUND_ANNUAL_DELTA_V_KM_S", Self::VT_UPPER_BOUND_ANNUAL_DELTA_V_KM_S, false)?
             .finish();
         Ok(())
     }
@@ -3582,6 +4544,10 @@ pub struct tbpStationKeepingArgs<'a> {
     pub MAX_CYCLE_DELTA_V_KM_S: f64,
     pub CYCLE_DELTA_V_KM_S: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
     pub BOUNDED: bool,
+    pub CORRECTION_INTERVAL_S: f64,
+    pub DELTA_V_EXECUTION_ERROR_KM_S: f64,
+    pub LOWER_BOUND_ANNUAL_DELTA_V_KM_S: f64,
+    pub UPPER_BOUND_ANNUAL_DELTA_V_KM_S: f64,
 }
 
 impl<'a> Default for tbpStationKeepingArgs<'a> {
@@ -3598,6 +4564,10 @@ impl<'a> Default for tbpStationKeepingArgs<'a> {
             MAX_CYCLE_DELTA_V_KM_S: 0.0,
             CYCLE_DELTA_V_KM_S: None,
             BOUNDED: false,
+            CORRECTION_INTERVAL_S: 0.0,
+            DELTA_V_EXECUTION_ERROR_KM_S: 0.0,
+            LOWER_BOUND_ANNUAL_DELTA_V_KM_S: 0.0,
+            UPPER_BOUND_ANNUAL_DELTA_V_KM_S: 0.0,
         }
     }
 }
@@ -3659,6 +4629,26 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> tbpStationKeepingBuilder<'a, 
     }
 
     #[inline]
+    pub fn add_CORRECTION_INTERVAL_S(&mut self, CORRECTION_INTERVAL_S: f64) {
+        self.fbb_.push_slot::<f64>(tbpStationKeeping::VT_CORRECTION_INTERVAL_S, CORRECTION_INTERVAL_S, 0.0);
+    }
+
+    #[inline]
+    pub fn add_DELTA_V_EXECUTION_ERROR_KM_S(&mut self, DELTA_V_EXECUTION_ERROR_KM_S: f64) {
+        self.fbb_.push_slot::<f64>(tbpStationKeeping::VT_DELTA_V_EXECUTION_ERROR_KM_S, DELTA_V_EXECUTION_ERROR_KM_S, 0.0);
+    }
+
+    #[inline]
+    pub fn add_LOWER_BOUND_ANNUAL_DELTA_V_KM_S(&mut self, LOWER_BOUND_ANNUAL_DELTA_V_KM_S: f64) {
+        self.fbb_.push_slot::<f64>(tbpStationKeeping::VT_LOWER_BOUND_ANNUAL_DELTA_V_KM_S, LOWER_BOUND_ANNUAL_DELTA_V_KM_S, 0.0);
+    }
+
+    #[inline]
+    pub fn add_UPPER_BOUND_ANNUAL_DELTA_V_KM_S(&mut self, UPPER_BOUND_ANNUAL_DELTA_V_KM_S: f64) {
+        self.fbb_.push_slot::<f64>(tbpStationKeeping::VT_UPPER_BOUND_ANNUAL_DELTA_V_KM_S, UPPER_BOUND_ANNUAL_DELTA_V_KM_S, 0.0);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> tbpStationKeepingBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         tbpStationKeepingBuilder {
@@ -3687,6 +4677,10 @@ impl ::core::fmt::Debug for tbpStationKeeping<'_> {
         ds.field("MAX_CYCLE_DELTA_V_KM_S", &self.MAX_CYCLE_DELTA_V_KM_S());
         ds.field("CYCLE_DELTA_V_KM_S", &self.CYCLE_DELTA_V_KM_S());
         ds.field("BOUNDED", &self.BOUNDED());
+        ds.field("CORRECTION_INTERVAL_S", &self.CORRECTION_INTERVAL_S());
+        ds.field("DELTA_V_EXECUTION_ERROR_KM_S", &self.DELTA_V_EXECUTION_ERROR_KM_S());
+        ds.field("LOWER_BOUND_ANNUAL_DELTA_V_KM_S", &self.LOWER_BOUND_ANNUAL_DELTA_V_KM_S());
+        ds.field("UPPER_BOUND_ANNUAL_DELTA_V_KM_S", &self.UPPER_BOUND_ANNUAL_DELTA_V_KM_S());
         ds.finish()
     }
 }
@@ -3704,6 +4698,10 @@ pub struct tbpStationKeepingT {
     pub MAX_CYCLE_DELTA_V_KM_S: f64,
     pub CYCLE_DELTA_V_KM_S: Option<alloc::vec::Vec<f64>>,
     pub BOUNDED: bool,
+    pub CORRECTION_INTERVAL_S: f64,
+    pub DELTA_V_EXECUTION_ERROR_KM_S: f64,
+    pub LOWER_BOUND_ANNUAL_DELTA_V_KM_S: f64,
+    pub UPPER_BOUND_ANNUAL_DELTA_V_KM_S: f64,
 }
 
 impl Default for tbpStationKeepingT {
@@ -3719,6 +4717,10 @@ impl Default for tbpStationKeepingT {
             MAX_CYCLE_DELTA_V_KM_S: 0.0,
             CYCLE_DELTA_V_KM_S: None,
             BOUNDED: false,
+            CORRECTION_INTERVAL_S: 0.0,
+            DELTA_V_EXECUTION_ERROR_KM_S: 0.0,
+            LOWER_BOUND_ANNUAL_DELTA_V_KM_S: 0.0,
+            UPPER_BOUND_ANNUAL_DELTA_V_KM_S: 0.0,
         }
     }
 }
@@ -3742,6 +4744,10 @@ impl tbpStationKeepingT {
             _fbb.create_vector(x)
         });
         let BOUNDED = self.BOUNDED;
+        let CORRECTION_INTERVAL_S = self.CORRECTION_INTERVAL_S;
+        let DELTA_V_EXECUTION_ERROR_KM_S = self.DELTA_V_EXECUTION_ERROR_KM_S;
+        let LOWER_BOUND_ANNUAL_DELTA_V_KM_S = self.LOWER_BOUND_ANNUAL_DELTA_V_KM_S;
+        let UPPER_BOUND_ANNUAL_DELTA_V_KM_S = self.UPPER_BOUND_ANNUAL_DELTA_V_KM_S;
         tbpStationKeeping::create(_fbb, &tbpStationKeepingArgs{
             ORBIT,
             STRATEGY,
@@ -3753,6 +4759,10 @@ impl tbpStationKeepingT {
             MAX_CYCLE_DELTA_V_KM_S,
             CYCLE_DELTA_V_KM_S,
             BOUNDED,
+            CORRECTION_INTERVAL_S,
+            DELTA_V_EXECUTION_ERROR_KM_S,
+            LOWER_BOUND_ANNUAL_DELTA_V_KM_S,
+            UPPER_BOUND_ANNUAL_DELTA_V_KM_S,
         })
     }
 }
@@ -3783,6 +4793,12 @@ impl<'a> tbpFrameConversion<'a> {
     pub const VT_ELAPSED_S: ::flatbuffers::VOffsetT = 8;
     pub const VT_SYNODIC: ::flatbuffers::VOffsetT = 10;
     pub const VT_INERTIAL: ::flatbuffers::VOffsetT = 12;
+    pub const VT_REFERENCE_PRIMARY: ::flatbuffers::VOffsetT = 14;
+    pub const VT_JULIAN_DATE: ::flatbuffers::VOffsetT = 16;
+    pub const VT_LLA_DEG_KM: ::flatbuffers::VOffsetT = 18;
+    pub const VT_ORBITAL_ELEMENTS: ::flatbuffers::VOffsetT = 20;
+    pub const VT_BATCH_SYNODIC_STATES: ::flatbuffers::VOffsetT = 22;
+    pub const VT_BATCH_INERTIAL_STATES: ::flatbuffers::VOffsetT = 24;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -3795,10 +4811,16 @@ impl<'a> tbpFrameConversion<'a> {
         args: &'args tbpFrameConversionArgs<'args>
     ) -> ::flatbuffers::WIPOffset<tbpFrameConversion<'bldr>> {
         let mut builder = tbpFrameConversionBuilder::new(_fbb);
+        builder.add_JULIAN_DATE(args.JULIAN_DATE);
         builder.add_ELAPSED_S(args.ELAPSED_S);
         builder.add_REFERENCE_EPOCH_MS(args.REFERENCE_EPOCH_MS);
+        if let Some(x) = args.BATCH_INERTIAL_STATES { builder.add_BATCH_INERTIAL_STATES(x); }
+        if let Some(x) = args.BATCH_SYNODIC_STATES { builder.add_BATCH_SYNODIC_STATES(x); }
+        if let Some(x) = args.ORBITAL_ELEMENTS { builder.add_ORBITAL_ELEMENTS(x); }
+        if let Some(x) = args.LLA_DEG_KM { builder.add_LLA_DEG_KM(x); }
         if let Some(x) = args.INERTIAL { builder.add_INERTIAL(x); }
         if let Some(x) = args.SYNODIC { builder.add_SYNODIC(x); }
+        builder.add_REFERENCE_PRIMARY(args.REFERENCE_PRIMARY);
         builder.add_DIRECTION(args.DIRECTION);
         builder.finish()
     }
@@ -3813,12 +4835,32 @@ impl<'a> tbpFrameConversion<'a> {
         let INERTIAL = self.INERTIAL().map(|x| {
             x.into_iter().collect()
         });
+        let REFERENCE_PRIMARY = self.REFERENCE_PRIMARY();
+        let JULIAN_DATE = self.JULIAN_DATE();
+        let LLA_DEG_KM = self.LLA_DEG_KM().map(|x| {
+            x.into_iter().collect()
+        });
+        let ORBITAL_ELEMENTS = self.ORBITAL_ELEMENTS().map(|x| {
+            x.into_iter().collect()
+        });
+        let BATCH_SYNODIC_STATES = self.BATCH_SYNODIC_STATES().map(|x| {
+            x.into_iter().collect()
+        });
+        let BATCH_INERTIAL_STATES = self.BATCH_INERTIAL_STATES().map(|x| {
+            x.into_iter().collect()
+        });
         tbpFrameConversionT {
             DIRECTION,
             REFERENCE_EPOCH_MS,
             ELAPSED_S,
             SYNODIC,
             INERTIAL,
+            REFERENCE_PRIMARY,
+            JULIAN_DATE,
+            LLA_DEG_KM,
+            ORBITAL_ELEMENTS,
+            BATCH_SYNODIC_STATES,
+            BATCH_INERTIAL_STATES,
         }
     }
 
@@ -3866,6 +4908,60 @@ impl<'a> tbpFrameConversion<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(tbpFrameConversion::VT_INERTIAL, None)}
     }
+
+    /// Reference primary body: 0 = barycenter, 1 = P1 (Earth), 2 = P2 (Moon).
+    #[inline]
+    pub fn REFERENCE_PRIMARY(&self) -> u8 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u8>(tbpFrameConversion::VT_REFERENCE_PRIMARY, Some(0)).unwrap()}
+    }
+
+    /// Epoch Julian date (days) for J2000/ephemeris conversions; 0 = from REFERENCE_EPOCH_MS.
+    #[inline]
+    pub fn JULIAN_DATE(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(tbpFrameConversion::VT_JULIAN_DATE, Some(0.0)).unwrap()}
+    }
+
+    /// Geodetic/selenodetic coordinates [lat_deg, lon_deg, alt_km] (3 values).
+    #[inline]
+    pub fn LLA_DEG_KM(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(tbpFrameConversion::VT_LLA_DEG_KM, None)}
+    }
+
+    /// Classical Keplerian elements [a_km, e, inc_deg, raan_deg, argp_deg, nu_deg] (6 values).
+    #[inline]
+    pub fn ORBITAL_ELEMENTS(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(tbpFrameConversion::VT_ORBITAL_ELEMENTS, None)}
+    }
+
+    /// Batch synodic states (N * 6 values, non-dimensional) for vectorized conversion.
+    #[inline]
+    pub fn BATCH_SYNODIC_STATES(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(tbpFrameConversion::VT_BATCH_SYNODIC_STATES, None)}
+    }
+
+    /// Batch inertial/target states (N * 6 values, km and km/s) for vectorized conversion.
+    #[inline]
+    pub fn BATCH_INERTIAL_STATES(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(tbpFrameConversion::VT_BATCH_INERTIAL_STATES, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for tbpFrameConversion<'_> {
@@ -3879,6 +4975,12 @@ impl ::flatbuffers::Verifiable for tbpFrameConversion<'_> {
             .visit_field::<f64>("ELAPSED_S", Self::VT_ELAPSED_S, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<tbpState>>("SYNODIC", Self::VT_SYNODIC, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("INERTIAL", Self::VT_INERTIAL, false)?
+            .visit_field::<u8>("REFERENCE_PRIMARY", Self::VT_REFERENCE_PRIMARY, false)?
+            .visit_field::<f64>("JULIAN_DATE", Self::VT_JULIAN_DATE, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("LLA_DEG_KM", Self::VT_LLA_DEG_KM, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("ORBITAL_ELEMENTS", Self::VT_ORBITAL_ELEMENTS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("BATCH_SYNODIC_STATES", Self::VT_BATCH_SYNODIC_STATES, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("BATCH_INERTIAL_STATES", Self::VT_BATCH_INERTIAL_STATES, false)?
             .finish();
         Ok(())
     }
@@ -3890,6 +4992,12 @@ pub struct tbpFrameConversionArgs<'a> {
     pub ELAPSED_S: f64,
     pub SYNODIC: Option<::flatbuffers::WIPOffset<tbpState<'a>>>,
     pub INERTIAL: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub REFERENCE_PRIMARY: u8,
+    pub JULIAN_DATE: f64,
+    pub LLA_DEG_KM: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub ORBITAL_ELEMENTS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub BATCH_SYNODIC_STATES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub BATCH_INERTIAL_STATES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
 }
 
 impl<'a> Default for tbpFrameConversionArgs<'a> {
@@ -3901,6 +5009,12 @@ impl<'a> Default for tbpFrameConversionArgs<'a> {
             ELAPSED_S: 0.0,
             SYNODIC: None,
             INERTIAL: None,
+            REFERENCE_PRIMARY: 0,
+            JULIAN_DATE: 0.0,
+            LLA_DEG_KM: None,
+            ORBITAL_ELEMENTS: None,
+            BATCH_SYNODIC_STATES: None,
+            BATCH_INERTIAL_STATES: None,
         }
     }
 }
@@ -3937,6 +5051,36 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> tbpFrameConversionBuilder<'a,
     }
 
     #[inline]
+    pub fn add_REFERENCE_PRIMARY(&mut self, REFERENCE_PRIMARY: u8) {
+        self.fbb_.push_slot::<u8>(tbpFrameConversion::VT_REFERENCE_PRIMARY, REFERENCE_PRIMARY, 0);
+    }
+
+    #[inline]
+    pub fn add_JULIAN_DATE(&mut self, JULIAN_DATE: f64) {
+        self.fbb_.push_slot::<f64>(tbpFrameConversion::VT_JULIAN_DATE, JULIAN_DATE, 0.0);
+    }
+
+    #[inline]
+    pub fn add_LLA_DEG_KM(&mut self, LLA_DEG_KM: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(tbpFrameConversion::VT_LLA_DEG_KM, LLA_DEG_KM);
+    }
+
+    #[inline]
+    pub fn add_ORBITAL_ELEMENTS(&mut self, ORBITAL_ELEMENTS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(tbpFrameConversion::VT_ORBITAL_ELEMENTS, ORBITAL_ELEMENTS);
+    }
+
+    #[inline]
+    pub fn add_BATCH_SYNODIC_STATES(&mut self, BATCH_SYNODIC_STATES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(tbpFrameConversion::VT_BATCH_SYNODIC_STATES, BATCH_SYNODIC_STATES);
+    }
+
+    #[inline]
+    pub fn add_BATCH_INERTIAL_STATES(&mut self, BATCH_INERTIAL_STATES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(tbpFrameConversion::VT_BATCH_INERTIAL_STATES, BATCH_INERTIAL_STATES);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> tbpFrameConversionBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         tbpFrameConversionBuilder {
@@ -3960,6 +5104,12 @@ impl ::core::fmt::Debug for tbpFrameConversion<'_> {
         ds.field("ELAPSED_S", &self.ELAPSED_S());
         ds.field("SYNODIC", &self.SYNODIC());
         ds.field("INERTIAL", &self.INERTIAL());
+        ds.field("REFERENCE_PRIMARY", &self.REFERENCE_PRIMARY());
+        ds.field("JULIAN_DATE", &self.JULIAN_DATE());
+        ds.field("LLA_DEG_KM", &self.LLA_DEG_KM());
+        ds.field("ORBITAL_ELEMENTS", &self.ORBITAL_ELEMENTS());
+        ds.field("BATCH_SYNODIC_STATES", &self.BATCH_SYNODIC_STATES());
+        ds.field("BATCH_INERTIAL_STATES", &self.BATCH_INERTIAL_STATES());
         ds.finish()
     }
 }
@@ -3972,6 +5122,12 @@ pub struct tbpFrameConversionT {
     pub ELAPSED_S: f64,
     pub SYNODIC: Option<alloc::boxed::Box<tbpStateT>>,
     pub INERTIAL: Option<alloc::vec::Vec<f64>>,
+    pub REFERENCE_PRIMARY: u8,
+    pub JULIAN_DATE: f64,
+    pub LLA_DEG_KM: Option<alloc::vec::Vec<f64>>,
+    pub ORBITAL_ELEMENTS: Option<alloc::vec::Vec<f64>>,
+    pub BATCH_SYNODIC_STATES: Option<alloc::vec::Vec<f64>>,
+    pub BATCH_INERTIAL_STATES: Option<alloc::vec::Vec<f64>>,
 }
 
 impl Default for tbpFrameConversionT {
@@ -3982,6 +5138,12 @@ impl Default for tbpFrameConversionT {
             ELAPSED_S: 0.0,
             SYNODIC: None,
             INERTIAL: None,
+            REFERENCE_PRIMARY: 0,
+            JULIAN_DATE: 0.0,
+            LLA_DEG_KM: None,
+            ORBITAL_ELEMENTS: None,
+            BATCH_SYNODIC_STATES: None,
+            BATCH_INERTIAL_STATES: None,
         }
     }
 }
@@ -4000,12 +5162,1712 @@ impl tbpFrameConversionT {
         let INERTIAL = self.INERTIAL.as_ref().map(|x|{
             _fbb.create_vector(x)
         });
+        let REFERENCE_PRIMARY = self.REFERENCE_PRIMARY;
+        let JULIAN_DATE = self.JULIAN_DATE;
+        let LLA_DEG_KM = self.LLA_DEG_KM.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let ORBITAL_ELEMENTS = self.ORBITAL_ELEMENTS.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let BATCH_SYNODIC_STATES = self.BATCH_SYNODIC_STATES.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let BATCH_INERTIAL_STATES = self.BATCH_INERTIAL_STATES.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
         tbpFrameConversion::create(_fbb, &tbpFrameConversionArgs{
             DIRECTION,
             REFERENCE_EPOCH_MS,
             ELAPSED_S,
             SYNODIC,
             INERTIAL,
+            REFERENCE_PRIMARY,
+            JULIAN_DATE,
+            LLA_DEG_KM,
+            ORBITAL_ELEMENTS,
+            BATCH_SYNODIC_STATES,
+            BATCH_INERTIAL_STATES,
+        })
+    }
+}
+
+pub enum tbpContinuationRequestOffset {}
+
+/// Request parameters for pseudo-arclength or natural-parameter continuation.
+#[derive(Copy, Clone, PartialEq)]
+pub struct tbpContinuationRequest<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for tbpContinuationRequest<'a> {
+    type Inner = tbpContinuationRequest<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> tbpContinuationRequest<'a> {
+    pub const VT_SEED_ORBIT: ::flatbuffers::VOffsetT = 4;
+    pub const VT_STEP_SIZE: ::flatbuffers::VOffsetT = 6;
+    pub const VT_STEPS: ::flatbuffers::VOffsetT = 8;
+    pub const VT_FIXED_PERIOD: ::flatbuffers::VOffsetT = 10;
+    pub const VT_NULL_VECTOR: ::flatbuffers::VOffsetT = 12;
+    pub const VT_TOLERANCE: ::flatbuffers::VOffsetT = 14;
+    pub const VT_MAX_ITERATIONS: ::flatbuffers::VOffsetT = 16;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        tbpContinuationRequest { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args tbpContinuationRequestArgs<'args>
+    ) -> ::flatbuffers::WIPOffset<tbpContinuationRequest<'bldr>> {
+        let mut builder = tbpContinuationRequestBuilder::new(_fbb);
+        builder.add_TOLERANCE(args.TOLERANCE);
+        builder.add_STEP_SIZE(args.STEP_SIZE);
+        builder.add_MAX_ITERATIONS(args.MAX_ITERATIONS);
+        if let Some(x) = args.NULL_VECTOR { builder.add_NULL_VECTOR(x); }
+        builder.add_STEPS(args.STEPS);
+        if let Some(x) = args.SEED_ORBIT { builder.add_SEED_ORBIT(x); }
+        builder.add_FIXED_PERIOD(args.FIXED_PERIOD);
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> tbpContinuationRequestT {
+        let SEED_ORBIT = self.SEED_ORBIT().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
+        let STEP_SIZE = self.STEP_SIZE();
+        let STEPS = self.STEPS();
+        let FIXED_PERIOD = self.FIXED_PERIOD();
+        let NULL_VECTOR = self.NULL_VECTOR().map(|x| {
+            x.into_iter().collect()
+        });
+        let TOLERANCE = self.TOLERANCE();
+        let MAX_ITERATIONS = self.MAX_ITERATIONS();
+        tbpContinuationRequestT {
+            SEED_ORBIT,
+            STEP_SIZE,
+            STEPS,
+            FIXED_PERIOD,
+            NULL_VECTOR,
+            TOLERANCE,
+            MAX_ITERATIONS,
+        }
+    }
+
+    /// Seed periodic orbit (INITIAL_STATE and PERIOD required).
+    #[inline]
+    pub fn SEED_ORBIT(&self) -> Option<tbpPeriodicOrbit<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<tbpPeriodicOrbit>>(tbpContinuationRequest::VT_SEED_ORBIT, None)}
+    }
+
+    /// Arclength step size ds (signed); 0 = natural-parameter fixed-period refinement.
+    #[inline]
+    pub fn STEP_SIZE(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(tbpContinuationRequest::VT_STEP_SIZE, Some(0.0)).unwrap()}
+    }
+
+    /// Number of continuation steps to generate; 0 = 1.
+    #[inline]
+    pub fn STEPS(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(tbpContinuationRequest::VT_STEPS, Some(0)).unwrap()}
+    }
+
+    /// True = fixed-period natural parameter continuation (cont_np); false = pseudo-arclength (cont).
+    #[inline]
+    pub fn FIXED_PERIOD(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(tbpContinuationRequest::VT_FIXED_PERIOD, Some(false)).unwrap()}
+    }
+
+    /// Optional 7-element previous null-vector tangent for directional continuation.
+    #[inline]
+    pub fn NULL_VECTOR(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(tbpContinuationRequest::VT_NULL_VECTOR, None)}
+    }
+
+    /// Convergence tolerance on periodicity residual; 0 = default (1e-10).
+    #[inline]
+    pub fn TOLERANCE(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(tbpContinuationRequest::VT_TOLERANCE, Some(0.0)).unwrap()}
+    }
+
+    /// Maximum corrector iterations per step; 0 = default.
+    #[inline]
+    pub fn MAX_ITERATIONS(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(tbpContinuationRequest::VT_MAX_ITERATIONS, Some(0)).unwrap()}
+    }
+}
+
+impl ::flatbuffers::Verifiable for tbpContinuationRequest<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<tbpPeriodicOrbit>>("SEED_ORBIT", Self::VT_SEED_ORBIT, false)?
+            .visit_field::<f64>("STEP_SIZE", Self::VT_STEP_SIZE, false)?
+            .visit_field::<u32>("STEPS", Self::VT_STEPS, false)?
+            .visit_field::<bool>("FIXED_PERIOD", Self::VT_FIXED_PERIOD, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("NULL_VECTOR", Self::VT_NULL_VECTOR, false)?
+            .visit_field::<f64>("TOLERANCE", Self::VT_TOLERANCE, false)?
+            .visit_field::<u32>("MAX_ITERATIONS", Self::VT_MAX_ITERATIONS, false)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct tbpContinuationRequestArgs<'a> {
+    pub SEED_ORBIT: Option<::flatbuffers::WIPOffset<tbpPeriodicOrbit<'a>>>,
+    pub STEP_SIZE: f64,
+    pub STEPS: u32,
+    pub FIXED_PERIOD: bool,
+    pub NULL_VECTOR: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub TOLERANCE: f64,
+    pub MAX_ITERATIONS: u32,
+}
+
+impl<'a> Default for tbpContinuationRequestArgs<'a> {
+    #[inline]
+    fn default() -> Self {
+        tbpContinuationRequestArgs {
+            SEED_ORBIT: None,
+            STEP_SIZE: 0.0,
+            STEPS: 0,
+            FIXED_PERIOD: false,
+            NULL_VECTOR: None,
+            TOLERANCE: 0.0,
+            MAX_ITERATIONS: 0,
+        }
+    }
+}
+
+pub struct tbpContinuationRequestBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> tbpContinuationRequestBuilder<'a, 'b, A> {
+    #[inline]
+    pub fn add_SEED_ORBIT(&mut self, SEED_ORBIT: ::flatbuffers::WIPOffset<tbpPeriodicOrbit<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<tbpPeriodicOrbit>>(tbpContinuationRequest::VT_SEED_ORBIT, SEED_ORBIT);
+    }
+
+    #[inline]
+    pub fn add_STEP_SIZE(&mut self, STEP_SIZE: f64) {
+        self.fbb_.push_slot::<f64>(tbpContinuationRequest::VT_STEP_SIZE, STEP_SIZE, 0.0);
+    }
+
+    #[inline]
+    pub fn add_STEPS(&mut self, STEPS: u32) {
+        self.fbb_.push_slot::<u32>(tbpContinuationRequest::VT_STEPS, STEPS, 0);
+    }
+
+    #[inline]
+    pub fn add_FIXED_PERIOD(&mut self, FIXED_PERIOD: bool) {
+        self.fbb_.push_slot::<bool>(tbpContinuationRequest::VT_FIXED_PERIOD, FIXED_PERIOD, false);
+    }
+
+    #[inline]
+    pub fn add_NULL_VECTOR(&mut self, NULL_VECTOR: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(tbpContinuationRequest::VT_NULL_VECTOR, NULL_VECTOR);
+    }
+
+    #[inline]
+    pub fn add_TOLERANCE(&mut self, TOLERANCE: f64) {
+        self.fbb_.push_slot::<f64>(tbpContinuationRequest::VT_TOLERANCE, TOLERANCE, 0.0);
+    }
+
+    #[inline]
+    pub fn add_MAX_ITERATIONS(&mut self, MAX_ITERATIONS: u32) {
+        self.fbb_.push_slot::<u32>(tbpContinuationRequest::VT_MAX_ITERATIONS, MAX_ITERATIONS, 0);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> tbpContinuationRequestBuilder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        tbpContinuationRequestBuilder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<tbpContinuationRequest<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for tbpContinuationRequest<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("tbpContinuationRequest");
+        ds.field("SEED_ORBIT", &self.SEED_ORBIT());
+        ds.field("STEP_SIZE", &self.STEP_SIZE());
+        ds.field("STEPS", &self.STEPS());
+        ds.field("FIXED_PERIOD", &self.FIXED_PERIOD());
+        ds.field("NULL_VECTOR", &self.NULL_VECTOR());
+        ds.field("TOLERANCE", &self.TOLERANCE());
+        ds.field("MAX_ITERATIONS", &self.MAX_ITERATIONS());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct tbpContinuationRequestT {
+    pub SEED_ORBIT: Option<alloc::boxed::Box<tbpPeriodicOrbitT>>,
+    pub STEP_SIZE: f64,
+    pub STEPS: u32,
+    pub FIXED_PERIOD: bool,
+    pub NULL_VECTOR: Option<alloc::vec::Vec<f64>>,
+    pub TOLERANCE: f64,
+    pub MAX_ITERATIONS: u32,
+}
+
+impl Default for tbpContinuationRequestT {
+    fn default() -> Self {
+        Self {
+            SEED_ORBIT: None,
+            STEP_SIZE: 0.0,
+            STEPS: 0,
+            FIXED_PERIOD: false,
+            NULL_VECTOR: None,
+            TOLERANCE: 0.0,
+            MAX_ITERATIONS: 0,
+        }
+    }
+}
+
+impl tbpContinuationRequestT {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<tbpContinuationRequest<'b>> {
+        let SEED_ORBIT = self.SEED_ORBIT.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
+        let STEP_SIZE = self.STEP_SIZE;
+        let STEPS = self.STEPS;
+        let FIXED_PERIOD = self.FIXED_PERIOD;
+        let NULL_VECTOR = self.NULL_VECTOR.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let TOLERANCE = self.TOLERANCE;
+        let MAX_ITERATIONS = self.MAX_ITERATIONS;
+        tbpContinuationRequest::create(_fbb, &tbpContinuationRequestArgs{
+            SEED_ORBIT,
+            STEP_SIZE,
+            STEPS,
+            FIXED_PERIOD,
+            NULL_VECTOR,
+            TOLERANCE,
+            MAX_ITERATIONS,
+        })
+    }
+}
+
+pub enum tbpManifoldBranchOffset {}
+
+/// One stable or unstable invariant manifold branch emanating from a periodic orbit.
+#[derive(Copy, Clone, PartialEq)]
+pub struct tbpManifoldBranch<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for tbpManifoldBranch<'a> {
+    type Inner = tbpManifoldBranch<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> tbpManifoldBranch<'a> {
+    pub const VT_STABLE: ::flatbuffers::VOffsetT = 4;
+    pub const VT_EXTERIOR: ::flatbuffers::VOffsetT = 6;
+    pub const VT_SEED_INDEX: ::flatbuffers::VOffsetT = 8;
+    pub const VT_INITIAL_STATE: ::flatbuffers::VOffsetT = 10;
+    pub const VT_TRAJECTORY: ::flatbuffers::VOffsetT = 12;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        tbpManifoldBranch { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args tbpManifoldBranchArgs<'args>
+    ) -> ::flatbuffers::WIPOffset<tbpManifoldBranch<'bldr>> {
+        let mut builder = tbpManifoldBranchBuilder::new(_fbb);
+        if let Some(x) = args.TRAJECTORY { builder.add_TRAJECTORY(x); }
+        if let Some(x) = args.INITIAL_STATE { builder.add_INITIAL_STATE(x); }
+        builder.add_SEED_INDEX(args.SEED_INDEX);
+        builder.add_EXTERIOR(args.EXTERIOR);
+        builder.add_STABLE(args.STABLE);
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> tbpManifoldBranchT {
+        let STABLE = self.STABLE();
+        let EXTERIOR = self.EXTERIOR();
+        let SEED_INDEX = self.SEED_INDEX();
+        let INITIAL_STATE = self.INITIAL_STATE().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
+        let TRAJECTORY = self.TRAJECTORY().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
+        tbpManifoldBranchT {
+            STABLE,
+            EXTERIOR,
+            SEED_INDEX,
+            INITIAL_STATE,
+            TRAJECTORY,
+        }
+    }
+
+    /// True = stable branch (integrated backward), false = unstable branch (forward).
+    #[inline]
+    pub fn STABLE(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(tbpManifoldBranch::VT_STABLE, Some(false)).unwrap()}
+    }
+
+    /// True = exterior (+eigenvector), false = interior (-eigenvector).
+    #[inline]
+    pub fn EXTERIOR(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(tbpManifoldBranch::VT_EXTERIOR, Some(false)).unwrap()}
+    }
+
+    /// Index of the seed point along the periodic orbit.
+    #[inline]
+    pub fn SEED_INDEX(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(tbpManifoldBranch::VT_SEED_INDEX, Some(0)).unwrap()}
+    }
+
+    /// Perturbed initial state on the manifold, non-dimensional.
+    #[inline]
+    pub fn INITIAL_STATE(&self) -> Option<tbpState<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<tbpState>>(tbpManifoldBranch::VT_INITIAL_STATE, None)}
+    }
+
+    /// Propagated manifold trajectory.
+    #[inline]
+    pub fn TRAJECTORY(&self) -> Option<tbpTrajectory<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<tbpTrajectory>>(tbpManifoldBranch::VT_TRAJECTORY, None)}
+    }
+}
+
+impl ::flatbuffers::Verifiable for tbpManifoldBranch<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<bool>("STABLE", Self::VT_STABLE, false)?
+            .visit_field::<bool>("EXTERIOR", Self::VT_EXTERIOR, false)?
+            .visit_field::<u32>("SEED_INDEX", Self::VT_SEED_INDEX, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<tbpState>>("INITIAL_STATE", Self::VT_INITIAL_STATE, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<tbpTrajectory>>("TRAJECTORY", Self::VT_TRAJECTORY, false)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct tbpManifoldBranchArgs<'a> {
+    pub STABLE: bool,
+    pub EXTERIOR: bool,
+    pub SEED_INDEX: u32,
+    pub INITIAL_STATE: Option<::flatbuffers::WIPOffset<tbpState<'a>>>,
+    pub TRAJECTORY: Option<::flatbuffers::WIPOffset<tbpTrajectory<'a>>>,
+}
+
+impl<'a> Default for tbpManifoldBranchArgs<'a> {
+    #[inline]
+    fn default() -> Self {
+        tbpManifoldBranchArgs {
+            STABLE: false,
+            EXTERIOR: false,
+            SEED_INDEX: 0,
+            INITIAL_STATE: None,
+            TRAJECTORY: None,
+        }
+    }
+}
+
+pub struct tbpManifoldBranchBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> tbpManifoldBranchBuilder<'a, 'b, A> {
+    #[inline]
+    pub fn add_STABLE(&mut self, STABLE: bool) {
+        self.fbb_.push_slot::<bool>(tbpManifoldBranch::VT_STABLE, STABLE, false);
+    }
+
+    #[inline]
+    pub fn add_EXTERIOR(&mut self, EXTERIOR: bool) {
+        self.fbb_.push_slot::<bool>(tbpManifoldBranch::VT_EXTERIOR, EXTERIOR, false);
+    }
+
+    #[inline]
+    pub fn add_SEED_INDEX(&mut self, SEED_INDEX: u32) {
+        self.fbb_.push_slot::<u32>(tbpManifoldBranch::VT_SEED_INDEX, SEED_INDEX, 0);
+    }
+
+    #[inline]
+    pub fn add_INITIAL_STATE(&mut self, INITIAL_STATE: ::flatbuffers::WIPOffset<tbpState<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<tbpState>>(tbpManifoldBranch::VT_INITIAL_STATE, INITIAL_STATE);
+    }
+
+    #[inline]
+    pub fn add_TRAJECTORY(&mut self, TRAJECTORY: ::flatbuffers::WIPOffset<tbpTrajectory<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<tbpTrajectory>>(tbpManifoldBranch::VT_TRAJECTORY, TRAJECTORY);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> tbpManifoldBranchBuilder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        tbpManifoldBranchBuilder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<tbpManifoldBranch<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for tbpManifoldBranch<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("tbpManifoldBranch");
+        ds.field("STABLE", &self.STABLE());
+        ds.field("EXTERIOR", &self.EXTERIOR());
+        ds.field("SEED_INDEX", &self.SEED_INDEX());
+        ds.field("INITIAL_STATE", &self.INITIAL_STATE());
+        ds.field("TRAJECTORY", &self.TRAJECTORY());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct tbpManifoldBranchT {
+    pub STABLE: bool,
+    pub EXTERIOR: bool,
+    pub SEED_INDEX: u32,
+    pub INITIAL_STATE: Option<alloc::boxed::Box<tbpStateT>>,
+    pub TRAJECTORY: Option<alloc::boxed::Box<tbpTrajectoryT>>,
+}
+
+impl Default for tbpManifoldBranchT {
+    fn default() -> Self {
+        Self {
+            STABLE: false,
+            EXTERIOR: false,
+            SEED_INDEX: 0,
+            INITIAL_STATE: None,
+            TRAJECTORY: None,
+        }
+    }
+}
+
+impl tbpManifoldBranchT {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<tbpManifoldBranch<'b>> {
+        let STABLE = self.STABLE;
+        let EXTERIOR = self.EXTERIOR;
+        let SEED_INDEX = self.SEED_INDEX;
+        let INITIAL_STATE = self.INITIAL_STATE.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
+        let TRAJECTORY = self.TRAJECTORY.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
+        tbpManifoldBranch::create(_fbb, &tbpManifoldBranchArgs{
+            STABLE,
+            EXTERIOR,
+            SEED_INDEX,
+            INITIAL_STATE,
+            TRAJECTORY,
+        })
+    }
+}
+
+pub enum tbpManifoldsOffset {}
+
+/// Invariant manifold request and computed branches for an unstable periodic orbit.
+#[derive(Copy, Clone, PartialEq)]
+pub struct tbpManifolds<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for tbpManifolds<'a> {
+    type Inner = tbpManifolds<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> tbpManifolds<'a> {
+    pub const VT_ORBIT: ::flatbuffers::VOffsetT = 4;
+    pub const VT_PERTURBATION: ::flatbuffers::VOffsetT = 6;
+    pub const VT_DURATION: ::flatbuffers::VOffsetT = 8;
+    pub const VT_SAMPLE_POINTS: ::flatbuffers::VOffsetT = 10;
+    pub const VT_BRANCH_KIND: ::flatbuffers::VOffsetT = 12;
+    pub const VT_BRANCHES: ::flatbuffers::VOffsetT = 14;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        tbpManifolds { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args tbpManifoldsArgs<'args>
+    ) -> ::flatbuffers::WIPOffset<tbpManifolds<'bldr>> {
+        let mut builder = tbpManifoldsBuilder::new(_fbb);
+        builder.add_DURATION(args.DURATION);
+        builder.add_PERTURBATION(args.PERTURBATION);
+        if let Some(x) = args.BRANCHES { builder.add_BRANCHES(x); }
+        builder.add_SAMPLE_POINTS(args.SAMPLE_POINTS);
+        if let Some(x) = args.ORBIT { builder.add_ORBIT(x); }
+        builder.add_BRANCH_KIND(args.BRANCH_KIND);
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> tbpManifoldsT {
+        let ORBIT = self.ORBIT().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
+        let PERTURBATION = self.PERTURBATION();
+        let DURATION = self.DURATION();
+        let SAMPLE_POINTS = self.SAMPLE_POINTS();
+        let BRANCH_KIND = self.BRANCH_KIND();
+        let BRANCHES = self.BRANCHES().map(|x| {
+            x.iter().map(|t| t.unpack()).collect()
+        });
+        tbpManifoldsT {
+            ORBIT,
+            PERTURBATION,
+            DURATION,
+            SAMPLE_POINTS,
+            BRANCH_KIND,
+            BRANCHES,
+        }
+    }
+
+    /// Periodic orbit to perturb (INITIAL_STATE and PERIOD required).
+    #[inline]
+    pub fn ORBIT(&self) -> Option<tbpPeriodicOrbit<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<tbpPeriodicOrbit>>(tbpManifolds::VT_ORBIT, None)}
+    }
+
+    /// Perturbation distance epsilon (non-dimensional); 0 = default (1e-5).
+    #[inline]
+    pub fn PERTURBATION(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(tbpManifolds::VT_PERTURBATION, Some(0.0)).unwrap()}
+    }
+
+    /// Propagation duration per branch, non-dimensional; 0 = one orbit period.
+    #[inline]
+    pub fn DURATION(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(tbpManifolds::VT_DURATION, Some(0.0)).unwrap()}
+    }
+
+    /// Number of seed points along the periodic orbit; 0 = default (12).
+    #[inline]
+    pub fn SAMPLE_POINTS(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(tbpManifolds::VT_SAMPLE_POINTS, Some(0)).unwrap()}
+    }
+
+    /// Which manifold branches to generate.
+    #[inline]
+    pub fn BRANCH_KIND(&self) -> tbpManifoldBranchKind {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<tbpManifoldBranchKind>(tbpManifolds::VT_BRANCH_KIND, Some(tbpManifoldBranchKind::Both)).unwrap()}
+    }
+
+    /// Computed manifold branches.
+    #[inline]
+    pub fn BRANCHES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<tbpManifoldBranch<'a>>>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<tbpManifoldBranch>>>>(tbpManifolds::VT_BRANCHES, None)}
+    }
+}
+
+impl ::flatbuffers::Verifiable for tbpManifolds<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<tbpPeriodicOrbit>>("ORBIT", Self::VT_ORBIT, false)?
+            .visit_field::<f64>("PERTURBATION", Self::VT_PERTURBATION, false)?
+            .visit_field::<f64>("DURATION", Self::VT_DURATION, false)?
+            .visit_field::<u32>("SAMPLE_POINTS", Self::VT_SAMPLE_POINTS, false)?
+            .visit_field::<tbpManifoldBranchKind>("BRANCH_KIND", Self::VT_BRANCH_KIND, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<tbpManifoldBranch>>>>("BRANCHES", Self::VT_BRANCHES, false)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct tbpManifoldsArgs<'a> {
+    pub ORBIT: Option<::flatbuffers::WIPOffset<tbpPeriodicOrbit<'a>>>,
+    pub PERTURBATION: f64,
+    pub DURATION: f64,
+    pub SAMPLE_POINTS: u32,
+    pub BRANCH_KIND: tbpManifoldBranchKind,
+    pub BRANCHES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<tbpManifoldBranch<'a>>>>>,
+}
+
+impl<'a> Default for tbpManifoldsArgs<'a> {
+    #[inline]
+    fn default() -> Self {
+        tbpManifoldsArgs {
+            ORBIT: None,
+            PERTURBATION: 0.0,
+            DURATION: 0.0,
+            SAMPLE_POINTS: 0,
+            BRANCH_KIND: tbpManifoldBranchKind::Both,
+            BRANCHES: None,
+        }
+    }
+}
+
+pub struct tbpManifoldsBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> tbpManifoldsBuilder<'a, 'b, A> {
+    #[inline]
+    pub fn add_ORBIT(&mut self, ORBIT: ::flatbuffers::WIPOffset<tbpPeriodicOrbit<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<tbpPeriodicOrbit>>(tbpManifolds::VT_ORBIT, ORBIT);
+    }
+
+    #[inline]
+    pub fn add_PERTURBATION(&mut self, PERTURBATION: f64) {
+        self.fbb_.push_slot::<f64>(tbpManifolds::VT_PERTURBATION, PERTURBATION, 0.0);
+    }
+
+    #[inline]
+    pub fn add_DURATION(&mut self, DURATION: f64) {
+        self.fbb_.push_slot::<f64>(tbpManifolds::VT_DURATION, DURATION, 0.0);
+    }
+
+    #[inline]
+    pub fn add_SAMPLE_POINTS(&mut self, SAMPLE_POINTS: u32) {
+        self.fbb_.push_slot::<u32>(tbpManifolds::VT_SAMPLE_POINTS, SAMPLE_POINTS, 0);
+    }
+
+    #[inline]
+    pub fn add_BRANCH_KIND(&mut self, BRANCH_KIND: tbpManifoldBranchKind) {
+        self.fbb_.push_slot::<tbpManifoldBranchKind>(tbpManifolds::VT_BRANCH_KIND, BRANCH_KIND, tbpManifoldBranchKind::Both);
+    }
+
+    #[inline]
+    pub fn add_BRANCHES(&mut self, BRANCHES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<tbpManifoldBranch<'b >>>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(tbpManifolds::VT_BRANCHES, BRANCHES);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> tbpManifoldsBuilder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        tbpManifoldsBuilder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<tbpManifolds<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for tbpManifolds<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("tbpManifolds");
+        ds.field("ORBIT", &self.ORBIT());
+        ds.field("PERTURBATION", &self.PERTURBATION());
+        ds.field("DURATION", &self.DURATION());
+        ds.field("SAMPLE_POINTS", &self.SAMPLE_POINTS());
+        ds.field("BRANCH_KIND", &self.BRANCH_KIND());
+        ds.field("BRANCHES", &self.BRANCHES());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct tbpManifoldsT {
+    pub ORBIT: Option<alloc::boxed::Box<tbpPeriodicOrbitT>>,
+    pub PERTURBATION: f64,
+    pub DURATION: f64,
+    pub SAMPLE_POINTS: u32,
+    pub BRANCH_KIND: tbpManifoldBranchKind,
+    pub BRANCHES: Option<alloc::vec::Vec<tbpManifoldBranchT>>,
+}
+
+impl Default for tbpManifoldsT {
+    fn default() -> Self {
+        Self {
+            ORBIT: None,
+            PERTURBATION: 0.0,
+            DURATION: 0.0,
+            SAMPLE_POINTS: 0,
+            BRANCH_KIND: tbpManifoldBranchKind::Both,
+            BRANCHES: None,
+        }
+    }
+}
+
+impl tbpManifoldsT {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<tbpManifolds<'b>> {
+        let ORBIT = self.ORBIT.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
+        let PERTURBATION = self.PERTURBATION;
+        let DURATION = self.DURATION;
+        let SAMPLE_POINTS = self.SAMPLE_POINTS;
+        let BRANCH_KIND = self.BRANCH_KIND;
+        let BRANCHES = self.BRANCHES.as_ref().map(|x|{
+            let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+        });
+        tbpManifolds::create(_fbb, &tbpManifoldsArgs{
+            ORBIT,
+            PERTURBATION,
+            DURATION,
+            SAMPLE_POINTS,
+            BRANCH_KIND,
+            BRANCHES,
+        })
+    }
+}
+
+pub enum tbpConstellationOffset {}
+
+/// Multi-spacecraft time-phased CR3BP constellation along a periodic orbit.
+#[derive(Copy, Clone, PartialEq)]
+pub struct tbpConstellation<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for tbpConstellation<'a> {
+    type Inner = tbpConstellation<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> tbpConstellation<'a> {
+    pub const VT_ORBIT: ::flatbuffers::VOffsetT = 4;
+    pub const VT_SATELLITE_COUNT: ::flatbuffers::VOffsetT = 6;
+    pub const VT_REVOLUTIONS: ::flatbuffers::VOffsetT = 8;
+    pub const VT_PHASE_OFFSETS: ::flatbuffers::VOffsetT = 10;
+    pub const VT_OUTPUT_POINTS: ::flatbuffers::VOffsetT = 12;
+    pub const VT_TRAJECTORIES: ::flatbuffers::VOffsetT = 14;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        tbpConstellation { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args tbpConstellationArgs<'args>
+    ) -> ::flatbuffers::WIPOffset<tbpConstellation<'bldr>> {
+        let mut builder = tbpConstellationBuilder::new(_fbb);
+        if let Some(x) = args.TRAJECTORIES { builder.add_TRAJECTORIES(x); }
+        builder.add_OUTPUT_POINTS(args.OUTPUT_POINTS);
+        if let Some(x) = args.PHASE_OFFSETS { builder.add_PHASE_OFFSETS(x); }
+        builder.add_REVOLUTIONS(args.REVOLUTIONS);
+        builder.add_SATELLITE_COUNT(args.SATELLITE_COUNT);
+        if let Some(x) = args.ORBIT { builder.add_ORBIT(x); }
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> tbpConstellationT {
+        let ORBIT = self.ORBIT().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
+        let SATELLITE_COUNT = self.SATELLITE_COUNT();
+        let REVOLUTIONS = self.REVOLUTIONS();
+        let PHASE_OFFSETS = self.PHASE_OFFSETS().map(|x| {
+            x.into_iter().collect()
+        });
+        let OUTPUT_POINTS = self.OUTPUT_POINTS();
+        let TRAJECTORIES = self.TRAJECTORIES().map(|x| {
+            x.iter().map(|t| t.unpack()).collect()
+        });
+        tbpConstellationT {
+            ORBIT,
+            SATELLITE_COUNT,
+            REVOLUTIONS,
+            PHASE_OFFSETS,
+            OUTPUT_POINTS,
+            TRAJECTORIES,
+        }
+    }
+
+    /// Generating periodic orbit (FAMILY + PETALS + PERIOD or explicit INITIAL_STATE).
+    #[inline]
+    pub fn ORBIT(&self) -> Option<tbpPeriodicOrbit<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<tbpPeriodicOrbit>>(tbpConstellation::VT_ORBIT, None)}
+    }
+
+    /// Number of spacecraft in the constellation.
+    #[inline]
+    pub fn SATELLITE_COUNT(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(tbpConstellation::VT_SATELLITE_COUNT, Some(0)).unwrap()}
+    }
+
+    /// Number of orbit revolutions to propagate; 0 = 1.
+    #[inline]
+    pub fn REVOLUTIONS(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(tbpConstellation::VT_REVOLUTIONS, Some(0)).unwrap()}
+    }
+
+    /// Non-dimensional phase offsets (length SATELLITE_COUNT); empty = evenly spaced.
+    #[inline]
+    pub fn PHASE_OFFSETS(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(tbpConstellation::VT_PHASE_OFFSETS, None)}
+    }
+
+    /// Uniform time samples per spacecraft trajectory; 0 = default.
+    #[inline]
+    pub fn OUTPUT_POINTS(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(tbpConstellation::VT_OUTPUT_POINTS, Some(0)).unwrap()}
+    }
+
+    /// Result: propagated trajectory for each spacecraft in the constellation.
+    #[inline]
+    pub fn TRAJECTORIES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<tbpTrajectory<'a>>>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<tbpTrajectory>>>>(tbpConstellation::VT_TRAJECTORIES, None)}
+    }
+}
+
+impl ::flatbuffers::Verifiable for tbpConstellation<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<tbpPeriodicOrbit>>("ORBIT", Self::VT_ORBIT, false)?
+            .visit_field::<u32>("SATELLITE_COUNT", Self::VT_SATELLITE_COUNT, false)?
+            .visit_field::<u32>("REVOLUTIONS", Self::VT_REVOLUTIONS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("PHASE_OFFSETS", Self::VT_PHASE_OFFSETS, false)?
+            .visit_field::<u32>("OUTPUT_POINTS", Self::VT_OUTPUT_POINTS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<tbpTrajectory>>>>("TRAJECTORIES", Self::VT_TRAJECTORIES, false)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct tbpConstellationArgs<'a> {
+    pub ORBIT: Option<::flatbuffers::WIPOffset<tbpPeriodicOrbit<'a>>>,
+    pub SATELLITE_COUNT: u32,
+    pub REVOLUTIONS: u32,
+    pub PHASE_OFFSETS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub OUTPUT_POINTS: u32,
+    pub TRAJECTORIES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<tbpTrajectory<'a>>>>>,
+}
+
+impl<'a> Default for tbpConstellationArgs<'a> {
+    #[inline]
+    fn default() -> Self {
+        tbpConstellationArgs {
+            ORBIT: None,
+            SATELLITE_COUNT: 0,
+            REVOLUTIONS: 0,
+            PHASE_OFFSETS: None,
+            OUTPUT_POINTS: 0,
+            TRAJECTORIES: None,
+        }
+    }
+}
+
+pub struct tbpConstellationBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> tbpConstellationBuilder<'a, 'b, A> {
+    #[inline]
+    pub fn add_ORBIT(&mut self, ORBIT: ::flatbuffers::WIPOffset<tbpPeriodicOrbit<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<tbpPeriodicOrbit>>(tbpConstellation::VT_ORBIT, ORBIT);
+    }
+
+    #[inline]
+    pub fn add_SATELLITE_COUNT(&mut self, SATELLITE_COUNT: u32) {
+        self.fbb_.push_slot::<u32>(tbpConstellation::VT_SATELLITE_COUNT, SATELLITE_COUNT, 0);
+    }
+
+    #[inline]
+    pub fn add_REVOLUTIONS(&mut self, REVOLUTIONS: u32) {
+        self.fbb_.push_slot::<u32>(tbpConstellation::VT_REVOLUTIONS, REVOLUTIONS, 0);
+    }
+
+    #[inline]
+    pub fn add_PHASE_OFFSETS(&mut self, PHASE_OFFSETS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(tbpConstellation::VT_PHASE_OFFSETS, PHASE_OFFSETS);
+    }
+
+    #[inline]
+    pub fn add_OUTPUT_POINTS(&mut self, OUTPUT_POINTS: u32) {
+        self.fbb_.push_slot::<u32>(tbpConstellation::VT_OUTPUT_POINTS, OUTPUT_POINTS, 0);
+    }
+
+    #[inline]
+    pub fn add_TRAJECTORIES(&mut self, TRAJECTORIES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<tbpTrajectory<'b >>>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(tbpConstellation::VT_TRAJECTORIES, TRAJECTORIES);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> tbpConstellationBuilder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        tbpConstellationBuilder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<tbpConstellation<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for tbpConstellation<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("tbpConstellation");
+        ds.field("ORBIT", &self.ORBIT());
+        ds.field("SATELLITE_COUNT", &self.SATELLITE_COUNT());
+        ds.field("REVOLUTIONS", &self.REVOLUTIONS());
+        ds.field("PHASE_OFFSETS", &self.PHASE_OFFSETS());
+        ds.field("OUTPUT_POINTS", &self.OUTPUT_POINTS());
+        ds.field("TRAJECTORIES", &self.TRAJECTORIES());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct tbpConstellationT {
+    pub ORBIT: Option<alloc::boxed::Box<tbpPeriodicOrbitT>>,
+    pub SATELLITE_COUNT: u32,
+    pub REVOLUTIONS: u32,
+    pub PHASE_OFFSETS: Option<alloc::vec::Vec<f64>>,
+    pub OUTPUT_POINTS: u32,
+    pub TRAJECTORIES: Option<alloc::vec::Vec<tbpTrajectoryT>>,
+}
+
+impl Default for tbpConstellationT {
+    fn default() -> Self {
+        Self {
+            ORBIT: None,
+            SATELLITE_COUNT: 0,
+            REVOLUTIONS: 0,
+            PHASE_OFFSETS: None,
+            OUTPUT_POINTS: 0,
+            TRAJECTORIES: None,
+        }
+    }
+}
+
+impl tbpConstellationT {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<tbpConstellation<'b>> {
+        let ORBIT = self.ORBIT.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
+        let SATELLITE_COUNT = self.SATELLITE_COUNT;
+        let REVOLUTIONS = self.REVOLUTIONS;
+        let PHASE_OFFSETS = self.PHASE_OFFSETS.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let OUTPUT_POINTS = self.OUTPUT_POINTS;
+        let TRAJECTORIES = self.TRAJECTORIES.as_ref().map(|x|{
+            let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+        });
+        tbpConstellation::create(_fbb, &tbpConstellationArgs{
+            ORBIT,
+            SATELLITE_COUNT,
+            REVOLUTIONS,
+            PHASE_OFFSETS,
+            OUTPUT_POINTS,
+            TRAJECTORIES,
+        })
+    }
+}
+
+pub enum tbpSurfaceAnalysisOffset {}
+
+/// Surface coverage gap, elevation angle, occultation, and DOP analysis on a primary body.
+#[derive(Copy, Clone, PartialEq)]
+pub struct tbpSurfaceAnalysis<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for tbpSurfaceAnalysis<'a> {
+    type Inner = tbpSurfaceAnalysis<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> tbpSurfaceAnalysis<'a> {
+    pub const VT_REFERENCE_PRIMARY: ::flatbuffers::VOffsetT = 4;
+    pub const VT_PRIMARY_RADIUS_KM: ::flatbuffers::VOffsetT = 6;
+    pub const VT_MIN_ELEVATION_DEG: ::flatbuffers::VOffsetT = 8;
+    pub const VT_MIN_SATELLITES: ::flatbuffers::VOffsetT = 10;
+    pub const VT_SURFACE_POINTS_SYNODIC: ::flatbuffers::VOffsetT = 12;
+    pub const VT_SURFACE_LAT_LON_DEG: ::flatbuffers::VOffsetT = 14;
+    pub const VT_GRID_POINT_COUNT: ::flatbuffers::VOffsetT = 16;
+    pub const VT_SAMPLE_TIMES: ::flatbuffers::VOffsetT = 18;
+    pub const VT_MAX_GAP_S: ::flatbuffers::VOffsetT = 20;
+    pub const VT_GDOP: ::flatbuffers::VOffsetT = 22;
+    pub const VT_PDOP: ::flatbuffers::VOffsetT = 24;
+    pub const VT_TDOP: ::flatbuffers::VOffsetT = 26;
+    pub const VT_ELEVATION_DEG: ::flatbuffers::VOffsetT = 28;
+    pub const VT_OCCULTATION_START_S: ::flatbuffers::VOffsetT = 30;
+    pub const VT_OCCULTATION_END_S: ::flatbuffers::VOffsetT = 32;
+    pub const VT_OCCULTING_PRIMARY: ::flatbuffers::VOffsetT = 34;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        tbpSurfaceAnalysis { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args tbpSurfaceAnalysisArgs<'args>
+    ) -> ::flatbuffers::WIPOffset<tbpSurfaceAnalysis<'bldr>> {
+        let mut builder = tbpSurfaceAnalysisBuilder::new(_fbb);
+        builder.add_MIN_ELEVATION_DEG(args.MIN_ELEVATION_DEG);
+        builder.add_PRIMARY_RADIUS_KM(args.PRIMARY_RADIUS_KM);
+        if let Some(x) = args.OCCULTING_PRIMARY { builder.add_OCCULTING_PRIMARY(x); }
+        if let Some(x) = args.OCCULTATION_END_S { builder.add_OCCULTATION_END_S(x); }
+        if let Some(x) = args.OCCULTATION_START_S { builder.add_OCCULTATION_START_S(x); }
+        if let Some(x) = args.ELEVATION_DEG { builder.add_ELEVATION_DEG(x); }
+        if let Some(x) = args.TDOP { builder.add_TDOP(x); }
+        if let Some(x) = args.PDOP { builder.add_PDOP(x); }
+        if let Some(x) = args.GDOP { builder.add_GDOP(x); }
+        if let Some(x) = args.MAX_GAP_S { builder.add_MAX_GAP_S(x); }
+        if let Some(x) = args.SAMPLE_TIMES { builder.add_SAMPLE_TIMES(x); }
+        builder.add_GRID_POINT_COUNT(args.GRID_POINT_COUNT);
+        if let Some(x) = args.SURFACE_LAT_LON_DEG { builder.add_SURFACE_LAT_LON_DEG(x); }
+        if let Some(x) = args.SURFACE_POINTS_SYNODIC { builder.add_SURFACE_POINTS_SYNODIC(x); }
+        builder.add_MIN_SATELLITES(args.MIN_SATELLITES);
+        builder.add_REFERENCE_PRIMARY(args.REFERENCE_PRIMARY);
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> tbpSurfaceAnalysisT {
+        let REFERENCE_PRIMARY = self.REFERENCE_PRIMARY();
+        let PRIMARY_RADIUS_KM = self.PRIMARY_RADIUS_KM();
+        let MIN_ELEVATION_DEG = self.MIN_ELEVATION_DEG();
+        let MIN_SATELLITES = self.MIN_SATELLITES();
+        let SURFACE_POINTS_SYNODIC = self.SURFACE_POINTS_SYNODIC().map(|x| {
+            x.into_iter().collect()
+        });
+        let SURFACE_LAT_LON_DEG = self.SURFACE_LAT_LON_DEG().map(|x| {
+            x.into_iter().collect()
+        });
+        let GRID_POINT_COUNT = self.GRID_POINT_COUNT();
+        let SAMPLE_TIMES = self.SAMPLE_TIMES().map(|x| {
+            x.into_iter().collect()
+        });
+        let MAX_GAP_S = self.MAX_GAP_S().map(|x| {
+            x.into_iter().collect()
+        });
+        let GDOP = self.GDOP().map(|x| {
+            x.into_iter().collect()
+        });
+        let PDOP = self.PDOP().map(|x| {
+            x.into_iter().collect()
+        });
+        let TDOP = self.TDOP().map(|x| {
+            x.into_iter().collect()
+        });
+        let ELEVATION_DEG = self.ELEVATION_DEG().map(|x| {
+            x.into_iter().collect()
+        });
+        let OCCULTATION_START_S = self.OCCULTATION_START_S().map(|x| {
+            x.into_iter().collect()
+        });
+        let OCCULTATION_END_S = self.OCCULTATION_END_S().map(|x| {
+            x.into_iter().collect()
+        });
+        let OCCULTING_PRIMARY = self.OCCULTING_PRIMARY().map(|x| {
+            x.into_iter().collect()
+        });
+        tbpSurfaceAnalysisT {
+            REFERENCE_PRIMARY,
+            PRIMARY_RADIUS_KM,
+            MIN_ELEVATION_DEG,
+            MIN_SATELLITES,
+            SURFACE_POINTS_SYNODIC,
+            SURFACE_LAT_LON_DEG,
+            GRID_POINT_COUNT,
+            SAMPLE_TIMES,
+            MAX_GAP_S,
+            GDOP,
+            PDOP,
+            TDOP,
+            ELEVATION_DEG,
+            OCCULTATION_START_S,
+            OCCULTATION_END_S,
+            OCCULTING_PRIMARY,
+        }
+    }
+
+    /// Target primary body: 0 or 2 = smaller primary (Moon), 1 = larger primary (Earth).
+    #[inline]
+    pub fn REFERENCE_PRIMARY(&self) -> u8 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u8>(tbpSurfaceAnalysis::VT_REFERENCE_PRIMARY, Some(0)).unwrap()}
+    }
+
+    /// Radius of target primary body, km; 0 = default body radius.
+    #[inline]
+    pub fn PRIMARY_RADIUS_KM(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(tbpSurfaceAnalysis::VT_PRIMARY_RADIUS_KM, Some(0.0)).unwrap()}
+    }
+
+    /// Minimum elevation mask angle above local horizon, deg; 0 = horizon (0 deg).
+    #[inline]
+    pub fn MIN_ELEVATION_DEG(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(tbpSurfaceAnalysis::VT_MIN_ELEVATION_DEG, Some(0.0)).unwrap()}
+    }
+
+    /// Minimum simultaneous satellites in view for coverage; 0 = 1.
+    #[inline]
+    pub fn MIN_SATELLITES(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(tbpSurfaceAnalysis::VT_MIN_SATELLITES, Some(0)).unwrap()}
+    }
+
+    /// Surface observer positions in synodic frame (P * 3 non-dimensional values); empty = auto Fibonacci sphere.
+    #[inline]
+    pub fn SURFACE_POINTS_SYNODIC(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(tbpSurfaceAnalysis::VT_SURFACE_POINTS_SYNODIC, None)}
+    }
+
+    /// Surface observer lat/lon pairs [lat0, lon0, ...] in deg (P * 2 values).
+    #[inline]
+    pub fn SURFACE_LAT_LON_DEG(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(tbpSurfaceAnalysis::VT_SURFACE_LAT_LON_DEG, None)}
+    }
+
+    /// Number of Fibonacci surface grid points when SURFACE_POINTS_SYNODIC is empty; 0 = default.
+    #[inline]
+    pub fn GRID_POINT_COUNT(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(tbpSurfaceAnalysis::VT_GRID_POINT_COUNT, Some(0)).unwrap()}
+    }
+
+    /// Result: non-dimensional sample times (T values).
+    #[inline]
+    pub fn SAMPLE_TIMES(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(tbpSurfaceAnalysis::VT_SAMPLE_TIMES, None)}
+    }
+
+    /// Result: maximum uncovered gap duration per surface point, s (P values).
+    #[inline]
+    pub fn MAX_GAP_S(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(tbpSurfaceAnalysis::VT_MAX_GAP_S, None)}
+    }
+
+    /// Result: geometric dilution of precision (T * P values, NaN/0 when <4 sats visible).
+    #[inline]
+    pub fn GDOP(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(tbpSurfaceAnalysis::VT_GDOP, None)}
+    }
+
+    /// Result: position dilution of precision (T * P values).
+    #[inline]
+    pub fn PDOP(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(tbpSurfaceAnalysis::VT_PDOP, None)}
+    }
+
+    /// Result: time dilution of precision (T * P values).
+    #[inline]
+    pub fn TDOP(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(tbpSurfaceAnalysis::VT_TDOP, None)}
+    }
+
+    /// Result: maximum elevation angle per sample and surface point, deg (T * P values).
+    #[inline]
+    pub fn ELEVATION_DEG(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(tbpSurfaceAnalysis::VT_ELEVATION_DEG, None)}
+    }
+
+    /// Result: occultation interval start times, s (M values).
+    #[inline]
+    pub fn OCCULTATION_START_S(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(tbpSurfaceAnalysis::VT_OCCULTATION_START_S, None)}
+    }
+
+    /// Result: occultation interval end times, s (M values).
+    #[inline]
+    pub fn OCCULTATION_END_S(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(tbpSurfaceAnalysis::VT_OCCULTATION_END_S, None)}
+    }
+
+    /// Result: occulting body index per interval (1 = P1, 2 = P2; M values).
+    #[inline]
+    pub fn OCCULTING_PRIMARY(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(tbpSurfaceAnalysis::VT_OCCULTING_PRIMARY, None)}
+    }
+}
+
+impl ::flatbuffers::Verifiable for tbpSurfaceAnalysis<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<u8>("REFERENCE_PRIMARY", Self::VT_REFERENCE_PRIMARY, false)?
+            .visit_field::<f64>("PRIMARY_RADIUS_KM", Self::VT_PRIMARY_RADIUS_KM, false)?
+            .visit_field::<f64>("MIN_ELEVATION_DEG", Self::VT_MIN_ELEVATION_DEG, false)?
+            .visit_field::<u32>("MIN_SATELLITES", Self::VT_MIN_SATELLITES, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("SURFACE_POINTS_SYNODIC", Self::VT_SURFACE_POINTS_SYNODIC, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("SURFACE_LAT_LON_DEG", Self::VT_SURFACE_LAT_LON_DEG, false)?
+            .visit_field::<u32>("GRID_POINT_COUNT", Self::VT_GRID_POINT_COUNT, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("SAMPLE_TIMES", Self::VT_SAMPLE_TIMES, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("MAX_GAP_S", Self::VT_MAX_GAP_S, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("GDOP", Self::VT_GDOP, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("PDOP", Self::VT_PDOP, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("TDOP", Self::VT_TDOP, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("ELEVATION_DEG", Self::VT_ELEVATION_DEG, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("OCCULTATION_START_S", Self::VT_OCCULTATION_START_S, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("OCCULTATION_END_S", Self::VT_OCCULTATION_END_S, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("OCCULTING_PRIMARY", Self::VT_OCCULTING_PRIMARY, false)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct tbpSurfaceAnalysisArgs<'a> {
+    pub REFERENCE_PRIMARY: u8,
+    pub PRIMARY_RADIUS_KM: f64,
+    pub MIN_ELEVATION_DEG: f64,
+    pub MIN_SATELLITES: u32,
+    pub SURFACE_POINTS_SYNODIC: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub SURFACE_LAT_LON_DEG: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub GRID_POINT_COUNT: u32,
+    pub SAMPLE_TIMES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub MAX_GAP_S: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub GDOP: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub PDOP: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub TDOP: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub ELEVATION_DEG: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub OCCULTATION_START_S: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub OCCULTATION_END_S: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub OCCULTING_PRIMARY: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
+}
+
+impl<'a> Default for tbpSurfaceAnalysisArgs<'a> {
+    #[inline]
+    fn default() -> Self {
+        tbpSurfaceAnalysisArgs {
+            REFERENCE_PRIMARY: 0,
+            PRIMARY_RADIUS_KM: 0.0,
+            MIN_ELEVATION_DEG: 0.0,
+            MIN_SATELLITES: 0,
+            SURFACE_POINTS_SYNODIC: None,
+            SURFACE_LAT_LON_DEG: None,
+            GRID_POINT_COUNT: 0,
+            SAMPLE_TIMES: None,
+            MAX_GAP_S: None,
+            GDOP: None,
+            PDOP: None,
+            TDOP: None,
+            ELEVATION_DEG: None,
+            OCCULTATION_START_S: None,
+            OCCULTATION_END_S: None,
+            OCCULTING_PRIMARY: None,
+        }
+    }
+}
+
+pub struct tbpSurfaceAnalysisBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> tbpSurfaceAnalysisBuilder<'a, 'b, A> {
+    #[inline]
+    pub fn add_REFERENCE_PRIMARY(&mut self, REFERENCE_PRIMARY: u8) {
+        self.fbb_.push_slot::<u8>(tbpSurfaceAnalysis::VT_REFERENCE_PRIMARY, REFERENCE_PRIMARY, 0);
+    }
+
+    #[inline]
+    pub fn add_PRIMARY_RADIUS_KM(&mut self, PRIMARY_RADIUS_KM: f64) {
+        self.fbb_.push_slot::<f64>(tbpSurfaceAnalysis::VT_PRIMARY_RADIUS_KM, PRIMARY_RADIUS_KM, 0.0);
+    }
+
+    #[inline]
+    pub fn add_MIN_ELEVATION_DEG(&mut self, MIN_ELEVATION_DEG: f64) {
+        self.fbb_.push_slot::<f64>(tbpSurfaceAnalysis::VT_MIN_ELEVATION_DEG, MIN_ELEVATION_DEG, 0.0);
+    }
+
+    #[inline]
+    pub fn add_MIN_SATELLITES(&mut self, MIN_SATELLITES: u32) {
+        self.fbb_.push_slot::<u32>(tbpSurfaceAnalysis::VT_MIN_SATELLITES, MIN_SATELLITES, 0);
+    }
+
+    #[inline]
+    pub fn add_SURFACE_POINTS_SYNODIC(&mut self, SURFACE_POINTS_SYNODIC: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(tbpSurfaceAnalysis::VT_SURFACE_POINTS_SYNODIC, SURFACE_POINTS_SYNODIC);
+    }
+
+    #[inline]
+    pub fn add_SURFACE_LAT_LON_DEG(&mut self, SURFACE_LAT_LON_DEG: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(tbpSurfaceAnalysis::VT_SURFACE_LAT_LON_DEG, SURFACE_LAT_LON_DEG);
+    }
+
+    #[inline]
+    pub fn add_GRID_POINT_COUNT(&mut self, GRID_POINT_COUNT: u32) {
+        self.fbb_.push_slot::<u32>(tbpSurfaceAnalysis::VT_GRID_POINT_COUNT, GRID_POINT_COUNT, 0);
+    }
+
+    #[inline]
+    pub fn add_SAMPLE_TIMES(&mut self, SAMPLE_TIMES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(tbpSurfaceAnalysis::VT_SAMPLE_TIMES, SAMPLE_TIMES);
+    }
+
+    #[inline]
+    pub fn add_MAX_GAP_S(&mut self, MAX_GAP_S: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(tbpSurfaceAnalysis::VT_MAX_GAP_S, MAX_GAP_S);
+    }
+
+    #[inline]
+    pub fn add_GDOP(&mut self, GDOP: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(tbpSurfaceAnalysis::VT_GDOP, GDOP);
+    }
+
+    #[inline]
+    pub fn add_PDOP(&mut self, PDOP: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(tbpSurfaceAnalysis::VT_PDOP, PDOP);
+    }
+
+    #[inline]
+    pub fn add_TDOP(&mut self, TDOP: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(tbpSurfaceAnalysis::VT_TDOP, TDOP);
+    }
+
+    #[inline]
+    pub fn add_ELEVATION_DEG(&mut self, ELEVATION_DEG: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(tbpSurfaceAnalysis::VT_ELEVATION_DEG, ELEVATION_DEG);
+    }
+
+    #[inline]
+    pub fn add_OCCULTATION_START_S(&mut self, OCCULTATION_START_S: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(tbpSurfaceAnalysis::VT_OCCULTATION_START_S, OCCULTATION_START_S);
+    }
+
+    #[inline]
+    pub fn add_OCCULTATION_END_S(&mut self, OCCULTATION_END_S: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(tbpSurfaceAnalysis::VT_OCCULTATION_END_S, OCCULTATION_END_S);
+    }
+
+    #[inline]
+    pub fn add_OCCULTING_PRIMARY(&mut self, OCCULTING_PRIMARY: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(tbpSurfaceAnalysis::VT_OCCULTING_PRIMARY, OCCULTING_PRIMARY);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> tbpSurfaceAnalysisBuilder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        tbpSurfaceAnalysisBuilder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<tbpSurfaceAnalysis<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for tbpSurfaceAnalysis<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("tbpSurfaceAnalysis");
+        ds.field("REFERENCE_PRIMARY", &self.REFERENCE_PRIMARY());
+        ds.field("PRIMARY_RADIUS_KM", &self.PRIMARY_RADIUS_KM());
+        ds.field("MIN_ELEVATION_DEG", &self.MIN_ELEVATION_DEG());
+        ds.field("MIN_SATELLITES", &self.MIN_SATELLITES());
+        ds.field("SURFACE_POINTS_SYNODIC", &self.SURFACE_POINTS_SYNODIC());
+        ds.field("SURFACE_LAT_LON_DEG", &self.SURFACE_LAT_LON_DEG());
+        ds.field("GRID_POINT_COUNT", &self.GRID_POINT_COUNT());
+        ds.field("SAMPLE_TIMES", &self.SAMPLE_TIMES());
+        ds.field("MAX_GAP_S", &self.MAX_GAP_S());
+        ds.field("GDOP", &self.GDOP());
+        ds.field("PDOP", &self.PDOP());
+        ds.field("TDOP", &self.TDOP());
+        ds.field("ELEVATION_DEG", &self.ELEVATION_DEG());
+        ds.field("OCCULTATION_START_S", &self.OCCULTATION_START_S());
+        ds.field("OCCULTATION_END_S", &self.OCCULTATION_END_S());
+        ds.field("OCCULTING_PRIMARY", &self.OCCULTING_PRIMARY());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct tbpSurfaceAnalysisT {
+    pub REFERENCE_PRIMARY: u8,
+    pub PRIMARY_RADIUS_KM: f64,
+    pub MIN_ELEVATION_DEG: f64,
+    pub MIN_SATELLITES: u32,
+    pub SURFACE_POINTS_SYNODIC: Option<alloc::vec::Vec<f64>>,
+    pub SURFACE_LAT_LON_DEG: Option<alloc::vec::Vec<f64>>,
+    pub GRID_POINT_COUNT: u32,
+    pub SAMPLE_TIMES: Option<alloc::vec::Vec<f64>>,
+    pub MAX_GAP_S: Option<alloc::vec::Vec<f64>>,
+    pub GDOP: Option<alloc::vec::Vec<f64>>,
+    pub PDOP: Option<alloc::vec::Vec<f64>>,
+    pub TDOP: Option<alloc::vec::Vec<f64>>,
+    pub ELEVATION_DEG: Option<alloc::vec::Vec<f64>>,
+    pub OCCULTATION_START_S: Option<alloc::vec::Vec<f64>>,
+    pub OCCULTATION_END_S: Option<alloc::vec::Vec<f64>>,
+    pub OCCULTING_PRIMARY: Option<alloc::vec::Vec<u8>>,
+}
+
+impl Default for tbpSurfaceAnalysisT {
+    fn default() -> Self {
+        Self {
+            REFERENCE_PRIMARY: 0,
+            PRIMARY_RADIUS_KM: 0.0,
+            MIN_ELEVATION_DEG: 0.0,
+            MIN_SATELLITES: 0,
+            SURFACE_POINTS_SYNODIC: None,
+            SURFACE_LAT_LON_DEG: None,
+            GRID_POINT_COUNT: 0,
+            SAMPLE_TIMES: None,
+            MAX_GAP_S: None,
+            GDOP: None,
+            PDOP: None,
+            TDOP: None,
+            ELEVATION_DEG: None,
+            OCCULTATION_START_S: None,
+            OCCULTATION_END_S: None,
+            OCCULTING_PRIMARY: None,
+        }
+    }
+}
+
+impl tbpSurfaceAnalysisT {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<tbpSurfaceAnalysis<'b>> {
+        let REFERENCE_PRIMARY = self.REFERENCE_PRIMARY;
+        let PRIMARY_RADIUS_KM = self.PRIMARY_RADIUS_KM;
+        let MIN_ELEVATION_DEG = self.MIN_ELEVATION_DEG;
+        let MIN_SATELLITES = self.MIN_SATELLITES;
+        let SURFACE_POINTS_SYNODIC = self.SURFACE_POINTS_SYNODIC.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let SURFACE_LAT_LON_DEG = self.SURFACE_LAT_LON_DEG.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let GRID_POINT_COUNT = self.GRID_POINT_COUNT;
+        let SAMPLE_TIMES = self.SAMPLE_TIMES.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let MAX_GAP_S = self.MAX_GAP_S.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let GDOP = self.GDOP.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let PDOP = self.PDOP.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let TDOP = self.TDOP.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let ELEVATION_DEG = self.ELEVATION_DEG.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let OCCULTATION_START_S = self.OCCULTATION_START_S.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let OCCULTATION_END_S = self.OCCULTATION_END_S.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let OCCULTING_PRIMARY = self.OCCULTING_PRIMARY.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        tbpSurfaceAnalysis::create(_fbb, &tbpSurfaceAnalysisArgs{
+            REFERENCE_PRIMARY,
+            PRIMARY_RADIUS_KM,
+            MIN_ELEVATION_DEG,
+            MIN_SATELLITES,
+            SURFACE_POINTS_SYNODIC,
+            SURFACE_LAT_LON_DEG,
+            GRID_POINT_COUNT,
+            SAMPLE_TIMES,
+            MAX_GAP_S,
+            GDOP,
+            PDOP,
+            TDOP,
+            ELEVATION_DEG,
+            OCCULTATION_START_S,
+            OCCULTATION_END_S,
+            OCCULTING_PRIMARY,
         })
     }
 }
@@ -4045,6 +6907,10 @@ impl<'a> TBP<'a> {
     pub const VT_TRANSFER: ::flatbuffers::VOffsetT = 32;
     pub const VT_STATION_KEEPING: ::flatbuffers::VOffsetT = 34;
     pub const VT_FRAME_CONVERSION: ::flatbuffers::VOffsetT = 36;
+    pub const VT_CONTINUATION: ::flatbuffers::VOffsetT = 38;
+    pub const VT_MANIFOLDS: ::flatbuffers::VOffsetT = 40;
+    pub const VT_CONSTELLATION: ::flatbuffers::VOffsetT = 42;
+    pub const VT_SURFACE_ANALYSIS: ::flatbuffers::VOffsetT = 44;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -4059,6 +6925,10 @@ impl<'a> TBP<'a> {
         let mut builder = TBPBuilder::new(_fbb);
         builder.add_JACOBI(args.JACOBI);
         builder.add_CREATED_AT_MS(args.CREATED_AT_MS);
+        if let Some(x) = args.SURFACE_ANALYSIS { builder.add_SURFACE_ANALYSIS(x); }
+        if let Some(x) = args.CONSTELLATION { builder.add_CONSTELLATION(x); }
+        if let Some(x) = args.MANIFOLDS { builder.add_MANIFOLDS(x); }
+        if let Some(x) = args.CONTINUATION { builder.add_CONTINUATION(x); }
         if let Some(x) = args.FRAME_CONVERSION { builder.add_FRAME_CONVERSION(x); }
         if let Some(x) = args.STATION_KEEPING { builder.add_STATION_KEEPING(x); }
         if let Some(x) = args.TRANSFER { builder.add_TRANSFER(x); }
@@ -4121,6 +6991,18 @@ impl<'a> TBP<'a> {
         let FRAME_CONVERSION = self.FRAME_CONVERSION().map(|x| {
             alloc::boxed::Box::new(x.unpack())
         });
+        let CONTINUATION = self.CONTINUATION().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
+        let MANIFOLDS = self.MANIFOLDS().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
+        let CONSTELLATION = self.CONSTELLATION().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
+        let SURFACE_ANALYSIS = self.SURFACE_ANALYSIS().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
         TBPT {
             ID,
             CREATED_AT_MS,
@@ -4139,6 +7021,10 @@ impl<'a> TBP<'a> {
             TRANSFER,
             STATION_KEEPING,
             FRAME_CONVERSION,
+            CONTINUATION,
+            MANIFOLDS,
+            CONSTELLATION,
+            SURFACE_ANALYSIS,
         }
     }
 
@@ -4253,10 +7139,10 @@ impl<'a> TBP<'a> {
         unsafe { self._tab.get::<f64>(TBP::VT_JACOBI, Some(0.0)).unwrap()}
     }
 
-    /// PeriodicOrbit, HaloFirstGuess, NearRectilinearHalo: the request fields
-    /// (FAMILY, LIBRATION_POINT, AMPLITUDE or perilune/apolune, TOLERANCE,
-    /// MAX_ITERATIONS) and the result. Family: the members, ordered along the
-    /// family's continuation parameter (AMPLITUDE).
+    /// PeriodicOrbit, HaloFirstGuess, NearRectilinearHalo, OrbitProperties: the
+    /// request fields (FAMILY, LIBRATION_POINT, AMPLITUDE, PETALS, or
+    /// perilune/apolune, TOLERANCE, MAX_ITERATIONS) and the result. Family and
+    /// Continuation: the members ordered along the continuation parameter.
     #[inline]
     pub fn ORBITS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<tbpPeriodicOrbit<'a>>>> {
         // Safety:
@@ -4288,6 +7174,42 @@ impl<'a> TBP<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<tbpFrameConversion>>(TBP::VT_FRAME_CONVERSION, None)}
     }
+
+    /// Continuation: pseudo-arclength or natural-parameter continuation request.
+    #[inline]
+    pub fn CONTINUATION(&self) -> Option<tbpContinuationRequest<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<tbpContinuationRequest>>(TBP::VT_CONTINUATION, None)}
+    }
+
+    /// Manifolds: invariant stable/unstable manifold request and branches.
+    #[inline]
+    pub fn MANIFOLDS(&self) -> Option<tbpManifolds<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<tbpManifolds>>(TBP::VT_MANIFOLDS, None)}
+    }
+
+    /// Constellation: time-phased multi-spacecraft CR3BP constellation.
+    #[inline]
+    pub fn CONSTELLATION(&self) -> Option<tbpConstellation<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<tbpConstellation>>(TBP::VT_CONSTELLATION, None)}
+    }
+
+    /// SurfaceAnalysis: surface coverage gaps, elevation, occultations, and DOP.
+    #[inline]
+    pub fn SURFACE_ANALYSIS(&self) -> Option<tbpSurfaceAnalysis<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<tbpSurfaceAnalysis>>(TBP::VT_SURFACE_ANALYSIS, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for TBP<'_> {
@@ -4313,6 +7235,10 @@ impl ::flatbuffers::Verifiable for TBP<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<tbpTransfer>>("TRANSFER", Self::VT_TRANSFER, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<tbpStationKeeping>>("STATION_KEEPING", Self::VT_STATION_KEEPING, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<tbpFrameConversion>>("FRAME_CONVERSION", Self::VT_FRAME_CONVERSION, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<tbpContinuationRequest>>("CONTINUATION", Self::VT_CONTINUATION, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<tbpManifolds>>("MANIFOLDS", Self::VT_MANIFOLDS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<tbpConstellation>>("CONSTELLATION", Self::VT_CONSTELLATION, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<tbpSurfaceAnalysis>>("SURFACE_ANALYSIS", Self::VT_SURFACE_ANALYSIS, false)?
             .finish();
         Ok(())
     }
@@ -4336,6 +7262,10 @@ pub struct TBPArgs<'a> {
     pub TRANSFER: Option<::flatbuffers::WIPOffset<tbpTransfer<'a>>>,
     pub STATION_KEEPING: Option<::flatbuffers::WIPOffset<tbpStationKeeping<'a>>>,
     pub FRAME_CONVERSION: Option<::flatbuffers::WIPOffset<tbpFrameConversion<'a>>>,
+    pub CONTINUATION: Option<::flatbuffers::WIPOffset<tbpContinuationRequest<'a>>>,
+    pub MANIFOLDS: Option<::flatbuffers::WIPOffset<tbpManifolds<'a>>>,
+    pub CONSTELLATION: Option<::flatbuffers::WIPOffset<tbpConstellation<'a>>>,
+    pub SURFACE_ANALYSIS: Option<::flatbuffers::WIPOffset<tbpSurfaceAnalysis<'a>>>,
 }
 
 impl<'a> Default for TBPArgs<'a> {
@@ -4359,6 +7289,10 @@ impl<'a> Default for TBPArgs<'a> {
             TRANSFER: None,
             STATION_KEEPING: None,
             FRAME_CONVERSION: None,
+            CONTINUATION: None,
+            MANIFOLDS: None,
+            CONSTELLATION: None,
+            SURFACE_ANALYSIS: None,
         }
     }
 }
@@ -4455,6 +7389,26 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> TBPBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_CONTINUATION(&mut self, CONTINUATION: ::flatbuffers::WIPOffset<tbpContinuationRequest<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<tbpContinuationRequest>>(TBP::VT_CONTINUATION, CONTINUATION);
+    }
+
+    #[inline]
+    pub fn add_MANIFOLDS(&mut self, MANIFOLDS: ::flatbuffers::WIPOffset<tbpManifolds<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<tbpManifolds>>(TBP::VT_MANIFOLDS, MANIFOLDS);
+    }
+
+    #[inline]
+    pub fn add_CONSTELLATION(&mut self, CONSTELLATION: ::flatbuffers::WIPOffset<tbpConstellation<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<tbpConstellation>>(TBP::VT_CONSTELLATION, CONSTELLATION);
+    }
+
+    #[inline]
+    pub fn add_SURFACE_ANALYSIS(&mut self, SURFACE_ANALYSIS: ::flatbuffers::WIPOffset<tbpSurfaceAnalysis<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<tbpSurfaceAnalysis>>(TBP::VT_SURFACE_ANALYSIS, SURFACE_ANALYSIS);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> TBPBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         TBPBuilder {
@@ -4490,6 +7444,10 @@ impl ::core::fmt::Debug for TBP<'_> {
         ds.field("TRANSFER", &self.TRANSFER());
         ds.field("STATION_KEEPING", &self.STATION_KEEPING());
         ds.field("FRAME_CONVERSION", &self.FRAME_CONVERSION());
+        ds.field("CONTINUATION", &self.CONTINUATION());
+        ds.field("MANIFOLDS", &self.MANIFOLDS());
+        ds.field("CONSTELLATION", &self.CONSTELLATION());
+        ds.field("SURFACE_ANALYSIS", &self.SURFACE_ANALYSIS());
         ds.finish()
     }
 }
@@ -4514,6 +7472,10 @@ pub struct TBPT {
     pub TRANSFER: Option<alloc::boxed::Box<tbpTransferT>>,
     pub STATION_KEEPING: Option<alloc::boxed::Box<tbpStationKeepingT>>,
     pub FRAME_CONVERSION: Option<alloc::boxed::Box<tbpFrameConversionT>>,
+    pub CONTINUATION: Option<alloc::boxed::Box<tbpContinuationRequestT>>,
+    pub MANIFOLDS: Option<alloc::boxed::Box<tbpManifoldsT>>,
+    pub CONSTELLATION: Option<alloc::boxed::Box<tbpConstellationT>>,
+    pub SURFACE_ANALYSIS: Option<alloc::boxed::Box<tbpSurfaceAnalysisT>>,
 }
 
 impl Default for TBPT {
@@ -4536,6 +7498,10 @@ impl Default for TBPT {
             TRANSFER: None,
             STATION_KEEPING: None,
             FRAME_CONVERSION: None,
+            CONTINUATION: None,
+            MANIFOLDS: None,
+            CONSTELLATION: None,
+            SURFACE_ANALYSIS: None,
         }
     }
 }
@@ -4588,6 +7554,18 @@ impl TBPT {
         let FRAME_CONVERSION = self.FRAME_CONVERSION.as_ref().map(|x|{
             x.pack(_fbb)
         });
+        let CONTINUATION = self.CONTINUATION.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
+        let MANIFOLDS = self.MANIFOLDS.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
+        let CONSTELLATION = self.CONSTELLATION.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
+        let SURFACE_ANALYSIS = self.SURFACE_ANALYSIS.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
         TBP::create(_fbb, &TBPArgs{
             ID,
             CREATED_AT_MS,
@@ -4606,6 +7584,10 @@ impl TBPT {
             TRANSFER,
             STATION_KEEPING,
             FRAME_CONVERSION,
+            CONTINUATION,
+            MANIFOLDS,
+            CONSTELLATION,
+            SURFACE_ANALYSIS,
         })
     }
 }

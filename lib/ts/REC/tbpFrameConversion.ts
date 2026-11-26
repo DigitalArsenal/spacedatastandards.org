@@ -80,8 +80,96 @@ inertialArray():Float64Array|null {
   return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 }
 
+/**
+ * Reference primary body: 0 = barycenter, 1 = P1 (Earth), 2 = P2 (Moon).
+ */
+REFERENCE_PRIMARY():number {
+  const offset = this.bb!.__offset(this.bb_pos, 14);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Epoch Julian date (days) for J2000/ephemeris conversions; 0 = from REFERENCE_EPOCH_MS.
+ */
+JULIAN_DATE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Geodetic/selenodetic coordinates [lat_deg, lon_deg, alt_km] (3 values).
+ */
+LLA_DEG_KM(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+llaDegKmLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+llaDegKmArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Classical Keplerian elements [a_km, e, inc_deg, raan_deg, argp_deg, nu_deg] (6 values).
+ */
+ORBITAL_ELEMENTS(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+orbitalElementsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+orbitalElementsArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Batch synodic states (N * 6 values, non-dimensional) for vectorized conversion.
+ */
+BATCH_SYNODIC_STATES(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+batchSynodicStatesLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+batchSynodicStatesArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Batch inertial/target states (N * 6 values, km and km/s) for vectorized conversion.
+ */
+BATCH_INERTIAL_STATES(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+batchInertialStatesLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+batchInertialStatesArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
 static starttbpFrameConversion(builder:flatbuffers.Builder) {
-  builder.startObject(5);
+  builder.startObject(11);
 }
 
 static addDirection(builder:flatbuffers.Builder, DIRECTION:tbpConversionDirection) {
@@ -121,6 +209,98 @@ static startInertialVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(8, numElems, 8);
 }
 
+static addReferencePrimary(builder:flatbuffers.Builder, REFERENCE_PRIMARY:number) {
+  builder.addFieldInt8(5, REFERENCE_PRIMARY, 0);
+}
+
+static addJulianDate(builder:flatbuffers.Builder, JULIAN_DATE:number) {
+  builder.addFieldFloat64(6, JULIAN_DATE, 0.0);
+}
+
+static addLlaDegKm(builder:flatbuffers.Builder, LLA_DEG_KMOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(7, LLA_DEG_KMOffset, 0);
+}
+
+static createLlaDegKmVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createLlaDegKmVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createLlaDegKmVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startLlaDegKmVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
+static addOrbitalElements(builder:flatbuffers.Builder, ORBITAL_ELEMENTSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(8, ORBITAL_ELEMENTSOffset, 0);
+}
+
+static createOrbitalElementsVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createOrbitalElementsVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createOrbitalElementsVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startOrbitalElementsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
+static addBatchSynodicStates(builder:flatbuffers.Builder, BATCH_SYNODIC_STATESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(9, BATCH_SYNODIC_STATESOffset, 0);
+}
+
+static createBatchSynodicStatesVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createBatchSynodicStatesVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createBatchSynodicStatesVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startBatchSynodicStatesVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
+static addBatchInertialStates(builder:flatbuffers.Builder, BATCH_INERTIAL_STATESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(10, BATCH_INERTIAL_STATESOffset, 0);
+}
+
+static createBatchInertialStatesVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createBatchInertialStatesVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createBatchInertialStatesVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startBatchInertialStatesVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
 static endtbpFrameConversion(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -133,7 +313,13 @@ unpack(): tbpFrameConversionT {
     this.REFERENCE_EPOCH_MS(),
     this.ELAPSED_S(),
     (this.SYNODIC() !== null ? this.SYNODIC()!.unpack() : null),
-    this.bb!.createScalarList<number>(this.INERTIAL.bind(this), this.inertialLength())
+    this.bb!.createScalarList<number>(this.INERTIAL.bind(this), this.inertialLength()),
+    this.REFERENCE_PRIMARY(),
+    this.JULIAN_DATE(),
+    this.bb!.createScalarList<number>(this.LLA_DEG_KM.bind(this), this.llaDegKmLength()),
+    this.bb!.createScalarList<number>(this.ORBITAL_ELEMENTS.bind(this), this.orbitalElementsLength()),
+    this.bb!.createScalarList<number>(this.BATCH_SYNODIC_STATES.bind(this), this.batchSynodicStatesLength()),
+    this.bb!.createScalarList<number>(this.BATCH_INERTIAL_STATES.bind(this), this.batchInertialStatesLength())
   );
 }
 
@@ -144,6 +330,12 @@ unpackTo(_o: tbpFrameConversionT): void {
   _o.ELAPSED_S = this.ELAPSED_S();
   _o.SYNODIC = (this.SYNODIC() !== null ? this.SYNODIC()!.unpack() : null);
   _o.INERTIAL = this.bb!.createScalarList<number>(this.INERTIAL.bind(this), this.inertialLength());
+  _o.REFERENCE_PRIMARY = this.REFERENCE_PRIMARY();
+  _o.JULIAN_DATE = this.JULIAN_DATE();
+  _o.LLA_DEG_KM = this.bb!.createScalarList<number>(this.LLA_DEG_KM.bind(this), this.llaDegKmLength());
+  _o.ORBITAL_ELEMENTS = this.bb!.createScalarList<number>(this.ORBITAL_ELEMENTS.bind(this), this.orbitalElementsLength());
+  _o.BATCH_SYNODIC_STATES = this.bb!.createScalarList<number>(this.BATCH_SYNODIC_STATES.bind(this), this.batchSynodicStatesLength());
+  _o.BATCH_INERTIAL_STATES = this.bb!.createScalarList<number>(this.BATCH_INERTIAL_STATES.bind(this), this.batchInertialStatesLength());
 }
 }
 
@@ -153,13 +345,23 @@ constructor(
   public REFERENCE_EPOCH_MS: bigint = BigInt('0'),
   public ELAPSED_S: number = 0.0,
   public SYNODIC: tbpStateT|null = null,
-  public INERTIAL: (number)[] = []
+  public INERTIAL: (number)[] = [],
+  public REFERENCE_PRIMARY: number = 0,
+  public JULIAN_DATE: number = 0.0,
+  public LLA_DEG_KM: (number)[] = [],
+  public ORBITAL_ELEMENTS: (number)[] = [],
+  public BATCH_SYNODIC_STATES: (number)[] = [],
+  public BATCH_INERTIAL_STATES: (number)[] = []
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const SYNODIC = (this.SYNODIC !== null ? this.SYNODIC!.pack(builder) : 0);
   const INERTIAL = tbpFrameConversion.createInertialVector(builder, this.INERTIAL);
+  const LLA_DEG_KM = tbpFrameConversion.createLlaDegKmVector(builder, this.LLA_DEG_KM);
+  const ORBITAL_ELEMENTS = tbpFrameConversion.createOrbitalElementsVector(builder, this.ORBITAL_ELEMENTS);
+  const BATCH_SYNODIC_STATES = tbpFrameConversion.createBatchSynodicStatesVector(builder, this.BATCH_SYNODIC_STATES);
+  const BATCH_INERTIAL_STATES = tbpFrameConversion.createBatchInertialStatesVector(builder, this.BATCH_INERTIAL_STATES);
 
   tbpFrameConversion.starttbpFrameConversion(builder);
   tbpFrameConversion.addDirection(builder, this.DIRECTION);
@@ -167,6 +369,12 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   tbpFrameConversion.addElapsedS(builder, this.ELAPSED_S);
   tbpFrameConversion.addSynodic(builder, SYNODIC);
   tbpFrameConversion.addInertial(builder, INERTIAL);
+  tbpFrameConversion.addReferencePrimary(builder, this.REFERENCE_PRIMARY);
+  tbpFrameConversion.addJulianDate(builder, this.JULIAN_DATE);
+  tbpFrameConversion.addLlaDegKm(builder, LLA_DEG_KM);
+  tbpFrameConversion.addOrbitalElements(builder, ORBITAL_ELEMENTS);
+  tbpFrameConversion.addBatchSynodicStates(builder, BATCH_SYNODIC_STATES);
+  tbpFrameConversion.addBatchInertialStates(builder, BATCH_INERTIAL_STATES);
 
   return tbpFrameConversion.endtbpFrameConversion(builder);
 }

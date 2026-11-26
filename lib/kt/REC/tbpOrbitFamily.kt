@@ -44,5 +44,21 @@ class tbpOrbitFamily private constructor() {
          * Short- or long-period orbit about L4 or L5.
          */
         const val LongShortPeriod: UByte = 9u
+        /**
+         * Northern-hemisphere sidereal-resonant tulip-shaped CR3BP orbit.
+         */
+        const val TulipNorthern: UByte = 10u
+        /**
+         * Southern-hemisphere sidereal-resonant tulip-shaped CR3BP orbit.
+         */
+        const val TulipSouthern: UByte = 11u
+        /**
+         * Northern-hemisphere multi-petal pumpkin-shaped CR3BP orbit.
+         */
+        const val PumpkinNorthern: UByte = 12u
+        /**
+         * Southern-hemisphere multi-petal pumpkin-shaped CR3BP orbit.
+         */
+        const val PumpkinSouthern: UByte = 13u
     }
 }

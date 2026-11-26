@@ -295,10 +295,10 @@ func (rcv *TBP) MutateJacobi(n float64) bool {
 	return rcv.MutateJACOBI(n)
 }
 
-/// PeriodicOrbit, HaloFirstGuess, NearRectilinearHalo: the request fields
-/// (FAMILY, LIBRATION_POINT, AMPLITUDE or perilune/apolune, TOLERANCE,
-/// MAX_ITERATIONS) and the result. Family: the members, ordered along the
-/// family's continuation parameter (AMPLITUDE).
+/// PeriodicOrbit, HaloFirstGuess, NearRectilinearHalo, OrbitProperties: the
+/// request fields (FAMILY, LIBRATION_POINT, AMPLITUDE, PETALS, or
+/// perilune/apolune, TOLERANCE, MAX_ITERATIONS) and the result. Family and
+/// Continuation: the members ordered along the continuation parameter.
 func (rcv *TBP) ORBITS(obj *tbpPeriodicOrbit, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
@@ -330,10 +330,10 @@ func (rcv *TBP) OrbitsLength() int {
 	return rcv.ORBITSLength()
 }
 
-/// PeriodicOrbit, HaloFirstGuess, NearRectilinearHalo: the request fields
-/// (FAMILY, LIBRATION_POINT, AMPLITUDE or perilune/apolune, TOLERANCE,
-/// MAX_ITERATIONS) and the result. Family: the members, ordered along the
-/// family's continuation parameter (AMPLITUDE).
+/// PeriodicOrbit, HaloFirstGuess, NearRectilinearHalo, OrbitProperties: the
+/// request fields (FAMILY, LIBRATION_POINT, AMPLITUDE, PETALS, or
+/// perilune/apolune, TOLERANCE, MAX_ITERATIONS) and the result. Family and
+/// Continuation: the members ordered along the continuation parameter.
 func (rcv *TBP) TRANSFER(obj *tbpTransfer) *tbpTransfer {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
 	if o != 0 {
@@ -385,8 +385,84 @@ func (rcv *TBP) FrameConversion(obj *tbpFrameConversion) *tbpFrameConversion {
 	return rcv.FRAME_CONVERSION(obj)
 }
 
+/// Continuation: pseudo-arclength or natural-parameter continuation request.
+func (rcv *TBP) CONTINUATION(obj *tbpContinuationRequest) *tbpContinuationRequest {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(tbpContinuationRequest)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *TBP) Continuation(obj *tbpContinuationRequest) *tbpContinuationRequest {
+	return rcv.CONTINUATION(obj)
+}
+
+/// Continuation: pseudo-arclength or natural-parameter continuation request.
+/// Manifolds: invariant stable/unstable manifold request and branches.
+func (rcv *TBP) MANIFOLDS(obj *tbpManifolds) *tbpManifolds {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(tbpManifolds)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *TBP) Manifolds(obj *tbpManifolds) *tbpManifolds {
+	return rcv.MANIFOLDS(obj)
+}
+
+/// Manifolds: invariant stable/unstable manifold request and branches.
+/// Constellation: time-phased multi-spacecraft CR3BP constellation.
+func (rcv *TBP) CONSTELLATION(obj *tbpConstellation) *tbpConstellation {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(tbpConstellation)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *TBP) Constellation(obj *tbpConstellation) *tbpConstellation {
+	return rcv.CONSTELLATION(obj)
+}
+
+/// Constellation: time-phased multi-spacecraft CR3BP constellation.
+/// SurfaceAnalysis: surface coverage gaps, elevation, occultations, and DOP.
+func (rcv *TBP) SURFACE_ANALYSIS(obj *tbpSurfaceAnalysis) *tbpSurfaceAnalysis {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(tbpSurfaceAnalysis)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *TBP) SurfaceAnalysis(obj *tbpSurfaceAnalysis) *tbpSurfaceAnalysis {
+	return rcv.SURFACE_ANALYSIS(obj)
+}
+
+/// SurfaceAnalysis: surface coverage gaps, elevation, occultations, and DOP.
 func TBPStart(builder *flatbuffers.Builder) {
-	builder.StartObject(17)
+	builder.StartObject(21)
 }
 func TBPAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
@@ -501,6 +577,30 @@ func TBPAddFRAME_CONVERSION(builder *flatbuffers.Builder, FRAME_CONVERSION flatb
 }
 func TBPAddFrameConversion(builder *flatbuffers.Builder, FRAME_CONVERSION flatbuffers.UOffsetT) {
 	TBPAddFRAME_CONVERSION(builder, FRAME_CONVERSION)
+}
+func TBPAddCONTINUATION(builder *flatbuffers.Builder, CONTINUATION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(CONTINUATION), 0)
+}
+func TBPAddContinuation(builder *flatbuffers.Builder, CONTINUATION flatbuffers.UOffsetT) {
+	TBPAddCONTINUATION(builder, CONTINUATION)
+}
+func TBPAddMANIFOLDS(builder *flatbuffers.Builder, MANIFOLDS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(MANIFOLDS), 0)
+}
+func TBPAddManifolds(builder *flatbuffers.Builder, MANIFOLDS flatbuffers.UOffsetT) {
+	TBPAddMANIFOLDS(builder, MANIFOLDS)
+}
+func TBPAddCONSTELLATION(builder *flatbuffers.Builder, CONSTELLATION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(19, flatbuffers.UOffsetT(CONSTELLATION), 0)
+}
+func TBPAddConstellation(builder *flatbuffers.Builder, CONSTELLATION flatbuffers.UOffsetT) {
+	TBPAddCONSTELLATION(builder, CONSTELLATION)
+}
+func TBPAddSURFACE_ANALYSIS(builder *flatbuffers.Builder, SURFACE_ANALYSIS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(20, flatbuffers.UOffsetT(SURFACE_ANALYSIS), 0)
+}
+func TBPAddSurfaceAnalysis(builder *flatbuffers.Builder, SURFACE_ANALYSIS flatbuffers.UOffsetT) {
+	TBPAddSURFACE_ANALYSIS(builder, SURFACE_ANALYSIS)
 }
 func TBPEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

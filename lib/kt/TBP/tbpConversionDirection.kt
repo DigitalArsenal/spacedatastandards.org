@@ -9,5 +9,13 @@ class tbpConversionDirection private constructor() {
     companion object {
         const val SynodicToInertial: UByte = 0u
         const val InertialToSynodic: UByte = 1u
+        const val SynodicToJ2000: UByte = 2u
+        const val J2000ToSynodic: UByte = 3u
+        const val SynodicToPrimaryInertial: UByte = 4u
+        const val PrimaryInertialToSynodic: UByte = 5u
+        const val SynodicToLla: UByte = 6u
+        const val LlaToSynodic: UByte = 7u
+        const val SynodicToOrbitalElements: UByte = 8u
+        const val OrbitalElementsToSynodic: UByte = 9u
     }
 }

@@ -58,6 +58,16 @@ const (
 	tbpProblemFrameConversion     tbpProblem = 9
 	/// Members of a periodic-orbit family.
 	tbpProblemFamily              tbpProblem = 10
+	/// Pseudo-arclength or natural-parameter continuation from a seed orbit.
+	tbpProblemContinuation        tbpProblem = 11
+	/// Stable and unstable invariant manifolds of an unstable periodic orbit.
+	tbpProblemManifolds           tbpProblem = 12
+	/// Diagnostic properties of a periodic orbit (apsides, stability, occultations).
+	tbpProblemOrbitProperties     tbpProblem = 13
+	/// Time-phased multi-spacecraft constellation along a periodic CR3BP orbit.
+	tbpProblemConstellation       tbpProblem = 14
+	/// Primary-body surface coverage gaps, elevation, occultations, and DOP.
+	tbpProblemSurfaceAnalysis     tbpProblem = 15
 )
 
 var EnumNamestbpProblem = map[tbpProblem]string{
@@ -72,6 +82,11 @@ var EnumNamestbpProblem = map[tbpProblem]string{
 	tbpProblemStationKeeping:      "StationKeeping",
 	tbpProblemFrameConversion:     "FrameConversion",
 	tbpProblemFamily:              "Family",
+	tbpProblemContinuation:        "Continuation",
+	tbpProblemManifolds:           "Manifolds",
+	tbpProblemOrbitProperties:     "OrbitProperties",
+	tbpProblemConstellation:       "Constellation",
+	tbpProblemSurfaceAnalysis:     "SurfaceAnalysis",
 }
 
 var EnumValuestbpProblem = map[string]tbpProblem{
@@ -86,6 +101,11 @@ var EnumValuestbpProblem = map[string]tbpProblem{
 	"StationKeeping":      tbpProblemStationKeeping,
 	"FrameConversion":     tbpProblemFrameConversion,
 	"Family":              tbpProblemFamily,
+	"Continuation":        tbpProblemContinuation,
+	"Manifolds":           tbpProblemManifolds,
+	"OrbitProperties":     tbpProblemOrbitProperties,
+	"Constellation":       tbpProblemConstellation,
+	"SurfaceAnalysis":     tbpProblemSurfaceAnalysis,
 }
 
 func (v tbpProblem) String() string {

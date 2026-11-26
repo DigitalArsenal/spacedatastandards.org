@@ -165,22 +165,158 @@ class tbpTransfer extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// Departure state in synodic frame (MinEnergy, DirectLambert, MinLambert, LowThrustMinTime).
+    public function getINITIAL_STATE()
+    {
+        $obj = new TbpState();
+        $o = $this->__offset(28);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Arrival state in synodic frame.
+    public function getFINAL_STATE()
+    {
+        $obj = new TbpState();
+        $o = $this->__offset(30);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// False = prograde (default), true = retrograde (DirectLambert).
+    /**
+     * @return bool
+     */
+    public function getRETROGRADE()
+    {
+        $o = $this->__offset(32);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// Reference primary body for Lambert seeding: 0 = auto, 1 = P1, 2 = P2.
+    /**
+     * @return byte
+     */
+    public function getREFERENCE_PRIMARY()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : 0;
+    }
+
+    /// Low-thrust maximum thrust, N (LowThrustMinTime).
+    /**
+     * @return double
+     */
+    public function getMAX_THRUST_N()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Engine specific impulse Isp, s (LowThrustMinTime).
+    /**
+     * @return double
+     */
+    public function getSPECIFIC_IMPULSE_S()
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Initial wet spacecraft mass, kg.
+    /**
+     * @return double
+     */
+    public function getINITIAL_MASS_KG()
+    {
+        $o = $this->__offset(40);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Result: final spacecraft mass at arrival, kg.
+    /**
+     * @return double
+     */
+    public function getFINAL_MASS_KG()
+    {
+        $o = $this->__offset(42);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Result: propellant consumed, kg.
+    /**
+     * @return double
+     */
+    public function getPROPELLANT_MASS_KG()
+    {
+        $o = $this->__offset(44);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Initial costates [lambda_rx, ry, rz, vx, vy, vz, m] guess or solved.
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getINITIAL_COSTATES($j)
+    {
+        $o = $this->__offset(46);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getINITIAL_COSTATESLength()
+    {
+        $o = $this->__offset(46);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Result: normalized throttle [0..1] per trajectory sample.
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getTHROTTLE_HISTORY($j)
+    {
+        $o = $this->__offset(48);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTHROTTLE_HISTORYLength()
+    {
+        $o = $this->__offset(48);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Result: theoretical minimum Jacobi-energy delta-v, km/s (MinEnergy).
+    /**
+     * @return double
+     */
+    public function getMIN_ENERGY_DELTA_V_KM_S()
+    {
+        $o = $this->__offset(50);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function starttbpTransfer(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(12);
+        $builder->StartObject(24);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return tbpTransfer
      */
-    public static function createtbpTransfer(FlatBufferBuilder $builder, $KIND, $PARKING_ALTITUDE_KM, $TARGET_ALTITUDE_KM, $INCLINATION_DEG, $TARGET_ORBIT, $MAX_ITERATIONS, $TOLERANCE, $CONVERGED, $BURNS, $TOTAL_DELTA_V_KM_S, $TIME_OF_FLIGHT_S, $TRAJECTORY)
+    public static function createtbpTransfer(FlatBufferBuilder $builder, $KIND, $PARKING_ALTITUDE_KM, $TARGET_ALTITUDE_KM, $INCLINATION_DEG, $TARGET_ORBIT, $MAX_ITERATIONS, $TOLERANCE, $CONVERGED, $BURNS, $TOTAL_DELTA_V_KM_S, $TIME_OF_FLIGHT_S, $TRAJECTORY, $INITIAL_STATE, $FINAL_STATE, $RETROGRADE, $REFERENCE_PRIMARY, $MAX_THRUST_N, $SPECIFIC_IMPULSE_S, $INITIAL_MASS_KG, $FINAL_MASS_KG, $PROPELLANT_MASS_KG, $INITIAL_COSTATES, $THROTTLE_HISTORY, $MIN_ENERGY_DELTA_V_KM_S)
     {
-        $builder->startObject(12);
+        $builder->startObject(24);
         self::addKIND($builder, $KIND);
         self::addPARKING_ALTITUDE_KM($builder, $PARKING_ALTITUDE_KM);
         self::addTARGET_ALTITUDE_KM($builder, $TARGET_ALTITUDE_KM);
@@ -193,6 +329,18 @@ class tbpTransfer extends Table
         self::addTOTAL_DELTA_V_KM_S($builder, $TOTAL_DELTA_V_KM_S);
         self::addTIME_OF_FLIGHT_S($builder, $TIME_OF_FLIGHT_S);
         self::addTRAJECTORY($builder, $TRAJECTORY);
+        self::addINITIAL_STATE($builder, $INITIAL_STATE);
+        self::addFINAL_STATE($builder, $FINAL_STATE);
+        self::addRETROGRADE($builder, $RETROGRADE);
+        self::addREFERENCE_PRIMARY($builder, $REFERENCE_PRIMARY);
+        self::addMAX_THRUST_N($builder, $MAX_THRUST_N);
+        self::addSPECIFIC_IMPULSE_S($builder, $SPECIFIC_IMPULSE_S);
+        self::addINITIAL_MASS_KG($builder, $INITIAL_MASS_KG);
+        self::addFINAL_MASS_KG($builder, $FINAL_MASS_KG);
+        self::addPROPELLANT_MASS_KG($builder, $PROPELLANT_MASS_KG);
+        self::addINITIAL_COSTATES($builder, $INITIAL_COSTATES);
+        self::addTHROTTLE_HISTORY($builder, $THROTTLE_HISTORY);
+        self::addMIN_ENERGY_DELTA_V_KM_S($builder, $MIN_ENERGY_DELTA_V_KM_S);
         $o = $builder->endObject();
         return $o;
     }
@@ -339,6 +487,174 @@ class tbpTransfer extends Table
     public static function addTRAJECTORY(FlatBufferBuilder $builder, $TRAJECTORY)
     {
         $builder->addOffsetX(11, $TRAJECTORY, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addINITIAL_STATE(FlatBufferBuilder $builder, $INITIAL_STATE)
+    {
+        $builder->addOffsetX(12, $INITIAL_STATE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addFINAL_STATE(FlatBufferBuilder $builder, $FINAL_STATE)
+    {
+        $builder->addOffsetX(13, $FINAL_STATE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addRETROGRADE(FlatBufferBuilder $builder, $RETROGRADE)
+    {
+        $builder->addBoolX(14, $RETROGRADE, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addREFERENCE_PRIMARY(FlatBufferBuilder $builder, $REFERENCE_PRIMARY)
+    {
+        $builder->addByteX(15, $REFERENCE_PRIMARY, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addMAX_THRUST_N(FlatBufferBuilder $builder, $MAX_THRUST_N)
+    {
+        $builder->addDoubleX(16, $MAX_THRUST_N, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addSPECIFIC_IMPULSE_S(FlatBufferBuilder $builder, $SPECIFIC_IMPULSE_S)
+    {
+        $builder->addDoubleX(17, $SPECIFIC_IMPULSE_S, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addINITIAL_MASS_KG(FlatBufferBuilder $builder, $INITIAL_MASS_KG)
+    {
+        $builder->addDoubleX(18, $INITIAL_MASS_KG, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addFINAL_MASS_KG(FlatBufferBuilder $builder, $FINAL_MASS_KG)
+    {
+        $builder->addDoubleX(19, $FINAL_MASS_KG, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addPROPELLANT_MASS_KG(FlatBufferBuilder $builder, $PROPELLANT_MASS_KG)
+    {
+        $builder->addDoubleX(20, $PROPELLANT_MASS_KG, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addINITIAL_COSTATES(FlatBufferBuilder $builder, $INITIAL_COSTATES)
+    {
+        $builder->addOffsetX(21, $INITIAL_COSTATES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createINITIAL_COSTATESVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startINITIAL_COSTATESVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addTHROTTLE_HISTORY(FlatBufferBuilder $builder, $THROTTLE_HISTORY)
+    {
+        $builder->addOffsetX(22, $THROTTLE_HISTORY, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createTHROTTLE_HISTORYVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startTHROTTLE_HISTORYVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addMIN_ENERGY_DELTA_V_KM_S(FlatBufferBuilder $builder, $MIN_ENERGY_DELTA_V_KM_S)
+    {
+        $builder->addDoubleX(23, $MIN_ENERGY_DELTA_V_KM_S, 0.0);
     }
 
     /**
