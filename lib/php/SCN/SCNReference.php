@@ -319,22 +319,39 @@ class SCNReference extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// Optional display color token (for example "#ff9f0a") for this reference.
+    public function getCOLOR()
+    {
+        $o = $this->__offset(56);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// True when the 1-sigma covariance ellipsoid is shown on this reference.
+    /**
+     * @return bool
+     */
+    public function getSHOW_COVARIANCE()
+    {
+        $o = $this->__offset(58);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startSCNReference(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(26);
+        $builder->StartObject(28);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return SCNReference
      */
-    public static function createSCNReference(FlatBufferBuilder $builder, $REFERENCE_ID, $NAME, $REFERENCE_KIND, $REMOVE, $NORAD_CAT_ID, $OBJECT_ID, $COUNTRY, $OWNER, $SOURCES, $DATA_MODES, $MEAN_ELEMENTS, $STATE_VECTORS, $MANEUVERS, $SITE, $SENSOR, $SENSOR_SYSTEM_ID, $SENSOR_ID, $SITE_POSITION, $VARIABLE_SATELLITE_ID, $VARIABLE_SITE_ID, $POINTS, $VIEW_CONE, $SUN_ADVANTAGE_TARGET, $EXCLUSION_ZONE, $OBSERVATION_EO, $OBSERVATION_RADAR)
+    public static function createSCNReference(FlatBufferBuilder $builder, $REFERENCE_ID, $NAME, $REFERENCE_KIND, $REMOVE, $NORAD_CAT_ID, $OBJECT_ID, $COUNTRY, $OWNER, $SOURCES, $DATA_MODES, $MEAN_ELEMENTS, $STATE_VECTORS, $MANEUVERS, $SITE, $SENSOR, $SENSOR_SYSTEM_ID, $SENSOR_ID, $SITE_POSITION, $VARIABLE_SATELLITE_ID, $VARIABLE_SITE_ID, $POINTS, $VIEW_CONE, $SUN_ADVANTAGE_TARGET, $EXCLUSION_ZONE, $OBSERVATION_EO, $OBSERVATION_RADAR, $COLOR, $SHOW_COVARIANCE)
     {
-        $builder->startObject(26);
+        $builder->startObject(28);
         self::addREFERENCE_ID($builder, $REFERENCE_ID);
         self::addNAME($builder, $NAME);
         self::addREFERENCE_KIND($builder, $REFERENCE_KIND);
@@ -361,6 +378,8 @@ class SCNReference extends Table
         self::addEXCLUSION_ZONE($builder, $EXCLUSION_ZONE);
         self::addOBSERVATION_EO($builder, $OBSERVATION_EO);
         self::addOBSERVATION_RADAR($builder, $OBSERVATION_RADAR);
+        self::addCOLOR($builder, $COLOR);
+        self::addSHOW_COVARIANCE($builder, $SHOW_COVARIANCE);
         $o = $builder->endObject();
         return $o;
     }
@@ -767,6 +786,26 @@ class SCNReference extends Table
     public static function addOBSERVATION_RADAR(FlatBufferBuilder $builder, $OBSERVATION_RADAR)
     {
         $builder->addOffsetX(25, $OBSERVATION_RADAR, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCOLOR(FlatBufferBuilder $builder, $COLOR)
+    {
+        $builder->addOffsetX(26, $COLOR, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addSHOW_COVARIANCE(FlatBufferBuilder $builder, $SHOW_COVARIANCE)
+    {
+        $builder->addBoolX(27, $SHOW_COVARIANCE, false);
     }
 
     /**

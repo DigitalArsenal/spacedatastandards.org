@@ -165,6 +165,14 @@
       "type" : "string",
       "enum": ["UNKNOWN", "SATELLITE", "GROUND_SITE", "SENSOR", "VARIABLE_SATELLITE", "VARIABLE_SITE", "POINT_OF_INTEREST", "EXCLUSION_ZONE", "OBSERVATION", "GROUP", "AREA_OF_INTEREST"]
     },
+    "scnRicCoordinates" : {
+      "type" : "string",
+      "enum": ["CURVILINEAR", "RECTILINEAR"]
+    },
+    "scnGlobeDisplay" : {
+      "type" : "string",
+      "enum": ["SOLID", "WIREFRAME", "HIDDEN"]
+    },
     "scenarioActionCode" : {
       "type" : "string",
       "enum": ["NONE", "CLEAR", "RESET"]
@@ -3112,6 +3120,65 @@
       },
       "additionalProperties" : false
     },
+    "SCNRicBox" : {
+      "type" : "object",
+      "description" : "Relative-motion RIC box and RPO time-lapse settings kept with a scenario.",
+      "properties" : {
+        "CENTER_ID" : {
+                "type" : "string",
+                "description" : "Reference id of the center (target) object."
+              },
+        "MEMBER_IDS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Reference ids of the member (chaser / companion) objects inside the box."
+              },
+        "HALF_RADIAL_M" : {
+                "type" : "number",
+                "description" : "Half-size along the radial axis in meters (0 means auto-fit)."
+              },
+        "HALF_IN_TRACK_M" : {
+                "type" : "number",
+                "description" : "Half-size along the in-track axis in meters (0 means auto-fit)."
+              },
+        "HALF_CROSS_TRACK_M" : {
+                "type" : "number",
+                "description" : "Half-size along the cross-track axis in meters (0 means auto-fit)."
+              },
+        "COORDINATES" : {
+                "$ref" : "#/definitions/scnRicCoordinates",
+                "description" : "Coordinate convention (curvilinear along the orbit, or rectilinear)."
+              },
+        "RELATIVE_ORBITS" : {
+                "type" : "boolean",
+                "description" : "True when member orbits are drawn relative to the center object."
+              },
+        "GLOBE_DISPLAY" : {
+                "$ref" : "#/definitions/scnGlobeDisplay",
+                "description" : "Globe display mode while the RIC box is shown."
+              },
+        "SHOW_COVARIANCE" : {
+                "type" : "boolean",
+                "description" : "True when 1-sigma wireframe covariance ellipsoids are shown on boxed objects."
+              },
+        "DIVISIONS" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Grid divisions per side (0 uses viewer default)."
+              },
+        "RPO_TRAIL_SECONDS" : {
+                "type" : "number",
+                "description" : "RPO time-lapse trail duration in seconds (0 uses viewer default)."
+              },
+        "RPO_CHASER_IDS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Reference ids of chasers flying historical RPO trajectories in this RIC box."
+              },
+        "SHOW_BOX" : {
+                "type" : "boolean",
+                "description" : "True when the RIC box itself is visible."
+              }
+      },
+      "additionalProperties" : false
+    },
     "SCNPointOfInterest" : {
       "type" : "object",
       "description" : "Time-tagged point or annotation shown in a scenario.",
@@ -3339,6 +3406,14 @@
         "OBSERVATION_RADAR" : {
                 "$ref" : "#/definitions/RDO",
                 "description" : "Radar observation record associated with this reference."
+              },
+        "COLOR" : {
+                "type" : "string",
+                "description" : "Optional display color token (for example \"#ff9f0a\") for this reference."
+              },
+        "SHOW_COVARIANCE" : {
+                "type" : "boolean",
+                "description" : "True when the 1-sigma covariance ellipsoid is shown on this reference."
               }
       },
       "additionalProperties" : false
@@ -3515,6 +3590,10 @@
         "SIGNATURE" : {
                 "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
                 "description" : "Ed25519 signature, 64 bytes, by the first signing key of the $EPM in the\nenclosing $REC, over the five bytes \"$SCN\" and 0x00, followed by the\nenclosing $REC's bytes (without a size prefix) with these 64 bytes set to\nzero. The record's CID is computed over the signed bytes."
+              },
+        "RIC_BOX" : {
+                "$ref" : "#/definitions/SCNRicBox",
+                "description" : "Relative-motion RIC box and multi-chaser RPO view settings, when active."
               }
       },
       "additionalProperties" : false

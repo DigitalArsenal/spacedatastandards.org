@@ -129,6 +129,8 @@ public struct SCN : IFlatbufferObject
   public ArraySegment<byte>? GetSIGNATUREBytes() { return __p.__vector_as_arraysegment(42); }
 #endif
   public byte[] GetSIGNATUREArray() { return __p.__vector_as_array<byte>(42); }
+  /// Relative-motion RIC box and multi-chaser RPO view settings, when active.
+  public SCNRicBox? RIC_BOX { get { int o = __p.__offset(44); return o != 0 ? (SCNRicBox?)(new SCNRicBox()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<SCN> CreateSCN(FlatBufferBuilder builder,
       StringOffset SCENARIO_IDOffset = default(StringOffset),
@@ -150,9 +152,11 @@ public struct SCN : IFlatbufferObject
       StringOffset WINDOW_STOPOffset = default(StringOffset),
       StringOffset PROPAGATOR_MODULE_IDOffset = default(StringOffset),
       VectorOffset PINNED_ROWSOffset = default(VectorOffset),
-      VectorOffset SIGNATUREOffset = default(VectorOffset)) {
-    builder.StartTable(20);
+      VectorOffset SIGNATUREOffset = default(VectorOffset),
+      Offset<SCNRicBox> RIC_BOXOffset = default(Offset<SCNRicBox>)) {
+    builder.StartTable(21);
     SCN.AddSIM_SPEED(builder, SIM_SPEED);
+    SCN.AddRIC_BOX(builder, RIC_BOXOffset);
     SCN.AddSIGNATURE(builder, SIGNATUREOffset);
     SCN.AddPINNED_ROWS(builder, PINNED_ROWSOffset);
     SCN.AddPROPAGATOR_MODULE_ID(builder, PROPAGATOR_MODULE_IDOffset);
@@ -175,7 +179,7 @@ public struct SCN : IFlatbufferObject
     return SCN.EndSCN(builder);
   }
 
-  public static void StartSCN(FlatBufferBuilder builder) { builder.StartTable(20); }
+  public static void StartSCN(FlatBufferBuilder builder) { builder.StartTable(21); }
   public static void AddSCENARIO_ID(FlatBufferBuilder builder, StringOffset SCENARIO_IDOffset) { builder.AddOffset(0, SCENARIO_IDOffset.Value, 0); }
   public static void AddREFERENCES(FlatBufferBuilder builder, VectorOffset REFERENCESOffset) { builder.AddOffset(1, REFERENCESOffset.Value, 0); }
   public static VectorOffset CreateREFERENCESVector(FlatBufferBuilder builder, Offset<SCNReference>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
@@ -211,6 +215,7 @@ public struct SCN : IFlatbufferObject
   public static VectorOffset CreateSIGNATUREVectorBlock(FlatBufferBuilder builder, ArraySegment<byte> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateSIGNATUREVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<byte>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartSIGNATUREVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
+  public static void AddRIC_BOX(FlatBufferBuilder builder, Offset<SCNRicBox> RIC_BOXOffset) { builder.AddOffset(20, RIC_BOXOffset.Value, 0); }
   public static Offset<SCN> EndSCN(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<SCN>(o);
@@ -246,6 +251,7 @@ public struct SCN : IFlatbufferObject
     for (var _j = 0; _j < this.PINNED_ROWSLength; ++_j) {_o.PINNED_ROWS.Add(this.PINNED_ROWS(_j).HasValue ? this.PINNED_ROWS(_j).Value.UnPack() : null);}
     _o.SIGNATURE = new List<byte>();
     for (var _j = 0; _j < this.SIGNATURELength; ++_j) {_o.SIGNATURE.Add(this.SIGNATURE(_j));}
+    _o.RIC_BOX = this.RIC_BOX.HasValue ? this.RIC_BOX.Value.UnPack() : null;
   }
   public static Offset<SCN> Pack(FlatBufferBuilder builder, SCNT _o) {
     if (_o == null) return default(Offset<SCN>);
@@ -278,6 +284,7 @@ public struct SCN : IFlatbufferObject
       var __SIGNATURE = _o.SIGNATURE.ToArray();
       _SIGNATURE = CreateSIGNATUREVector(builder, __SIGNATURE);
     }
+    var _RIC_BOX = _o.RIC_BOX == null ? default(Offset<SCNRicBox>) : SCNRicBox.Pack(builder, _o.RIC_BOX);
     return CreateSCN(
       builder,
       _SCENARIO_ID,
@@ -299,7 +306,8 @@ public struct SCN : IFlatbufferObject
       _WINDOW_STOP,
       _PROPAGATOR_MODULE_ID,
       _PINNED_ROWS,
-      _SIGNATURE);
+      _SIGNATURE,
+      _RIC_BOX);
   }
 }
 
@@ -325,6 +333,7 @@ public class SCNT
   public string PROPAGATOR_MODULE_ID { get; set; }
   public List<SCNPinnedRowT> PINNED_ROWS { get; set; }
   public List<byte> SIGNATURE { get; set; }
+  public SCNRicBoxT RIC_BOX { get; set; }
 
   public SCNT() {
     this.SCENARIO_ID = null;
@@ -347,6 +356,7 @@ public class SCNT
     this.PROPAGATOR_MODULE_ID = null;
     this.PINNED_ROWS = null;
     this.SIGNATURE = null;
+    this.RIC_BOX = null;
   }
   public static SCNT DeserializeFromBinary(byte[] fbBuffer) {
     return SCN.GetRootAsSCN(new ByteBuffer(fbBuffer)).UnPack();
@@ -384,6 +394,7 @@ static public class SCNVerify
       && verifier.VerifyString(tablePos, 38 /*PROPAGATOR_MODULE_ID*/, false)
       && verifier.VerifyVectorOfTables(tablePos, 40 /*PINNED_ROWS*/, SCNPinnedRowVerify.Verify, false)
       && verifier.VerifyVectorOfData(tablePos, 42 /*SIGNATURE*/, 1 /*byte*/, false)
+      && verifier.VerifyTable(tablePos, 44 /*RIC_BOX*/, SCNRicBoxVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

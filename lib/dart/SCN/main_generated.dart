@@ -76,6 +76,78 @@ class _scenarioReferenceKindReader extends fb.Reader<scenarioReferenceKind> {
       scenarioReferenceKind.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
+///  Coordinate convention for a relative-motion RIC box.
+enum scnRicCoordinates {
+  CURVILINEAR(0),
+  RECTILINEAR(1);
+
+  final int value;
+  const scnRicCoordinates(this.value);
+
+  factory scnRicCoordinates.fromValue(int value) {
+    switch (value) {
+      case 0: return scnRicCoordinates.CURVILINEAR;
+      case 1: return scnRicCoordinates.RECTILINEAR;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static scnRicCoordinates? _createOrNull(int? value) =>
+      value == null ? null : scnRicCoordinates.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 1;
+  static const fb.Reader<scnRicCoordinates> reader = _scnRicCoordinatesReader();
+}
+
+class _scnRicCoordinatesReader extends fb.Reader<scnRicCoordinates> {
+  const _scnRicCoordinatesReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  scnRicCoordinates read(fb.BufferContext bc, int offset) =>
+      scnRicCoordinates.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Central-body globe display mode while a RIC box is shown.
+enum scnGlobeDisplay {
+  SOLID(0),
+  WIREFRAME(1),
+  HIDDEN(2);
+
+  final int value;
+  const scnGlobeDisplay(this.value);
+
+  factory scnGlobeDisplay.fromValue(int value) {
+    switch (value) {
+      case 0: return scnGlobeDisplay.SOLID;
+      case 1: return scnGlobeDisplay.WIREFRAME;
+      case 2: return scnGlobeDisplay.HIDDEN;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static scnGlobeDisplay? _createOrNull(int? value) =>
+      value == null ? null : scnGlobeDisplay.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static const fb.Reader<scnGlobeDisplay> reader = _scnGlobeDisplayReader();
+}
+
+class _scnGlobeDisplayReader extends fb.Reader<scnGlobeDisplay> {
+  const _scnGlobeDisplayReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  scnGlobeDisplay read(fb.BufferContext bc, int offset) =>
+      scnGlobeDisplay.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
 ///  Scenario command action.
 enum scenarioActionCode {
   NONE(0),
@@ -113,6 +185,227 @@ class _scenarioActionCodeReader extends fb.Reader<scenarioActionCode> {
       scenarioActionCode.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
+///  Relative-motion RIC box and RPO time-lapse settings kept with a scenario.
+class SCNRicBox {
+  SCNRicBox._(this._bc, this._bcOffset);
+  factory SCNRicBox(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<SCNRicBox> reader = _SCNRicBoxReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Reference id of the center (target) object.
+  String? get CENTER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get centerId => CENTER_ID;
+  ///  Reference ids of the member (chaser / companion) objects inside the box.
+  List<String>? get MEMBER_IDS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 6);
+  List<String>? get memberIds => MEMBER_IDS;
+  ///  Half-size along the radial axis in meters (0 means auto-fit).
+  double get HALF_RADIAL_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  double get halfRadialM => HALF_RADIAL_M;
+  ///  Half-size along the in-track axis in meters (0 means auto-fit).
+  double get HALF_IN_TRACK_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get halfInTrackM => HALF_IN_TRACK_M;
+  ///  Half-size along the cross-track axis in meters (0 means auto-fit).
+  double get HALF_CROSS_TRACK_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get halfCrossTrackM => HALF_CROSS_TRACK_M;
+  ///  Coordinate convention (curvilinear along the orbit, or rectilinear).
+  scnRicCoordinates get COORDINATES => scnRicCoordinates.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 14, 0));
+  ///  True when member orbits are drawn relative to the center object.
+  bool get RELATIVE_ORBITS => const fb.BoolReader().vTableGet(_bc, _bcOffset, 16, true);
+  bool get relativeOrbits => RELATIVE_ORBITS;
+  ///  Globe display mode while the RIC box is shown.
+  scnGlobeDisplay get GLOBE_DISPLAY => scnGlobeDisplay.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 18, 0));
+  scnGlobeDisplay get globeDisplay => GLOBE_DISPLAY;
+  ///  True when 1-sigma wireframe covariance ellipsoids are shown on boxed objects.
+  bool get SHOW_COVARIANCE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 20, false);
+  bool get showCovariance => SHOW_COVARIANCE;
+  ///  Grid divisions per side (0 uses viewer default).
+  int get DIVISIONS => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 22, 4);
+  ///  RPO time-lapse trail duration in seconds (0 uses viewer default).
+  double get RPO_TRAIL_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  double get rpoTrailSeconds => RPO_TRAIL_SECONDS;
+  ///  Reference ids of chasers flying historical RPO trajectories in this RIC box.
+  List<String>? get RPO_CHASER_IDS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 26);
+  List<String>? get rpoChaserIds => RPO_CHASER_IDS;
+  ///  True when the RIC box itself is visible.
+  bool get SHOW_BOX => const fb.BoolReader().vTableGet(_bc, _bcOffset, 28, true);
+  bool get showBox => SHOW_BOX;
+
+  @override
+  String toString() {
+    return 'SCNRicBox{centerId: ${centerId}, memberIds: ${memberIds}, halfRadialM: ${halfRadialM}, halfInTrackM: ${halfInTrackM}, halfCrossTrackM: ${halfCrossTrackM}, COORDINATES: ${COORDINATES}, relativeOrbits: ${relativeOrbits}, globeDisplay: ${globeDisplay}, showCovariance: ${showCovariance}, DIVISIONS: ${DIVISIONS}, rpoTrailSeconds: ${rpoTrailSeconds}, rpoChaserIds: ${rpoChaserIds}, showBox: ${showBox}}';
+  }
+}
+
+class _SCNRicBoxReader extends fb.TableReader<SCNRicBox> {
+  const _SCNRicBoxReader();
+
+  @override
+  SCNRicBox createObject(fb.BufferContext bc, int offset) =>
+    SCNRicBox._(bc, offset);
+}
+
+class SCNRicBoxBuilder {
+  SCNRicBoxBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(13);
+  }
+
+  int addCenterIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addMemberIdsOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addHalfRadialM(double? HALF_RADIAL_M) {
+    fbBuilder.addFloat64(2, HALF_RADIAL_M);
+    return fbBuilder.offset;
+  }
+  int addHalfInTrackM(double? HALF_IN_TRACK_M) {
+    fbBuilder.addFloat64(3, HALF_IN_TRACK_M);
+    return fbBuilder.offset;
+  }
+  int addHalfCrossTrackM(double? HALF_CROSS_TRACK_M) {
+    fbBuilder.addFloat64(4, HALF_CROSS_TRACK_M);
+    return fbBuilder.offset;
+  }
+  int addCoordinates(scnRicCoordinates? COORDINATES) {
+    fbBuilder.addInt8(5, COORDINATES?.value);
+    return fbBuilder.offset;
+  }
+  int addRelativeOrbits(bool? RELATIVE_ORBITS) {
+    fbBuilder.addBool(6, RELATIVE_ORBITS);
+    return fbBuilder.offset;
+  }
+  int addGlobeDisplay(scnGlobeDisplay? GLOBE_DISPLAY) {
+    fbBuilder.addInt8(7, GLOBE_DISPLAY?.value);
+    return fbBuilder.offset;
+  }
+  int addShowCovariance(bool? SHOW_COVARIANCE) {
+    fbBuilder.addBool(8, SHOW_COVARIANCE);
+    return fbBuilder.offset;
+  }
+  int addDivisions(int? DIVISIONS) {
+    fbBuilder.addUint8(9, DIVISIONS);
+    return fbBuilder.offset;
+  }
+  int addRpoTrailSeconds(double? RPO_TRAIL_SECONDS) {
+    fbBuilder.addFloat64(10, RPO_TRAIL_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addRpoChaserIdsOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addShowBox(bool? SHOW_BOX) {
+    fbBuilder.addBool(12, SHOW_BOX);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class SCNRicBoxObjectBuilder extends fb.ObjectBuilder {
+  final String? _CENTER_ID;
+  final List<String>? _MEMBER_IDS;
+  final double? _HALF_RADIAL_M;
+  final double? _HALF_IN_TRACK_M;
+  final double? _HALF_CROSS_TRACK_M;
+  final scnRicCoordinates? _COORDINATES;
+  final bool? _RELATIVE_ORBITS;
+  final scnGlobeDisplay? _GLOBE_DISPLAY;
+  final bool? _SHOW_COVARIANCE;
+  final int? _DIVISIONS;
+  final double? _RPO_TRAIL_SECONDS;
+  final List<String>? _RPO_CHASER_IDS;
+  final bool? _SHOW_BOX;
+
+  SCNRicBoxObjectBuilder({
+    String? CENTER_ID,
+    String? centerId,
+    List<String>? MEMBER_IDS,
+    List<String>? memberIds,
+    double? HALF_RADIAL_M,
+    double? halfRadialM,
+    double? HALF_IN_TRACK_M,
+    double? halfInTrackM,
+    double? HALF_CROSS_TRACK_M,
+    double? halfCrossTrackM,
+    scnRicCoordinates? COORDINATES,
+    bool? RELATIVE_ORBITS,
+    bool? relativeOrbits,
+    scnGlobeDisplay? GLOBE_DISPLAY,
+    scnGlobeDisplay? globeDisplay,
+    bool? SHOW_COVARIANCE,
+    bool? showCovariance,
+    int? DIVISIONS,
+    double? RPO_TRAIL_SECONDS,
+    double? rpoTrailSeconds,
+    List<String>? RPO_CHASER_IDS,
+    List<String>? rpoChaserIds,
+    bool? SHOW_BOX,
+    bool? showBox,
+  })
+      : _CENTER_ID = centerId ?? CENTER_ID,
+        _MEMBER_IDS = memberIds ?? MEMBER_IDS,
+        _HALF_RADIAL_M = halfRadialM ?? HALF_RADIAL_M,
+        _HALF_IN_TRACK_M = halfInTrackM ?? HALF_IN_TRACK_M,
+        _HALF_CROSS_TRACK_M = halfCrossTrackM ?? HALF_CROSS_TRACK_M,
+        _COORDINATES = COORDINATES,
+        _RELATIVE_ORBITS = relativeOrbits ?? RELATIVE_ORBITS,
+        _GLOBE_DISPLAY = globeDisplay ?? GLOBE_DISPLAY,
+        _SHOW_COVARIANCE = showCovariance ?? SHOW_COVARIANCE,
+        _DIVISIONS = DIVISIONS,
+        _RPO_TRAIL_SECONDS = rpoTrailSeconds ?? RPO_TRAIL_SECONDS,
+        _RPO_CHASER_IDS = rpoChaserIds ?? RPO_CHASER_IDS,
+        _SHOW_BOX = showBox ?? SHOW_BOX;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? CENTER_IDOffset = _CENTER_ID == null ? null
+        : fbBuilder.writeString(_CENTER_ID!);
+    final int? MEMBER_IDSOffset = _MEMBER_IDS == null ? null
+        : fbBuilder.writeList(_MEMBER_IDS!.map(fbBuilder.writeString).toList());
+    final int? RPO_CHASER_IDSOffset = _RPO_CHASER_IDS == null ? null
+        : fbBuilder.writeList(_RPO_CHASER_IDS!.map(fbBuilder.writeString).toList());
+    fbBuilder.startTable(13);
+    fbBuilder.addOffset(0, CENTER_IDOffset);
+    fbBuilder.addOffset(1, MEMBER_IDSOffset);
+    fbBuilder.addFloat64(2, _HALF_RADIAL_M);
+    fbBuilder.addFloat64(3, _HALF_IN_TRACK_M);
+    fbBuilder.addFloat64(4, _HALF_CROSS_TRACK_M);
+    fbBuilder.addInt8(5, _COORDINATES?.value);
+    fbBuilder.addBool(6, _RELATIVE_ORBITS);
+    fbBuilder.addInt8(7, _GLOBE_DISPLAY?.value);
+    fbBuilder.addBool(8, _SHOW_COVARIANCE);
+    fbBuilder.addUint8(9, _DIVISIONS);
+    fbBuilder.addFloat64(10, _RPO_TRAIL_SECONDS);
+    fbBuilder.addOffset(11, RPO_CHASER_IDSOffset);
+    fbBuilder.addBool(12, _SHOW_BOX);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
 ///  Time-tagged point or annotation shown in a scenario.
 class SCNPointOfInterest {
   SCNPointOfInterest._(this._bc, this._bcOffset);
@@ -733,10 +1026,15 @@ class SCNReference {
   ///  Radar observation record associated with this reference.
   RDO? get OBSERVATION_RADAR => RDO.reader.vTableGetNullable(_bc, _bcOffset, 54);
   RDO? get observationRadar => OBSERVATION_RADAR;
+  ///  Optional display color token (for example "#ff9f0a") for this reference.
+  String? get COLOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 56);
+  ///  True when the 1-sigma covariance ellipsoid is shown on this reference.
+  bool get SHOW_COVARIANCE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 58, false);
+  bool get showCovariance => SHOW_COVARIANCE;
 
   @override
   String toString() {
-    return 'SCNReference{referenceId: ${referenceId}, NAME: ${NAME}, referenceKind: ${referenceKind}, REMOVE: ${REMOVE}, noradCatId: ${noradCatId}, objectId: ${objectId}, COUNTRY: ${COUNTRY}, OWNER: ${OWNER}, SOURCES: ${SOURCES}, dataModes: ${dataModes}, meanElements: ${meanElements}, stateVectors: ${stateVectors}, MANEUVERS: ${MANEUVERS}, SITE: ${SITE}, SENSOR: ${SENSOR}, sensorSystemId: ${sensorSystemId}, sensorId: ${sensorId}, sitePosition: ${sitePosition}, variableSatelliteId: ${variableSatelliteId}, variableSiteId: ${variableSiteId}, POINTS: ${POINTS}, viewCone: ${viewCone}, sunAdvantageTarget: ${sunAdvantageTarget}, exclusionZone: ${exclusionZone}, observationEo: ${observationEo}, observationRadar: ${observationRadar}}';
+    return 'SCNReference{referenceId: ${referenceId}, NAME: ${NAME}, referenceKind: ${referenceKind}, REMOVE: ${REMOVE}, noradCatId: ${noradCatId}, objectId: ${objectId}, COUNTRY: ${COUNTRY}, OWNER: ${OWNER}, SOURCES: ${SOURCES}, dataModes: ${dataModes}, meanElements: ${meanElements}, stateVectors: ${stateVectors}, MANEUVERS: ${MANEUVERS}, SITE: ${SITE}, SENSOR: ${SENSOR}, sensorSystemId: ${sensorSystemId}, sensorId: ${sensorId}, sitePosition: ${sitePosition}, variableSatelliteId: ${variableSatelliteId}, variableSiteId: ${variableSiteId}, POINTS: ${POINTS}, viewCone: ${viewCone}, sunAdvantageTarget: ${sunAdvantageTarget}, exclusionZone: ${exclusionZone}, observationEo: ${observationEo}, observationRadar: ${observationRadar}, COLOR: ${COLOR}, showCovariance: ${showCovariance}}';
   }
 }
 
@@ -754,7 +1052,7 @@ class SCNReferenceBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(26);
+    fbBuilder.startTable(28);
   }
 
   int addReferenceIdOffset(int? offset) {
@@ -861,6 +1159,14 @@ class SCNReferenceBuilder {
     fbBuilder.addOffset(25, offset);
     return fbBuilder.offset;
   }
+  int addColorOffset(int? offset) {
+    fbBuilder.addOffset(26, offset);
+    return fbBuilder.offset;
+  }
+  int addShowCovariance(bool? SHOW_COVARIANCE) {
+    fbBuilder.addBool(27, SHOW_COVARIANCE);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -894,6 +1200,8 @@ class SCNReferenceObjectBuilder extends fb.ObjectBuilder {
   final SCNExclusionZoneObjectBuilder? _EXCLUSION_ZONE;
   final EOOObjectBuilder? _OBSERVATION_EO;
   final RDOObjectBuilder? _OBSERVATION_RADAR;
+  final String? _COLOR;
+  final bool? _SHOW_COVARIANCE;
 
   SCNReferenceObjectBuilder({
     String? REFERENCE_ID,
@@ -939,6 +1247,9 @@ class SCNReferenceObjectBuilder extends fb.ObjectBuilder {
     EOOObjectBuilder? observationEo,
     RDOObjectBuilder? OBSERVATION_RADAR,
     RDOObjectBuilder? observationRadar,
+    String? COLOR,
+    bool? SHOW_COVARIANCE,
+    bool? showCovariance,
   })
       : _REFERENCE_ID = referenceId ?? REFERENCE_ID,
         _NAME = NAME,
@@ -965,7 +1276,9 @@ class SCNReferenceObjectBuilder extends fb.ObjectBuilder {
         _SUN_ADVANTAGE_TARGET = sunAdvantageTarget ?? SUN_ADVANTAGE_TARGET,
         _EXCLUSION_ZONE = exclusionZone ?? EXCLUSION_ZONE,
         _OBSERVATION_EO = observationEo ?? OBSERVATION_EO,
-        _OBSERVATION_RADAR = observationRadar ?? OBSERVATION_RADAR;
+        _OBSERVATION_RADAR = observationRadar ?? OBSERVATION_RADAR,
+        _COLOR = COLOR,
+        _SHOW_COVARIANCE = showCovariance ?? SHOW_COVARIANCE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1008,7 +1321,9 @@ class SCNReferenceObjectBuilder extends fb.ObjectBuilder {
     final int? EXCLUSION_ZONEOffset = _EXCLUSION_ZONE?.getOrCreateOffset(fbBuilder);
     final int? OBSERVATION_EOOffset = _OBSERVATION_EO?.getOrCreateOffset(fbBuilder);
     final int? OBSERVATION_RADAROffset = _OBSERVATION_RADAR?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(26);
+    final int? COLOROffset = _COLOR == null ? null
+        : fbBuilder.writeString(_COLOR!);
+    fbBuilder.startTable(28);
     fbBuilder.addOffset(0, REFERENCE_IDOffset);
     fbBuilder.addOffset(1, NAMEOffset);
     fbBuilder.addInt8(2, _REFERENCE_KIND?.value);
@@ -1035,6 +1350,8 @@ class SCNReferenceObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(23, EXCLUSION_ZONEOffset);
     fbBuilder.addOffset(24, OBSERVATION_EOOffset);
     fbBuilder.addOffset(25, OBSERVATION_RADAROffset);
+    fbBuilder.addOffset(26, COLOROffset);
+    fbBuilder.addBool(27, _SHOW_COVARIANCE);
     return fbBuilder.endTable();
   }
 
@@ -1552,10 +1869,13 @@ class SCN {
   ///  enclosing $REC's bytes (without a size prefix) with these 64 bytes set to
   ///  zero. The record's CID is computed over the signed bytes.
   List<int>? get SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 42);
+  ///  Relative-motion RIC box and multi-chaser RPO view settings, when active.
+  SCNRicBox? get RIC_BOX => SCNRicBox.reader.vTableGetNullable(_bc, _bcOffset, 44);
+  SCNRicBox? get ricBox => RIC_BOX;
 
   @override
   String toString() {
-    return 'SCN{scenarioId: ${scenarioId}, REFERENCES: ${REFERENCES}, EVENT: ${EVENT}, focusedReferenceIndex: ${focusedReferenceIndex}, focusedReferenceId: ${focusedReferenceId}, EPOCH: ${EPOCH}, simSpeed: ${simSpeed}, useBodyFixedFrame: ${useBodyFixedFrame}, referenceFrame: ${referenceFrame}, ACTION: ${ACTION}, viewState: ${viewState}, assetsChanged: ${assetsChanged}, startEpoch: ${startEpoch}, stopEpoch: ${stopEpoch}, ANIMATING: ${ANIMATING}, windowStart: ${windowStart}, windowStop: ${windowStop}, propagatorModuleId: ${propagatorModuleId}, pinnedRows: ${pinnedRows}, SIGNATURE: ${SIGNATURE}}';
+    return 'SCN{scenarioId: ${scenarioId}, REFERENCES: ${REFERENCES}, EVENT: ${EVENT}, focusedReferenceIndex: ${focusedReferenceIndex}, focusedReferenceId: ${focusedReferenceId}, EPOCH: ${EPOCH}, simSpeed: ${simSpeed}, useBodyFixedFrame: ${useBodyFixedFrame}, referenceFrame: ${referenceFrame}, ACTION: ${ACTION}, viewState: ${viewState}, assetsChanged: ${assetsChanged}, startEpoch: ${startEpoch}, stopEpoch: ${stopEpoch}, ANIMATING: ${ANIMATING}, windowStart: ${windowStart}, windowStop: ${windowStop}, propagatorModuleId: ${propagatorModuleId}, pinnedRows: ${pinnedRows}, SIGNATURE: ${SIGNATURE}, ricBox: ${ricBox}}';
   }
 }
 
@@ -1573,7 +1893,7 @@ class SCNBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(20);
+    fbBuilder.startTable(21);
   }
 
   int addScenarioIdOffset(int? offset) {
@@ -1656,6 +1976,10 @@ class SCNBuilder {
     fbBuilder.addOffset(19, offset);
     return fbBuilder.offset;
   }
+  int addRicBoxOffset(int? offset) {
+    fbBuilder.addOffset(20, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1683,6 +2007,7 @@ class SCNObjectBuilder extends fb.ObjectBuilder {
   final String? _PROPAGATOR_MODULE_ID;
   final List<SCNPinnedRowObjectBuilder>? _PINNED_ROWS;
   final List<int>? _SIGNATURE;
+  final SCNRicBoxObjectBuilder? _RIC_BOX;
 
   SCNObjectBuilder({
     String? SCENARIO_ID,
@@ -1719,6 +2044,8 @@ class SCNObjectBuilder extends fb.ObjectBuilder {
     List<SCNPinnedRowObjectBuilder>? PINNED_ROWS,
     List<SCNPinnedRowObjectBuilder>? pinnedRows,
     List<int>? SIGNATURE,
+    SCNRicBoxObjectBuilder? RIC_BOX,
+    SCNRicBoxObjectBuilder? ricBox,
   })
       : _SCENARIO_ID = scenarioId ?? SCENARIO_ID,
         _REFERENCES = REFERENCES,
@@ -1739,7 +2066,8 @@ class SCNObjectBuilder extends fb.ObjectBuilder {
         _WINDOW_STOP = windowStop ?? WINDOW_STOP,
         _PROPAGATOR_MODULE_ID = propagatorModuleId ?? PROPAGATOR_MODULE_ID,
         _PINNED_ROWS = pinnedRows ?? PINNED_ROWS,
-        _SIGNATURE = SIGNATURE;
+        _SIGNATURE = SIGNATURE,
+        _RIC_BOX = ricBox ?? RIC_BOX;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1770,7 +2098,8 @@ class SCNObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeList(_PINNED_ROWS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? SIGNATUREOffset = _SIGNATURE == null ? null
         : fbBuilder.writeListUint8(_SIGNATURE!);
-    fbBuilder.startTable(20);
+    final int? RIC_BOXOffset = _RIC_BOX?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(21);
     fbBuilder.addOffset(0, SCENARIO_IDOffset);
     fbBuilder.addOffset(1, REFERENCESOffset);
     fbBuilder.addOffset(2, EVENTOffset);
@@ -1791,6 +2120,7 @@ class SCNObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(17, PROPAGATOR_MODULE_IDOffset);
     fbBuilder.addOffset(18, PINNED_ROWSOffset);
     fbBuilder.addOffset(19, SIGNATUREOffset);
+    fbBuilder.addOffset(20, RIC_BOXOffset);
     return fbBuilder.endTable();
   }
 

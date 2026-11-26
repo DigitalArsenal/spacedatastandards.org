@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.295.0+1795658698734",
+  version: "1.296.0+1795700734282",
   STANDARDS: {
     PCF: {
       IDL: `// Hash: e259db0e1e4887f3ca3d15f7819bd8fbac894d2e251c81328b3c79a61b9e4060
@@ -10658,8 +10658,8 @@ file_identifier "$PUR";`,
       ]
     },
     SCN: {
-      IDL: `// Hash: 091ef0a1caaed12241e4d895843693dfe6fba10886f18bc073bd6abcb3a9d57a
-// Version: 1.136.6
+      IDL: `// Hash: 4f2ffbe7ec6d9766d08b6a0bf9147f86f0f0ee547608cdbd063aede13a7867a2
+// Version: 1.136.7
 // -----------------------------------END_HEADER
 include "../EOO/main.fbs";
 include "../RDO/main.fbs";
@@ -10692,6 +10692,49 @@ enum scenarioReferenceKind : byte {
   /// equals REFERENCE_ID. NAME is its label; COUNTRY is its ISO 3166-1
   /// alpha-2 code when the area is a country.
   AREA_OF_INTEREST
+}
+
+/// Coordinate convention for a relative-motion RIC box.
+enum scnRicCoordinates : byte {
+  CURVILINEAR,
+  RECTILINEAR
+}
+
+/// Central-body globe display mode while a RIC box is shown.
+enum scnGlobeDisplay : byte {
+  SOLID,
+  WIREFRAME,
+  HIDDEN
+}
+
+/// Relative-motion RIC box and RPO time-lapse settings kept with a scenario.
+table SCNRicBox {
+  /// Reference id of the center (target) object.
+  CENTER_ID:string;
+  /// Reference ids of the member (chaser / companion) objects inside the box.
+  MEMBER_IDS:[string];
+  /// Half-size along the radial axis in meters (0 means auto-fit).
+  HALF_RADIAL_M:double;
+  /// Half-size along the in-track axis in meters (0 means auto-fit).
+  HALF_IN_TRACK_M:double;
+  /// Half-size along the cross-track axis in meters (0 means auto-fit).
+  HALF_CROSS_TRACK_M:double;
+  /// Coordinate convention (curvilinear along the orbit, or rectilinear).
+  COORDINATES:scnRicCoordinates = CURVILINEAR;
+  /// True when member orbits are drawn relative to the center object.
+  RELATIVE_ORBITS:bool = true;
+  /// Globe display mode while the RIC box is shown.
+  GLOBE_DISPLAY:scnGlobeDisplay = SOLID;
+  /// True when 1-sigma wireframe covariance ellipsoids are shown on boxed objects.
+  SHOW_COVARIANCE:bool = false;
+  /// Grid divisions per side (0 uses viewer default).
+  DIVISIONS:ubyte = 4;
+  /// RPO time-lapse trail duration in seconds (0 uses viewer default).
+  RPO_TRAIL_SECONDS:double = 0;
+  /// Reference ids of chasers flying historical RPO trajectories in this RIC box.
+  RPO_CHASER_IDS:[string];
+  /// True when the RIC box itself is visible.
+  SHOW_BOX:bool = true;
 }
 
 /// Scenario command action.
@@ -10819,6 +10862,10 @@ table SCNReference {
   OBSERVATION_EO:EOO;
   /// Radar observation record associated with this reference.
   OBSERVATION_RADAR:RDO;
+  /// Optional display color token (for example "#ff9f0a") for this reference.
+  COLOR:string;
+  /// True when the 1-sigma covariance ellipsoid is shown on this reference.
+  SHOW_COVARIANCE:bool;
 }
 
 /// Imported scenario event payload composed from existing SDS records.
@@ -10925,6 +10972,8 @@ table SCN {
   /// enclosing $REC's bytes (without a size prefix) with these 64 bytes set to
   /// zero. The record's CID is computed over the signed bytes.
   SIGNATURE:[ubyte];
+  /// Relative-motion RIC box and multi-chaser RPO view settings, when active.
+  RIC_BOX:SCNRicBox;
 }
 
 root_type SCN;
@@ -121387,6 +121436,21 @@ compressed). Nothing hashes the payload before the protocol hash.`
             "AREA_OF_INTEREST"
           ]
         },
+        scnRicCoordinates: {
+          type: "string",
+          enum: [
+            "CURVILINEAR",
+            "RECTILINEAR"
+          ]
+        },
+        scnGlobeDisplay: {
+          type: "string",
+          enum: [
+            "SOLID",
+            "WIREFRAME",
+            "HIDDEN"
+          ]
+        },
         scenarioActionCode: {
           type: "string",
           enum: [
@@ -124562,6 +124626,73 @@ provider's reviewed register). Never free text.`
           },
           additionalProperties: false
         },
+        SCNRicBox: {
+          type: "object",
+          description: "Relative-motion RIC box and RPO time-lapse settings kept with a scenario.",
+          properties: {
+            CENTER_ID: {
+              type: "string",
+              description: "Reference id of the center (target) object."
+            },
+            MEMBER_IDS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Reference ids of the member (chaser / companion) objects inside the box."
+            },
+            HALF_RADIAL_M: {
+              type: "number",
+              description: "Half-size along the radial axis in meters (0 means auto-fit)."
+            },
+            HALF_IN_TRACK_M: {
+              type: "number",
+              description: "Half-size along the in-track axis in meters (0 means auto-fit)."
+            },
+            HALF_CROSS_TRACK_M: {
+              type: "number",
+              description: "Half-size along the cross-track axis in meters (0 means auto-fit)."
+            },
+            COORDINATES: {
+              $ref: "#/definitions/scnRicCoordinates",
+              description: "Coordinate convention (curvilinear along the orbit, or rectilinear)."
+            },
+            RELATIVE_ORBITS: {
+              type: "boolean",
+              description: "True when member orbits are drawn relative to the center object."
+            },
+            GLOBE_DISPLAY: {
+              $ref: "#/definitions/scnGlobeDisplay",
+              description: "Globe display mode while the RIC box is shown."
+            },
+            SHOW_COVARIANCE: {
+              type: "boolean",
+              description: "True when 1-sigma wireframe covariance ellipsoids are shown on boxed objects."
+            },
+            DIVISIONS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Grid divisions per side (0 uses viewer default)."
+            },
+            RPO_TRAIL_SECONDS: {
+              type: "number",
+              description: "RPO time-lapse trail duration in seconds (0 uses viewer default)."
+            },
+            RPO_CHASER_IDS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Reference ids of chasers flying historical RPO trajectories in this RIC box."
+            },
+            SHOW_BOX: {
+              type: "boolean",
+              description: "True when the RIC box itself is visible."
+            }
+          },
+          additionalProperties: false
+        },
         SCNPointOfInterest: {
           type: "object",
           description: "Time-tagged point or annotation shown in a scenario.",
@@ -124814,6 +124945,14 @@ provider's reviewed register). Never free text.`
             OBSERVATION_RADAR: {
               $ref: "#/definitions/RDO",
               description: "Radar observation record associated with this reference."
+            },
+            COLOR: {
+              type: "string",
+              description: 'Optional display color token (for example "#ff9f0a") for this reference.'
+            },
+            SHOW_COVARIANCE: {
+              type: "boolean",
+              description: "True when the 1-sigma covariance ellipsoid is shown on this reference."
             }
           },
           additionalProperties: false
@@ -125042,6 +125181,10 @@ provider's reviewed register). Never free text.`
 enclosing $REC, over the five bytes "$SCN" and 0x00, followed by the
 enclosing $REC's bytes (without a size prefix) with these 64 bytes set to
 zero. The record's CID is computed over the signed bytes.`
+            },
+            RIC_BOX: {
+              $ref: "#/definitions/SCNRicBox",
+              description: "Relative-motion RIC box and multi-chaser RPO view settings, when active."
             }
           },
           additionalProperties: false
@@ -173558,6 +173701,21 @@ stated.`
             "OBSERVATION",
             "GROUP",
             "AREA_OF_INTEREST"
+          ]
+        },
+        scnRicCoordinates: {
+          type: "string",
+          enum: [
+            "CURVILINEAR",
+            "RECTILINEAR"
+          ]
+        },
+        scnGlobeDisplay: {
+          type: "string",
+          enum: [
+            "SOLID",
+            "WIREFRAME",
+            "HIDDEN"
           ]
         },
         scenarioActionCode: {
@@ -235434,6 +235592,73 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`
           },
           additionalProperties: false
         },
+        SCNRicBox: {
+          type: "object",
+          description: "Relative-motion RIC box and RPO time-lapse settings kept with a scenario.",
+          properties: {
+            CENTER_ID: {
+              type: "string",
+              description: "Reference id of the center (target) object."
+            },
+            MEMBER_IDS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Reference ids of the member (chaser / companion) objects inside the box."
+            },
+            HALF_RADIAL_M: {
+              type: "number",
+              description: "Half-size along the radial axis in meters (0 means auto-fit)."
+            },
+            HALF_IN_TRACK_M: {
+              type: "number",
+              description: "Half-size along the in-track axis in meters (0 means auto-fit)."
+            },
+            HALF_CROSS_TRACK_M: {
+              type: "number",
+              description: "Half-size along the cross-track axis in meters (0 means auto-fit)."
+            },
+            COORDINATES: {
+              $ref: "#/definitions/scnRicCoordinates",
+              description: "Coordinate convention (curvilinear along the orbit, or rectilinear)."
+            },
+            RELATIVE_ORBITS: {
+              type: "boolean",
+              description: "True when member orbits are drawn relative to the center object."
+            },
+            GLOBE_DISPLAY: {
+              $ref: "#/definitions/scnGlobeDisplay",
+              description: "Globe display mode while the RIC box is shown."
+            },
+            SHOW_COVARIANCE: {
+              type: "boolean",
+              description: "True when 1-sigma wireframe covariance ellipsoids are shown on boxed objects."
+            },
+            DIVISIONS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Grid divisions per side (0 uses viewer default)."
+            },
+            RPO_TRAIL_SECONDS: {
+              type: "number",
+              description: "RPO time-lapse trail duration in seconds (0 uses viewer default)."
+            },
+            RPO_CHASER_IDS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Reference ids of chasers flying historical RPO trajectories in this RIC box."
+            },
+            SHOW_BOX: {
+              type: "boolean",
+              description: "True when the RIC box itself is visible."
+            }
+          },
+          additionalProperties: false
+        },
         SCNPointOfInterest: {
           type: "object",
           description: "Time-tagged point or annotation shown in a scenario.",
@@ -235686,6 +235911,14 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`
             OBSERVATION_RADAR: {
               $ref: "#/definitions/RDO",
               description: "Radar observation record associated with this reference."
+            },
+            COLOR: {
+              type: "string",
+              description: 'Optional display color token (for example "#ff9f0a") for this reference.'
+            },
+            SHOW_COVARIANCE: {
+              type: "boolean",
+              description: "True when the 1-sigma covariance ellipsoid is shown on this reference."
             }
           },
           additionalProperties: false
@@ -235914,6 +236147,10 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`
 enclosing $REC, over the five bytes "$SCN" and 0x00, followed by the
 enclosing $REC's bytes (without a size prefix) with these 64 bytes set to
 zero. The record's CID is computed over the signed bytes.`
+            },
+            RIC_BOX: {
+              $ref: "#/definitions/SCNRicBox",
+              description: "Relative-motion RIC box and multi-chaser RPO view settings, when active."
             }
           },
           additionalProperties: false
@@ -330134,6 +330371,21 @@ assumptions".`
             "AREA_OF_INTEREST"
           ]
         },
+        scnRicCoordinates: {
+          type: "string",
+          enum: [
+            "CURVILINEAR",
+            "RECTILINEAR"
+          ]
+        },
+        scnGlobeDisplay: {
+          type: "string",
+          enum: [
+            "SOLID",
+            "WIREFRAME",
+            "HIDDEN"
+          ]
+        },
         scenarioActionCode: {
           type: "string",
           enum: [
@@ -333338,6 +333590,73 @@ provider's reviewed register). Never free text.`
           },
           additionalProperties: false
         },
+        SCNRicBox: {
+          type: "object",
+          description: "Relative-motion RIC box and RPO time-lapse settings kept with a scenario.",
+          properties: {
+            CENTER_ID: {
+              type: "string",
+              description: "Reference id of the center (target) object."
+            },
+            MEMBER_IDS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Reference ids of the member (chaser / companion) objects inside the box."
+            },
+            HALF_RADIAL_M: {
+              type: "number",
+              description: "Half-size along the radial axis in meters (0 means auto-fit)."
+            },
+            HALF_IN_TRACK_M: {
+              type: "number",
+              description: "Half-size along the in-track axis in meters (0 means auto-fit)."
+            },
+            HALF_CROSS_TRACK_M: {
+              type: "number",
+              description: "Half-size along the cross-track axis in meters (0 means auto-fit)."
+            },
+            COORDINATES: {
+              $ref: "#/definitions/scnRicCoordinates",
+              description: "Coordinate convention (curvilinear along the orbit, or rectilinear)."
+            },
+            RELATIVE_ORBITS: {
+              type: "boolean",
+              description: "True when member orbits are drawn relative to the center object."
+            },
+            GLOBE_DISPLAY: {
+              $ref: "#/definitions/scnGlobeDisplay",
+              description: "Globe display mode while the RIC box is shown."
+            },
+            SHOW_COVARIANCE: {
+              type: "boolean",
+              description: "True when 1-sigma wireframe covariance ellipsoids are shown on boxed objects."
+            },
+            DIVISIONS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Grid divisions per side (0 uses viewer default)."
+            },
+            RPO_TRAIL_SECONDS: {
+              type: "number",
+              description: "RPO time-lapse trail duration in seconds (0 uses viewer default)."
+            },
+            RPO_CHASER_IDS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Reference ids of chasers flying historical RPO trajectories in this RIC box."
+            },
+            SHOW_BOX: {
+              type: "boolean",
+              description: "True when the RIC box itself is visible."
+            }
+          },
+          additionalProperties: false
+        },
         SCNPointOfInterest: {
           type: "object",
           description: "Time-tagged point or annotation shown in a scenario.",
@@ -333590,6 +333909,14 @@ provider's reviewed register). Never free text.`
             OBSERVATION_RADAR: {
               $ref: "#/definitions/RDO",
               description: "Radar observation record associated with this reference."
+            },
+            COLOR: {
+              type: "string",
+              description: 'Optional display color token (for example "#ff9f0a") for this reference.'
+            },
+            SHOW_COVARIANCE: {
+              type: "boolean",
+              description: "True when the 1-sigma covariance ellipsoid is shown on this reference."
             }
           },
           additionalProperties: false
@@ -333818,6 +334145,10 @@ provider's reviewed register). Never free text.`
 enclosing $REC, over the five bytes "$SCN" and 0x00, followed by the
 enclosing $REC's bytes (without a size prefix) with these 64 bytes set to
 zero. The record's CID is computed over the signed bytes.`
+            },
+            RIC_BOX: {
+              $ref: "#/definitions/SCNRicBox",
+              description: "Relative-motion RIC box and multi-chaser RPO view settings, when active."
             }
           },
           additionalProperties: false
@@ -599454,6 +599785,44 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             }
           }
         },
+        scnRicCoordinates: {
+          type: "string",
+          enum: [
+            "CURVILINEAR",
+            "RECTILINEAR"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            CURVILINEAR: {
+              value: 0
+            },
+            RECTILINEAR: {
+              value: 1
+            }
+          }
+        },
+        scnGlobeDisplay: {
+          type: "string",
+          enum: [
+            "SOLID",
+            "WIREFRAME",
+            "HIDDEN"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            SOLID: {
+              value: 0
+            },
+            WIREFRAME: {
+              value: 1
+            },
+            HIDDEN: {
+              value: 2
+            }
+          }
+        },
         scenarioActionCode: {
           type: "string",
           enum: [
@@ -605436,6 +605805,114 @@ provider's reviewed register). Never free text.`,
           },
           additionalProperties: false
         },
+        SCNRicBox: {
+          type: "object",
+          description: "Relative-motion RIC box and RPO time-lapse settings kept with a scenario.",
+          properties: {
+            CENTER_ID: {
+              type: "string",
+              description: "Reference id of the center (target) object.",
+              "x-flatbuffer-type": "string"
+            },
+            MEMBER_IDS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Reference ids of the member (chaser / companion) objects inside the box.",
+              "x-flatbuffer-type": "[string]"
+            },
+            HALF_RADIAL_M: {
+              type: "number",
+              description: "Half-size along the radial axis in meters (0 means auto-fit).",
+              "x-flatbuffer-type": "double"
+            },
+            HALF_IN_TRACK_M: {
+              type: "number",
+              description: "Half-size along the in-track axis in meters (0 means auto-fit).",
+              "x-flatbuffer-type": "double"
+            },
+            HALF_CROSS_TRACK_M: {
+              type: "number",
+              description: "Half-size along the cross-track axis in meters (0 means auto-fit).",
+              "x-flatbuffer-type": "double"
+            },
+            COORDINATES: {
+              $ref: "#/definitions/scnRicCoordinates",
+              description: "Coordinate convention (curvilinear along the orbit, or rectilinear).",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                CURVILINEAR: {
+                  value: 0
+                },
+                RECTILINEAR: {
+                  value: 1
+                }
+              },
+              "x-flatbuffer-default": "CURVILINEAR"
+            },
+            RELATIVE_ORBITS: {
+              type: "boolean",
+              description: "True when member orbits are drawn relative to the center object.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "true"
+            },
+            GLOBE_DISPLAY: {
+              $ref: "#/definitions/scnGlobeDisplay",
+              description: "Globe display mode while the RIC box is shown.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                SOLID: {
+                  value: 0
+                },
+                WIREFRAME: {
+                  value: 1
+                },
+                HIDDEN: {
+                  value: 2
+                }
+              },
+              "x-flatbuffer-default": "SOLID"
+            },
+            SHOW_COVARIANCE: {
+              type: "boolean",
+              description: "True when 1-sigma wireframe covariance ellipsoids are shown on boxed objects.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            DIVISIONS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Grid divisions per side (0 uses viewer default).",
+              "x-flatbuffer-type": "ubyte",
+              "x-flatbuffer-default": "4"
+            },
+            RPO_TRAIL_SECONDS: {
+              type: "number",
+              description: "RPO time-lapse trail duration in seconds (0 uses viewer default).",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "0"
+            },
+            RPO_CHASER_IDS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Reference ids of chasers flying historical RPO trajectories in this RIC box.",
+              "x-flatbuffer-type": "[string]"
+            },
+            SHOW_BOX: {
+              type: "boolean",
+              description: "True when the RIC box itself is visible.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "true"
+            }
+          },
+          additionalProperties: false
+        },
         SCNPointOfInterest: {
           type: "object",
           description: "Time-tagged point or annotation shown in a scenario.",
@@ -605775,6 +606252,16 @@ provider's reviewed register). Never free text.`,
               $ref: "#/definitions/RDO",
               description: "Radar observation record associated with this reference.",
               "x-flatbuffer-type": "RDO"
+            },
+            COLOR: {
+              type: "string",
+              description: 'Optional display color token (for example "#ff9f0a") for this reference.',
+              "x-flatbuffer-type": "string"
+            },
+            SHOW_COVARIANCE: {
+              type: "boolean",
+              description: "True when the 1-sigma covariance ellipsoid is shown on this reference.",
+              "x-flatbuffer-type": "bool"
             }
           },
           additionalProperties: false
@@ -606053,6 +606540,11 @@ enclosing $REC, over the five bytes "$SCN" and 0x00, followed by the
 enclosing $REC's bytes (without a size prefix) with these 64 bytes set to
 zero. The record's CID is computed over the signed bytes.`,
               "x-flatbuffer-type": "[ubyte]"
+            },
+            RIC_BOX: {
+              $ref: "#/definitions/SCNRicBox",
+              description: "Relative-motion RIC box and multi-chaser RPO view settings, when active.",
+              "x-flatbuffer-type": "SCNRicBox"
             }
           },
           additionalProperties: false
@@ -721576,6 +722068,44 @@ stated.`,
             }
           }
         },
+        scnRicCoordinates: {
+          type: "string",
+          enum: [
+            "CURVILINEAR",
+            "RECTILINEAR"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            CURVILINEAR: {
+              value: 0
+            },
+            RECTILINEAR: {
+              value: 1
+            }
+          }
+        },
+        scnGlobeDisplay: {
+          type: "string",
+          enum: [
+            "SOLID",
+            "WIREFRAME",
+            "HIDDEN"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            SOLID: {
+              value: 0
+            },
+            WIREFRAME: {
+              value: 1
+            },
+            HIDDEN: {
+              value: 2
+            }
+          }
+        },
         scenarioActionCode: {
           type: "string",
           enum: [
@@ -826554,6 +827084,114 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
           },
           additionalProperties: false
         },
+        SCNRicBox: {
+          type: "object",
+          description: "Relative-motion RIC box and RPO time-lapse settings kept with a scenario.",
+          properties: {
+            CENTER_ID: {
+              type: "string",
+              description: "Reference id of the center (target) object.",
+              "x-flatbuffer-type": "string"
+            },
+            MEMBER_IDS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Reference ids of the member (chaser / companion) objects inside the box.",
+              "x-flatbuffer-type": "[string]"
+            },
+            HALF_RADIAL_M: {
+              type: "number",
+              description: "Half-size along the radial axis in meters (0 means auto-fit).",
+              "x-flatbuffer-type": "double"
+            },
+            HALF_IN_TRACK_M: {
+              type: "number",
+              description: "Half-size along the in-track axis in meters (0 means auto-fit).",
+              "x-flatbuffer-type": "double"
+            },
+            HALF_CROSS_TRACK_M: {
+              type: "number",
+              description: "Half-size along the cross-track axis in meters (0 means auto-fit).",
+              "x-flatbuffer-type": "double"
+            },
+            COORDINATES: {
+              $ref: "#/definitions/scnRicCoordinates",
+              description: "Coordinate convention (curvilinear along the orbit, or rectilinear).",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                CURVILINEAR: {
+                  value: 0
+                },
+                RECTILINEAR: {
+                  value: 1
+                }
+              },
+              "x-flatbuffer-default": "CURVILINEAR"
+            },
+            RELATIVE_ORBITS: {
+              type: "boolean",
+              description: "True when member orbits are drawn relative to the center object.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "true"
+            },
+            GLOBE_DISPLAY: {
+              $ref: "#/definitions/scnGlobeDisplay",
+              description: "Globe display mode while the RIC box is shown.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                SOLID: {
+                  value: 0
+                },
+                WIREFRAME: {
+                  value: 1
+                },
+                HIDDEN: {
+                  value: 2
+                }
+              },
+              "x-flatbuffer-default": "SOLID"
+            },
+            SHOW_COVARIANCE: {
+              type: "boolean",
+              description: "True when 1-sigma wireframe covariance ellipsoids are shown on boxed objects.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            DIVISIONS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Grid divisions per side (0 uses viewer default).",
+              "x-flatbuffer-type": "ubyte",
+              "x-flatbuffer-default": "4"
+            },
+            RPO_TRAIL_SECONDS: {
+              type: "number",
+              description: "RPO time-lapse trail duration in seconds (0 uses viewer default).",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "0"
+            },
+            RPO_CHASER_IDS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Reference ids of chasers flying historical RPO trajectories in this RIC box.",
+              "x-flatbuffer-type": "[string]"
+            },
+            SHOW_BOX: {
+              type: "boolean",
+              description: "True when the RIC box itself is visible.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "true"
+            }
+          },
+          additionalProperties: false
+        },
         SCNPointOfInterest: {
           type: "object",
           description: "Time-tagged point or annotation shown in a scenario.",
@@ -826893,6 +827531,16 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
               $ref: "#/definitions/RDO",
               description: "Radar observation record associated with this reference.",
               "x-flatbuffer-type": "RDO"
+            },
+            COLOR: {
+              type: "string",
+              description: 'Optional display color token (for example "#ff9f0a") for this reference.',
+              "x-flatbuffer-type": "string"
+            },
+            SHOW_COVARIANCE: {
+              type: "boolean",
+              description: "True when the 1-sigma covariance ellipsoid is shown on this reference.",
+              "x-flatbuffer-type": "bool"
             }
           },
           additionalProperties: false
@@ -827171,6 +827819,11 @@ enclosing $REC, over the five bytes "$SCN" and 0x00, followed by the
 enclosing $REC's bytes (without a size prefix) with these 64 bytes set to
 zero. The record's CID is computed over the signed bytes.`,
               "x-flatbuffer-type": "[ubyte]"
+            },
+            RIC_BOX: {
+              $ref: "#/definitions/SCNRicBox",
+              description: "Relative-motion RIC box and multi-chaser RPO view settings, when active.",
+              "x-flatbuffer-type": "SCNRicBox"
             }
           },
           additionalProperties: false
@@ -1035427,6 +1036080,44 @@ assumptions".`,
             }
           }
         },
+        scnRicCoordinates: {
+          type: "string",
+          enum: [
+            "CURVILINEAR",
+            "RECTILINEAR"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            CURVILINEAR: {
+              value: 0
+            },
+            RECTILINEAR: {
+              value: 1
+            }
+          }
+        },
+        scnGlobeDisplay: {
+          type: "string",
+          enum: [
+            "SOLID",
+            "WIREFRAME",
+            "HIDDEN"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            SOLID: {
+              value: 0
+            },
+            WIREFRAME: {
+              value: 1
+            },
+            HIDDEN: {
+              value: 2
+            }
+          }
+        },
         scenarioActionCode: {
           type: "string",
           enum: [
@@ -1041492,6 +1042183,114 @@ provider's reviewed register). Never free text.`,
           },
           additionalProperties: false
         },
+        SCNRicBox: {
+          type: "object",
+          description: "Relative-motion RIC box and RPO time-lapse settings kept with a scenario.",
+          properties: {
+            CENTER_ID: {
+              type: "string",
+              description: "Reference id of the center (target) object.",
+              "x-flatbuffer-type": "string"
+            },
+            MEMBER_IDS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Reference ids of the member (chaser / companion) objects inside the box.",
+              "x-flatbuffer-type": "[string]"
+            },
+            HALF_RADIAL_M: {
+              type: "number",
+              description: "Half-size along the radial axis in meters (0 means auto-fit).",
+              "x-flatbuffer-type": "double"
+            },
+            HALF_IN_TRACK_M: {
+              type: "number",
+              description: "Half-size along the in-track axis in meters (0 means auto-fit).",
+              "x-flatbuffer-type": "double"
+            },
+            HALF_CROSS_TRACK_M: {
+              type: "number",
+              description: "Half-size along the cross-track axis in meters (0 means auto-fit).",
+              "x-flatbuffer-type": "double"
+            },
+            COORDINATES: {
+              $ref: "#/definitions/scnRicCoordinates",
+              description: "Coordinate convention (curvilinear along the orbit, or rectilinear).",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                CURVILINEAR: {
+                  value: 0
+                },
+                RECTILINEAR: {
+                  value: 1
+                }
+              },
+              "x-flatbuffer-default": "CURVILINEAR"
+            },
+            RELATIVE_ORBITS: {
+              type: "boolean",
+              description: "True when member orbits are drawn relative to the center object.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "true"
+            },
+            GLOBE_DISPLAY: {
+              $ref: "#/definitions/scnGlobeDisplay",
+              description: "Globe display mode while the RIC box is shown.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                SOLID: {
+                  value: 0
+                },
+                WIREFRAME: {
+                  value: 1
+                },
+                HIDDEN: {
+                  value: 2
+                }
+              },
+              "x-flatbuffer-default": "SOLID"
+            },
+            SHOW_COVARIANCE: {
+              type: "boolean",
+              description: "True when 1-sigma wireframe covariance ellipsoids are shown on boxed objects.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            DIVISIONS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Grid divisions per side (0 uses viewer default).",
+              "x-flatbuffer-type": "ubyte",
+              "x-flatbuffer-default": "4"
+            },
+            RPO_TRAIL_SECONDS: {
+              type: "number",
+              description: "RPO time-lapse trail duration in seconds (0 uses viewer default).",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "0"
+            },
+            RPO_CHASER_IDS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Reference ids of chasers flying historical RPO trajectories in this RIC box.",
+              "x-flatbuffer-type": "[string]"
+            },
+            SHOW_BOX: {
+              type: "boolean",
+              description: "True when the RIC box itself is visible.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "true"
+            }
+          },
+          additionalProperties: false
+        },
         SCNPointOfInterest: {
           type: "object",
           description: "Time-tagged point or annotation shown in a scenario.",
@@ -1041831,6 +1042630,16 @@ provider's reviewed register). Never free text.`,
               $ref: "#/definitions/RDO",
               description: "Radar observation record associated with this reference.",
               "x-flatbuffer-type": "RDO"
+            },
+            COLOR: {
+              type: "string",
+              description: 'Optional display color token (for example "#ff9f0a") for this reference.',
+              "x-flatbuffer-type": "string"
+            },
+            SHOW_COVARIANCE: {
+              type: "boolean",
+              description: "True when the 1-sigma covariance ellipsoid is shown on this reference.",
+              "x-flatbuffer-type": "bool"
             }
           },
           additionalProperties: false
@@ -1042109,6 +1042918,11 @@ enclosing $REC, over the five bytes "$SCN" and 0x00, followed by the
 enclosing $REC's bytes (without a size prefix) with these 64 bytes set to
 zero. The record's CID is computed over the signed bytes.`,
               "x-flatbuffer-type": "[ubyte]"
+            },
+            RIC_BOX: {
+              $ref: "#/definitions/SCNRicBox",
+              description: "Relative-motion RIC box and multi-chaser RPO view settings, when active.",
+              "x-flatbuffer-type": "SCNRicBox"
             }
           },
           additionalProperties: false

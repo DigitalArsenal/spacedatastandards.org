@@ -301,8 +301,26 @@ OBSERVATION_RADAR(obj?:RDO):RDO|null {
   return offset ? (obj || new RDO()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * Optional display color token (for example "#ff9f0a") for this reference.
+ */
+COLOR():string|null
+COLOR(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+COLOR(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 56);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * True when the 1-sigma covariance ellipsoid is shown on this reference.
+ */
+SHOW_COVARIANCE():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 58);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
 static startSCNReference(builder:flatbuffers.Builder) {
-  builder.startObject(26);
+  builder.startObject(28);
 }
 
 static addReferenceId(builder:flatbuffers.Builder, REFERENCE_IDOffset:flatbuffers.Offset) {
@@ -481,6 +499,14 @@ static addObservationRadar(builder:flatbuffers.Builder, OBSERVATION_RADAROffset:
   builder.addFieldOffset(25, OBSERVATION_RADAROffset, 0);
 }
 
+static addColor(builder:flatbuffers.Builder, COLOROffset:flatbuffers.Offset) {
+  builder.addFieldOffset(26, COLOROffset, 0);
+}
+
+static addShowCovariance(builder:flatbuffers.Builder, SHOW_COVARIANCE:boolean) {
+  builder.addFieldInt8(27, +SHOW_COVARIANCE, +false);
+}
+
 static endSCNReference(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -514,7 +540,9 @@ unpack(): SCNReferenceT {
     (this.SUN_ADVANTAGE_TARGET() !== null ? this.SUN_ADVANTAGE_TARGET()!.unpack() : null),
     (this.EXCLUSION_ZONE() !== null ? this.EXCLUSION_ZONE()!.unpack() : null),
     (this.OBSERVATION_EO() !== null ? this.OBSERVATION_EO()!.unpack() : null),
-    (this.OBSERVATION_RADAR() !== null ? this.OBSERVATION_RADAR()!.unpack() : null)
+    (this.OBSERVATION_RADAR() !== null ? this.OBSERVATION_RADAR()!.unpack() : null),
+    this.COLOR(),
+    this.SHOW_COVARIANCE()
   );
 }
 
@@ -546,6 +574,8 @@ unpackTo(_o: SCNReferenceT): void {
   _o.EXCLUSION_ZONE = (this.EXCLUSION_ZONE() !== null ? this.EXCLUSION_ZONE()!.unpack() : null);
   _o.OBSERVATION_EO = (this.OBSERVATION_EO() !== null ? this.OBSERVATION_EO()!.unpack() : null);
   _o.OBSERVATION_RADAR = (this.OBSERVATION_RADAR() !== null ? this.OBSERVATION_RADAR()!.unpack() : null);
+  _o.COLOR = this.COLOR();
+  _o.SHOW_COVARIANCE = this.SHOW_COVARIANCE();
 }
 }
 
@@ -576,7 +606,9 @@ constructor(
   public SUN_ADVANTAGE_TARGET: SCNSunAdvantageTargetT|null = null,
   public EXCLUSION_ZONE: SCNExclusionZoneT|null = null,
   public OBSERVATION_EO: EOOT|null = null,
-  public OBSERVATION_RADAR: RDOT|null = null
+  public OBSERVATION_RADAR: RDOT|null = null,
+  public COLOR: string|Uint8Array|null = null,
+  public SHOW_COVARIANCE: boolean = false
 ){}
 
 
@@ -604,6 +636,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const EXCLUSION_ZONE = (this.EXCLUSION_ZONE !== null ? this.EXCLUSION_ZONE!.pack(builder) : 0);
   const OBSERVATION_EO = (this.OBSERVATION_EO !== null ? this.OBSERVATION_EO!.pack(builder) : 0);
   const OBSERVATION_RADAR = (this.OBSERVATION_RADAR !== null ? this.OBSERVATION_RADAR!.pack(builder) : 0);
+  const COLOR = (this.COLOR !== null ? builder.createString(this.COLOR!) : 0);
 
   SCNReference.startSCNReference(builder);
   SCNReference.addReferenceId(builder, REFERENCE_ID);
@@ -632,6 +665,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   SCNReference.addExclusionZone(builder, EXCLUSION_ZONE);
   SCNReference.addObservationEo(builder, OBSERVATION_EO);
   SCNReference.addObservationRadar(builder, OBSERVATION_RADAR);
+  SCNReference.addColor(builder, COLOR);
+  SCNReference.addShowCovariance(builder, this.SHOW_COVARIANCE);
 
   return SCNReference.endSCNReference(builder);
 }

@@ -370,6 +370,28 @@ class SCNReference : Table() {
             null
         }
     }
+    /**
+     * Optional display color token (for example "#ff9f0a") for this reference.
+     */
+    val color : String?
+        get() {
+            val o = __offset(56)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val colorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(56, 1)
+    fun colorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 56, 1)
+    /**
+     * True when the 1-sigma covariance ellipsoid is shown on this reference.
+     */
+    val showCovariance : Boolean
+        get() {
+            val o = __offset(58)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSCNReference(_bb: ByteBuffer): SCNReference = getRootAsSCNReference(_bb, SCNReference())
@@ -377,8 +399,9 @@ class SCNReference : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createSCNReference(builder: FlatBufferBuilder, referenceIdOffset: Int, nameOffset: Int, referenceKind: Byte, remove: Boolean, noradCatId: UInt, objectIdOffset: Int, countryOffset: Int, ownerOffset: Int, sourcesOffset: Int, dataModesOffset: Int, meanElementsOffset: Int, stateVectorsOffset: Int, maneuversOffset: Int, siteOffset: Int, sensorOffset: Int, sensorSystemIdOffset: Int, sensorIdOffset: Int, sitePositionOffset: Int, variableSatelliteIdOffset: Int, variableSiteIdOffset: Int, pointsOffset: Int, viewConeOffset: Int, sunAdvantageTargetOffset: Int, exclusionZoneOffset: Int, observationEoOffset: Int, observationRadarOffset: Int) : Int {
-            builder.startTable(26)
+        fun createSCNReference(builder: FlatBufferBuilder, referenceIdOffset: Int, nameOffset: Int, referenceKind: Byte, remove: Boolean, noradCatId: UInt, objectIdOffset: Int, countryOffset: Int, ownerOffset: Int, sourcesOffset: Int, dataModesOffset: Int, meanElementsOffset: Int, stateVectorsOffset: Int, maneuversOffset: Int, siteOffset: Int, sensorOffset: Int, sensorSystemIdOffset: Int, sensorIdOffset: Int, sitePositionOffset: Int, variableSatelliteIdOffset: Int, variableSiteIdOffset: Int, pointsOffset: Int, viewConeOffset: Int, sunAdvantageTargetOffset: Int, exclusionZoneOffset: Int, observationEoOffset: Int, observationRadarOffset: Int, colorOffset: Int, showCovariance: Boolean) : Int {
+            builder.startTable(28)
+            addCOLOR(builder, colorOffset)
             addOBSERVATIONRADAR(builder, observationRadarOffset)
             addOBSERVATIONEO(builder, observationEoOffset)
             addEXCLUSIONZONE(builder, exclusionZoneOffset)
@@ -403,11 +426,12 @@ class SCNReference : Table() {
             addNORADCATID(builder, noradCatId)
             addNAME(builder, nameOffset)
             addREFERENCEID(builder, referenceIdOffset)
+            addSHOWCOVARIANCE(builder, showCovariance)
             addREMOVE(builder, remove)
             addREFERENCEKIND(builder, referenceKind)
             return endSCNReference(builder)
         }
-        fun startSCNReference(builder: FlatBufferBuilder) = builder.startTable(26)
+        fun startSCNReference(builder: FlatBufferBuilder) = builder.startTable(28)
         fun addREFERENCEID(builder: FlatBufferBuilder, referenceId: Int) = builder.addOffset(0, referenceId, 0)
         fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(1, name, 0)
         fun addREFERENCEKIND(builder: FlatBufferBuilder, referenceKind: Byte) = builder.addByte(2, referenceKind, 0)
@@ -482,6 +506,8 @@ class SCNReference : Table() {
         fun addEXCLUSIONZONE(builder: FlatBufferBuilder, exclusionZone: Int) = builder.addOffset(23, exclusionZone, 0)
         fun addOBSERVATIONEO(builder: FlatBufferBuilder, observationEo: Int) = builder.addOffset(24, observationEo, 0)
         fun addOBSERVATIONRADAR(builder: FlatBufferBuilder, observationRadar: Int) = builder.addOffset(25, observationRadar, 0)
+        fun addCOLOR(builder: FlatBufferBuilder, color: Int) = builder.addOffset(26, color, 0)
+        fun addSHOWCOVARIANCE(builder: FlatBufferBuilder, showCovariance: Boolean) = builder.addBoolean(27, showCovariance, false)
         fun endSCNReference(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

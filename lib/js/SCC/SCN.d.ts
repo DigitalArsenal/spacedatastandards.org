@@ -4,6 +4,7 @@ import { SCNAssetsChanged, SCNAssetsChangedT } from './SCNAssetsChanged.js';
 import { SCNEvent, SCNEventT } from './SCNEvent.js';
 import { SCNPinnedRow, SCNPinnedRowT } from './SCNPinnedRow.js';
 import { SCNReference, SCNReferenceT } from './SCNReference.js';
+import { SCNRicBox, SCNRicBoxT } from './SCNRicBox.js';
 import { VST, VSTT } from './VST.js';
 import { scenarioActionCode } from './scenarioActionCode.js';
 /**
@@ -121,6 +122,10 @@ export declare class SCN implements flatbuffers.IUnpackableObject<SCNT> {
     SIGNATURE(index: number): number | null;
     signatureLength(): number;
     signatureArray(): Uint8Array | null;
+    /**
+     * Relative-motion RIC box and multi-chaser RPO view settings, when active.
+     */
+    RIC_BOX(obj?: SCNRicBox): SCNRicBox | null;
     static startSCN(builder: flatbuffers.Builder): void;
     static addScenarioId(builder: flatbuffers.Builder, SCENARIO_IDOffset: flatbuffers.Offset): void;
     static addReferences(builder: flatbuffers.Builder, REFERENCESOffset: flatbuffers.Offset): void;
@@ -148,6 +153,7 @@ export declare class SCN implements flatbuffers.IUnpackableObject<SCNT> {
     static addSignature(builder: flatbuffers.Builder, SIGNATUREOffset: flatbuffers.Offset): void;
     static createSignatureVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
     static startSignatureVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addRicBox(builder: flatbuffers.Builder, RIC_BOXOffset: flatbuffers.Offset): void;
     static endSCN(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishSCNBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedSCNBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
@@ -175,7 +181,8 @@ export declare class SCNT implements flatbuffers.IGeneratedObject {
     PROPAGATOR_MODULE_ID: string | Uint8Array | null;
     PINNED_ROWS: (SCNPinnedRowT)[];
     SIGNATURE: (number)[];
-    constructor(SCENARIO_ID?: string | Uint8Array | null, REFERENCES?: (SCNReferenceT)[], EVENT?: SCNEventT | null, FOCUSED_REFERENCE_INDEX?: number, FOCUSED_REFERENCE_ID?: string | Uint8Array | null, EPOCH?: string | Uint8Array | null, SIM_SPEED?: number, USE_BODY_FIXED_FRAME?: boolean, REFERENCE_FRAME?: RFMT | null, ACTION?: scenarioActionCode, VIEW_STATE?: VSTT | null, ASSETS_CHANGED?: SCNAssetsChangedT | null, START_EPOCH?: string | Uint8Array | null, STOP_EPOCH?: string | Uint8Array | null, ANIMATING?: boolean, WINDOW_START?: string | Uint8Array | null, WINDOW_STOP?: string | Uint8Array | null, PROPAGATOR_MODULE_ID?: string | Uint8Array | null, PINNED_ROWS?: (SCNPinnedRowT)[], SIGNATURE?: (number)[]);
+    RIC_BOX: SCNRicBoxT | null;
+    constructor(SCENARIO_ID?: string | Uint8Array | null, REFERENCES?: (SCNReferenceT)[], EVENT?: SCNEventT | null, FOCUSED_REFERENCE_INDEX?: number, FOCUSED_REFERENCE_ID?: string | Uint8Array | null, EPOCH?: string | Uint8Array | null, SIM_SPEED?: number, USE_BODY_FIXED_FRAME?: boolean, REFERENCE_FRAME?: RFMT | null, ACTION?: scenarioActionCode, VIEW_STATE?: VSTT | null, ASSETS_CHANGED?: SCNAssetsChangedT | null, START_EPOCH?: string | Uint8Array | null, STOP_EPOCH?: string | Uint8Array | null, ANIMATING?: boolean, WINDOW_START?: string | Uint8Array | null, WINDOW_STOP?: string | Uint8Array | null, PROPAGATOR_MODULE_ID?: string | Uint8Array | null, PINNED_ROWS?: (SCNPinnedRowT)[], SIGNATURE?: (number)[], RIC_BOX?: SCNRicBoxT | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=SCN.d.ts.map

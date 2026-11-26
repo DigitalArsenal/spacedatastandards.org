@@ -260,22 +260,30 @@ class SCN extends Table
         return $this->__vector_as_bytes(42);
     }
 
+    /// Relative-motion RIC box and multi-chaser RPO view settings, when active.
+    public function getRIC_BOX()
+    {
+        $obj = new SCNRicBox();
+        $o = $this->__offset(44);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startSCN(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(20);
+        $builder->StartObject(21);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return SCN
      */
-    public static function createSCN(FlatBufferBuilder $builder, $SCENARIO_ID, $REFERENCES, $EVENT, $FOCUSED_REFERENCE_INDEX, $FOCUSED_REFERENCE_ID, $EPOCH, $SIM_SPEED, $USE_BODY_FIXED_FRAME, $REFERENCE_FRAME, $ACTION, $VIEW_STATE, $ASSETS_CHANGED, $START_EPOCH, $STOP_EPOCH, $ANIMATING, $WINDOW_START, $WINDOW_STOP, $PROPAGATOR_MODULE_ID, $PINNED_ROWS, $SIGNATURE)
+    public static function createSCN(FlatBufferBuilder $builder, $SCENARIO_ID, $REFERENCES, $EVENT, $FOCUSED_REFERENCE_INDEX, $FOCUSED_REFERENCE_ID, $EPOCH, $SIM_SPEED, $USE_BODY_FIXED_FRAME, $REFERENCE_FRAME, $ACTION, $VIEW_STATE, $ASSETS_CHANGED, $START_EPOCH, $STOP_EPOCH, $ANIMATING, $WINDOW_START, $WINDOW_STOP, $PROPAGATOR_MODULE_ID, $PINNED_ROWS, $SIGNATURE, $RIC_BOX)
     {
-        $builder->startObject(20);
+        $builder->startObject(21);
         self::addSCENARIO_ID($builder, $SCENARIO_ID);
         self::addREFERENCES($builder, $REFERENCES);
         self::addEVENT($builder, $EVENT);
@@ -296,6 +304,7 @@ class SCN extends Table
         self::addPROPAGATOR_MODULE_ID($builder, $PROPAGATOR_MODULE_ID);
         self::addPINNED_ROWS($builder, $PINNED_ROWS);
         self::addSIGNATURE($builder, $SIGNATURE);
+        self::addRIC_BOX($builder, $RIC_BOX);
         $o = $builder->endObject();
         return $o;
     }
@@ -570,6 +579,16 @@ class SCN extends Table
     public static function startSIGNATUREVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(1, $numElems, 1);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addRIC_BOX(FlatBufferBuilder $builder, $RIC_BOX)
+    {
+        $builder->addOffsetX(20, $RIC_BOX, 0);
     }
 
     /**
