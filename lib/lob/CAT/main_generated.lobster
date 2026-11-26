@@ -294,13 +294,42 @@ class CAT : flatbuffers.handle
         return CATRecommendation { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 60) + i * 4) }
     def RECOMMENDED_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 60)
+    /// Current estimated remaining maneuvering delta-V capability [m/s] as of
+    /// DELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the
+    /// element-set archive) and propulsion-class bounds. Zero when assessed as
+    /// non-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty.
+    def ESTIMATED_DELTA_V_MPS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 62, 0.0)
+    /// 1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s].
+    def ESTIMATED_DELTA_V_UNC_MPS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 64, 0.0)
+    /// Cumulative historical delta-V magnitude [m/s] summed across detected or
+    /// confirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF.
+    def HISTORICAL_DELTA_V_MPS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 66, 0.0)
+    /// Number of merged detected or confirmed maneuvers observed in the object's
+    /// historical archive up to DELTA_V_AS_OF.
+    def MANEUVER_COUNT() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 68, 0)
+    /// ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or
+    /// empty when no maneuver has been observed.
+    def LAST_MANEUVER_EPOCH() -> string:
+        return flatbuffers.field_string(buf_, pos_, 70)
+    /// ISO 8601 UTC instant when the delta-V fields above were last evaluated.
+    /// Non-empty distinguishes an assessed 0 m/s object from an unassessed record.
+    def DELTA_V_AS_OF() -> string:
+        return flatbuffers.field_string(buf_, pos_, 72)
+    /// Method and source provenance for the delta-V estimate (for example
+    /// "sdn-ap/maneuver-detection+catalog-composer").
+    def DELTA_V_PROVENANCE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 74)
 
 def GetRootAsCAT(buf:string): return CAT { buf, flatbuffers.indirect(buf, 0) }
 
 struct CATBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(29)
+        b_.StartObject(36)
         return this
     def add_OBJECT_NAME(OBJECT_NAME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, OBJECT_NAME)
@@ -388,6 +417,27 @@ struct CATBuilder:
         return this
     def add_RECOMMENDED(RECOMMENDED:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(28, RECOMMENDED)
+        return this
+    def add_ESTIMATED_DELTA_V_MPS(ESTIMATED_DELTA_V_MPS:float):
+        b_.PrependFloat64Slot(29, ESTIMATED_DELTA_V_MPS, 0.0)
+        return this
+    def add_ESTIMATED_DELTA_V_UNC_MPS(ESTIMATED_DELTA_V_UNC_MPS:float):
+        b_.PrependFloat64Slot(30, ESTIMATED_DELTA_V_UNC_MPS, 0.0)
+        return this
+    def add_HISTORICAL_DELTA_V_MPS(HISTORICAL_DELTA_V_MPS:float):
+        b_.PrependFloat64Slot(31, HISTORICAL_DELTA_V_MPS, 0.0)
+        return this
+    def add_MANEUVER_COUNT(MANEUVER_COUNT:int):
+        b_.PrependUint32Slot(32, MANEUVER_COUNT, 0)
+        return this
+    def add_LAST_MANEUVER_EPOCH(LAST_MANEUVER_EPOCH:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(33, LAST_MANEUVER_EPOCH)
+        return this
+    def add_DELTA_V_AS_OF(DELTA_V_AS_OF:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(34, DELTA_V_AS_OF)
+        return this
+    def add_DELTA_V_PROVENANCE(DELTA_V_PROVENANCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(35, DELTA_V_PROVENANCE)
         return this
     def end():
         return b_.EndObject()

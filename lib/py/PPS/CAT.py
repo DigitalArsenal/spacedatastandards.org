@@ -333,8 +333,72 @@ class CAT(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
         return o == 0
 
+    # Current estimated remaining maneuvering delta-V capability [m/s] as of
+    # DELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the
+    # element-set archive) and propulsion-class bounds. Zero when assessed as
+    # non-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty.
+    # CAT
+    def ESTIMATED_DELTA_V_MPS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # 1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s].
+    # CAT
+    def ESTIMATED_DELTA_V_UNC_MPS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Cumulative historical delta-V magnitude [m/s] summed across detected or
+    # confirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF.
+    # CAT
+    def HISTORICAL_DELTA_V_MPS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Number of merged detected or confirmed maneuvers observed in the object's
+    # historical archive up to DELTA_V_AS_OF.
+    # CAT
+    def MANEUVER_COUNT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or
+    # empty when no maneuver has been observed.
+    # CAT
+    def LAST_MANEUVER_EPOCH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # ISO 8601 UTC instant when the delta-V fields above were last evaluated.
+    # Non-empty distinguishes an assessed 0 m/s object from an unassessed record.
+    # CAT
+    def DELTA_V_AS_OF(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Method and source provenance for the delta-V estimate (for example
+    # "sdn-ap/maneuver-detection+catalog-composer").
+    # CAT
+    def DELTA_V_PROVENANCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def CATStart(builder):
-    builder.StartObject(29)
+    builder.StartObject(36)
 
 def Start(builder):
     CATStart(builder)
@@ -549,6 +613,48 @@ def CATCreateRECOMMENDEDVector(builder, data):
 def CreateRECOMMENDEDVector(builder, data):
     return CATCreateRECOMMENDEDVector(builder, data)
 
+def CATAddESTIMATED_DELTA_V_MPS(builder, ESTIMATED_DELTA_V_MPS):
+    builder.PrependFloat64Slot(29, ESTIMATED_DELTA_V_MPS, 0.0)
+
+def AddESTIMATED_DELTA_V_MPS(builder, ESTIMATED_DELTA_V_MPS):
+    CATAddESTIMATED_DELTA_V_MPS(builder, ESTIMATED_DELTA_V_MPS)
+
+def CATAddESTIMATED_DELTA_V_UNC_MPS(builder, ESTIMATED_DELTA_V_UNC_MPS):
+    builder.PrependFloat64Slot(30, ESTIMATED_DELTA_V_UNC_MPS, 0.0)
+
+def AddESTIMATED_DELTA_V_UNC_MPS(builder, ESTIMATED_DELTA_V_UNC_MPS):
+    CATAddESTIMATED_DELTA_V_UNC_MPS(builder, ESTIMATED_DELTA_V_UNC_MPS)
+
+def CATAddHISTORICAL_DELTA_V_MPS(builder, HISTORICAL_DELTA_V_MPS):
+    builder.PrependFloat64Slot(31, HISTORICAL_DELTA_V_MPS, 0.0)
+
+def AddHISTORICAL_DELTA_V_MPS(builder, HISTORICAL_DELTA_V_MPS):
+    CATAddHISTORICAL_DELTA_V_MPS(builder, HISTORICAL_DELTA_V_MPS)
+
+def CATAddMANEUVER_COUNT(builder, MANEUVER_COUNT):
+    builder.PrependUint32Slot(32, MANEUVER_COUNT, 0)
+
+def AddMANEUVER_COUNT(builder, MANEUVER_COUNT):
+    CATAddMANEUVER_COUNT(builder, MANEUVER_COUNT)
+
+def CATAddLAST_MANEUVER_EPOCH(builder, LAST_MANEUVER_EPOCH):
+    builder.PrependUOffsetTRelativeSlot(33, flatbuffers.number_types.UOffsetTFlags.py_type(LAST_MANEUVER_EPOCH), 0)
+
+def AddLAST_MANEUVER_EPOCH(builder, LAST_MANEUVER_EPOCH):
+    CATAddLAST_MANEUVER_EPOCH(builder, LAST_MANEUVER_EPOCH)
+
+def CATAddDELTA_V_AS_OF(builder, DELTA_V_AS_OF):
+    builder.PrependUOffsetTRelativeSlot(34, flatbuffers.number_types.UOffsetTFlags.py_type(DELTA_V_AS_OF), 0)
+
+def AddDELTA_V_AS_OF(builder, DELTA_V_AS_OF):
+    CATAddDELTA_V_AS_OF(builder, DELTA_V_AS_OF)
+
+def CATAddDELTA_V_PROVENANCE(builder, DELTA_V_PROVENANCE):
+    builder.PrependUOffsetTRelativeSlot(35, flatbuffers.number_types.UOffsetTFlags.py_type(DELTA_V_PROVENANCE), 0)
+
+def AddDELTA_V_PROVENANCE(builder, DELTA_V_PROVENANCE):
+    CATAddDELTA_V_PROVENANCE(builder, DELTA_V_PROVENANCE)
+
 def CATEnd(builder):
     return builder.EndObject()
 
@@ -597,6 +703,13 @@ class CATT(object):
         PRODUCTS = None,
         PRODUCTS_AS_OF = None,
         RECOMMENDED = None,
+        ESTIMATED_DELTA_V_MPS = 0.0,
+        ESTIMATED_DELTA_V_UNC_MPS = 0.0,
+        HISTORICAL_DELTA_V_MPS = 0.0,
+        MANEUVER_COUNT = 0,
+        LAST_MANEUVER_EPOCH = None,
+        DELTA_V_AS_OF = None,
+        DELTA_V_PROVENANCE = None,
     ):
         self.OBJECT_NAME = OBJECT_NAME  # type: Optional[str]
         self.OBJECT_ID = OBJECT_ID  # type: Optional[str]
@@ -627,6 +740,13 @@ class CATT(object):
         self.PRODUCTS = PRODUCTS  # type: Optional[List[CATProduct.CATProductT]]
         self.PRODUCTS_AS_OF = PRODUCTS_AS_OF  # type: Optional[str]
         self.RECOMMENDED = RECOMMENDED  # type: Optional[List[CATRecommendation.CATRecommendationT]]
+        self.ESTIMATED_DELTA_V_MPS = ESTIMATED_DELTA_V_MPS  # type: float
+        self.ESTIMATED_DELTA_V_UNC_MPS = ESTIMATED_DELTA_V_UNC_MPS  # type: float
+        self.HISTORICAL_DELTA_V_MPS = HISTORICAL_DELTA_V_MPS  # type: float
+        self.MANEUVER_COUNT = MANEUVER_COUNT  # type: int
+        self.LAST_MANEUVER_EPOCH = LAST_MANEUVER_EPOCH  # type: Optional[str]
+        self.DELTA_V_AS_OF = DELTA_V_AS_OF  # type: Optional[str]
+        self.DELTA_V_PROVENANCE = DELTA_V_PROVENANCE  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -699,6 +819,13 @@ class CATT(object):
                 else:
                     cATRecommendation_ = CATRecommendation.CATRecommendationT.InitFromObj(CAT.RECOMMENDED(i))
                     self.RECOMMENDED.append(cATRecommendation_)
+        self.ESTIMATED_DELTA_V_MPS = CAT.ESTIMATED_DELTA_V_MPS()
+        self.ESTIMATED_DELTA_V_UNC_MPS = CAT.ESTIMATED_DELTA_V_UNC_MPS()
+        self.HISTORICAL_DELTA_V_MPS = CAT.HISTORICAL_DELTA_V_MPS()
+        self.MANEUVER_COUNT = CAT.MANEUVER_COUNT()
+        self.LAST_MANEUVER_EPOCH = CAT.LAST_MANEUVER_EPOCH()
+        self.DELTA_V_AS_OF = CAT.DELTA_V_AS_OF()
+        self.DELTA_V_PROVENANCE = CAT.DELTA_V_PROVENANCE()
 
     # CATT
     def Pack(self, builder):
@@ -748,6 +875,12 @@ class CATT(object):
             for i in reversed(range(len(self.RECOMMENDED))):
                 builder.PrependUOffsetTRelative(RECOMMENDEDlist[i])
             RECOMMENDED = builder.EndVector()
+        if self.LAST_MANEUVER_EPOCH is not None:
+            LAST_MANEUVER_EPOCH = builder.CreateString(self.LAST_MANEUVER_EPOCH)
+        if self.DELTA_V_AS_OF is not None:
+            DELTA_V_AS_OF = builder.CreateString(self.DELTA_V_AS_OF)
+        if self.DELTA_V_PROVENANCE is not None:
+            DELTA_V_PROVENANCE = builder.CreateString(self.DELTA_V_PROVENANCE)
         CATStart(builder)
         if self.OBJECT_NAME is not None:
             CATAddOBJECT_NAME(builder, OBJECT_NAME)
@@ -792,5 +925,15 @@ class CATT(object):
             CATAddPRODUCTS_AS_OF(builder, PRODUCTS_AS_OF)
         if self.RECOMMENDED is not None:
             CATAddRECOMMENDED(builder, RECOMMENDED)
+        CATAddESTIMATED_DELTA_V_MPS(builder, self.ESTIMATED_DELTA_V_MPS)
+        CATAddESTIMATED_DELTA_V_UNC_MPS(builder, self.ESTIMATED_DELTA_V_UNC_MPS)
+        CATAddHISTORICAL_DELTA_V_MPS(builder, self.HISTORICAL_DELTA_V_MPS)
+        CATAddMANEUVER_COUNT(builder, self.MANEUVER_COUNT)
+        if self.LAST_MANEUVER_EPOCH is not None:
+            CATAddLAST_MANEUVER_EPOCH(builder, LAST_MANEUVER_EPOCH)
+        if self.DELTA_V_AS_OF is not None:
+            CATAddDELTA_V_AS_OF(builder, DELTA_V_AS_OF)
+        if self.DELTA_V_PROVENANCE is not None:
+            CATAddDELTA_V_PROVENANCE(builder, DELTA_V_PROVENANCE)
         CAT = CATEnd(builder)
         return CAT

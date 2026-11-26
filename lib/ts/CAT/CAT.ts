@@ -327,8 +327,78 @@ recommendedLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Current estimated remaining maneuvering delta-V capability [m/s] as of
+ * DELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the
+ * element-set archive) and propulsion-class bounds. Zero when assessed as
+ * non-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty.
+ */
+ESTIMATED_DELTA_V_MPS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 62);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * 1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s].
+ */
+ESTIMATED_DELTA_V_UNC_MPS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 64);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Cumulative historical delta-V magnitude [m/s] summed across detected or
+ * confirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF.
+ */
+HISTORICAL_DELTA_V_MPS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 66);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Number of merged detected or confirmed maneuvers observed in the object's
+ * historical archive up to DELTA_V_AS_OF.
+ */
+MANEUVER_COUNT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 68);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or
+ * empty when no maneuver has been observed.
+ */
+LAST_MANEUVER_EPOCH():string|null
+LAST_MANEUVER_EPOCH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+LAST_MANEUVER_EPOCH(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 70);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * ISO 8601 UTC instant when the delta-V fields above were last evaluated.
+ * Non-empty distinguishes an assessed 0 m/s object from an unassessed record.
+ */
+DELTA_V_AS_OF():string|null
+DELTA_V_AS_OF(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+DELTA_V_AS_OF(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 72);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Method and source provenance for the delta-V estimate (for example
+ * "sdn-ap/maneuver-detection+catalog-composer").
+ */
+DELTA_V_PROVENANCE():string|null
+DELTA_V_PROVENANCE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+DELTA_V_PROVENANCE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 74);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startCAT(builder:flatbuffers.Builder) {
-  builder.startObject(29);
+  builder.startObject(36);
 }
 
 static addObjectName(builder:flatbuffers.Builder, OBJECT_NAMEOffset:flatbuffers.Offset) {
@@ -483,6 +553,34 @@ static startRecommendedVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
+static addEstimatedDeltaVMps(builder:flatbuffers.Builder, ESTIMATED_DELTA_V_MPS:number) {
+  builder.addFieldFloat64(29, ESTIMATED_DELTA_V_MPS, 0.0);
+}
+
+static addEstimatedDeltaVUncMps(builder:flatbuffers.Builder, ESTIMATED_DELTA_V_UNC_MPS:number) {
+  builder.addFieldFloat64(30, ESTIMATED_DELTA_V_UNC_MPS, 0.0);
+}
+
+static addHistoricalDeltaVMps(builder:flatbuffers.Builder, HISTORICAL_DELTA_V_MPS:number) {
+  builder.addFieldFloat64(31, HISTORICAL_DELTA_V_MPS, 0.0);
+}
+
+static addManeuverCount(builder:flatbuffers.Builder, MANEUVER_COUNT:number) {
+  builder.addFieldInt32(32, MANEUVER_COUNT, 0);
+}
+
+static addLastManeuverEpoch(builder:flatbuffers.Builder, LAST_MANEUVER_EPOCHOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(33, LAST_MANEUVER_EPOCHOffset, 0);
+}
+
+static addDeltaVAsOf(builder:flatbuffers.Builder, DELTA_V_AS_OFOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(34, DELTA_V_AS_OFOffset, 0);
+}
+
+static addDeltaVProvenance(builder:flatbuffers.Builder, DELTA_V_PROVENANCEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(35, DELTA_V_PROVENANCEOffset, 0);
+}
+
 static endCAT(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -496,7 +594,7 @@ static finishSizePrefixedCATBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$CAT', true);
 }
 
-static createCAT(builder:flatbuffers.Builder, OBJECT_NAMEOffset:flatbuffers.Offset, OBJECT_IDOffset:flatbuffers.Offset, NORAD_CAT_ID:number, OBJECT_TYPE:spaceObjectClass, OPS_STATUS_CODE:operationalState, OWNER:legacyCountryCode, LAUNCH_DATEOffset:flatbuffers.Offset, LAUNCH_SITEOffset:flatbuffers.Offset, DECAY_DATEOffset:flatbuffers.Offset, PERIOD:number, INCLINATION:number, APOGEE:number, PERIGEE:number, RCS:number, DATA_STATUS_CODE:dataAvailability, ORBIT_CENTEROffset:flatbuffers.Offset, ORBIT_TYPE:orbitRegime, DEPLOYMENT_DATEOffset:flatbuffers.Offset, MANEUVERABLE:boolean, SIZE:number, MASS:number, MASS_TYPE:massCategory, PAYLOADSOffset:flatbuffers.Offset, BUS_IDOffset:flatbuffers.Offset, CATALOG_URIOffset:flatbuffers.Offset, CATALOG_OBJECT_IDOffset:flatbuffers.Offset, PRODUCTSOffset:flatbuffers.Offset, PRODUCTS_AS_OFOffset:flatbuffers.Offset, RECOMMENDEDOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createCAT(builder:flatbuffers.Builder, OBJECT_NAMEOffset:flatbuffers.Offset, OBJECT_IDOffset:flatbuffers.Offset, NORAD_CAT_ID:number, OBJECT_TYPE:spaceObjectClass, OPS_STATUS_CODE:operationalState, OWNER:legacyCountryCode, LAUNCH_DATEOffset:flatbuffers.Offset, LAUNCH_SITEOffset:flatbuffers.Offset, DECAY_DATEOffset:flatbuffers.Offset, PERIOD:number, INCLINATION:number, APOGEE:number, PERIGEE:number, RCS:number, DATA_STATUS_CODE:dataAvailability, ORBIT_CENTEROffset:flatbuffers.Offset, ORBIT_TYPE:orbitRegime, DEPLOYMENT_DATEOffset:flatbuffers.Offset, MANEUVERABLE:boolean, SIZE:number, MASS:number, MASS_TYPE:massCategory, PAYLOADSOffset:flatbuffers.Offset, BUS_IDOffset:flatbuffers.Offset, CATALOG_URIOffset:flatbuffers.Offset, CATALOG_OBJECT_IDOffset:flatbuffers.Offset, PRODUCTSOffset:flatbuffers.Offset, PRODUCTS_AS_OFOffset:flatbuffers.Offset, RECOMMENDEDOffset:flatbuffers.Offset, ESTIMATED_DELTA_V_MPS:number, ESTIMATED_DELTA_V_UNC_MPS:number, HISTORICAL_DELTA_V_MPS:number, MANEUVER_COUNT:number, LAST_MANEUVER_EPOCHOffset:flatbuffers.Offset, DELTA_V_AS_OFOffset:flatbuffers.Offset, DELTA_V_PROVENANCEOffset:flatbuffers.Offset):flatbuffers.Offset {
   CAT.startCAT(builder);
   CAT.addObjectName(builder, OBJECT_NAMEOffset);
   CAT.addObjectId(builder, OBJECT_IDOffset);
@@ -527,6 +625,13 @@ static createCAT(builder:flatbuffers.Builder, OBJECT_NAMEOffset:flatbuffers.Offs
   CAT.addProducts(builder, PRODUCTSOffset);
   CAT.addProductsAsOf(builder, PRODUCTS_AS_OFOffset);
   CAT.addRecommended(builder, RECOMMENDEDOffset);
+  CAT.addEstimatedDeltaVMps(builder, ESTIMATED_DELTA_V_MPS);
+  CAT.addEstimatedDeltaVUncMps(builder, ESTIMATED_DELTA_V_UNC_MPS);
+  CAT.addHistoricalDeltaVMps(builder, HISTORICAL_DELTA_V_MPS);
+  CAT.addManeuverCount(builder, MANEUVER_COUNT);
+  CAT.addLastManeuverEpoch(builder, LAST_MANEUVER_EPOCHOffset);
+  CAT.addDeltaVAsOf(builder, DELTA_V_AS_OFOffset);
+  CAT.addDeltaVProvenance(builder, DELTA_V_PROVENANCEOffset);
   return CAT.endCAT(builder);
 }
 
@@ -560,7 +665,14 @@ unpack(): CATT {
     this.CATALOG_OBJECT_ID(),
     this.bb!.createObjList<CATProduct, CATProductT>(this.PRODUCTS.bind(this), this.productsLength()),
     this.PRODUCTS_AS_OF(),
-    this.bb!.createObjList<CATRecommendation, CATRecommendationT>(this.RECOMMENDED.bind(this), this.recommendedLength())
+    this.bb!.createObjList<CATRecommendation, CATRecommendationT>(this.RECOMMENDED.bind(this), this.recommendedLength()),
+    this.ESTIMATED_DELTA_V_MPS(),
+    this.ESTIMATED_DELTA_V_UNC_MPS(),
+    this.HISTORICAL_DELTA_V_MPS(),
+    this.MANEUVER_COUNT(),
+    this.LAST_MANEUVER_EPOCH(),
+    this.DELTA_V_AS_OF(),
+    this.DELTA_V_PROVENANCE()
   );
 }
 
@@ -595,6 +707,13 @@ unpackTo(_o: CATT): void {
   _o.PRODUCTS = this.bb!.createObjList<CATProduct, CATProductT>(this.PRODUCTS.bind(this), this.productsLength());
   _o.PRODUCTS_AS_OF = this.PRODUCTS_AS_OF();
   _o.RECOMMENDED = this.bb!.createObjList<CATRecommendation, CATRecommendationT>(this.RECOMMENDED.bind(this), this.recommendedLength());
+  _o.ESTIMATED_DELTA_V_MPS = this.ESTIMATED_DELTA_V_MPS();
+  _o.ESTIMATED_DELTA_V_UNC_MPS = this.ESTIMATED_DELTA_V_UNC_MPS();
+  _o.HISTORICAL_DELTA_V_MPS = this.HISTORICAL_DELTA_V_MPS();
+  _o.MANEUVER_COUNT = this.MANEUVER_COUNT();
+  _o.LAST_MANEUVER_EPOCH = this.LAST_MANEUVER_EPOCH();
+  _o.DELTA_V_AS_OF = this.DELTA_V_AS_OF();
+  _o.DELTA_V_PROVENANCE = this.DELTA_V_PROVENANCE();
 }
 }
 
@@ -628,7 +747,14 @@ constructor(
   public CATALOG_OBJECT_ID: string|Uint8Array|null = null,
   public PRODUCTS: (CATProductT)[] = [],
   public PRODUCTS_AS_OF: string|Uint8Array|null = null,
-  public RECOMMENDED: (CATRecommendationT)[] = []
+  public RECOMMENDED: (CATRecommendationT)[] = [],
+  public ESTIMATED_DELTA_V_MPS: number = 0.0,
+  public ESTIMATED_DELTA_V_UNC_MPS: number = 0.0,
+  public HISTORICAL_DELTA_V_MPS: number = 0.0,
+  public MANEUVER_COUNT: number = 0,
+  public LAST_MANEUVER_EPOCH: string|Uint8Array|null = null,
+  public DELTA_V_AS_OF: string|Uint8Array|null = null,
+  public DELTA_V_PROVENANCE: string|Uint8Array|null = null
 ){}
 
 
@@ -647,6 +773,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const PRODUCTS = CAT.createProductsVector(builder, builder.createObjectOffsetList(this.PRODUCTS));
   const PRODUCTS_AS_OF = (this.PRODUCTS_AS_OF !== null ? builder.createString(this.PRODUCTS_AS_OF!) : 0);
   const RECOMMENDED = CAT.createRecommendedVector(builder, builder.createObjectOffsetList(this.RECOMMENDED));
+  const LAST_MANEUVER_EPOCH = (this.LAST_MANEUVER_EPOCH !== null ? builder.createString(this.LAST_MANEUVER_EPOCH!) : 0);
+  const DELTA_V_AS_OF = (this.DELTA_V_AS_OF !== null ? builder.createString(this.DELTA_V_AS_OF!) : 0);
+  const DELTA_V_PROVENANCE = (this.DELTA_V_PROVENANCE !== null ? builder.createString(this.DELTA_V_PROVENANCE!) : 0);
 
   return CAT.createCAT(builder,
     OBJECT_NAME,
@@ -677,7 +806,14 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     CATALOG_OBJECT_ID,
     PRODUCTS,
     PRODUCTS_AS_OF,
-    RECOMMENDED
+    RECOMMENDED,
+    this.ESTIMATED_DELTA_V_MPS,
+    this.ESTIMATED_DELTA_V_UNC_MPS,
+    this.HISTORICAL_DELTA_V_MPS,
+    this.MANEUVER_COUNT,
+    LAST_MANEUVER_EPOCH,
+    DELTA_V_AS_OF,
+    DELTA_V_PROVENANCE
   );
 }
 }

@@ -166,6 +166,45 @@ export declare class CAT implements flatbuffers.IUnpackableObject<CATT> {
      */
     RECOMMENDED(index: number, obj?: CATRecommendation): CATRecommendation | null;
     recommendedLength(): number;
+    /**
+     * Current estimated remaining maneuvering delta-V capability [m/s] as of
+     * DELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the
+     * element-set archive) and propulsion-class bounds. Zero when assessed as
+     * non-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty.
+     */
+    ESTIMATED_DELTA_V_MPS(): number;
+    /**
+     * 1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s].
+     */
+    ESTIMATED_DELTA_V_UNC_MPS(): number;
+    /**
+     * Cumulative historical delta-V magnitude [m/s] summed across detected or
+     * confirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF.
+     */
+    HISTORICAL_DELTA_V_MPS(): number;
+    /**
+     * Number of merged detected or confirmed maneuvers observed in the object's
+     * historical archive up to DELTA_V_AS_OF.
+     */
+    MANEUVER_COUNT(): number;
+    /**
+     * ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or
+     * empty when no maneuver has been observed.
+     */
+    LAST_MANEUVER_EPOCH(): string | null;
+    LAST_MANEUVER_EPOCH(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * ISO 8601 UTC instant when the delta-V fields above were last evaluated.
+     * Non-empty distinguishes an assessed 0 m/s object from an unassessed record.
+     */
+    DELTA_V_AS_OF(): string | null;
+    DELTA_V_AS_OF(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Method and source provenance for the delta-V estimate (for example
+     * "sdn-ap/maneuver-detection+catalog-composer").
+     */
+    DELTA_V_PROVENANCE(): string | null;
+    DELTA_V_PROVENANCE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     static startCAT(builder: flatbuffers.Builder): void;
     static addObjectName(builder: flatbuffers.Builder, OBJECT_NAMEOffset: flatbuffers.Offset): void;
     static addObjectId(builder: flatbuffers.Builder, OBJECT_IDOffset: flatbuffers.Offset): void;
@@ -202,10 +241,17 @@ export declare class CAT implements flatbuffers.IUnpackableObject<CATT> {
     static addRecommended(builder: flatbuffers.Builder, RECOMMENDEDOffset: flatbuffers.Offset): void;
     static createRecommendedVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startRecommendedVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addEstimatedDeltaVMps(builder: flatbuffers.Builder, ESTIMATED_DELTA_V_MPS: number): void;
+    static addEstimatedDeltaVUncMps(builder: flatbuffers.Builder, ESTIMATED_DELTA_V_UNC_MPS: number): void;
+    static addHistoricalDeltaVMps(builder: flatbuffers.Builder, HISTORICAL_DELTA_V_MPS: number): void;
+    static addManeuverCount(builder: flatbuffers.Builder, MANEUVER_COUNT: number): void;
+    static addLastManeuverEpoch(builder: flatbuffers.Builder, LAST_MANEUVER_EPOCHOffset: flatbuffers.Offset): void;
+    static addDeltaVAsOf(builder: flatbuffers.Builder, DELTA_V_AS_OFOffset: flatbuffers.Offset): void;
+    static addDeltaVProvenance(builder: flatbuffers.Builder, DELTA_V_PROVENANCEOffset: flatbuffers.Offset): void;
     static endCAT(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishCATBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedCATBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createCAT(builder: flatbuffers.Builder, OBJECT_NAMEOffset: flatbuffers.Offset, OBJECT_IDOffset: flatbuffers.Offset, NORAD_CAT_ID: number, OBJECT_TYPE: spaceObjectClass, OPS_STATUS_CODE: operationalState, OWNER: legacyCountryCode, LAUNCH_DATEOffset: flatbuffers.Offset, LAUNCH_SITEOffset: flatbuffers.Offset, DECAY_DATEOffset: flatbuffers.Offset, PERIOD: number, INCLINATION: number, APOGEE: number, PERIGEE: number, RCS: number, DATA_STATUS_CODE: dataAvailability, ORBIT_CENTEROffset: flatbuffers.Offset, ORBIT_TYPE: orbitRegime, DEPLOYMENT_DATEOffset: flatbuffers.Offset, MANEUVERABLE: boolean, SIZE: number, MASS: number, MASS_TYPE: massCategory, PAYLOADSOffset: flatbuffers.Offset, BUS_IDOffset: flatbuffers.Offset, CATALOG_URIOffset: flatbuffers.Offset, CATALOG_OBJECT_IDOffset: flatbuffers.Offset, PRODUCTSOffset: flatbuffers.Offset, PRODUCTS_AS_OFOffset: flatbuffers.Offset, RECOMMENDEDOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createCAT(builder: flatbuffers.Builder, OBJECT_NAMEOffset: flatbuffers.Offset, OBJECT_IDOffset: flatbuffers.Offset, NORAD_CAT_ID: number, OBJECT_TYPE: spaceObjectClass, OPS_STATUS_CODE: operationalState, OWNER: legacyCountryCode, LAUNCH_DATEOffset: flatbuffers.Offset, LAUNCH_SITEOffset: flatbuffers.Offset, DECAY_DATEOffset: flatbuffers.Offset, PERIOD: number, INCLINATION: number, APOGEE: number, PERIGEE: number, RCS: number, DATA_STATUS_CODE: dataAvailability, ORBIT_CENTEROffset: flatbuffers.Offset, ORBIT_TYPE: orbitRegime, DEPLOYMENT_DATEOffset: flatbuffers.Offset, MANEUVERABLE: boolean, SIZE: number, MASS: number, MASS_TYPE: massCategory, PAYLOADSOffset: flatbuffers.Offset, BUS_IDOffset: flatbuffers.Offset, CATALOG_URIOffset: flatbuffers.Offset, CATALOG_OBJECT_IDOffset: flatbuffers.Offset, PRODUCTSOffset: flatbuffers.Offset, PRODUCTS_AS_OFOffset: flatbuffers.Offset, RECOMMENDEDOffset: flatbuffers.Offset, ESTIMATED_DELTA_V_MPS: number, ESTIMATED_DELTA_V_UNC_MPS: number, HISTORICAL_DELTA_V_MPS: number, MANEUVER_COUNT: number, LAST_MANEUVER_EPOCHOffset: flatbuffers.Offset, DELTA_V_AS_OFOffset: flatbuffers.Offset, DELTA_V_PROVENANCEOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): CATT;
     unpackTo(_o: CATT): void;
 }
@@ -239,7 +285,14 @@ export declare class CATT implements flatbuffers.IGeneratedObject {
     PRODUCTS: (CATProductT)[];
     PRODUCTS_AS_OF: string | Uint8Array | null;
     RECOMMENDED: (CATRecommendationT)[];
-    constructor(OBJECT_NAME?: string | Uint8Array | null, OBJECT_ID?: string | Uint8Array | null, NORAD_CAT_ID?: number, OBJECT_TYPE?: spaceObjectClass, OPS_STATUS_CODE?: operationalState, OWNER?: legacyCountryCode, LAUNCH_DATE?: string | Uint8Array | null, LAUNCH_SITE?: string | Uint8Array | null, DECAY_DATE?: string | Uint8Array | null, PERIOD?: number, INCLINATION?: number, APOGEE?: number, PERIGEE?: number, RCS?: number, DATA_STATUS_CODE?: dataAvailability, ORBIT_CENTER?: string | Uint8Array | null, ORBIT_TYPE?: orbitRegime, DEPLOYMENT_DATE?: string | Uint8Array | null, MANEUVERABLE?: boolean, SIZE?: number, MASS?: number, MASS_TYPE?: massCategory, PAYLOADS?: (PLDT)[], BUS_ID?: string | Uint8Array | null, CATALOG_URI?: string | Uint8Array | null, CATALOG_OBJECT_ID?: string | Uint8Array | null, PRODUCTS?: (CATProductT)[], PRODUCTS_AS_OF?: string | Uint8Array | null, RECOMMENDED?: (CATRecommendationT)[]);
+    ESTIMATED_DELTA_V_MPS: number;
+    ESTIMATED_DELTA_V_UNC_MPS: number;
+    HISTORICAL_DELTA_V_MPS: number;
+    MANEUVER_COUNT: number;
+    LAST_MANEUVER_EPOCH: string | Uint8Array | null;
+    DELTA_V_AS_OF: string | Uint8Array | null;
+    DELTA_V_PROVENANCE: string | Uint8Array | null;
+    constructor(OBJECT_NAME?: string | Uint8Array | null, OBJECT_ID?: string | Uint8Array | null, NORAD_CAT_ID?: number, OBJECT_TYPE?: spaceObjectClass, OPS_STATUS_CODE?: operationalState, OWNER?: legacyCountryCode, LAUNCH_DATE?: string | Uint8Array | null, LAUNCH_SITE?: string | Uint8Array | null, DECAY_DATE?: string | Uint8Array | null, PERIOD?: number, INCLINATION?: number, APOGEE?: number, PERIGEE?: number, RCS?: number, DATA_STATUS_CODE?: dataAvailability, ORBIT_CENTER?: string | Uint8Array | null, ORBIT_TYPE?: orbitRegime, DEPLOYMENT_DATE?: string | Uint8Array | null, MANEUVERABLE?: boolean, SIZE?: number, MASS?: number, MASS_TYPE?: massCategory, PAYLOADS?: (PLDT)[], BUS_ID?: string | Uint8Array | null, CATALOG_URI?: string | Uint8Array | null, CATALOG_OBJECT_ID?: string | Uint8Array | null, PRODUCTS?: (CATProductT)[], PRODUCTS_AS_OF?: string | Uint8Array | null, RECOMMENDED?: (CATRecommendationT)[], ESTIMATED_DELTA_V_MPS?: number, ESTIMATED_DELTA_V_UNC_MPS?: number, HISTORICAL_DELTA_V_MPS?: number, MANEUVER_COUNT?: number, LAST_MANEUVER_EPOCH?: string | Uint8Array | null, DELTA_V_AS_OF?: string | Uint8Array | null, DELTA_V_PROVENANCE?: string | Uint8Array | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=CAT.d.ts.map

@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.296.0+1795700734282",
+  version: "1.297.0+1795704353889",
   STANDARDS: {
     PCF: {
       IDL: `// Hash: e259db0e1e4887f3ca3d15f7819bd8fbac894d2e251c81328b3c79a61b9e4060
@@ -1063,8 +1063,8 @@ file_identifier "$GNM";`,
       ]
     },
     CAT: {
-      IDL: `// Hash: 8b615ffca20a8074e17669dc4257daeae8a4d44ae7c142fcfc4e284a0de6adde
-// Version: 1.0.8
+      IDL: `// Hash: 878e3d2679f2dd31046539fe1ccf0ebba740a72c1912a5dfc8a4b60581a74607
+// Version: 1.0.10
 // -----------------------------------END_HEADER
 include "../PLD/main.fbs";
 include "../LCC/main.fbs";
@@ -1264,6 +1264,28 @@ table CAT {
   /// overlapping. Absent: the catalog recommends no product. Past the last
   /// span no product is recommended.
   RECOMMENDED: [CATRecommendation];
+  /// Current estimated remaining maneuvering delta-V capability [m/s] as of
+  /// DELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the
+  /// element-set archive) and propulsion-class bounds. Zero when assessed as
+  /// non-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty.
+  ESTIMATED_DELTA_V_MPS: double;
+  /// 1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s].
+  ESTIMATED_DELTA_V_UNC_MPS: double;
+  /// Cumulative historical delta-V magnitude [m/s] summed across detected or
+  /// confirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF.
+  HISTORICAL_DELTA_V_MPS: double;
+  /// Number of merged detected or confirmed maneuvers observed in the object's
+  /// historical archive up to DELTA_V_AS_OF.
+  MANEUVER_COUNT: uint;
+  /// ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or
+  /// empty when no maneuver has been observed.
+  LAST_MANEUVER_EPOCH: string;
+  /// ISO 8601 UTC instant when the delta-V fields above were last evaluated.
+  /// Non-empty distinguishes an assessed 0 m/s object from an unassessed record.
+  DELTA_V_AS_OF: string;
+  /// Method and source provenance for the delta-V estimate (for example
+  /// "sdn-ap/maneuver-detection+catalog-composer").
+  DELTA_V_PROVENANCE: string;
 }
 
 root_type CAT;
@@ -41268,6 +41290,36 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`
                 $ref: "#/definitions/CATRecommendation"
               },
               description: "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended."
+            },
+            ESTIMATED_DELTA_V_MPS: {
+              type: "number",
+              description: "Current estimated remaining maneuvering delta-V capability [m/s] as of\nDELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the\nelement-set archive) and propulsion-class bounds. Zero when assessed as\nnon-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty."
+            },
+            ESTIMATED_DELTA_V_UNC_MPS: {
+              type: "number",
+              description: "1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s]."
+            },
+            HISTORICAL_DELTA_V_MPS: {
+              type: "number",
+              description: "Cumulative historical delta-V magnitude [m/s] summed across detected or\nconfirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF."
+            },
+            MANEUVER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of merged detected or confirmed maneuvers observed in the object's\nhistorical archive up to DELTA_V_AS_OF."
+            },
+            LAST_MANEUVER_EPOCH: {
+              type: "string",
+              description: "ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or\nempty when no maneuver has been observed."
+            },
+            DELTA_V_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant when the delta-V fields above were last evaluated.\nNon-empty distinguishes an assessed 0 m/s object from an unassessed record."
+            },
+            DELTA_V_PROVENANCE: {
+              type: "string",
+              description: 'Method and source provenance for the delta-V estimate (for example\n"sdn-ap/maneuver-detection+catalog-composer").'
             }
           },
           additionalProperties: false
@@ -49331,6 +49383,36 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`
                 $ref: "#/definitions/CATRecommendation"
               },
               description: "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended."
+            },
+            ESTIMATED_DELTA_V_MPS: {
+              type: "number",
+              description: "Current estimated remaining maneuvering delta-V capability [m/s] as of\nDELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the\nelement-set archive) and propulsion-class bounds. Zero when assessed as\nnon-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty."
+            },
+            ESTIMATED_DELTA_V_UNC_MPS: {
+              type: "number",
+              description: "1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s]."
+            },
+            HISTORICAL_DELTA_V_MPS: {
+              type: "number",
+              description: "Cumulative historical delta-V magnitude [m/s] summed across detected or\nconfirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF."
+            },
+            MANEUVER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of merged detected or confirmed maneuvers observed in the object's\nhistorical archive up to DELTA_V_AS_OF."
+            },
+            LAST_MANEUVER_EPOCH: {
+              type: "string",
+              description: "ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or\nempty when no maneuver has been observed."
+            },
+            DELTA_V_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant when the delta-V fields above were last evaluated.\nNon-empty distinguishes an assessed 0 m/s object from an unassessed record."
+            },
+            DELTA_V_PROVENANCE: {
+              type: "string",
+              description: 'Method and source provenance for the delta-V estimate (for example\n"sdn-ap/maneuver-detection+catalog-composer").'
             }
           },
           additionalProperties: false
@@ -60762,6 +60844,36 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`
                 $ref: "#/definitions/CATRecommendation"
               },
               description: "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended."
+            },
+            ESTIMATED_DELTA_V_MPS: {
+              type: "number",
+              description: "Current estimated remaining maneuvering delta-V capability [m/s] as of\nDELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the\nelement-set archive) and propulsion-class bounds. Zero when assessed as\nnon-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty."
+            },
+            ESTIMATED_DELTA_V_UNC_MPS: {
+              type: "number",
+              description: "1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s]."
+            },
+            HISTORICAL_DELTA_V_MPS: {
+              type: "number",
+              description: "Cumulative historical delta-V magnitude [m/s] summed across detected or\nconfirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF."
+            },
+            MANEUVER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of merged detected or confirmed maneuvers observed in the object's\nhistorical archive up to DELTA_V_AS_OF."
+            },
+            LAST_MANEUVER_EPOCH: {
+              type: "string",
+              description: "ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or\nempty when no maneuver has been observed."
+            },
+            DELTA_V_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant when the delta-V fields above were last evaluated.\nNon-empty distinguishes an assessed 0 m/s object from an unassessed record."
+            },
+            DELTA_V_PROVENANCE: {
+              type: "string",
+              description: 'Method and source provenance for the delta-V estimate (for example\n"sdn-ap/maneuver-detection+catalog-composer").'
             }
           },
           additionalProperties: false
@@ -77426,6 +77538,36 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`
                 $ref: "#/definitions/CATRecommendation"
               },
               description: "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended."
+            },
+            ESTIMATED_DELTA_V_MPS: {
+              type: "number",
+              description: "Current estimated remaining maneuvering delta-V capability [m/s] as of\nDELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the\nelement-set archive) and propulsion-class bounds. Zero when assessed as\nnon-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty."
+            },
+            ESTIMATED_DELTA_V_UNC_MPS: {
+              type: "number",
+              description: "1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s]."
+            },
+            HISTORICAL_DELTA_V_MPS: {
+              type: "number",
+              description: "Cumulative historical delta-V magnitude [m/s] summed across detected or\nconfirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF."
+            },
+            MANEUVER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of merged detected or confirmed maneuvers observed in the object's\nhistorical archive up to DELTA_V_AS_OF."
+            },
+            LAST_MANEUVER_EPOCH: {
+              type: "string",
+              description: "ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or\nempty when no maneuver has been observed."
+            },
+            DELTA_V_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant when the delta-V fields above were last evaluated.\nNon-empty distinguishes an assessed 0 m/s object from an unassessed record."
+            },
+            DELTA_V_PROVENANCE: {
+              type: "string",
+              description: 'Method and source provenance for the delta-V estimate (for example\n"sdn-ap/maneuver-detection+catalog-composer").'
             }
           },
           additionalProperties: false
@@ -91233,6 +91375,36 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`
                 $ref: "#/definitions/CATRecommendation"
               },
               description: "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended."
+            },
+            ESTIMATED_DELTA_V_MPS: {
+              type: "number",
+              description: "Current estimated remaining maneuvering delta-V capability [m/s] as of\nDELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the\nelement-set archive) and propulsion-class bounds. Zero when assessed as\nnon-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty."
+            },
+            ESTIMATED_DELTA_V_UNC_MPS: {
+              type: "number",
+              description: "1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s]."
+            },
+            HISTORICAL_DELTA_V_MPS: {
+              type: "number",
+              description: "Cumulative historical delta-V magnitude [m/s] summed across detected or\nconfirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF."
+            },
+            MANEUVER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of merged detected or confirmed maneuvers observed in the object's\nhistorical archive up to DELTA_V_AS_OF."
+            },
+            LAST_MANEUVER_EPOCH: {
+              type: "string",
+              description: "ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or\nempty when no maneuver has been observed."
+            },
+            DELTA_V_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant when the delta-V fields above were last evaluated.\nNon-empty distinguishes an assessed 0 m/s object from an unassessed record."
+            },
+            DELTA_V_PROVENANCE: {
+              type: "string",
+              description: 'Method and source provenance for the delta-V estimate (for example\n"sdn-ap/maneuver-detection+catalog-composer").'
             }
           },
           additionalProperties: false
@@ -101635,6 +101807,36 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`
                 $ref: "#/definitions/CATRecommendation"
               },
               description: "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended."
+            },
+            ESTIMATED_DELTA_V_MPS: {
+              type: "number",
+              description: "Current estimated remaining maneuvering delta-V capability [m/s] as of\nDELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the\nelement-set archive) and propulsion-class bounds. Zero when assessed as\nnon-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty."
+            },
+            ESTIMATED_DELTA_V_UNC_MPS: {
+              type: "number",
+              description: "1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s]."
+            },
+            HISTORICAL_DELTA_V_MPS: {
+              type: "number",
+              description: "Cumulative historical delta-V magnitude [m/s] summed across detected or\nconfirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF."
+            },
+            MANEUVER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of merged detected or confirmed maneuvers observed in the object's\nhistorical archive up to DELTA_V_AS_OF."
+            },
+            LAST_MANEUVER_EPOCH: {
+              type: "string",
+              description: "ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or\nempty when no maneuver has been observed."
+            },
+            DELTA_V_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant when the delta-V fields above were last evaluated.\nNon-empty distinguishes an assessed 0 m/s object from an unassessed record."
+            },
+            DELTA_V_PROVENANCE: {
+              type: "string",
+              description: 'Method and source provenance for the delta-V estimate (for example\n"sdn-ap/maneuver-detection+catalog-composer").'
             }
           },
           additionalProperties: false
@@ -108875,6 +109077,36 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`
                 $ref: "#/definitions/CATRecommendation"
               },
               description: "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended."
+            },
+            ESTIMATED_DELTA_V_MPS: {
+              type: "number",
+              description: "Current estimated remaining maneuvering delta-V capability [m/s] as of\nDELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the\nelement-set archive) and propulsion-class bounds. Zero when assessed as\nnon-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty."
+            },
+            ESTIMATED_DELTA_V_UNC_MPS: {
+              type: "number",
+              description: "1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s]."
+            },
+            HISTORICAL_DELTA_V_MPS: {
+              type: "number",
+              description: "Cumulative historical delta-V magnitude [m/s] summed across detected or\nconfirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF."
+            },
+            MANEUVER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of merged detected or confirmed maneuvers observed in the object's\nhistorical archive up to DELTA_V_AS_OF."
+            },
+            LAST_MANEUVER_EPOCH: {
+              type: "string",
+              description: "ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or\nempty when no maneuver has been observed."
+            },
+            DELTA_V_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant when the delta-V fields above were last evaluated.\nNon-empty distinguishes an assessed 0 m/s object from an unassessed record."
+            },
+            DELTA_V_PROVENANCE: {
+              type: "string",
+              description: 'Method and source provenance for the delta-V estimate (for example\n"sdn-ap/maneuver-detection+catalog-composer").'
             }
           },
           additionalProperties: false
@@ -136844,6 +137076,36 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`
                 $ref: "#/definitions/CATRecommendation"
               },
               description: "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended."
+            },
+            ESTIMATED_DELTA_V_MPS: {
+              type: "number",
+              description: "Current estimated remaining maneuvering delta-V capability [m/s] as of\nDELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the\nelement-set archive) and propulsion-class bounds. Zero when assessed as\nnon-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty."
+            },
+            ESTIMATED_DELTA_V_UNC_MPS: {
+              type: "number",
+              description: "1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s]."
+            },
+            HISTORICAL_DELTA_V_MPS: {
+              type: "number",
+              description: "Cumulative historical delta-V magnitude [m/s] summed across detected or\nconfirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF."
+            },
+            MANEUVER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of merged detected or confirmed maneuvers observed in the object's\nhistorical archive up to DELTA_V_AS_OF."
+            },
+            LAST_MANEUVER_EPOCH: {
+              type: "string",
+              description: "ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or\nempty when no maneuver has been observed."
+            },
+            DELTA_V_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant when the delta-V fields above were last evaluated.\nNon-empty distinguishes an assessed 0 m/s object from an unassessed record."
+            },
+            DELTA_V_PROVENANCE: {
+              type: "string",
+              description: 'Method and source provenance for the delta-V estimate (for example\n"sdn-ap/maneuver-detection+catalog-composer").'
             }
           },
           additionalProperties: false
@@ -147455,6 +147717,36 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`
                 $ref: "#/definitions/CATRecommendation"
               },
               description: "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended."
+            },
+            ESTIMATED_DELTA_V_MPS: {
+              type: "number",
+              description: "Current estimated remaining maneuvering delta-V capability [m/s] as of\nDELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the\nelement-set archive) and propulsion-class bounds. Zero when assessed as\nnon-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty."
+            },
+            ESTIMATED_DELTA_V_UNC_MPS: {
+              type: "number",
+              description: "1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s]."
+            },
+            HISTORICAL_DELTA_V_MPS: {
+              type: "number",
+              description: "Cumulative historical delta-V magnitude [m/s] summed across detected or\nconfirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF."
+            },
+            MANEUVER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of merged detected or confirmed maneuvers observed in the object's\nhistorical archive up to DELTA_V_AS_OF."
+            },
+            LAST_MANEUVER_EPOCH: {
+              type: "string",
+              description: "ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or\nempty when no maneuver has been observed."
+            },
+            DELTA_V_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant when the delta-V fields above were last evaluated.\nNon-empty distinguishes an assessed 0 m/s object from an unassessed record."
+            },
+            DELTA_V_PROVENANCE: {
+              type: "string",
+              description: 'Method and source provenance for the delta-V estimate (for example\n"sdn-ap/maneuver-detection+catalog-composer").'
             }
           },
           additionalProperties: false
@@ -154872,6 +155164,36 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`
                 $ref: "#/definitions/CATRecommendation"
               },
               description: "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended."
+            },
+            ESTIMATED_DELTA_V_MPS: {
+              type: "number",
+              description: "Current estimated remaining maneuvering delta-V capability [m/s] as of\nDELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the\nelement-set archive) and propulsion-class bounds. Zero when assessed as\nnon-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty."
+            },
+            ESTIMATED_DELTA_V_UNC_MPS: {
+              type: "number",
+              description: "1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s]."
+            },
+            HISTORICAL_DELTA_V_MPS: {
+              type: "number",
+              description: "Cumulative historical delta-V magnitude [m/s] summed across detected or\nconfirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF."
+            },
+            MANEUVER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of merged detected or confirmed maneuvers observed in the object's\nhistorical archive up to DELTA_V_AS_OF."
+            },
+            LAST_MANEUVER_EPOCH: {
+              type: "string",
+              description: "ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or\nempty when no maneuver has been observed."
+            },
+            DELTA_V_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant when the delta-V fields above were last evaluated.\nNon-empty distinguishes an assessed 0 m/s object from an unassessed record."
+            },
+            DELTA_V_PROVENANCE: {
+              type: "string",
+              description: 'Method and source provenance for the delta-V estimate (for example\n"sdn-ap/maneuver-detection+catalog-composer").'
             }
           },
           additionalProperties: false
@@ -186159,6 +186481,36 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`
                 $ref: "#/definitions/CATRecommendation"
               },
               description: "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended."
+            },
+            ESTIMATED_DELTA_V_MPS: {
+              type: "number",
+              description: "Current estimated remaining maneuvering delta-V capability [m/s] as of\nDELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the\nelement-set archive) and propulsion-class bounds. Zero when assessed as\nnon-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty."
+            },
+            ESTIMATED_DELTA_V_UNC_MPS: {
+              type: "number",
+              description: "1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s]."
+            },
+            HISTORICAL_DELTA_V_MPS: {
+              type: "number",
+              description: "Cumulative historical delta-V magnitude [m/s] summed across detected or\nconfirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF."
+            },
+            MANEUVER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of merged detected or confirmed maneuvers observed in the object's\nhistorical archive up to DELTA_V_AS_OF."
+            },
+            LAST_MANEUVER_EPOCH: {
+              type: "string",
+              description: "ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or\nempty when no maneuver has been observed."
+            },
+            DELTA_V_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant when the delta-V fields above were last evaluated.\nNon-empty distinguishes an assessed 0 m/s object from an unassessed record."
+            },
+            DELTA_V_PROVENANCE: {
+              type: "string",
+              description: 'Method and source provenance for the delta-V estimate (for example\n"sdn-ap/maneuver-detection+catalog-composer").'
             }
           },
           additionalProperties: false
@@ -277190,6 +277542,36 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`
                 $ref: "#/definitions/CATRecommendation"
               },
               description: "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended."
+            },
+            ESTIMATED_DELTA_V_MPS: {
+              type: "number",
+              description: "Current estimated remaining maneuvering delta-V capability [m/s] as of\nDELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the\nelement-set archive) and propulsion-class bounds. Zero when assessed as\nnon-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty."
+            },
+            ESTIMATED_DELTA_V_UNC_MPS: {
+              type: "number",
+              description: "1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s]."
+            },
+            HISTORICAL_DELTA_V_MPS: {
+              type: "number",
+              description: "Cumulative historical delta-V magnitude [m/s] summed across detected or\nconfirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF."
+            },
+            MANEUVER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of merged detected or confirmed maneuvers observed in the object's\nhistorical archive up to DELTA_V_AS_OF."
+            },
+            LAST_MANEUVER_EPOCH: {
+              type: "string",
+              description: "ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or\nempty when no maneuver has been observed."
+            },
+            DELTA_V_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant when the delta-V fields above were last evaluated.\nNon-empty distinguishes an assessed 0 m/s object from an unassessed record."
+            },
+            DELTA_V_PROVENANCE: {
+              type: "string",
+              description: 'Method and source provenance for the delta-V estimate (for example\n"sdn-ap/maneuver-detection+catalog-composer").'
             }
           },
           additionalProperties: false
@@ -281559,6 +281941,36 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`
                 $ref: "#/definitions/CATRecommendation"
               },
               description: "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended."
+            },
+            ESTIMATED_DELTA_V_MPS: {
+              type: "number",
+              description: "Current estimated remaining maneuvering delta-V capability [m/s] as of\nDELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the\nelement-set archive) and propulsion-class bounds. Zero when assessed as\nnon-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty."
+            },
+            ESTIMATED_DELTA_V_UNC_MPS: {
+              type: "number",
+              description: "1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s]."
+            },
+            HISTORICAL_DELTA_V_MPS: {
+              type: "number",
+              description: "Cumulative historical delta-V magnitude [m/s] summed across detected or\nconfirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF."
+            },
+            MANEUVER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of merged detected or confirmed maneuvers observed in the object's\nhistorical archive up to DELTA_V_AS_OF."
+            },
+            LAST_MANEUVER_EPOCH: {
+              type: "string",
+              description: "ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or\nempty when no maneuver has been observed."
+            },
+            DELTA_V_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant when the delta-V fields above were last evaluated.\nNon-empty distinguishes an assessed 0 m/s object from an unassessed record."
+            },
+            DELTA_V_PROVENANCE: {
+              type: "string",
+              description: 'Method and source provenance for the delta-V estimate (for example\n"sdn-ap/maneuver-detection+catalog-composer").'
             }
           },
           additionalProperties: false
@@ -288918,6 +289330,36 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`
                 $ref: "#/definitions/CATRecommendation"
               },
               description: "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended."
+            },
+            ESTIMATED_DELTA_V_MPS: {
+              type: "number",
+              description: "Current estimated remaining maneuvering delta-V capability [m/s] as of\nDELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the\nelement-set archive) and propulsion-class bounds. Zero when assessed as\nnon-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty."
+            },
+            ESTIMATED_DELTA_V_UNC_MPS: {
+              type: "number",
+              description: "1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s]."
+            },
+            HISTORICAL_DELTA_V_MPS: {
+              type: "number",
+              description: "Cumulative historical delta-V magnitude [m/s] summed across detected or\nconfirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF."
+            },
+            MANEUVER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of merged detected or confirmed maneuvers observed in the object's\nhistorical archive up to DELTA_V_AS_OF."
+            },
+            LAST_MANEUVER_EPOCH: {
+              type: "string",
+              description: "ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or\nempty when no maneuver has been observed."
+            },
+            DELTA_V_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant when the delta-V fields above were last evaluated.\nNon-empty distinguishes an assessed 0 m/s object from an unassessed record."
+            },
+            DELTA_V_PROVENANCE: {
+              type: "string",
+              description: 'Method and source provenance for the delta-V estimate (for example\n"sdn-ap/maneuver-detection+catalog-composer").'
             }
           },
           additionalProperties: false
@@ -306154,6 +306596,36 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`
                 $ref: "#/definitions/CATRecommendation"
               },
               description: "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended."
+            },
+            ESTIMATED_DELTA_V_MPS: {
+              type: "number",
+              description: "Current estimated remaining maneuvering delta-V capability [m/s] as of\nDELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the\nelement-set archive) and propulsion-class bounds. Zero when assessed as\nnon-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty."
+            },
+            ESTIMATED_DELTA_V_UNC_MPS: {
+              type: "number",
+              description: "1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s]."
+            },
+            HISTORICAL_DELTA_V_MPS: {
+              type: "number",
+              description: "Cumulative historical delta-V magnitude [m/s] summed across detected or\nconfirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF."
+            },
+            MANEUVER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of merged detected or confirmed maneuvers observed in the object's\nhistorical archive up to DELTA_V_AS_OF."
+            },
+            LAST_MANEUVER_EPOCH: {
+              type: "string",
+              description: "ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or\nempty when no maneuver has been observed."
+            },
+            DELTA_V_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant when the delta-V fields above were last evaluated.\nNon-empty distinguishes an assessed 0 m/s object from an unassessed record."
+            },
+            DELTA_V_PROVENANCE: {
+              type: "string",
+              description: 'Method and source provenance for the delta-V estimate (for example\n"sdn-ap/maneuver-detection+catalog-composer").'
             }
           },
           additionalProperties: false
@@ -312537,6 +313009,36 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`
                 $ref: "#/definitions/CATRecommendation"
               },
               description: "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended."
+            },
+            ESTIMATED_DELTA_V_MPS: {
+              type: "number",
+              description: "Current estimated remaining maneuvering delta-V capability [m/s] as of\nDELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the\nelement-set archive) and propulsion-class bounds. Zero when assessed as\nnon-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty."
+            },
+            ESTIMATED_DELTA_V_UNC_MPS: {
+              type: "number",
+              description: "1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s]."
+            },
+            HISTORICAL_DELTA_V_MPS: {
+              type: "number",
+              description: "Cumulative historical delta-V magnitude [m/s] summed across detected or\nconfirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF."
+            },
+            MANEUVER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of merged detected or confirmed maneuvers observed in the object's\nhistorical archive up to DELTA_V_AS_OF."
+            },
+            LAST_MANEUVER_EPOCH: {
+              type: "string",
+              description: "ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or\nempty when no maneuver has been observed."
+            },
+            DELTA_V_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant when the delta-V fields above were last evaluated.\nNon-empty distinguishes an assessed 0 m/s object from an unassessed record."
+            },
+            DELTA_V_PROVENANCE: {
+              type: "string",
+              description: 'Method and source provenance for the delta-V estimate (for example\n"sdn-ap/maneuver-detection+catalog-composer").'
             }
           },
           additionalProperties: false
@@ -316611,6 +317113,36 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`
                 $ref: "#/definitions/CATRecommendation"
               },
               description: "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended."
+            },
+            ESTIMATED_DELTA_V_MPS: {
+              type: "number",
+              description: "Current estimated remaining maneuvering delta-V capability [m/s] as of\nDELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the\nelement-set archive) and propulsion-class bounds. Zero when assessed as\nnon-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty."
+            },
+            ESTIMATED_DELTA_V_UNC_MPS: {
+              type: "number",
+              description: "1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s]."
+            },
+            HISTORICAL_DELTA_V_MPS: {
+              type: "number",
+              description: "Cumulative historical delta-V magnitude [m/s] summed across detected or\nconfirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF."
+            },
+            MANEUVER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of merged detected or confirmed maneuvers observed in the object's\nhistorical archive up to DELTA_V_AS_OF."
+            },
+            LAST_MANEUVER_EPOCH: {
+              type: "string",
+              description: "ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or\nempty when no maneuver has been observed."
+            },
+            DELTA_V_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant when the delta-V fields above were last evaluated.\nNon-empty distinguishes an assessed 0 m/s object from an unassessed record."
+            },
+            DELTA_V_PROVENANCE: {
+              type: "string",
+              description: 'Method and source provenance for the delta-V estimate (for example\n"sdn-ap/maneuver-detection+catalog-composer").'
             }
           },
           additionalProperties: false
@@ -345773,6 +346305,36 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`
                 $ref: "#/definitions/CATRecommendation"
               },
               description: "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended."
+            },
+            ESTIMATED_DELTA_V_MPS: {
+              type: "number",
+              description: "Current estimated remaining maneuvering delta-V capability [m/s] as of\nDELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the\nelement-set archive) and propulsion-class bounds. Zero when assessed as\nnon-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty."
+            },
+            ESTIMATED_DELTA_V_UNC_MPS: {
+              type: "number",
+              description: "1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s]."
+            },
+            HISTORICAL_DELTA_V_MPS: {
+              type: "number",
+              description: "Cumulative historical delta-V magnitude [m/s] summed across detected or\nconfirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF."
+            },
+            MANEUVER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of merged detected or confirmed maneuvers observed in the object's\nhistorical archive up to DELTA_V_AS_OF."
+            },
+            LAST_MANEUVER_EPOCH: {
+              type: "string",
+              description: "ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or\nempty when no maneuver has been observed."
+            },
+            DELTA_V_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant when the delta-V fields above were last evaluated.\nNon-empty distinguishes an assessed 0 m/s object from an unassessed record."
+            },
+            DELTA_V_PROVENANCE: {
+              type: "string",
+              description: 'Method and source provenance for the delta-V estimate (for example\n"sdn-ap/maneuver-detection+catalog-composer").'
             }
           },
           additionalProperties: false
@@ -370085,6 +370647,36 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`
                 $ref: "#/definitions/CATRecommendation"
               },
               description: "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended."
+            },
+            ESTIMATED_DELTA_V_MPS: {
+              type: "number",
+              description: "Current estimated remaining maneuvering delta-V capability [m/s] as of\nDELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the\nelement-set archive) and propulsion-class bounds. Zero when assessed as\nnon-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty."
+            },
+            ESTIMATED_DELTA_V_UNC_MPS: {
+              type: "number",
+              description: "1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s]."
+            },
+            HISTORICAL_DELTA_V_MPS: {
+              type: "number",
+              description: "Cumulative historical delta-V magnitude [m/s] summed across detected or\nconfirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF."
+            },
+            MANEUVER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of merged detected or confirmed maneuvers observed in the object's\nhistorical archive up to DELTA_V_AS_OF."
+            },
+            LAST_MANEUVER_EPOCH: {
+              type: "string",
+              description: "ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or\nempty when no maneuver has been observed."
+            },
+            DELTA_V_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant when the delta-V fields above were last evaluated.\nNon-empty distinguishes an assessed 0 m/s object from an unassessed record."
+            },
+            DELTA_V_PROVENANCE: {
+              type: "string",
+              description: 'Method and source provenance for the delta-V estimate (for example\n"sdn-ap/maneuver-detection+catalog-composer").'
             }
           },
           additionalProperties: false
@@ -394878,6 +395470,43 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
               },
               description: "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended.",
               "x-flatbuffer-type": "[CATRecommendation]"
+            },
+            ESTIMATED_DELTA_V_MPS: {
+              type: "number",
+              description: "Current estimated remaining maneuvering delta-V capability [m/s] as of\nDELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the\nelement-set archive) and propulsion-class bounds. Zero when assessed as\nnon-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty.",
+              "x-flatbuffer-type": "double"
+            },
+            ESTIMATED_DELTA_V_UNC_MPS: {
+              type: "number",
+              description: "1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s].",
+              "x-flatbuffer-type": "double"
+            },
+            HISTORICAL_DELTA_V_MPS: {
+              type: "number",
+              description: "Cumulative historical delta-V magnitude [m/s] summed across detected or\nconfirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF.",
+              "x-flatbuffer-type": "double"
+            },
+            MANEUVER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of merged detected or confirmed maneuvers observed in the object's\nhistorical archive up to DELTA_V_AS_OF.",
+              "x-flatbuffer-type": "uint"
+            },
+            LAST_MANEUVER_EPOCH: {
+              type: "string",
+              description: "ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or\nempty when no maneuver has been observed.",
+              "x-flatbuffer-type": "string"
+            },
+            DELTA_V_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant when the delta-V fields above were last evaluated.\nNon-empty distinguishes an assessed 0 m/s object from an unassessed record.",
+              "x-flatbuffer-type": "string"
+            },
+            DELTA_V_PROVENANCE: {
+              type: "string",
+              description: 'Method and source provenance for the delta-V estimate (for example\n"sdn-ap/maneuver-detection+catalog-composer").',
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -418237,6 +418866,43 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
               },
               description: "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended.",
               "x-flatbuffer-type": "[CATRecommendation]"
+            },
+            ESTIMATED_DELTA_V_MPS: {
+              type: "number",
+              description: "Current estimated remaining maneuvering delta-V capability [m/s] as of\nDELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the\nelement-set archive) and propulsion-class bounds. Zero when assessed as\nnon-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty.",
+              "x-flatbuffer-type": "double"
+            },
+            ESTIMATED_DELTA_V_UNC_MPS: {
+              type: "number",
+              description: "1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s].",
+              "x-flatbuffer-type": "double"
+            },
+            HISTORICAL_DELTA_V_MPS: {
+              type: "number",
+              description: "Cumulative historical delta-V magnitude [m/s] summed across detected or\nconfirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF.",
+              "x-flatbuffer-type": "double"
+            },
+            MANEUVER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of merged detected or confirmed maneuvers observed in the object's\nhistorical archive up to DELTA_V_AS_OF.",
+              "x-flatbuffer-type": "uint"
+            },
+            LAST_MANEUVER_EPOCH: {
+              type: "string",
+              description: "ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or\nempty when no maneuver has been observed.",
+              "x-flatbuffer-type": "string"
+            },
+            DELTA_V_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant when the delta-V fields above were last evaluated.\nNon-empty distinguishes an assessed 0 m/s object from an unassessed record.",
+              "x-flatbuffer-type": "string"
+            },
+            DELTA_V_PROVENANCE: {
+              type: "string",
+              description: 'Method and source provenance for the delta-V estimate (for example\n"sdn-ap/maneuver-detection+catalog-composer").',
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -445909,6 +446575,43 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
               },
               description: "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended.",
               "x-flatbuffer-type": "[CATRecommendation]"
+            },
+            ESTIMATED_DELTA_V_MPS: {
+              type: "number",
+              description: "Current estimated remaining maneuvering delta-V capability [m/s] as of\nDELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the\nelement-set archive) and propulsion-class bounds. Zero when assessed as\nnon-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty.",
+              "x-flatbuffer-type": "double"
+            },
+            ESTIMATED_DELTA_V_UNC_MPS: {
+              type: "number",
+              description: "1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s].",
+              "x-flatbuffer-type": "double"
+            },
+            HISTORICAL_DELTA_V_MPS: {
+              type: "number",
+              description: "Cumulative historical delta-V magnitude [m/s] summed across detected or\nconfirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF.",
+              "x-flatbuffer-type": "double"
+            },
+            MANEUVER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of merged detected or confirmed maneuvers observed in the object's\nhistorical archive up to DELTA_V_AS_OF.",
+              "x-flatbuffer-type": "uint"
+            },
+            LAST_MANEUVER_EPOCH: {
+              type: "string",
+              description: "ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or\nempty when no maneuver has been observed.",
+              "x-flatbuffer-type": "string"
+            },
+            DELTA_V_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant when the delta-V fields above were last evaluated.\nNon-empty distinguishes an assessed 0 m/s object from an unassessed record.",
+              "x-flatbuffer-type": "string"
+            },
+            DELTA_V_PROVENANCE: {
+              type: "string",
+              description: 'Method and source provenance for the delta-V estimate (for example\n"sdn-ap/maneuver-detection+catalog-composer").',
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -485464,6 +486167,43 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
               },
               description: "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended.",
               "x-flatbuffer-type": "[CATRecommendation]"
+            },
+            ESTIMATED_DELTA_V_MPS: {
+              type: "number",
+              description: "Current estimated remaining maneuvering delta-V capability [m/s] as of\nDELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the\nelement-set archive) and propulsion-class bounds. Zero when assessed as\nnon-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty.",
+              "x-flatbuffer-type": "double"
+            },
+            ESTIMATED_DELTA_V_UNC_MPS: {
+              type: "number",
+              description: "1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s].",
+              "x-flatbuffer-type": "double"
+            },
+            HISTORICAL_DELTA_V_MPS: {
+              type: "number",
+              description: "Cumulative historical delta-V magnitude [m/s] summed across detected or\nconfirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF.",
+              "x-flatbuffer-type": "double"
+            },
+            MANEUVER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of merged detected or confirmed maneuvers observed in the object's\nhistorical archive up to DELTA_V_AS_OF.",
+              "x-flatbuffer-type": "uint"
+            },
+            LAST_MANEUVER_EPOCH: {
+              type: "string",
+              description: "ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or\nempty when no maneuver has been observed.",
+              "x-flatbuffer-type": "string"
+            },
+            DELTA_V_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant when the delta-V fields above were last evaluated.\nNon-empty distinguishes an assessed 0 m/s object from an unassessed record.",
+              "x-flatbuffer-type": "string"
+            },
+            DELTA_V_PROVENANCE: {
+              type: "string",
+              description: 'Method and source provenance for the delta-V estimate (for example\n"sdn-ap/maneuver-detection+catalog-composer").',
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -523204,6 +523944,43 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
               },
               description: "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended.",
               "x-flatbuffer-type": "[CATRecommendation]"
+            },
+            ESTIMATED_DELTA_V_MPS: {
+              type: "number",
+              description: "Current estimated remaining maneuvering delta-V capability [m/s] as of\nDELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the\nelement-set archive) and propulsion-class bounds. Zero when assessed as\nnon-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty.",
+              "x-flatbuffer-type": "double"
+            },
+            ESTIMATED_DELTA_V_UNC_MPS: {
+              type: "number",
+              description: "1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s].",
+              "x-flatbuffer-type": "double"
+            },
+            HISTORICAL_DELTA_V_MPS: {
+              type: "number",
+              description: "Cumulative historical delta-V magnitude [m/s] summed across detected or\nconfirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF.",
+              "x-flatbuffer-type": "double"
+            },
+            MANEUVER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of merged detected or confirmed maneuvers observed in the object's\nhistorical archive up to DELTA_V_AS_OF.",
+              "x-flatbuffer-type": "uint"
+            },
+            LAST_MANEUVER_EPOCH: {
+              type: "string",
+              description: "ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or\nempty when no maneuver has been observed.",
+              "x-flatbuffer-type": "string"
+            },
+            DELTA_V_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant when the delta-V fields above were last evaluated.\nNon-empty distinguishes an assessed 0 m/s object from an unassessed record.",
+              "x-flatbuffer-type": "string"
+            },
+            DELTA_V_PROVENANCE: {
+              type: "string",
+              description: 'Method and source provenance for the delta-V estimate (for example\n"sdn-ap/maneuver-detection+catalog-composer").',
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -545615,6 +546392,43 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
               },
               description: "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended.",
               "x-flatbuffer-type": "[CATRecommendation]"
+            },
+            ESTIMATED_DELTA_V_MPS: {
+              type: "number",
+              description: "Current estimated remaining maneuvering delta-V capability [m/s] as of\nDELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the\nelement-set archive) and propulsion-class bounds. Zero when assessed as\nnon-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty.",
+              "x-flatbuffer-type": "double"
+            },
+            ESTIMATED_DELTA_V_UNC_MPS: {
+              type: "number",
+              description: "1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s].",
+              "x-flatbuffer-type": "double"
+            },
+            HISTORICAL_DELTA_V_MPS: {
+              type: "number",
+              description: "Cumulative historical delta-V magnitude [m/s] summed across detected or\nconfirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF.",
+              "x-flatbuffer-type": "double"
+            },
+            MANEUVER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of merged detected or confirmed maneuvers observed in the object's\nhistorical archive up to DELTA_V_AS_OF.",
+              "x-flatbuffer-type": "uint"
+            },
+            LAST_MANEUVER_EPOCH: {
+              type: "string",
+              description: "ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or\nempty when no maneuver has been observed.",
+              "x-flatbuffer-type": "string"
+            },
+            DELTA_V_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant when the delta-V fields above were last evaluated.\nNon-empty distinguishes an assessed 0 m/s object from an unassessed record.",
+              "x-flatbuffer-type": "string"
+            },
+            DELTA_V_PROVENANCE: {
+              type: "string",
+              description: 'Method and source provenance for the delta-V estimate (for example\n"sdn-ap/maneuver-detection+catalog-composer").',
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -573617,6 +574431,43 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
               },
               description: "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended.",
               "x-flatbuffer-type": "[CATRecommendation]"
+            },
+            ESTIMATED_DELTA_V_MPS: {
+              type: "number",
+              description: "Current estimated remaining maneuvering delta-V capability [m/s] as of\nDELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the\nelement-set archive) and propulsion-class bounds. Zero when assessed as\nnon-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty.",
+              "x-flatbuffer-type": "double"
+            },
+            ESTIMATED_DELTA_V_UNC_MPS: {
+              type: "number",
+              description: "1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s].",
+              "x-flatbuffer-type": "double"
+            },
+            HISTORICAL_DELTA_V_MPS: {
+              type: "number",
+              description: "Cumulative historical delta-V magnitude [m/s] summed across detected or\nconfirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF.",
+              "x-flatbuffer-type": "double"
+            },
+            MANEUVER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of merged detected or confirmed maneuvers observed in the object's\nhistorical archive up to DELTA_V_AS_OF.",
+              "x-flatbuffer-type": "uint"
+            },
+            LAST_MANEUVER_EPOCH: {
+              type: "string",
+              description: "ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or\nempty when no maneuver has been observed.",
+              "x-flatbuffer-type": "string"
+            },
+            DELTA_V_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant when the delta-V fields above were last evaluated.\nNon-empty distinguishes an assessed 0 m/s object from an unassessed record.",
+              "x-flatbuffer-type": "string"
+            },
+            DELTA_V_PROVENANCE: {
+              type: "string",
+              description: 'Method and source provenance for the delta-V estimate (for example\n"sdn-ap/maneuver-detection+catalog-composer").',
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -632158,6 +633009,43 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
               },
               description: "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended.",
               "x-flatbuffer-type": "[CATRecommendation]"
+            },
+            ESTIMATED_DELTA_V_MPS: {
+              type: "number",
+              description: "Current estimated remaining maneuvering delta-V capability [m/s] as of\nDELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the\nelement-set archive) and propulsion-class bounds. Zero when assessed as\nnon-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty.",
+              "x-flatbuffer-type": "double"
+            },
+            ESTIMATED_DELTA_V_UNC_MPS: {
+              type: "number",
+              description: "1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s].",
+              "x-flatbuffer-type": "double"
+            },
+            HISTORICAL_DELTA_V_MPS: {
+              type: "number",
+              description: "Cumulative historical delta-V magnitude [m/s] summed across detected or\nconfirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF.",
+              "x-flatbuffer-type": "double"
+            },
+            MANEUVER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of merged detected or confirmed maneuvers observed in the object's\nhistorical archive up to DELTA_V_AS_OF.",
+              "x-flatbuffer-type": "uint"
+            },
+            LAST_MANEUVER_EPOCH: {
+              type: "string",
+              description: "ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or\nempty when no maneuver has been observed.",
+              "x-flatbuffer-type": "string"
+            },
+            DELTA_V_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant when the delta-V fields above were last evaluated.\nNon-empty distinguishes an assessed 0 m/s object from an unassessed record.",
+              "x-flatbuffer-type": "string"
+            },
+            DELTA_V_PROVENANCE: {
+              type: "string",
+              description: 'Method and source provenance for the delta-V estimate (for example\n"sdn-ap/maneuver-detection+catalog-composer").',
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -654890,6 +655778,43 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
               },
               description: "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended.",
               "x-flatbuffer-type": "[CATRecommendation]"
+            },
+            ESTIMATED_DELTA_V_MPS: {
+              type: "number",
+              description: "Current estimated remaining maneuvering delta-V capability [m/s] as of\nDELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the\nelement-set archive) and propulsion-class bounds. Zero when assessed as\nnon-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty.",
+              "x-flatbuffer-type": "double"
+            },
+            ESTIMATED_DELTA_V_UNC_MPS: {
+              type: "number",
+              description: "1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s].",
+              "x-flatbuffer-type": "double"
+            },
+            HISTORICAL_DELTA_V_MPS: {
+              type: "number",
+              description: "Cumulative historical delta-V magnitude [m/s] summed across detected or\nconfirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF.",
+              "x-flatbuffer-type": "double"
+            },
+            MANEUVER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of merged detected or confirmed maneuvers observed in the object's\nhistorical archive up to DELTA_V_AS_OF.",
+              "x-flatbuffer-type": "uint"
+            },
+            LAST_MANEUVER_EPOCH: {
+              type: "string",
+              description: "ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or\nempty when no maneuver has been observed.",
+              "x-flatbuffer-type": "string"
+            },
+            DELTA_V_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant when the delta-V fields above were last evaluated.\nNon-empty distinguishes an assessed 0 m/s object from an unassessed record.",
+              "x-flatbuffer-type": "string"
+            },
+            DELTA_V_PROVENANCE: {
+              type: "string",
+              description: 'Method and source provenance for the delta-V estimate (for example\n"sdn-ap/maneuver-detection+catalog-composer").',
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -673135,6 +674060,43 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
               },
               description: "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended.",
               "x-flatbuffer-type": "[CATRecommendation]"
+            },
+            ESTIMATED_DELTA_V_MPS: {
+              type: "number",
+              description: "Current estimated remaining maneuvering delta-V capability [m/s] as of\nDELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the\nelement-set archive) and propulsion-class bounds. Zero when assessed as\nnon-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty.",
+              "x-flatbuffer-type": "double"
+            },
+            ESTIMATED_DELTA_V_UNC_MPS: {
+              type: "number",
+              description: "1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s].",
+              "x-flatbuffer-type": "double"
+            },
+            HISTORICAL_DELTA_V_MPS: {
+              type: "number",
+              description: "Cumulative historical delta-V magnitude [m/s] summed across detected or\nconfirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF.",
+              "x-flatbuffer-type": "double"
+            },
+            MANEUVER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of merged detected or confirmed maneuvers observed in the object's\nhistorical archive up to DELTA_V_AS_OF.",
+              "x-flatbuffer-type": "uint"
+            },
+            LAST_MANEUVER_EPOCH: {
+              type: "string",
+              description: "ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or\nempty when no maneuver has been observed.",
+              "x-flatbuffer-type": "string"
+            },
+            DELTA_V_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant when the delta-V fields above were last evaluated.\nNon-empty distinguishes an assessed 0 m/s object from an unassessed record.",
+              "x-flatbuffer-type": "string"
+            },
+            DELTA_V_PROVENANCE: {
+              type: "string",
+              description: 'Method and source provenance for the delta-V estimate (for example\n"sdn-ap/maneuver-detection+catalog-composer").',
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -747625,6 +748587,43 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
               },
               description: "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended.",
               "x-flatbuffer-type": "[CATRecommendation]"
+            },
+            ESTIMATED_DELTA_V_MPS: {
+              type: "number",
+              description: "Current estimated remaining maneuvering delta-V capability [m/s] as of\nDELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the\nelement-set archive) and propulsion-class bounds. Zero when assessed as\nnon-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty.",
+              "x-flatbuffer-type": "double"
+            },
+            ESTIMATED_DELTA_V_UNC_MPS: {
+              type: "number",
+              description: "1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s].",
+              "x-flatbuffer-type": "double"
+            },
+            HISTORICAL_DELTA_V_MPS: {
+              type: "number",
+              description: "Cumulative historical delta-V magnitude [m/s] summed across detected or\nconfirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF.",
+              "x-flatbuffer-type": "double"
+            },
+            MANEUVER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of merged detected or confirmed maneuvers observed in the object's\nhistorical archive up to DELTA_V_AS_OF.",
+              "x-flatbuffer-type": "uint"
+            },
+            LAST_MANEUVER_EPOCH: {
+              type: "string",
+              description: "ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or\nempty when no maneuver has been observed.",
+              "x-flatbuffer-type": "string"
+            },
+            DELTA_V_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant when the delta-V fields above were last evaluated.\nNon-empty distinguishes an assessed 0 m/s object from an unassessed record.",
+              "x-flatbuffer-type": "string"
+            },
+            DELTA_V_PROVENANCE: {
+              type: "string",
+              description: 'Method and source provenance for the delta-V estimate (for example\n"sdn-ap/maneuver-detection+catalog-composer").',
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -915440,6 +916439,43 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
               },
               description: "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended.",
               "x-flatbuffer-type": "[CATRecommendation]"
+            },
+            ESTIMATED_DELTA_V_MPS: {
+              type: "number",
+              description: "Current estimated remaining maneuvering delta-V capability [m/s] as of\nDELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the\nelement-set archive) and propulsion-class bounds. Zero when assessed as\nnon-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty.",
+              "x-flatbuffer-type": "double"
+            },
+            ESTIMATED_DELTA_V_UNC_MPS: {
+              type: "number",
+              description: "1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s].",
+              "x-flatbuffer-type": "double"
+            },
+            HISTORICAL_DELTA_V_MPS: {
+              type: "number",
+              description: "Cumulative historical delta-V magnitude [m/s] summed across detected or\nconfirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF.",
+              "x-flatbuffer-type": "double"
+            },
+            MANEUVER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of merged detected or confirmed maneuvers observed in the object's\nhistorical archive up to DELTA_V_AS_OF.",
+              "x-flatbuffer-type": "uint"
+            },
+            LAST_MANEUVER_EPOCH: {
+              type: "string",
+              description: "ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or\nempty when no maneuver has been observed.",
+              "x-flatbuffer-type": "string"
+            },
+            DELTA_V_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant when the delta-V fields above were last evaluated.\nNon-empty distinguishes an assessed 0 m/s object from an unassessed record.",
+              "x-flatbuffer-type": "string"
+            },
+            DELTA_V_PROVENANCE: {
+              type: "string",
+              description: 'Method and source provenance for the delta-V estimate (for example\n"sdn-ap/maneuver-detection+catalog-composer").',
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -926093,6 +927129,43 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
               },
               description: "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended.",
               "x-flatbuffer-type": "[CATRecommendation]"
+            },
+            ESTIMATED_DELTA_V_MPS: {
+              type: "number",
+              description: "Current estimated remaining maneuvering delta-V capability [m/s] as of\nDELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the\nelement-set archive) and propulsion-class bounds. Zero when assessed as\nnon-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty.",
+              "x-flatbuffer-type": "double"
+            },
+            ESTIMATED_DELTA_V_UNC_MPS: {
+              type: "number",
+              description: "1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s].",
+              "x-flatbuffer-type": "double"
+            },
+            HISTORICAL_DELTA_V_MPS: {
+              type: "number",
+              description: "Cumulative historical delta-V magnitude [m/s] summed across detected or\nconfirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF.",
+              "x-flatbuffer-type": "double"
+            },
+            MANEUVER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of merged detected or confirmed maneuvers observed in the object's\nhistorical archive up to DELTA_V_AS_OF.",
+              "x-flatbuffer-type": "uint"
+            },
+            LAST_MANEUVER_EPOCH: {
+              type: "string",
+              description: "ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or\nempty when no maneuver has been observed.",
+              "x-flatbuffer-type": "string"
+            },
+            DELTA_V_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant when the delta-V fields above were last evaluated.\nNon-empty distinguishes an assessed 0 m/s object from an unassessed record.",
+              "x-flatbuffer-type": "string"
+            },
+            DELTA_V_PROVENANCE: {
+              type: "string",
+              description: 'Method and source provenance for the delta-V estimate (for example\n"sdn-ap/maneuver-detection+catalog-composer").',
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -948684,6 +949757,43 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
               },
               description: "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended.",
               "x-flatbuffer-type": "[CATRecommendation]"
+            },
+            ESTIMATED_DELTA_V_MPS: {
+              type: "number",
+              description: "Current estimated remaining maneuvering delta-V capability [m/s] as of\nDELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the\nelement-set archive) and propulsion-class bounds. Zero when assessed as\nnon-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty.",
+              "x-flatbuffer-type": "double"
+            },
+            ESTIMATED_DELTA_V_UNC_MPS: {
+              type: "number",
+              description: "1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s].",
+              "x-flatbuffer-type": "double"
+            },
+            HISTORICAL_DELTA_V_MPS: {
+              type: "number",
+              description: "Cumulative historical delta-V magnitude [m/s] summed across detected or\nconfirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF.",
+              "x-flatbuffer-type": "double"
+            },
+            MANEUVER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of merged detected or confirmed maneuvers observed in the object's\nhistorical archive up to DELTA_V_AS_OF.",
+              "x-flatbuffer-type": "uint"
+            },
+            LAST_MANEUVER_EPOCH: {
+              type: "string",
+              description: "ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or\nempty when no maneuver has been observed.",
+              "x-flatbuffer-type": "string"
+            },
+            DELTA_V_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant when the delta-V fields above were last evaluated.\nNon-empty distinguishes an assessed 0 m/s object from an unassessed record.",
+              "x-flatbuffer-type": "string"
+            },
+            DELTA_V_PROVENANCE: {
+              type: "string",
+              description: 'Method and source provenance for the delta-V estimate (for example\n"sdn-ap/maneuver-detection+catalog-composer").',
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -982198,6 +983308,43 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
               },
               description: "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended.",
               "x-flatbuffer-type": "[CATRecommendation]"
+            },
+            ESTIMATED_DELTA_V_MPS: {
+              type: "number",
+              description: "Current estimated remaining maneuvering delta-V capability [m/s] as of\nDELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the\nelement-set archive) and propulsion-class bounds. Zero when assessed as\nnon-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty.",
+              "x-flatbuffer-type": "double"
+            },
+            ESTIMATED_DELTA_V_UNC_MPS: {
+              type: "number",
+              description: "1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s].",
+              "x-flatbuffer-type": "double"
+            },
+            HISTORICAL_DELTA_V_MPS: {
+              type: "number",
+              description: "Cumulative historical delta-V magnitude [m/s] summed across detected or\nconfirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF.",
+              "x-flatbuffer-type": "double"
+            },
+            MANEUVER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of merged detected or confirmed maneuvers observed in the object's\nhistorical archive up to DELTA_V_AS_OF.",
+              "x-flatbuffer-type": "uint"
+            },
+            LAST_MANEUVER_EPOCH: {
+              type: "string",
+              description: "ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or\nempty when no maneuver has been observed.",
+              "x-flatbuffer-type": "string"
+            },
+            DELTA_V_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant when the delta-V fields above were last evaluated.\nNon-empty distinguishes an assessed 0 m/s object from an unassessed record.",
+              "x-flatbuffer-type": "string"
+            },
+            DELTA_V_PROVENANCE: {
+              type: "string",
+              description: 'Method and source provenance for the delta-V estimate (for example\n"sdn-ap/maneuver-detection+catalog-composer").',
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -996814,6 +997961,43 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
               },
               description: "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended.",
               "x-flatbuffer-type": "[CATRecommendation]"
+            },
+            ESTIMATED_DELTA_V_MPS: {
+              type: "number",
+              description: "Current estimated remaining maneuvering delta-V capability [m/s] as of\nDELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the\nelement-set archive) and propulsion-class bounds. Zero when assessed as\nnon-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty.",
+              "x-flatbuffer-type": "double"
+            },
+            ESTIMATED_DELTA_V_UNC_MPS: {
+              type: "number",
+              description: "1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s].",
+              "x-flatbuffer-type": "double"
+            },
+            HISTORICAL_DELTA_V_MPS: {
+              type: "number",
+              description: "Cumulative historical delta-V magnitude [m/s] summed across detected or\nconfirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF.",
+              "x-flatbuffer-type": "double"
+            },
+            MANEUVER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of merged detected or confirmed maneuvers observed in the object's\nhistorical archive up to DELTA_V_AS_OF.",
+              "x-flatbuffer-type": "uint"
+            },
+            LAST_MANEUVER_EPOCH: {
+              type: "string",
+              description: "ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or\nempty when no maneuver has been observed.",
+              "x-flatbuffer-type": "string"
+            },
+            DELTA_V_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant when the delta-V fields above were last evaluated.\nNon-empty distinguishes an assessed 0 m/s object from an unassessed record.",
+              "x-flatbuffer-type": "string"
+            },
+            DELTA_V_PROVENANCE: {
+              type: "string",
+              description: 'Method and source provenance for the delta-V estimate (for example\n"sdn-ap/maneuver-detection+catalog-composer").',
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -1012546,6 +1013730,43 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
               },
               description: "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended.",
               "x-flatbuffer-type": "[CATRecommendation]"
+            },
+            ESTIMATED_DELTA_V_MPS: {
+              type: "number",
+              description: "Current estimated remaining maneuvering delta-V capability [m/s] as of\nDELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the\nelement-set archive) and propulsion-class bounds. Zero when assessed as\nnon-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty.",
+              "x-flatbuffer-type": "double"
+            },
+            ESTIMATED_DELTA_V_UNC_MPS: {
+              type: "number",
+              description: "1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s].",
+              "x-flatbuffer-type": "double"
+            },
+            HISTORICAL_DELTA_V_MPS: {
+              type: "number",
+              description: "Cumulative historical delta-V magnitude [m/s] summed across detected or\nconfirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF.",
+              "x-flatbuffer-type": "double"
+            },
+            MANEUVER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of merged detected or confirmed maneuvers observed in the object's\nhistorical archive up to DELTA_V_AS_OF.",
+              "x-flatbuffer-type": "uint"
+            },
+            LAST_MANEUVER_EPOCH: {
+              type: "string",
+              description: "ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or\nempty when no maneuver has been observed.",
+              "x-flatbuffer-type": "string"
+            },
+            DELTA_V_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant when the delta-V fields above were last evaluated.\nNon-empty distinguishes an assessed 0 m/s object from an unassessed record.",
+              "x-flatbuffer-type": "string"
+            },
+            DELTA_V_PROVENANCE: {
+              type: "string",
+              description: 'Method and source provenance for the delta-V estimate (for example\n"sdn-ap/maneuver-detection+catalog-composer").',
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -1071241,6 +1072462,43 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
               },
               description: "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended.",
               "x-flatbuffer-type": "[CATRecommendation]"
+            },
+            ESTIMATED_DELTA_V_MPS: {
+              type: "number",
+              description: "Current estimated remaining maneuvering delta-V capability [m/s] as of\nDELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the\nelement-set archive) and propulsion-class bounds. Zero when assessed as\nnon-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty.",
+              "x-flatbuffer-type": "double"
+            },
+            ESTIMATED_DELTA_V_UNC_MPS: {
+              type: "number",
+              description: "1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s].",
+              "x-flatbuffer-type": "double"
+            },
+            HISTORICAL_DELTA_V_MPS: {
+              type: "number",
+              description: "Cumulative historical delta-V magnitude [m/s] summed across detected or\nconfirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF.",
+              "x-flatbuffer-type": "double"
+            },
+            MANEUVER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of merged detected or confirmed maneuvers observed in the object's\nhistorical archive up to DELTA_V_AS_OF.",
+              "x-flatbuffer-type": "uint"
+            },
+            LAST_MANEUVER_EPOCH: {
+              type: "string",
+              description: "ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or\nempty when no maneuver has been observed.",
+              "x-flatbuffer-type": "string"
+            },
+            DELTA_V_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant when the delta-V fields above were last evaluated.\nNon-empty distinguishes an assessed 0 m/s object from an unassessed record.",
+              "x-flatbuffer-type": "string"
+            },
+            DELTA_V_PROVENANCE: {
+              type: "string",
+              description: 'Method and source provenance for the delta-V estimate (for example\n"sdn-ap/maneuver-detection+catalog-composer").',
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -1128423,6 +1129681,43 @@ cell the object fell in (for example "catalog-serve/2 public/meo").`,
               },
               description: "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended.",
               "x-flatbuffer-type": "[CATRecommendation]"
+            },
+            ESTIMATED_DELTA_V_MPS: {
+              type: "number",
+              description: "Current estimated remaining maneuvering delta-V capability [m/s] as of\nDELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the\nelement-set archive) and propulsion-class bounds. Zero when assessed as\nnon-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty.",
+              "x-flatbuffer-type": "double"
+            },
+            ESTIMATED_DELTA_V_UNC_MPS: {
+              type: "number",
+              description: "1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s].",
+              "x-flatbuffer-type": "double"
+            },
+            HISTORICAL_DELTA_V_MPS: {
+              type: "number",
+              description: "Cumulative historical delta-V magnitude [m/s] summed across detected or\nconfirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF.",
+              "x-flatbuffer-type": "double"
+            },
+            MANEUVER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of merged detected or confirmed maneuvers observed in the object's\nhistorical archive up to DELTA_V_AS_OF.",
+              "x-flatbuffer-type": "uint"
+            },
+            LAST_MANEUVER_EPOCH: {
+              type: "string",
+              description: "ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or\nempty when no maneuver has been observed.",
+              "x-flatbuffer-type": "string"
+            },
+            DELTA_V_AS_OF: {
+              type: "string",
+              description: "ISO 8601 UTC instant when the delta-V fields above were last evaluated.\nNon-empty distinguishes an assessed 0 m/s object from an unassessed record.",
+              "x-flatbuffer-type": "string"
+            },
+            DELTA_V_PROVENANCE: {
+              type: "string",
+              description: 'Method and source provenance for the delta-V estimate (for example\n"sdn-ap/maneuver-detection+catalog-composer").',
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false

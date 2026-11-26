@@ -1385,6 +1385,34 @@
         "RECOMMENDED" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/CATRecommendation"},
                 "description" : "The recommended product per span of lead, in lead order, the spans not\noverlapping. Absent: the catalog recommends no product. Past the last\nspan no product is recommended."
+              },
+        "ESTIMATED_DELTA_V_MPS" : {
+                "type" : "number",
+                "description" : "Current estimated remaining maneuvering delta-V capability [m/s] as of\nDELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the\nelement-set archive) and propulsion-class bounds. Zero when assessed as\nnon-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty."
+              },
+        "ESTIMATED_DELTA_V_UNC_MPS" : {
+                "type" : "number",
+                "description" : "1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s]."
+              },
+        "HISTORICAL_DELTA_V_MPS" : {
+                "type" : "number",
+                "description" : "Cumulative historical delta-V magnitude [m/s] summed across detected or\nconfirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF."
+              },
+        "MANEUVER_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of merged detected or confirmed maneuvers observed in the object's\nhistorical archive up to DELTA_V_AS_OF."
+              },
+        "LAST_MANEUVER_EPOCH" : {
+                "type" : "string",
+                "description" : "ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or\nempty when no maneuver has been observed."
+              },
+        "DELTA_V_AS_OF" : {
+                "type" : "string",
+                "description" : "ISO 8601 UTC instant when the delta-V fields above were last evaluated.\nNon-empty distinguishes an assessed 0 m/s object from an unassessed record."
+              },
+        "DELTA_V_PROVENANCE" : {
+                "type" : "string",
+                "description" : "Method and source provenance for the delta-V estimate (for example\n\"sdn-ap/maneuver-detection+catalog-composer\")."
               }
       },
       "additionalProperties" : false

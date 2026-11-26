@@ -346,22 +346,91 @@ class CAT extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Current estimated remaining maneuvering delta-V capability [m/s] as of
+    /// DELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the
+    /// element-set archive) and propulsion-class bounds. Zero when assessed as
+    /// non-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty.
+    /**
+     * @return double
+     */
+    public function getESTIMATED_DELTA_V_MPS()
+    {
+        $o = $this->__offset(62);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// 1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s].
+    /**
+     * @return double
+     */
+    public function getESTIMATED_DELTA_V_UNC_MPS()
+    {
+        $o = $this->__offset(64);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Cumulative historical delta-V magnitude [m/s] summed across detected or
+    /// confirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF.
+    /**
+     * @return double
+     */
+    public function getHISTORICAL_DELTA_V_MPS()
+    {
+        $o = $this->__offset(66);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Number of merged detected or confirmed maneuvers observed in the object's
+    /// historical archive up to DELTA_V_AS_OF.
+    /**
+     * @return uint
+     */
+    public function getMANEUVER_COUNT()
+    {
+        $o = $this->__offset(68);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or
+    /// empty when no maneuver has been observed.
+    public function getLAST_MANEUVER_EPOCH()
+    {
+        $o = $this->__offset(70);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// ISO 8601 UTC instant when the delta-V fields above were last evaluated.
+    /// Non-empty distinguishes an assessed 0 m/s object from an unassessed record.
+    public function getDELTA_V_AS_OF()
+    {
+        $o = $this->__offset(72);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Method and source provenance for the delta-V estimate (for example
+    /// "sdn-ap/maneuver-detection+catalog-composer").
+    public function getDELTA_V_PROVENANCE()
+    {
+        $o = $this->__offset(74);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startCAT(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(29);
+        $builder->StartObject(36);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return CAT
      */
-    public static function createCAT(FlatBufferBuilder $builder, $OBJECT_NAME, $OBJECT_ID, $NORAD_CAT_ID, $OBJECT_TYPE, $OPS_STATUS_CODE, $OWNER, $LAUNCH_DATE, $LAUNCH_SITE, $DECAY_DATE, $PERIOD, $INCLINATION, $APOGEE, $PERIGEE, $RCS, $DATA_STATUS_CODE, $ORBIT_CENTER, $ORBIT_TYPE, $DEPLOYMENT_DATE, $MANEUVERABLE, $SIZE, $MASS, $MASS_TYPE, $PAYLOADS, $BUS_ID, $CATALOG_URI, $CATALOG_OBJECT_ID, $PRODUCTS, $PRODUCTS_AS_OF, $RECOMMENDED)
+    public static function createCAT(FlatBufferBuilder $builder, $OBJECT_NAME, $OBJECT_ID, $NORAD_CAT_ID, $OBJECT_TYPE, $OPS_STATUS_CODE, $OWNER, $LAUNCH_DATE, $LAUNCH_SITE, $DECAY_DATE, $PERIOD, $INCLINATION, $APOGEE, $PERIGEE, $RCS, $DATA_STATUS_CODE, $ORBIT_CENTER, $ORBIT_TYPE, $DEPLOYMENT_DATE, $MANEUVERABLE, $SIZE, $MASS, $MASS_TYPE, $PAYLOADS, $BUS_ID, $CATALOG_URI, $CATALOG_OBJECT_ID, $PRODUCTS, $PRODUCTS_AS_OF, $RECOMMENDED, $ESTIMATED_DELTA_V_MPS, $ESTIMATED_DELTA_V_UNC_MPS, $HISTORICAL_DELTA_V_MPS, $MANEUVER_COUNT, $LAST_MANEUVER_EPOCH, $DELTA_V_AS_OF, $DELTA_V_PROVENANCE)
     {
-        $builder->startObject(29);
+        $builder->startObject(36);
         self::addOBJECT_NAME($builder, $OBJECT_NAME);
         self::addOBJECT_ID($builder, $OBJECT_ID);
         self::addNORAD_CAT_ID($builder, $NORAD_CAT_ID);
@@ -391,6 +460,13 @@ class CAT extends Table
         self::addPRODUCTS($builder, $PRODUCTS);
         self::addPRODUCTS_AS_OF($builder, $PRODUCTS_AS_OF);
         self::addRECOMMENDED($builder, $RECOMMENDED);
+        self::addESTIMATED_DELTA_V_MPS($builder, $ESTIMATED_DELTA_V_MPS);
+        self::addESTIMATED_DELTA_V_UNC_MPS($builder, $ESTIMATED_DELTA_V_UNC_MPS);
+        self::addHISTORICAL_DELTA_V_MPS($builder, $HISTORICAL_DELTA_V_MPS);
+        self::addMANEUVER_COUNT($builder, $MANEUVER_COUNT);
+        self::addLAST_MANEUVER_EPOCH($builder, $LAST_MANEUVER_EPOCH);
+        self::addDELTA_V_AS_OF($builder, $DELTA_V_AS_OF);
+        self::addDELTA_V_PROVENANCE($builder, $DELTA_V_PROVENANCE);
         $o = $builder->endObject();
         return $o;
     }
@@ -755,6 +831,76 @@ class CAT extends Table
     public static function startRECOMMENDEDVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addESTIMATED_DELTA_V_MPS(FlatBufferBuilder $builder, $ESTIMATED_DELTA_V_MPS)
+    {
+        $builder->addDoubleX(29, $ESTIMATED_DELTA_V_MPS, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addESTIMATED_DELTA_V_UNC_MPS(FlatBufferBuilder $builder, $ESTIMATED_DELTA_V_UNC_MPS)
+    {
+        $builder->addDoubleX(30, $ESTIMATED_DELTA_V_UNC_MPS, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addHISTORICAL_DELTA_V_MPS(FlatBufferBuilder $builder, $HISTORICAL_DELTA_V_MPS)
+    {
+        $builder->addDoubleX(31, $HISTORICAL_DELTA_V_MPS, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addMANEUVER_COUNT(FlatBufferBuilder $builder, $MANEUVER_COUNT)
+    {
+        $builder->addUintX(32, $MANEUVER_COUNT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addLAST_MANEUVER_EPOCH(FlatBufferBuilder $builder, $LAST_MANEUVER_EPOCH)
+    {
+        $builder->addOffsetX(33, $LAST_MANEUVER_EPOCH, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addDELTA_V_AS_OF(FlatBufferBuilder $builder, $DELTA_V_AS_OF)
+    {
+        $builder->addOffsetX(34, $DELTA_V_AS_OF, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addDELTA_V_PROVENANCE(FlatBufferBuilder $builder, $DELTA_V_PROVENANCE)
+    {
+        $builder->addOffsetX(35, $DELTA_V_PROVENANCE, 0);
     }
 
     /**

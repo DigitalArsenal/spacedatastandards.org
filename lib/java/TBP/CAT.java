@@ -196,6 +196,48 @@ public final class CAT extends com.google.flatbuffers.Table {
   public int RECOMMENDEDLength() { int o = __offset(60); return o != 0 ? __vector_len(o) : 0; }
   public CATRecommendation.Vector recommendedVector() { return recommendedVector(new CATRecommendation.Vector()); }
   public CATRecommendation.Vector recommendedVector(CATRecommendation.Vector obj) { int o = __offset(60); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Current estimated remaining maneuvering delta-V capability [m/s] as of
+   * DELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the
+   * element-set archive) and propulsion-class bounds. Zero when assessed as
+   * non-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty.
+   */
+  public double ESTIMATED_DELTA_V_MPS() { int o = __offset(62); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * 1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s].
+   */
+  public double ESTIMATED_DELTA_V_UNC_MPS() { int o = __offset(64); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Cumulative historical delta-V magnitude [m/s] summed across detected or
+   * confirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF.
+   */
+  public double HISTORICAL_DELTA_V_MPS() { int o = __offset(66); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Number of merged detected or confirmed maneuvers observed in the object's
+   * historical archive up to DELTA_V_AS_OF.
+   */
+  public long MANEUVER_COUNT() { int o = __offset(68); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or
+   * empty when no maneuver has been observed.
+   */
+  public String LAST_MANEUVER_EPOCH() { int o = __offset(70); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer LAST_MANEUVER_EPOCHAsByteBuffer() { return __vector_as_bytebuffer(70, 1); }
+  public ByteBuffer LAST_MANEUVER_EPOCHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 70, 1); }
+  /**
+   * ISO 8601 UTC instant when the delta-V fields above were last evaluated.
+   * Non-empty distinguishes an assessed 0 m/s object from an unassessed record.
+   */
+  public String DELTA_V_AS_OF() { int o = __offset(72); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer DELTA_V_AS_OFAsByteBuffer() { return __vector_as_bytebuffer(72, 1); }
+  public ByteBuffer DELTA_V_AS_OFInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 72, 1); }
+  /**
+   * Method and source provenance for the delta-V estimate (for example
+   * "sdn-ap/maneuver-detection+catalog-composer").
+   */
+  public String DELTA_V_PROVENANCE() { int o = __offset(74); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer DELTA_V_PROVENANCEAsByteBuffer() { return __vector_as_bytebuffer(74, 1); }
+  public ByteBuffer DELTA_V_PROVENANCEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 74, 1); }
 
   public static int createCAT(FlatBufferBuilder builder,
       int OBJECT_NAMEOffset,
@@ -226,8 +268,18 @@ public final class CAT extends com.google.flatbuffers.Table {
       int CATALOG_OBJECT_IDOffset,
       int PRODUCTSOffset,
       int PRODUCTS_AS_OFOffset,
-      int RECOMMENDEDOffset) {
-    builder.startTable(29);
+      int RECOMMENDEDOffset,
+      double ESTIMATED_DELTA_V_MPS,
+      double ESTIMATED_DELTA_V_UNC_MPS,
+      double HISTORICAL_DELTA_V_MPS,
+      long MANEUVER_COUNT,
+      int LAST_MANEUVER_EPOCHOffset,
+      int DELTA_V_AS_OFOffset,
+      int DELTA_V_PROVENANCEOffset) {
+    builder.startTable(36);
+    CAT.addHistoricalDeltaVMps(builder, HISTORICAL_DELTA_V_MPS);
+    CAT.addEstimatedDeltaVUncMps(builder, ESTIMATED_DELTA_V_UNC_MPS);
+    CAT.addEstimatedDeltaVMps(builder, ESTIMATED_DELTA_V_MPS);
     CAT.addMass(builder, MASS);
     CAT.addSize(builder, SIZE);
     CAT.addRcs(builder, RCS);
@@ -235,6 +287,10 @@ public final class CAT extends com.google.flatbuffers.Table {
     CAT.addApogee(builder, APOGEE);
     CAT.addInclination(builder, INCLINATION);
     CAT.addPeriod(builder, PERIOD);
+    CAT.addDeltaVProvenance(builder, DELTA_V_PROVENANCEOffset);
+    CAT.addDeltaVAsOf(builder, DELTA_V_AS_OFOffset);
+    CAT.addLastManeuverEpoch(builder, LAST_MANEUVER_EPOCHOffset);
+    CAT.addManeuverCount(builder, MANEUVER_COUNT);
     CAT.addRecommended(builder, RECOMMENDEDOffset);
     CAT.addProductsAsOf(builder, PRODUCTS_AS_OFOffset);
     CAT.addProducts(builder, PRODUCTSOffset);
@@ -260,7 +316,7 @@ public final class CAT extends com.google.flatbuffers.Table {
     return CAT.endCAT(builder);
   }
 
-  public static void startCAT(FlatBufferBuilder builder) { builder.startTable(29); }
+  public static void startCAT(FlatBufferBuilder builder) { builder.startTable(36); }
   public static void addObjectName(FlatBufferBuilder builder, int OBJECT_NAMEOffset) { builder.addOffset(0, OBJECT_NAMEOffset, 0); }
   public static void addObjectId(FlatBufferBuilder builder, int OBJECT_IDOffset) { builder.addOffset(1, OBJECT_IDOffset, 0); }
   public static void addNoradCatId(FlatBufferBuilder builder, long NORAD_CAT_ID) { builder.addInt(2, (int) NORAD_CAT_ID, (int) 0L); }
@@ -296,6 +352,13 @@ public final class CAT extends com.google.flatbuffers.Table {
   public static void addRecommended(FlatBufferBuilder builder, int RECOMMENDEDOffset) { builder.addOffset(28, RECOMMENDEDOffset, 0); }
   public static int createRecommendedVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startRecommendedVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addEstimatedDeltaVMps(FlatBufferBuilder builder, double ESTIMATED_DELTA_V_MPS) { builder.addDouble(29, ESTIMATED_DELTA_V_MPS, 0.0); }
+  public static void addEstimatedDeltaVUncMps(FlatBufferBuilder builder, double ESTIMATED_DELTA_V_UNC_MPS) { builder.addDouble(30, ESTIMATED_DELTA_V_UNC_MPS, 0.0); }
+  public static void addHistoricalDeltaVMps(FlatBufferBuilder builder, double HISTORICAL_DELTA_V_MPS) { builder.addDouble(31, HISTORICAL_DELTA_V_MPS, 0.0); }
+  public static void addManeuverCount(FlatBufferBuilder builder, long MANEUVER_COUNT) { builder.addInt(32, (int) MANEUVER_COUNT, (int) 0L); }
+  public static void addLastManeuverEpoch(FlatBufferBuilder builder, int LAST_MANEUVER_EPOCHOffset) { builder.addOffset(33, LAST_MANEUVER_EPOCHOffset, 0); }
+  public static void addDeltaVAsOf(FlatBufferBuilder builder, int DELTA_V_AS_OFOffset) { builder.addOffset(34, DELTA_V_AS_OFOffset, 0); }
+  public static void addDeltaVProvenance(FlatBufferBuilder builder, int DELTA_V_PROVENANCEOffset) { builder.addOffset(35, DELTA_V_PROVENANCEOffset, 0); }
   public static int endCAT(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

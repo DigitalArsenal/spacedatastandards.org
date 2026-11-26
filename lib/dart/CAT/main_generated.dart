@@ -619,10 +619,39 @@ class CAT {
   ///  overlapping. Absent: the catalog recommends no product. Past the last
   ///  span no product is recommended.
   List<CATRecommendation>? get RECOMMENDED => const fb.ListReader<CATRecommendation>(CATRecommendation.reader).vTableGetNullable(_bc, _bcOffset, 60);
+  ///  Current estimated remaining maneuvering delta-V capability [m/s] as of
+  ///  DELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the
+  ///  element-set archive) and propulsion-class bounds. Zero when assessed as
+  ///  non-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty.
+  double get ESTIMATED_DELTA_V_MPS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 62, 0.0);
+  double get estimatedDeltaVMps => ESTIMATED_DELTA_V_MPS;
+  ///  1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s].
+  double get ESTIMATED_DELTA_V_UNC_MPS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 64, 0.0);
+  double get estimatedDeltaVUncMps => ESTIMATED_DELTA_V_UNC_MPS;
+  ///  Cumulative historical delta-V magnitude [m/s] summed across detected or
+  ///  confirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF.
+  double get HISTORICAL_DELTA_V_MPS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 66, 0.0);
+  double get historicalDeltaVMps => HISTORICAL_DELTA_V_MPS;
+  ///  Number of merged detected or confirmed maneuvers observed in the object's
+  ///  historical archive up to DELTA_V_AS_OF.
+  int get MANEUVER_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 68, 0);
+  int get maneuverCount => MANEUVER_COUNT;
+  ///  ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or
+  ///  empty when no maneuver has been observed.
+  String? get LAST_MANEUVER_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 70);
+  String? get lastManeuverEpoch => LAST_MANEUVER_EPOCH;
+  ///  ISO 8601 UTC instant when the delta-V fields above were last evaluated.
+  ///  Non-empty distinguishes an assessed 0 m/s object from an unassessed record.
+  String? get DELTA_V_AS_OF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 72);
+  String? get deltaVAsOf => DELTA_V_AS_OF;
+  ///  Method and source provenance for the delta-V estimate (for example
+  ///  "sdn-ap/maneuver-detection+catalog-composer").
+  String? get DELTA_V_PROVENANCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 74);
+  String? get deltaVProvenance => DELTA_V_PROVENANCE;
 
   @override
   String toString() {
-    return 'CAT{objectName: ${objectName}, objectId: ${objectId}, noradCatId: ${noradCatId}, objectType: ${objectType}, opsStatusCode: ${opsStatusCode}, OWNER: ${OWNER}, launchDate: ${launchDate}, launchSite: ${launchSite}, decayDate: ${decayDate}, PERIOD: ${PERIOD}, INCLINATION: ${INCLINATION}, APOGEE: ${APOGEE}, PERIGEE: ${PERIGEE}, RCS: ${RCS}, dataStatusCode: ${dataStatusCode}, orbitCenter: ${orbitCenter}, orbitType: ${orbitType}, deploymentDate: ${deploymentDate}, MANEUVERABLE: ${MANEUVERABLE}, SIZE: ${SIZE}, MASS: ${MASS}, massType: ${massType}, PAYLOADS: ${PAYLOADS}, busId: ${busId}, catalogUri: ${catalogUri}, catalogObjectId: ${catalogObjectId}, PRODUCTS: ${PRODUCTS}, productsAsOf: ${productsAsOf}, RECOMMENDED: ${RECOMMENDED}}';
+    return 'CAT{objectName: ${objectName}, objectId: ${objectId}, noradCatId: ${noradCatId}, objectType: ${objectType}, opsStatusCode: ${opsStatusCode}, OWNER: ${OWNER}, launchDate: ${launchDate}, launchSite: ${launchSite}, decayDate: ${decayDate}, PERIOD: ${PERIOD}, INCLINATION: ${INCLINATION}, APOGEE: ${APOGEE}, PERIGEE: ${PERIGEE}, RCS: ${RCS}, dataStatusCode: ${dataStatusCode}, orbitCenter: ${orbitCenter}, orbitType: ${orbitType}, deploymentDate: ${deploymentDate}, MANEUVERABLE: ${MANEUVERABLE}, SIZE: ${SIZE}, MASS: ${MASS}, massType: ${massType}, PAYLOADS: ${PAYLOADS}, busId: ${busId}, catalogUri: ${catalogUri}, catalogObjectId: ${catalogObjectId}, PRODUCTS: ${PRODUCTS}, productsAsOf: ${productsAsOf}, RECOMMENDED: ${RECOMMENDED}, estimatedDeltaVMps: ${estimatedDeltaVMps}, estimatedDeltaVUncMps: ${estimatedDeltaVUncMps}, historicalDeltaVMps: ${historicalDeltaVMps}, maneuverCount: ${maneuverCount}, lastManeuverEpoch: ${lastManeuverEpoch}, deltaVAsOf: ${deltaVAsOf}, deltaVProvenance: ${deltaVProvenance}}';
   }
 }
 
@@ -640,7 +669,7 @@ class CATBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(29);
+    fbBuilder.startTable(36);
   }
 
   int addObjectNameOffset(int? offset) {
@@ -759,6 +788,34 @@ class CATBuilder {
     fbBuilder.addOffset(28, offset);
     return fbBuilder.offset;
   }
+  int addEstimatedDeltaVMps(double? ESTIMATED_DELTA_V_MPS) {
+    fbBuilder.addFloat64(29, ESTIMATED_DELTA_V_MPS);
+    return fbBuilder.offset;
+  }
+  int addEstimatedDeltaVUncMps(double? ESTIMATED_DELTA_V_UNC_MPS) {
+    fbBuilder.addFloat64(30, ESTIMATED_DELTA_V_UNC_MPS);
+    return fbBuilder.offset;
+  }
+  int addHistoricalDeltaVMps(double? HISTORICAL_DELTA_V_MPS) {
+    fbBuilder.addFloat64(31, HISTORICAL_DELTA_V_MPS);
+    return fbBuilder.offset;
+  }
+  int addManeuverCount(int? MANEUVER_COUNT) {
+    fbBuilder.addUint32(32, MANEUVER_COUNT);
+    return fbBuilder.offset;
+  }
+  int addLastManeuverEpochOffset(int? offset) {
+    fbBuilder.addOffset(33, offset);
+    return fbBuilder.offset;
+  }
+  int addDeltaVAsOfOffset(int? offset) {
+    fbBuilder.addOffset(34, offset);
+    return fbBuilder.offset;
+  }
+  int addDeltaVProvenanceOffset(int? offset) {
+    fbBuilder.addOffset(35, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -795,6 +852,13 @@ class CATObjectBuilder extends fb.ObjectBuilder {
   final List<CATProductObjectBuilder>? _PRODUCTS;
   final String? _PRODUCTS_AS_OF;
   final List<CATRecommendationObjectBuilder>? _RECOMMENDED;
+  final double? _ESTIMATED_DELTA_V_MPS;
+  final double? _ESTIMATED_DELTA_V_UNC_MPS;
+  final double? _HISTORICAL_DELTA_V_MPS;
+  final int? _MANEUVER_COUNT;
+  final String? _LAST_MANEUVER_EPOCH;
+  final String? _DELTA_V_AS_OF;
+  final String? _DELTA_V_PROVENANCE;
 
   CATObjectBuilder({
     String? OBJECT_NAME,
@@ -843,6 +907,20 @@ class CATObjectBuilder extends fb.ObjectBuilder {
     String? PRODUCTS_AS_OF,
     String? productsAsOf,
     List<CATRecommendationObjectBuilder>? RECOMMENDED,
+    double? ESTIMATED_DELTA_V_MPS,
+    double? estimatedDeltaVMps,
+    double? ESTIMATED_DELTA_V_UNC_MPS,
+    double? estimatedDeltaVUncMps,
+    double? HISTORICAL_DELTA_V_MPS,
+    double? historicalDeltaVMps,
+    int? MANEUVER_COUNT,
+    int? maneuverCount,
+    String? LAST_MANEUVER_EPOCH,
+    String? lastManeuverEpoch,
+    String? DELTA_V_AS_OF,
+    String? deltaVAsOf,
+    String? DELTA_V_PROVENANCE,
+    String? deltaVProvenance,
   })
       : _OBJECT_NAME = objectName ?? OBJECT_NAME,
         _OBJECT_ID = objectId ?? OBJECT_ID,
@@ -872,7 +950,14 @@ class CATObjectBuilder extends fb.ObjectBuilder {
         _CATALOG_OBJECT_ID = catalogObjectId ?? CATALOG_OBJECT_ID,
         _PRODUCTS = PRODUCTS,
         _PRODUCTS_AS_OF = productsAsOf ?? PRODUCTS_AS_OF,
-        _RECOMMENDED = RECOMMENDED;
+        _RECOMMENDED = RECOMMENDED,
+        _ESTIMATED_DELTA_V_MPS = estimatedDeltaVMps ?? ESTIMATED_DELTA_V_MPS,
+        _ESTIMATED_DELTA_V_UNC_MPS = estimatedDeltaVUncMps ?? ESTIMATED_DELTA_V_UNC_MPS,
+        _HISTORICAL_DELTA_V_MPS = historicalDeltaVMps ?? HISTORICAL_DELTA_V_MPS,
+        _MANEUVER_COUNT = maneuverCount ?? MANEUVER_COUNT,
+        _LAST_MANEUVER_EPOCH = lastManeuverEpoch ?? LAST_MANEUVER_EPOCH,
+        _DELTA_V_AS_OF = deltaVAsOf ?? DELTA_V_AS_OF,
+        _DELTA_V_PROVENANCE = deltaVProvenance ?? DELTA_V_PROVENANCE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -905,7 +990,13 @@ class CATObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_PRODUCTS_AS_OF!);
     final int? RECOMMENDEDOffset = _RECOMMENDED == null ? null
         : fbBuilder.writeList(_RECOMMENDED!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(29);
+    final int? LAST_MANEUVER_EPOCHOffset = _LAST_MANEUVER_EPOCH == null ? null
+        : fbBuilder.writeString(_LAST_MANEUVER_EPOCH!);
+    final int? DELTA_V_AS_OFOffset = _DELTA_V_AS_OF == null ? null
+        : fbBuilder.writeString(_DELTA_V_AS_OF!);
+    final int? DELTA_V_PROVENANCEOffset = _DELTA_V_PROVENANCE == null ? null
+        : fbBuilder.writeString(_DELTA_V_PROVENANCE!);
+    fbBuilder.startTable(36);
     fbBuilder.addOffset(0, OBJECT_NAMEOffset);
     fbBuilder.addOffset(1, OBJECT_IDOffset);
     fbBuilder.addUint32(2, _NORAD_CAT_ID);
@@ -935,6 +1026,13 @@ class CATObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(26, PRODUCTSOffset);
     fbBuilder.addOffset(27, PRODUCTS_AS_OFOffset);
     fbBuilder.addOffset(28, RECOMMENDEDOffset);
+    fbBuilder.addFloat64(29, _ESTIMATED_DELTA_V_MPS);
+    fbBuilder.addFloat64(30, _ESTIMATED_DELTA_V_UNC_MPS);
+    fbBuilder.addFloat64(31, _HISTORICAL_DELTA_V_MPS);
+    fbBuilder.addUint32(32, _MANEUVER_COUNT);
+    fbBuilder.addOffset(33, LAST_MANEUVER_EPOCHOffset);
+    fbBuilder.addOffset(34, DELTA_V_AS_OFOffset);
+    fbBuilder.addOffset(35, DELTA_V_PROVENANCEOffset);
     return fbBuilder.endTable();
   }
 

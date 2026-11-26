@@ -1255,6 +1255,13 @@ impl<'a> CAT<'a> {
     pub const VT_PRODUCTS: ::flatbuffers::VOffsetT = 56;
     pub const VT_PRODUCTS_AS_OF: ::flatbuffers::VOffsetT = 58;
     pub const VT_RECOMMENDED: ::flatbuffers::VOffsetT = 60;
+    pub const VT_ESTIMATED_DELTA_V_MPS: ::flatbuffers::VOffsetT = 62;
+    pub const VT_ESTIMATED_DELTA_V_UNC_MPS: ::flatbuffers::VOffsetT = 64;
+    pub const VT_HISTORICAL_DELTA_V_MPS: ::flatbuffers::VOffsetT = 66;
+    pub const VT_MANEUVER_COUNT: ::flatbuffers::VOffsetT = 68;
+    pub const VT_LAST_MANEUVER_EPOCH: ::flatbuffers::VOffsetT = 70;
+    pub const VT_DELTA_V_AS_OF: ::flatbuffers::VOffsetT = 72;
+    pub const VT_DELTA_V_PROVENANCE: ::flatbuffers::VOffsetT = 74;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1267,6 +1274,9 @@ impl<'a> CAT<'a> {
         args: &'args CATArgs<'args>
     ) -> ::flatbuffers::WIPOffset<CAT<'bldr>> {
         let mut builder = CATBuilder::new(_fbb);
+        builder.add_HISTORICAL_DELTA_V_MPS(args.HISTORICAL_DELTA_V_MPS);
+        builder.add_ESTIMATED_DELTA_V_UNC_MPS(args.ESTIMATED_DELTA_V_UNC_MPS);
+        builder.add_ESTIMATED_DELTA_V_MPS(args.ESTIMATED_DELTA_V_MPS);
         builder.add_MASS(args.MASS);
         builder.add_SIZE(args.SIZE);
         builder.add_RCS(args.RCS);
@@ -1274,6 +1284,10 @@ impl<'a> CAT<'a> {
         builder.add_APOGEE(args.APOGEE);
         builder.add_INCLINATION(args.INCLINATION);
         builder.add_PERIOD(args.PERIOD);
+        if let Some(x) = args.DELTA_V_PROVENANCE { builder.add_DELTA_V_PROVENANCE(x); }
+        if let Some(x) = args.DELTA_V_AS_OF { builder.add_DELTA_V_AS_OF(x); }
+        if let Some(x) = args.LAST_MANEUVER_EPOCH { builder.add_LAST_MANEUVER_EPOCH(x); }
+        builder.add_MANEUVER_COUNT(args.MANEUVER_COUNT);
         if let Some(x) = args.RECOMMENDED { builder.add_RECOMMENDED(x); }
         if let Some(x) = args.PRODUCTS_AS_OF { builder.add_PRODUCTS_AS_OF(x); }
         if let Some(x) = args.PRODUCTS { builder.add_PRODUCTS(x); }
@@ -1357,6 +1371,19 @@ impl<'a> CAT<'a> {
         let RECOMMENDED = self.RECOMMENDED().map(|x| {
             x.iter().map(|t| t.unpack()).collect()
         });
+        let ESTIMATED_DELTA_V_MPS = self.ESTIMATED_DELTA_V_MPS();
+        let ESTIMATED_DELTA_V_UNC_MPS = self.ESTIMATED_DELTA_V_UNC_MPS();
+        let HISTORICAL_DELTA_V_MPS = self.HISTORICAL_DELTA_V_MPS();
+        let MANEUVER_COUNT = self.MANEUVER_COUNT();
+        let LAST_MANEUVER_EPOCH = self.LAST_MANEUVER_EPOCH().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let DELTA_V_AS_OF = self.DELTA_V_AS_OF().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let DELTA_V_PROVENANCE = self.DELTA_V_PROVENANCE().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
         CATT {
             OBJECT_NAME,
             OBJECT_ID,
@@ -1387,6 +1414,13 @@ impl<'a> CAT<'a> {
             PRODUCTS,
             PRODUCTS_AS_OF,
             RECOMMENDED,
+            ESTIMATED_DELTA_V_MPS,
+            ESTIMATED_DELTA_V_UNC_MPS,
+            HISTORICAL_DELTA_V_MPS,
+            MANEUVER_COUNT,
+            LAST_MANEUVER_EPOCH,
+            DELTA_V_AS_OF,
+            DELTA_V_PROVENANCE,
         }
     }
 
@@ -1668,6 +1702,77 @@ impl<'a> CAT<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<CATRecommendation>>>>(CAT::VT_RECOMMENDED, None)}
     }
+
+    /// Current estimated remaining maneuvering delta-V capability [m/s] as of
+    /// DELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the
+    /// element-set archive) and propulsion-class bounds. Zero when assessed as
+    /// non-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty.
+    #[inline]
+    pub fn ESTIMATED_DELTA_V_MPS(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(CAT::VT_ESTIMATED_DELTA_V_MPS, Some(0.0)).unwrap()}
+    }
+
+    /// 1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s].
+    #[inline]
+    pub fn ESTIMATED_DELTA_V_UNC_MPS(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(CAT::VT_ESTIMATED_DELTA_V_UNC_MPS, Some(0.0)).unwrap()}
+    }
+
+    /// Cumulative historical delta-V magnitude [m/s] summed across detected or
+    /// confirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF.
+    #[inline]
+    pub fn HISTORICAL_DELTA_V_MPS(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(CAT::VT_HISTORICAL_DELTA_V_MPS, Some(0.0)).unwrap()}
+    }
+
+    /// Number of merged detected or confirmed maneuvers observed in the object's
+    /// historical archive up to DELTA_V_AS_OF.
+    #[inline]
+    pub fn MANEUVER_COUNT(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(CAT::VT_MANEUVER_COUNT, Some(0)).unwrap()}
+    }
+
+    /// ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or
+    /// empty when no maneuver has been observed.
+    #[inline]
+    pub fn LAST_MANEUVER_EPOCH(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CAT::VT_LAST_MANEUVER_EPOCH, None)}
+    }
+
+    /// ISO 8601 UTC instant when the delta-V fields above were last evaluated.
+    /// Non-empty distinguishes an assessed 0 m/s object from an unassessed record.
+    #[inline]
+    pub fn DELTA_V_AS_OF(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CAT::VT_DELTA_V_AS_OF, None)}
+    }
+
+    /// Method and source provenance for the delta-V estimate (for example
+    /// "sdn-ap/maneuver-detection+catalog-composer").
+    #[inline]
+    pub fn DELTA_V_PROVENANCE(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CAT::VT_DELTA_V_PROVENANCE, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for CAT<'_> {
@@ -1705,6 +1810,13 @@ impl ::flatbuffers::Verifiable for CAT<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<CATProduct>>>>("PRODUCTS", Self::VT_PRODUCTS, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PRODUCTS_AS_OF", Self::VT_PRODUCTS_AS_OF, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<CATRecommendation>>>>("RECOMMENDED", Self::VT_RECOMMENDED, false)?
+            .visit_field::<f64>("ESTIMATED_DELTA_V_MPS", Self::VT_ESTIMATED_DELTA_V_MPS, false)?
+            .visit_field::<f64>("ESTIMATED_DELTA_V_UNC_MPS", Self::VT_ESTIMATED_DELTA_V_UNC_MPS, false)?
+            .visit_field::<f64>("HISTORICAL_DELTA_V_MPS", Self::VT_HISTORICAL_DELTA_V_MPS, false)?
+            .visit_field::<u32>("MANEUVER_COUNT", Self::VT_MANEUVER_COUNT, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("LAST_MANEUVER_EPOCH", Self::VT_LAST_MANEUVER_EPOCH, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DELTA_V_AS_OF", Self::VT_DELTA_V_AS_OF, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DELTA_V_PROVENANCE", Self::VT_DELTA_V_PROVENANCE, false)?
             .finish();
         Ok(())
     }
@@ -1740,6 +1852,13 @@ pub struct CATArgs<'a> {
     pub PRODUCTS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<CATProduct<'a>>>>>,
     pub PRODUCTS_AS_OF: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub RECOMMENDED: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<CATRecommendation<'a>>>>>,
+    pub ESTIMATED_DELTA_V_MPS: f64,
+    pub ESTIMATED_DELTA_V_UNC_MPS: f64,
+    pub HISTORICAL_DELTA_V_MPS: f64,
+    pub MANEUVER_COUNT: u32,
+    pub LAST_MANEUVER_EPOCH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DELTA_V_AS_OF: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DELTA_V_PROVENANCE: Option<::flatbuffers::WIPOffset<&'a str>>,
 }
 
 impl<'a> Default for CATArgs<'a> {
@@ -1775,6 +1894,13 @@ impl<'a> Default for CATArgs<'a> {
             PRODUCTS: None,
             PRODUCTS_AS_OF: None,
             RECOMMENDED: None,
+            ESTIMATED_DELTA_V_MPS: 0.0,
+            ESTIMATED_DELTA_V_UNC_MPS: 0.0,
+            HISTORICAL_DELTA_V_MPS: 0.0,
+            MANEUVER_COUNT: 0,
+            LAST_MANEUVER_EPOCH: None,
+            DELTA_V_AS_OF: None,
+            DELTA_V_PROVENANCE: None,
         }
     }
 }
@@ -1931,6 +2057,41 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> CATBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_ESTIMATED_DELTA_V_MPS(&mut self, ESTIMATED_DELTA_V_MPS: f64) {
+        self.fbb_.push_slot::<f64>(CAT::VT_ESTIMATED_DELTA_V_MPS, ESTIMATED_DELTA_V_MPS, 0.0);
+    }
+
+    #[inline]
+    pub fn add_ESTIMATED_DELTA_V_UNC_MPS(&mut self, ESTIMATED_DELTA_V_UNC_MPS: f64) {
+        self.fbb_.push_slot::<f64>(CAT::VT_ESTIMATED_DELTA_V_UNC_MPS, ESTIMATED_DELTA_V_UNC_MPS, 0.0);
+    }
+
+    #[inline]
+    pub fn add_HISTORICAL_DELTA_V_MPS(&mut self, HISTORICAL_DELTA_V_MPS: f64) {
+        self.fbb_.push_slot::<f64>(CAT::VT_HISTORICAL_DELTA_V_MPS, HISTORICAL_DELTA_V_MPS, 0.0);
+    }
+
+    #[inline]
+    pub fn add_MANEUVER_COUNT(&mut self, MANEUVER_COUNT: u32) {
+        self.fbb_.push_slot::<u32>(CAT::VT_MANEUVER_COUNT, MANEUVER_COUNT, 0);
+    }
+
+    #[inline]
+    pub fn add_LAST_MANEUVER_EPOCH(&mut self, LAST_MANEUVER_EPOCH: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CAT::VT_LAST_MANEUVER_EPOCH, LAST_MANEUVER_EPOCH);
+    }
+
+    #[inline]
+    pub fn add_DELTA_V_AS_OF(&mut self, DELTA_V_AS_OF: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CAT::VT_DELTA_V_AS_OF, DELTA_V_AS_OF);
+    }
+
+    #[inline]
+    pub fn add_DELTA_V_PROVENANCE(&mut self, DELTA_V_PROVENANCE: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CAT::VT_DELTA_V_PROVENANCE, DELTA_V_PROVENANCE);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> CATBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         CATBuilder {
@@ -1978,6 +2139,13 @@ impl ::core::fmt::Debug for CAT<'_> {
         ds.field("PRODUCTS", &self.PRODUCTS());
         ds.field("PRODUCTS_AS_OF", &self.PRODUCTS_AS_OF());
         ds.field("RECOMMENDED", &self.RECOMMENDED());
+        ds.field("ESTIMATED_DELTA_V_MPS", &self.ESTIMATED_DELTA_V_MPS());
+        ds.field("ESTIMATED_DELTA_V_UNC_MPS", &self.ESTIMATED_DELTA_V_UNC_MPS());
+        ds.field("HISTORICAL_DELTA_V_MPS", &self.HISTORICAL_DELTA_V_MPS());
+        ds.field("MANEUVER_COUNT", &self.MANEUVER_COUNT());
+        ds.field("LAST_MANEUVER_EPOCH", &self.LAST_MANEUVER_EPOCH());
+        ds.field("DELTA_V_AS_OF", &self.DELTA_V_AS_OF());
+        ds.field("DELTA_V_PROVENANCE", &self.DELTA_V_PROVENANCE());
         ds.finish()
     }
 }
@@ -2014,6 +2182,13 @@ pub struct CATT {
     pub PRODUCTS: Option<alloc::vec::Vec<CATProductT>>,
     pub PRODUCTS_AS_OF: Option<alloc::string::String>,
     pub RECOMMENDED: Option<alloc::vec::Vec<CATRecommendationT>>,
+    pub ESTIMATED_DELTA_V_MPS: f64,
+    pub ESTIMATED_DELTA_V_UNC_MPS: f64,
+    pub HISTORICAL_DELTA_V_MPS: f64,
+    pub MANEUVER_COUNT: u32,
+    pub LAST_MANEUVER_EPOCH: Option<alloc::string::String>,
+    pub DELTA_V_AS_OF: Option<alloc::string::String>,
+    pub DELTA_V_PROVENANCE: Option<alloc::string::String>,
 }
 
 impl Default for CATT {
@@ -2048,6 +2223,13 @@ impl Default for CATT {
             PRODUCTS: None,
             PRODUCTS_AS_OF: None,
             RECOMMENDED: None,
+            ESTIMATED_DELTA_V_MPS: 0.0,
+            ESTIMATED_DELTA_V_UNC_MPS: 0.0,
+            HISTORICAL_DELTA_V_MPS: 0.0,
+            MANEUVER_COUNT: 0,
+            LAST_MANEUVER_EPOCH: None,
+            DELTA_V_AS_OF: None,
+            DELTA_V_PROVENANCE: None,
         }
     }
 }
@@ -2114,6 +2296,19 @@ impl CATT {
         let RECOMMENDED = self.RECOMMENDED.as_ref().map(|x|{
             let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
         });
+        let ESTIMATED_DELTA_V_MPS = self.ESTIMATED_DELTA_V_MPS;
+        let ESTIMATED_DELTA_V_UNC_MPS = self.ESTIMATED_DELTA_V_UNC_MPS;
+        let HISTORICAL_DELTA_V_MPS = self.HISTORICAL_DELTA_V_MPS;
+        let MANEUVER_COUNT = self.MANEUVER_COUNT;
+        let LAST_MANEUVER_EPOCH = self.LAST_MANEUVER_EPOCH.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let DELTA_V_AS_OF = self.DELTA_V_AS_OF.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let DELTA_V_PROVENANCE = self.DELTA_V_PROVENANCE.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
         CAT::create(_fbb, &CATArgs{
             OBJECT_NAME,
             OBJECT_ID,
@@ -2144,6 +2339,13 @@ impl CATT {
             PRODUCTS,
             PRODUCTS_AS_OF,
             RECOMMENDED,
+            ESTIMATED_DELTA_V_MPS,
+            ESTIMATED_DELTA_V_UNC_MPS,
+            HISTORICAL_DELTA_V_MPS,
+            MANEUVER_COUNT,
+            LAST_MANEUVER_EPOCH,
+            DELTA_V_AS_OF,
+            DELTA_V_PROVENANCE,
         })
     }
 }
