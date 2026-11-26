@@ -157247,6 +157247,31 @@
                         }
                     }
                 },
+                "scvSarLookSide": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "LEFT",
+                        "RIGHT",
+                        "BILATERAL"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "ubyte",
+                    "x-flatbuffer-enum-values": {
+                        "UNSPECIFIED": {
+                            "value": 0
+                        },
+                        "LEFT": {
+                            "value": 1
+                        },
+                        "RIGHT": {
+                            "value": 2
+                        },
+                        "BILATERAL": {
+                            "value": 3
+                        }
+                    }
+                },
                 "scvSensorAxisConvention": {
                     "type": "string",
                     "enum": [
@@ -159315,6 +159340,27 @@
                             "$ref": "#/definitions/SCVEllipsoid",
                             "description": "The surface MAX_ALTITUDE_M is measured from. Absent: the standard ellipsoid of the body the sensor is on (WGS84\non the Earth). SEMI_INTERMEDIATE_M 0 is SEMI_MAJOR_M (an ellipsoid of revolution); a sphere has equal semi-axes.",
                             "x-flatbuffer-type": "SCVEllipsoid"
+                        },
+                        "SAR_LOOK_SIDE": {
+                            "$ref": "#/definitions/scvSarLookSide",
+                            "description": "For SAR_ANNULAR_SECTOR: which side(s) of the ground track the sensor can\nimage (LEFT, RIGHT, or BILATERAL when roll/steering supports both sides).",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "ubyte",
+                            "x-flatbuffer-enum-values": {
+                                "UNSPECIFIED": {
+                                    "value": 0
+                                },
+                                "LEFT": {
+                                    "value": 1
+                                },
+                                "RIGHT": {
+                                    "value": 2
+                                },
+                                "BILATERAL": {
+                                    "value": 3
+                                }
+                            },
+                            "x-flatbuffer-default": "UNSPECIFIED"
                         }
                     },
                     "additionalProperties": false
@@ -223377,7 +223423,8 @@
                         "EXCLUSION_ZONE",
                         "OBSERVATION",
                         "GROUP",
-                        "AREA_OF_INTEREST"
+                        "AREA_OF_INTEREST",
+                        "FOLDER"
                     ],
                     "x-flatbuffer-type": "enum",
                     "x-flatbuffer-enum-type": "byte",
@@ -223416,6 +223463,31 @@
                         "AREA_OF_INTEREST": {
                             "value": 10,
                             "description": "An area of interest: the $GJN feature of the enclosing $REC whose ID equals REFERENCE_ID. NAME is its label; COUNTRY is its ISO 3166-1 alpha-2 code when the area is a country."
+                        },
+                        "FOLDER": {
+                            "value": 11,
+                            "description": "A console top-level folder (for example SELECTION, GROUPS, OBJECTS) that carries shared display-style overrides in DISPLAY_STYLE."
+                        }
+                    }
+                },
+                "scnToggle": {
+                    "type": "string",
+                    "enum": [
+                        "UNSET",
+                        "OFF",
+                        "ON"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "UNSET": {
+                            "value": 0
+                        },
+                        "OFF": {
+                            "value": 1
+                        },
+                        "ON": {
+                            "value": 2
                         }
                     }
                 },
@@ -229434,6 +229506,260 @@
                     },
                     "additionalProperties": false
                 },
+                "SCNDisplayStyle": {
+                    "type": "object",
+                    "description": "Typed display customization for a scenario reference (object, group, or\ntop-level folder). Unset strings are null, unset numeric fields are NaN,\nand unset switches are UNSET.",
+                    "properties": {
+                        "DOT_COLOR": {
+                            "type": "string",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "DOT_SIZE": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "OUTLINE_COLOR": {
+                            "type": "string",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "OUTLINE_WIDTH": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "SHOW_PATH": {
+                            "$ref": "#/definitions/scnToggle",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "UNSET": {
+                                    "value": 0
+                                },
+                                "OFF": {
+                                    "value": 1
+                                },
+                                "ON": {
+                                    "value": 2
+                                }
+                            },
+                            "x-flatbuffer-default": "UNSET"
+                        },
+                        "PATH_RELATIVE_TO": {
+                            "type": "string",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "PATH_COLOR": {
+                            "type": "string",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "PATH_WIDTH": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "PATH_AHEAD_MIN": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "PATH_BEHIND_MIN": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "SHOW_LABEL": {
+                            "$ref": "#/definitions/scnToggle",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "UNSET": {
+                                    "value": 0
+                                },
+                                "OFF": {
+                                    "value": 1
+                                },
+                                "ON": {
+                                    "value": 2
+                                }
+                            },
+                            "x-flatbuffer-default": "UNSET"
+                        },
+                        "LABEL_COLOR": {
+                            "type": "string",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "LABEL_SIZE": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "LABEL_OPACITY": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "SHOW_RIC_AXES": {
+                            "$ref": "#/definitions/scnToggle",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "UNSET": {
+                                    "value": 0
+                                },
+                                "OFF": {
+                                    "value": 1
+                                },
+                                "ON": {
+                                    "value": 2
+                                }
+                            },
+                            "x-flatbuffer-default": "UNSET"
+                        },
+                        "RIC_AXES_LENGTH_KM": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "SHOW_MODEL": {
+                            "$ref": "#/definitions/scnToggle",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "UNSET": {
+                                    "value": 0
+                                },
+                                "OFF": {
+                                    "value": 1
+                                },
+                                "ON": {
+                                    "value": 2
+                                }
+                            },
+                            "x-flatbuffer-default": "UNSET"
+                        },
+                        "SHOW_COVARIANCE": {
+                            "$ref": "#/definitions/scnToggle",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "UNSET": {
+                                    "value": 0
+                                },
+                                "OFF": {
+                                    "value": 1
+                                },
+                                "ON": {
+                                    "value": 2
+                                }
+                            },
+                            "x-flatbuffer-default": "UNSET"
+                        },
+                        "SHOW_SELECTOR": {
+                            "$ref": "#/definitions/scnToggle",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "UNSET": {
+                                    "value": 0
+                                },
+                                "OFF": {
+                                    "value": 1
+                                },
+                                "ON": {
+                                    "value": 2
+                                }
+                            },
+                            "x-flatbuffer-default": "UNSET"
+                        },
+                        "SHOW_SELECTOR_LABEL": {
+                            "$ref": "#/definitions/scnToggle",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "UNSET": {
+                                    "value": 0
+                                },
+                                "OFF": {
+                                    "value": 1
+                                },
+                                "ON": {
+                                    "value": 2
+                                }
+                            },
+                            "x-flatbuffer-default": "UNSET"
+                        },
+                        "SELECTOR_COLOR": {
+                            "type": "string",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "SELECTOR_WIDTH": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "SELECTOR_SEGMENTS": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "SELECTOR_FILL": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "SELECTOR_BINDING": {
+                            "type": "string",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "SELECTOR_MIN": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "SELECTOR_MAX": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "ORIENT_RADIAL_DEG": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "ORIENT_CROSS_TRACK_DEG": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "ORIENT_IN_TRACK_DEG": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "LABEL_COUNT": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "RIC_AXES_COUNT": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "MODEL_COUNT": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "COVARIANCE_COUNT": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "SCNRicBox": {
                     "type": "object",
                     "description": "Relative-motion RIC box and RPO time-lapse settings kept with a scenario.",
@@ -229744,6 +230070,10 @@
                                 "AREA_OF_INTEREST": {
                                     "value": 10,
                                     "description": "An area of interest: the $GJN feature of the enclosing $REC whose ID equals REFERENCE_ID. NAME is its label; COUNTRY is its ISO 3166-1 alpha-2 code when the area is a country."
+                                },
+                                "FOLDER": {
+                                    "value": 11,
+                                    "description": "A console top-level folder (for example SELECTION, GROUPS, OBJECTS) that carries shared display-style overrides in DISPLAY_STYLE."
                                 }
                             }
                         },
@@ -229891,6 +230221,11 @@
                             "type": "boolean",
                             "description": "True when the 1-sigma covariance ellipsoid is shown on this reference.",
                             "x-flatbuffer-type": "bool"
+                        },
+                        "DISPLAY_STYLE": {
+                            "$ref": "#/definitions/SCNDisplayStyle",
+                            "description": "Typed display-style overrides for this reference (object, group, or folder).",
+                            "x-flatbuffer-type": "SCNDisplayStyle"
                         }
                     },
                     "additionalProperties": false
@@ -345746,7 +346081,8 @@
                         "EXCLUSION_ZONE",
                         "OBSERVATION",
                         "GROUP",
-                        "AREA_OF_INTEREST"
+                        "AREA_OF_INTEREST",
+                        "FOLDER"
                     ],
                     "x-flatbuffer-type": "enum",
                     "x-flatbuffer-enum-type": "byte",
@@ -345785,6 +346121,31 @@
                         "AREA_OF_INTEREST": {
                             "value": 10,
                             "description": "An area of interest: the $GJN feature of the enclosing $REC whose ID equals REFERENCE_ID. NAME is its label; COUNTRY is its ISO 3166-1 alpha-2 code when the area is a country."
+                        },
+                        "FOLDER": {
+                            "value": 11,
+                            "description": "A console top-level folder (for example SELECTION, GROUPS, OBJECTS) that carries shared display-style overrides in DISPLAY_STYLE."
+                        }
+                    }
+                },
+                "scnToggle": {
+                    "type": "string",
+                    "enum": [
+                        "UNSET",
+                        "OFF",
+                        "ON"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "UNSET": {
+                            "value": 0
+                        },
+                        "OFF": {
+                            "value": 1
+                        },
+                        "ON": {
+                            "value": 2
                         }
                     }
                 },
@@ -346110,6 +346471,31 @@
                             "value": 2
                         },
                         "SAR_ANNULAR_SECTOR": {
+                            "value": 3
+                        }
+                    }
+                },
+                "scvSarLookSide": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "LEFT",
+                        "RIGHT",
+                        "BILATERAL"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "ubyte",
+                    "x-flatbuffer-enum-values": {
+                        "UNSPECIFIED": {
+                            "value": 0
+                        },
+                        "LEFT": {
+                            "value": 1
+                        },
+                        "RIGHT": {
+                            "value": 2
+                        },
+                        "BILATERAL": {
                             "value": 3
                         }
                     }
@@ -450828,6 +451214,260 @@
                     },
                     "additionalProperties": false
                 },
+                "SCNDisplayStyle": {
+                    "type": "object",
+                    "description": "Typed display customization for a scenario reference (object, group, or\ntop-level folder). Unset strings are null, unset numeric fields are NaN,\nand unset switches are UNSET.",
+                    "properties": {
+                        "DOT_COLOR": {
+                            "type": "string",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "DOT_SIZE": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "OUTLINE_COLOR": {
+                            "type": "string",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "OUTLINE_WIDTH": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "SHOW_PATH": {
+                            "$ref": "#/definitions/scnToggle",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "UNSET": {
+                                    "value": 0
+                                },
+                                "OFF": {
+                                    "value": 1
+                                },
+                                "ON": {
+                                    "value": 2
+                                }
+                            },
+                            "x-flatbuffer-default": "UNSET"
+                        },
+                        "PATH_RELATIVE_TO": {
+                            "type": "string",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "PATH_COLOR": {
+                            "type": "string",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "PATH_WIDTH": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "PATH_AHEAD_MIN": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "PATH_BEHIND_MIN": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "SHOW_LABEL": {
+                            "$ref": "#/definitions/scnToggle",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "UNSET": {
+                                    "value": 0
+                                },
+                                "OFF": {
+                                    "value": 1
+                                },
+                                "ON": {
+                                    "value": 2
+                                }
+                            },
+                            "x-flatbuffer-default": "UNSET"
+                        },
+                        "LABEL_COLOR": {
+                            "type": "string",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "LABEL_SIZE": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "LABEL_OPACITY": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "SHOW_RIC_AXES": {
+                            "$ref": "#/definitions/scnToggle",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "UNSET": {
+                                    "value": 0
+                                },
+                                "OFF": {
+                                    "value": 1
+                                },
+                                "ON": {
+                                    "value": 2
+                                }
+                            },
+                            "x-flatbuffer-default": "UNSET"
+                        },
+                        "RIC_AXES_LENGTH_KM": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "SHOW_MODEL": {
+                            "$ref": "#/definitions/scnToggle",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "UNSET": {
+                                    "value": 0
+                                },
+                                "OFF": {
+                                    "value": 1
+                                },
+                                "ON": {
+                                    "value": 2
+                                }
+                            },
+                            "x-flatbuffer-default": "UNSET"
+                        },
+                        "SHOW_COVARIANCE": {
+                            "$ref": "#/definitions/scnToggle",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "UNSET": {
+                                    "value": 0
+                                },
+                                "OFF": {
+                                    "value": 1
+                                },
+                                "ON": {
+                                    "value": 2
+                                }
+                            },
+                            "x-flatbuffer-default": "UNSET"
+                        },
+                        "SHOW_SELECTOR": {
+                            "$ref": "#/definitions/scnToggle",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "UNSET": {
+                                    "value": 0
+                                },
+                                "OFF": {
+                                    "value": 1
+                                },
+                                "ON": {
+                                    "value": 2
+                                }
+                            },
+                            "x-flatbuffer-default": "UNSET"
+                        },
+                        "SHOW_SELECTOR_LABEL": {
+                            "$ref": "#/definitions/scnToggle",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "UNSET": {
+                                    "value": 0
+                                },
+                                "OFF": {
+                                    "value": 1
+                                },
+                                "ON": {
+                                    "value": 2
+                                }
+                            },
+                            "x-flatbuffer-default": "UNSET"
+                        },
+                        "SELECTOR_COLOR": {
+                            "type": "string",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "SELECTOR_WIDTH": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "SELECTOR_SEGMENTS": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "SELECTOR_FILL": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "SELECTOR_BINDING": {
+                            "type": "string",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "SELECTOR_MIN": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "SELECTOR_MAX": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "ORIENT_RADIAL_DEG": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "ORIENT_CROSS_TRACK_DEG": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "ORIENT_IN_TRACK_DEG": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "LABEL_COUNT": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "RIC_AXES_COUNT": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "MODEL_COUNT": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "COVARIANCE_COUNT": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "SCNRicBox": {
                     "type": "object",
                     "description": "Relative-motion RIC box and RPO time-lapse settings kept with a scenario.",
@@ -451138,6 +451778,10 @@
                                 "AREA_OF_INTEREST": {
                                     "value": 10,
                                     "description": "An area of interest: the $GJN feature of the enclosing $REC whose ID equals REFERENCE_ID. NAME is its label; COUNTRY is its ISO 3166-1 alpha-2 code when the area is a country."
+                                },
+                                "FOLDER": {
+                                    "value": 11,
+                                    "description": "A console top-level folder (for example SELECTION, GROUPS, OBJECTS) that carries shared display-style overrides in DISPLAY_STYLE."
                                 }
                             }
                         },
@@ -451285,6 +451929,11 @@
                             "type": "boolean",
                             "description": "True when the 1-sigma covariance ellipsoid is shown on this reference.",
                             "x-flatbuffer-type": "bool"
+                        },
+                        "DISPLAY_STYLE": {
+                            "$ref": "#/definitions/SCNDisplayStyle",
+                            "description": "Typed display-style overrides for this reference (object, group, or folder).",
+                            "x-flatbuffer-type": "SCNDisplayStyle"
                         }
                     },
                     "additionalProperties": false
@@ -452683,6 +453332,27 @@
                             "$ref": "#/definitions/SCVEllipsoid",
                             "description": "The surface MAX_ALTITUDE_M is measured from. Absent: the standard ellipsoid of the body the sensor is on (WGS84\non the Earth). SEMI_INTERMEDIATE_M 0 is SEMI_MAJOR_M (an ellipsoid of revolution); a sphere has equal semi-axes.",
                             "x-flatbuffer-type": "SCVEllipsoid"
+                        },
+                        "SAR_LOOK_SIDE": {
+                            "$ref": "#/definitions/scvSarLookSide",
+                            "description": "For SAR_ANNULAR_SECTOR: which side(s) of the ground track the sensor can\nimage (LEFT, RIGHT, or BILATERAL when roll/steering supports both sides).",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "ubyte",
+                            "x-flatbuffer-enum-values": {
+                                "UNSPECIFIED": {
+                                    "value": 0
+                                },
+                                "LEFT": {
+                                    "value": 1
+                                },
+                                "RIGHT": {
+                                    "value": 2
+                                },
+                                "BILATERAL": {
+                                    "value": 3
+                                }
+                            },
+                            "x-flatbuffer-default": "UNSPECIFIED"
                         }
                     },
                     "additionalProperties": false
@@ -594086,6 +594756,31 @@
                         }
                     }
                 },
+                "scvSarLookSide": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "LEFT",
+                        "RIGHT",
+                        "BILATERAL"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "ubyte",
+                    "x-flatbuffer-enum-values": {
+                        "UNSPECIFIED": {
+                            "value": 0
+                        },
+                        "LEFT": {
+                            "value": 1
+                        },
+                        "RIGHT": {
+                            "value": 2
+                        },
+                        "BILATERAL": {
+                            "value": 3
+                        }
+                    }
+                },
                 "scvSensorAxisConvention": {
                     "type": "string",
                     "enum": [
@@ -596242,6 +596937,27 @@
                             "$ref": "#/definitions/SCVEllipsoid",
                             "description": "The surface MAX_ALTITUDE_M is measured from. Absent: the standard ellipsoid of the body the sensor is on (WGS84\non the Earth). SEMI_INTERMEDIATE_M 0 is SEMI_MAJOR_M (an ellipsoid of revolution); a sphere has equal semi-axes.",
                             "x-flatbuffer-type": "SCVEllipsoid"
+                        },
+                        "SAR_LOOK_SIDE": {
+                            "$ref": "#/definitions/scvSarLookSide",
+                            "description": "For SAR_ANNULAR_SECTOR: which side(s) of the ground track the sensor can\nimage (LEFT, RIGHT, or BILATERAL when roll/steering supports both sides).",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "ubyte",
+                            "x-flatbuffer-enum-values": {
+                                "UNSPECIFIED": {
+                                    "value": 0
+                                },
+                                "LEFT": {
+                                    "value": 1
+                                },
+                                "RIGHT": {
+                                    "value": 2
+                                },
+                                "BILATERAL": {
+                                    "value": 3
+                                }
+                            },
+                            "x-flatbuffer-default": "UNSPECIFIED"
                         }
                     },
                     "additionalProperties": false
@@ -659914,7 +660630,8 @@
                         "EXCLUSION_ZONE",
                         "OBSERVATION",
                         "GROUP",
-                        "AREA_OF_INTEREST"
+                        "AREA_OF_INTEREST",
+                        "FOLDER"
                     ],
                     "x-flatbuffer-type": "enum",
                     "x-flatbuffer-enum-type": "byte",
@@ -659953,6 +660670,31 @@
                         "AREA_OF_INTEREST": {
                             "value": 10,
                             "description": "An area of interest: the $GJN feature of the enclosing $REC whose ID equals REFERENCE_ID. NAME is its label; COUNTRY is its ISO 3166-1 alpha-2 code when the area is a country."
+                        },
+                        "FOLDER": {
+                            "value": 11,
+                            "description": "A console top-level folder (for example SELECTION, GROUPS, OBJECTS) that carries shared display-style overrides in DISPLAY_STYLE."
+                        }
+                    }
+                },
+                "scnToggle": {
+                    "type": "string",
+                    "enum": [
+                        "UNSET",
+                        "OFF",
+                        "ON"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "UNSET": {
+                            "value": 0
+                        },
+                        "OFF": {
+                            "value": 1
+                        },
+                        "ON": {
+                            "value": 2
                         }
                     }
                 },
@@ -666054,6 +666796,260 @@
                     },
                     "additionalProperties": false
                 },
+                "SCNDisplayStyle": {
+                    "type": "object",
+                    "description": "Typed display customization for a scenario reference (object, group, or\ntop-level folder). Unset strings are null, unset numeric fields are NaN,\nand unset switches are UNSET.",
+                    "properties": {
+                        "DOT_COLOR": {
+                            "type": "string",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "DOT_SIZE": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "OUTLINE_COLOR": {
+                            "type": "string",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "OUTLINE_WIDTH": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "SHOW_PATH": {
+                            "$ref": "#/definitions/scnToggle",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "UNSET": {
+                                    "value": 0
+                                },
+                                "OFF": {
+                                    "value": 1
+                                },
+                                "ON": {
+                                    "value": 2
+                                }
+                            },
+                            "x-flatbuffer-default": "UNSET"
+                        },
+                        "PATH_RELATIVE_TO": {
+                            "type": "string",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "PATH_COLOR": {
+                            "type": "string",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "PATH_WIDTH": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "PATH_AHEAD_MIN": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "PATH_BEHIND_MIN": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "SHOW_LABEL": {
+                            "$ref": "#/definitions/scnToggle",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "UNSET": {
+                                    "value": 0
+                                },
+                                "OFF": {
+                                    "value": 1
+                                },
+                                "ON": {
+                                    "value": 2
+                                }
+                            },
+                            "x-flatbuffer-default": "UNSET"
+                        },
+                        "LABEL_COLOR": {
+                            "type": "string",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "LABEL_SIZE": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "LABEL_OPACITY": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "SHOW_RIC_AXES": {
+                            "$ref": "#/definitions/scnToggle",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "UNSET": {
+                                    "value": 0
+                                },
+                                "OFF": {
+                                    "value": 1
+                                },
+                                "ON": {
+                                    "value": 2
+                                }
+                            },
+                            "x-flatbuffer-default": "UNSET"
+                        },
+                        "RIC_AXES_LENGTH_KM": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "SHOW_MODEL": {
+                            "$ref": "#/definitions/scnToggle",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "UNSET": {
+                                    "value": 0
+                                },
+                                "OFF": {
+                                    "value": 1
+                                },
+                                "ON": {
+                                    "value": 2
+                                }
+                            },
+                            "x-flatbuffer-default": "UNSET"
+                        },
+                        "SHOW_COVARIANCE": {
+                            "$ref": "#/definitions/scnToggle",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "UNSET": {
+                                    "value": 0
+                                },
+                                "OFF": {
+                                    "value": 1
+                                },
+                                "ON": {
+                                    "value": 2
+                                }
+                            },
+                            "x-flatbuffer-default": "UNSET"
+                        },
+                        "SHOW_SELECTOR": {
+                            "$ref": "#/definitions/scnToggle",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "UNSET": {
+                                    "value": 0
+                                },
+                                "OFF": {
+                                    "value": 1
+                                },
+                                "ON": {
+                                    "value": 2
+                                }
+                            },
+                            "x-flatbuffer-default": "UNSET"
+                        },
+                        "SHOW_SELECTOR_LABEL": {
+                            "$ref": "#/definitions/scnToggle",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "UNSET": {
+                                    "value": 0
+                                },
+                                "OFF": {
+                                    "value": 1
+                                },
+                                "ON": {
+                                    "value": 2
+                                }
+                            },
+                            "x-flatbuffer-default": "UNSET"
+                        },
+                        "SELECTOR_COLOR": {
+                            "type": "string",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "SELECTOR_WIDTH": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "SELECTOR_SEGMENTS": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "SELECTOR_FILL": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "SELECTOR_BINDING": {
+                            "type": "string",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "SELECTOR_MIN": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "SELECTOR_MAX": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "ORIENT_RADIAL_DEG": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "ORIENT_CROSS_TRACK_DEG": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "ORIENT_IN_TRACK_DEG": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "LABEL_COUNT": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "RIC_AXES_COUNT": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "MODEL_COUNT": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        },
+                        "COVARIANCE_COUNT": {
+                            "type": "number",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "nan"
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "SCNRicBox": {
                     "type": "object",
                     "description": "Relative-motion RIC box and RPO time-lapse settings kept with a scenario.",
@@ -666364,6 +667360,10 @@
                                 "AREA_OF_INTEREST": {
                                     "value": 10,
                                     "description": "An area of interest: the $GJN feature of the enclosing $REC whose ID equals REFERENCE_ID. NAME is its label; COUNTRY is its ISO 3166-1 alpha-2 code when the area is a country."
+                                },
+                                "FOLDER": {
+                                    "value": 11,
+                                    "description": "A console top-level folder (for example SELECTION, GROUPS, OBJECTS) that carries shared display-style overrides in DISPLAY_STYLE."
                                 }
                             }
                         },
@@ -666511,6 +667511,11 @@
                             "type": "boolean",
                             "description": "True when the 1-sigma covariance ellipsoid is shown on this reference.",
                             "x-flatbuffer-type": "bool"
+                        },
+                        "DISPLAY_STYLE": {
+                            "$ref": "#/definitions/SCNDisplayStyle",
+                            "description": "Typed display-style overrides for this reference (object, group, or folder).",
+                            "x-flatbuffer-type": "SCNDisplayStyle"
                         }
                     },
                     "additionalProperties": false
@@ -668416,6 +669421,31 @@
                         }
                     }
                 },
+                "scvSarLookSide": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "LEFT",
+                        "RIGHT",
+                        "BILATERAL"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "ubyte",
+                    "x-flatbuffer-enum-values": {
+                        "UNSPECIFIED": {
+                            "value": 0
+                        },
+                        "LEFT": {
+                            "value": 1
+                        },
+                        "RIGHT": {
+                            "value": 2
+                        },
+                        "BILATERAL": {
+                            "value": 3
+                        }
+                    }
+                },
                 "scvSensorAxisConvention": {
                     "type": "string",
                     "enum": [
@@ -669007,6 +670037,27 @@
                             "$ref": "#/definitions/SCVEllipsoid",
                             "description": "The surface MAX_ALTITUDE_M is measured from. Absent: the standard ellipsoid of the body the sensor is on (WGS84\non the Earth). SEMI_INTERMEDIATE_M 0 is SEMI_MAJOR_M (an ellipsoid of revolution); a sphere has equal semi-axes.",
                             "x-flatbuffer-type": "SCVEllipsoid"
+                        },
+                        "SAR_LOOK_SIDE": {
+                            "$ref": "#/definitions/scvSarLookSide",
+                            "description": "For SAR_ANNULAR_SECTOR: which side(s) of the ground track the sensor can\nimage (LEFT, RIGHT, or BILATERAL when roll/steering supports both sides).",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "ubyte",
+                            "x-flatbuffer-enum-values": {
+                                "UNSPECIFIED": {
+                                    "value": 0
+                                },
+                                "LEFT": {
+                                    "value": 1
+                                },
+                                "RIGHT": {
+                                    "value": 2
+                                },
+                                "BILATERAL": {
+                                    "value": 3
+                                }
+                            },
+                            "x-flatbuffer-default": "UNSPECIFIED"
                         }
                     },
                     "additionalProperties": false

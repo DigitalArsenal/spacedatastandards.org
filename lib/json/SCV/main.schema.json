@@ -21,6 +21,10 @@
       "type" : "string",
       "enum": ["CONIC", "RECTANGULAR", "CUSTOM_POLYGON", "SAR_ANNULAR_SECTOR"]
     },
+    "scvSarLookSide" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "LEFT", "RIGHT", "BILATERAL"]
+    },
     "scvSensorAxisConvention" : {
       "type" : "string",
       "enum": ["LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT"]
@@ -201,6 +205,10 @@
         "ALTITUDE_REFERENCE" : {
                 "$ref" : "#/definitions/SCVEllipsoid",
                 "description" : "The surface MAX_ALTITUDE_M is measured from. Absent: the standard ellipsoid of the body the sensor is on (WGS84\non the Earth). SEMI_INTERMEDIATE_M 0 is SEMI_MAJOR_M (an ellipsoid of revolution); a sphere has equal semi-axes."
+              },
+        "SAR_LOOK_SIDE" : {
+                "$ref" : "#/definitions/scvSarLookSide",
+                "description" : "For SAR_ANNULAR_SECTOR: which side(s) of the ground track the sensor can\nimage (LEFT, RIGHT, or BILATERAL when roll/steering supports both sides)."
               }
       },
       "additionalProperties" : false

@@ -70,6 +70,11 @@ public final class SCVSensorShapeContract extends com.google.flatbuffers.Table {
    */
   public SCVEllipsoid ALTITUDE_REFERENCE() { return ALTITUDE_REFERENCE(new SCVEllipsoid()); }
   public SCVEllipsoid ALTITUDE_REFERENCE(SCVEllipsoid obj) { int o = __offset(40); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * For SAR_ANNULAR_SECTOR: which side(s) of the ground track the sensor can
+   * image (LEFT, RIGHT, or BILATERAL when roll/steering supports both sides).
+   */
+  public int SAR_LOOK_SIDE() { int o = __offset(42); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
 
   public static int createSCVSensorShapeContract(FlatBufferBuilder builder,
       int SHAPE_KIND,
@@ -90,8 +95,9 @@ public final class SCVSensorShapeContract extends com.google.flatbuffers.Table {
       int POLYGON_FRAME,
       int AZ_EL_MASKOffset,
       double MAX_ALTITUDE_M,
-      int ALTITUDE_REFERENCEOffset) {
-    builder.startTable(19);
+      int ALTITUDE_REFERENCEOffset,
+      int SAR_LOOK_SIDE) {
+    builder.startTable(20);
     SCVSensorShapeContract.addMaxAltitudeM(builder, MAX_ALTITUDE_M);
     SCVSensorShapeContract.addMaxRangeM(builder, MAX_RANGE_M);
     SCVSensorShapeContract.addMinRangeM(builder, MIN_RANGE_M);
@@ -107,6 +113,7 @@ public final class SCVSensorShapeContract extends com.google.flatbuffers.Table {
     SCVSensorShapeContract.addAltitudeReference(builder, ALTITUDE_REFERENCEOffset);
     SCVSensorShapeContract.addAzElMask(builder, AZ_EL_MASKOffset);
     SCVSensorShapeContract.addPolygonVertices(builder, POLYGON_VERTICESOffset);
+    SCVSensorShapeContract.addSarLookSide(builder, SAR_LOOK_SIDE);
     SCVSensorShapeContract.addPolygonFrame(builder, POLYGON_FRAME);
     SCVSensorShapeContract.addRangeBoundary(builder, RANGE_BOUNDARY);
     SCVSensorShapeContract.addAxisConvention(builder, AXIS_CONVENTION);
@@ -114,7 +121,7 @@ public final class SCVSensorShapeContract extends com.google.flatbuffers.Table {
     return SCVSensorShapeContract.endSCVSensorShapeContract(builder);
   }
 
-  public static void startSCVSensorShapeContract(FlatBufferBuilder builder) { builder.startTable(19); }
+  public static void startSCVSensorShapeContract(FlatBufferBuilder builder) { builder.startTable(20); }
   public static void addShapeKind(FlatBufferBuilder builder, int SHAPE_KIND) { builder.addByte(0, (byte) SHAPE_KIND, (byte) 0); }
   public static void addAxisConvention(FlatBufferBuilder builder, int AXIS_CONVENTION) { builder.addByte(1, (byte) AXIS_CONVENTION, (byte) 0); }
   public static void addRangeBoundary(FlatBufferBuilder builder, int RANGE_BOUNDARY) { builder.addByte(2, (byte) RANGE_BOUNDARY, (byte) 0); }
@@ -138,6 +145,7 @@ public final class SCVSensorShapeContract extends com.google.flatbuffers.Table {
   public static void startAzElMaskVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static void addMaxAltitudeM(FlatBufferBuilder builder, double MAX_ALTITUDE_M) { builder.addDouble(17, MAX_ALTITUDE_M, 0.0); }
   public static void addAltitudeReference(FlatBufferBuilder builder, int ALTITUDE_REFERENCEOffset) { builder.addOffset(18, ALTITUDE_REFERENCEOffset, 0); }
+  public static void addSarLookSide(FlatBufferBuilder builder, int SAR_LOOK_SIDE) { builder.addByte(19, (byte) SAR_LOOK_SIDE, (byte) 0); }
   public static int endSCVSensorShapeContract(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

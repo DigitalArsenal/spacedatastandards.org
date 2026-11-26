@@ -239,22 +239,33 @@ class SCVSensorShapeContract extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// For SAR_ANNULAR_SECTOR: which side(s) of the ground track the sensor can
+    /// image (LEFT, RIGHT, or BILATERAL when roll/steering supports both sides).
+    /**
+     * @return byte
+     */
+    public function getSAR_LOOK_SIDE()
+    {
+        $o = $this->__offset(42);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \scvSarLookSide::UNSPECIFIED;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startSCVSensorShapeContract(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(19);
+        $builder->StartObject(20);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return SCVSensorShapeContract
      */
-    public static function createSCVSensorShapeContract(FlatBufferBuilder $builder, $SHAPE_KIND, $AXIS_CONVENTION, $RANGE_BOUNDARY, $OUTER_HALF_ANGLE_DEG, $INNER_HALF_ANGLE_DEG, $MIN_CLOCK_ANGLE_DEG, $MAX_CLOCK_ANGLE_DEG, $X_HALF_ANGLE_DEG, $Y_HALF_ANGLE_DEG, $INNER_LOOK_ANGLE_DEG, $OUTER_LOOK_ANGLE_DEG, $SAR_SAMPLING_DENSITY, $MIN_RANGE_M, $MAX_RANGE_M, $POLYGON_VERTICES, $POLYGON_FRAME, $AZ_EL_MASK, $MAX_ALTITUDE_M, $ALTITUDE_REFERENCE)
+    public static function createSCVSensorShapeContract(FlatBufferBuilder $builder, $SHAPE_KIND, $AXIS_CONVENTION, $RANGE_BOUNDARY, $OUTER_HALF_ANGLE_DEG, $INNER_HALF_ANGLE_DEG, $MIN_CLOCK_ANGLE_DEG, $MAX_CLOCK_ANGLE_DEG, $X_HALF_ANGLE_DEG, $Y_HALF_ANGLE_DEG, $INNER_LOOK_ANGLE_DEG, $OUTER_LOOK_ANGLE_DEG, $SAR_SAMPLING_DENSITY, $MIN_RANGE_M, $MAX_RANGE_M, $POLYGON_VERTICES, $POLYGON_FRAME, $AZ_EL_MASK, $MAX_ALTITUDE_M, $ALTITUDE_REFERENCE, $SAR_LOOK_SIDE)
     {
-        $builder->startObject(19);
+        $builder->startObject(20);
         self::addSHAPE_KIND($builder, $SHAPE_KIND);
         self::addAXIS_CONVENTION($builder, $AXIS_CONVENTION);
         self::addRANGE_BOUNDARY($builder, $RANGE_BOUNDARY);
@@ -274,6 +285,7 @@ class SCVSensorShapeContract extends Table
         self::addAZ_EL_MASK($builder, $AZ_EL_MASK);
         self::addMAX_ALTITUDE_M($builder, $MAX_ALTITUDE_M);
         self::addALTITUDE_REFERENCE($builder, $ALTITUDE_REFERENCE);
+        self::addSAR_LOOK_SIDE($builder, $SAR_LOOK_SIDE);
         $o = $builder->endObject();
         return $o;
     }
@@ -514,6 +526,16 @@ class SCVSensorShapeContract extends Table
     public static function addALTITUDE_REFERENCE(FlatBufferBuilder $builder, $ALTITUDE_REFERENCE)
     {
         $builder->addOffsetX(18, $ALTITUDE_REFERENCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addSAR_LOOK_SIDE(FlatBufferBuilder $builder, $SAR_LOOK_SIDE)
+    {
+        $builder->addByteX(19, $SAR_LOOK_SIDE, 0);
     }
 
     /**

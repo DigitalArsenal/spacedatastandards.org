@@ -28,8 +28,13 @@ public final class scenarioReferenceKind {
    * alpha-2 code when the area is a country.
    */
   public static final byte AREA_OF_INTEREST = 10;
+  /**
+   * A console top-level folder (for example SELECTION, GROUPS, OBJECTS) that
+   * carries shared display-style overrides in DISPLAY_STYLE.
+   */
+  public static final byte FOLDER = 11;
 
-  public static final String[] names = { "UNKNOWN", "SATELLITE", "GROUND_SITE", "SENSOR", "VARIABLE_SATELLITE", "VARIABLE_SITE", "POINT_OF_INTEREST", "EXCLUSION_ZONE", "OBSERVATION", "GROUP", "AREA_OF_INTEREST", };
+  public static final String[] names = { "UNKNOWN", "SATELLITE", "GROUND_SITE", "SENSOR", "VARIABLE_SATELLITE", "VARIABLE_SITE", "POINT_OF_INTEREST", "EXCLUSION_ZONE", "OBSERVATION", "GROUP", "AREA_OF_INTEREST", "FOLDER", };
 
   public static String name(int e) { return names[e]; }
 }

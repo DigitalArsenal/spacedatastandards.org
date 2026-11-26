@@ -22,6 +22,7 @@ export * from './scvRasterProductEncoding.js';
 export * from './scvRasterProductKind.js';
 export * from './SCVResult.js';
 export * from './scvResultState.js';
+export * from './scvSarLookSide.js';
 export * from './SCVSensor.js';
 export * from './scvSensorAxisConvention.js';
 export * from './SCVSensorContribution.js';

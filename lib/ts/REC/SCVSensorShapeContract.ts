@@ -8,6 +8,7 @@ import { SCVAzElMaskPoint, SCVAzElMaskPointT } from './SCVAzElMaskPoint.js';
 import { SCVEllipsoid, SCVEllipsoidT } from './SCVEllipsoid.js';
 import { SCVVec3, SCVVec3T } from './SCVVec3.js';
 import { scvCoordinateFrame } from './scvCoordinateFrame.js';
+import { scvSarLookSide } from './scvSarLookSide.js';
 import { scvSensorAxisConvention } from './scvSensorAxisConvention.js';
 import { scvSensorRangeBoundaryKind } from './scvSensorRangeBoundaryKind.js';
 import { scvSensorShapeKind } from './scvSensorShapeKind.js';
@@ -154,8 +155,17 @@ ALTITUDE_REFERENCE(obj?:SCVEllipsoid):SCVEllipsoid|null {
   return offset ? (obj || new SCVEllipsoid()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * For SAR_ANNULAR_SECTOR: which side(s) of the ground track the sensor can
+ * image (LEFT, RIGHT, or BILATERAL when roll/steering supports both sides).
+ */
+SAR_LOOK_SIDE():scvSarLookSide {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : scvSarLookSide.UNSPECIFIED;
+}
+
 static startSCVSensorShapeContract(builder:flatbuffers.Builder) {
-  builder.startObject(19);
+  builder.startObject(20);
 }
 
 static addShapeKind(builder:flatbuffers.Builder, SHAPE_KIND:scvSensorShapeKind) {
@@ -258,6 +268,10 @@ static addAltitudeReference(builder:flatbuffers.Builder, ALTITUDE_REFERENCEOffse
   builder.addFieldOffset(18, ALTITUDE_REFERENCEOffset, 0);
 }
 
+static addSarLookSide(builder:flatbuffers.Builder, SAR_LOOK_SIDE:scvSarLookSide) {
+  builder.addFieldInt8(19, SAR_LOOK_SIDE, scvSarLookSide.UNSPECIFIED);
+}
+
 static endSCVSensorShapeContract(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -284,7 +298,8 @@ unpack(): SCVSensorShapeContractT {
     this.POLYGON_FRAME(),
     this.bb!.createObjList<SCVAzElMaskPoint, SCVAzElMaskPointT>(this.AZ_EL_MASK.bind(this), this.azElMaskLength()),
     this.MAX_ALTITUDE_M(),
-    (this.ALTITUDE_REFERENCE() !== null ? this.ALTITUDE_REFERENCE()!.unpack() : null)
+    (this.ALTITUDE_REFERENCE() !== null ? this.ALTITUDE_REFERENCE()!.unpack() : null),
+    this.SAR_LOOK_SIDE()
   );
 }
 
@@ -309,6 +324,7 @@ unpackTo(_o: SCVSensorShapeContractT): void {
   _o.AZ_EL_MASK = this.bb!.createObjList<SCVAzElMaskPoint, SCVAzElMaskPointT>(this.AZ_EL_MASK.bind(this), this.azElMaskLength());
   _o.MAX_ALTITUDE_M = this.MAX_ALTITUDE_M();
   _o.ALTITUDE_REFERENCE = (this.ALTITUDE_REFERENCE() !== null ? this.ALTITUDE_REFERENCE()!.unpack() : null);
+  _o.SAR_LOOK_SIDE = this.SAR_LOOK_SIDE();
 }
 }
 
@@ -332,7 +348,8 @@ constructor(
   public POLYGON_FRAME: scvCoordinateFrame = scvCoordinateFrame.UNKNOWN,
   public AZ_EL_MASK: (SCVAzElMaskPointT)[] = [],
   public MAX_ALTITUDE_M: number = 0.0,
-  public ALTITUDE_REFERENCE: SCVEllipsoidT|null = null
+  public ALTITUDE_REFERENCE: SCVEllipsoidT|null = null,
+  public SAR_LOOK_SIDE: scvSarLookSide = scvSarLookSide.UNSPECIFIED
 ){}
 
 
@@ -361,6 +378,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   SCVSensorShapeContract.addAzElMask(builder, AZ_EL_MASK);
   SCVSensorShapeContract.addMaxAltitudeM(builder, this.MAX_ALTITUDE_M);
   SCVSensorShapeContract.addAltitudeReference(builder, ALTITUDE_REFERENCE);
+  SCVSensorShapeContract.addSarLookSide(builder, this.SAR_LOOK_SIDE);
 
   return SCVSensorShapeContract.endSCVSensorShapeContract(builder);
 }

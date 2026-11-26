@@ -163,7 +163,11 @@
     },
     "scenarioReferenceKind" : {
       "type" : "string",
-      "enum": ["UNKNOWN", "SATELLITE", "GROUND_SITE", "SENSOR", "VARIABLE_SATELLITE", "VARIABLE_SITE", "POINT_OF_INTEREST", "EXCLUSION_ZONE", "OBSERVATION", "GROUP", "AREA_OF_INTEREST"]
+      "enum": ["UNKNOWN", "SATELLITE", "GROUND_SITE", "SENSOR", "VARIABLE_SATELLITE", "VARIABLE_SITE", "POINT_OF_INTEREST", "EXCLUSION_ZONE", "OBSERVATION", "GROUP", "AREA_OF_INTEREST", "FOLDER"]
+    },
+    "scnToggle" : {
+      "type" : "string",
+      "enum": ["UNSET", "OFF", "ON"]
     },
     "scnRicCoordinates" : {
       "type" : "string",
@@ -3132,6 +3136,115 @@
       },
       "additionalProperties" : false
     },
+    "SCNDisplayStyle" : {
+      "type" : "object",
+      "description" : "Typed display customization for a scenario reference (object, group, or\ntop-level folder). Unset strings are null, unset numeric fields are NaN,\nand unset switches are UNSET.",
+      "properties" : {
+        "DOT_COLOR" : {
+                "type" : "string"
+              },
+        "DOT_SIZE" : {
+                "type" : "number"
+              },
+        "OUTLINE_COLOR" : {
+                "type" : "string"
+              },
+        "OUTLINE_WIDTH" : {
+                "type" : "number"
+              },
+        "SHOW_PATH" : {
+                "$ref" : "#/definitions/scnToggle"
+              },
+        "PATH_RELATIVE_TO" : {
+                "type" : "string"
+              },
+        "PATH_COLOR" : {
+                "type" : "string"
+              },
+        "PATH_WIDTH" : {
+                "type" : "number"
+              },
+        "PATH_AHEAD_MIN" : {
+                "type" : "number"
+              },
+        "PATH_BEHIND_MIN" : {
+                "type" : "number"
+              },
+        "SHOW_LABEL" : {
+                "$ref" : "#/definitions/scnToggle"
+              },
+        "LABEL_COLOR" : {
+                "type" : "string"
+              },
+        "LABEL_SIZE" : {
+                "type" : "number"
+              },
+        "LABEL_OPACITY" : {
+                "type" : "number"
+              },
+        "SHOW_RIC_AXES" : {
+                "$ref" : "#/definitions/scnToggle"
+              },
+        "RIC_AXES_LENGTH_KM" : {
+                "type" : "number"
+              },
+        "SHOW_MODEL" : {
+                "$ref" : "#/definitions/scnToggle"
+              },
+        "SHOW_COVARIANCE" : {
+                "$ref" : "#/definitions/scnToggle"
+              },
+        "SHOW_SELECTOR" : {
+                "$ref" : "#/definitions/scnToggle"
+              },
+        "SHOW_SELECTOR_LABEL" : {
+                "$ref" : "#/definitions/scnToggle"
+              },
+        "SELECTOR_COLOR" : {
+                "type" : "string"
+              },
+        "SELECTOR_WIDTH" : {
+                "type" : "number"
+              },
+        "SELECTOR_SEGMENTS" : {
+                "type" : "number"
+              },
+        "SELECTOR_FILL" : {
+                "type" : "number"
+              },
+        "SELECTOR_BINDING" : {
+                "type" : "string"
+              },
+        "SELECTOR_MIN" : {
+                "type" : "number"
+              },
+        "SELECTOR_MAX" : {
+                "type" : "number"
+              },
+        "ORIENT_RADIAL_DEG" : {
+                "type" : "number"
+              },
+        "ORIENT_CROSS_TRACK_DEG" : {
+                "type" : "number"
+              },
+        "ORIENT_IN_TRACK_DEG" : {
+                "type" : "number"
+              },
+        "LABEL_COUNT" : {
+                "type" : "number"
+              },
+        "RIC_AXES_COUNT" : {
+                "type" : "number"
+              },
+        "MODEL_COUNT" : {
+                "type" : "number"
+              },
+        "COVARIANCE_COUNT" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
     "SCNRicBox" : {
       "type" : "object",
       "description" : "Relative-motion RIC box and RPO time-lapse settings kept with a scenario.",
@@ -3426,6 +3539,10 @@
         "SHOW_COVARIANCE" : {
                 "type" : "boolean",
                 "description" : "True when the 1-sigma covariance ellipsoid is shown on this reference."
+              },
+        "DISPLAY_STYLE" : {
+                "$ref" : "#/definitions/SCNDisplayStyle",
+                "description" : "Typed display-style overrides for this reference (object, group, or folder)."
               }
       },
       "additionalProperties" : false

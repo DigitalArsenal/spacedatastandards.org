@@ -140,6 +140,8 @@ public struct SCNReference : IFlatbufferObject
   public byte[] GetCOLORArray() { return __p.__vector_as_array<byte>(56); }
   /// True when the 1-sigma covariance ellipsoid is shown on this reference.
   public bool SHOW_COVARIANCE { get { int o = __p.__offset(58); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Typed display-style overrides for this reference (object, group, or folder).
+  public SCNDisplayStyle? DISPLAY_STYLE { get { int o = __p.__offset(60); return o != 0 ? (SCNDisplayStyle?)(new SCNDisplayStyle()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<SCNReference> CreateSCNReference(FlatBufferBuilder builder,
       StringOffset REFERENCE_IDOffset = default(StringOffset),
@@ -169,8 +171,10 @@ public struct SCNReference : IFlatbufferObject
       Offset<EOO> OBSERVATION_EOOffset = default(Offset<EOO>),
       Offset<RDO> OBSERVATION_RADAROffset = default(Offset<RDO>),
       StringOffset COLOROffset = default(StringOffset),
-      bool SHOW_COVARIANCE = false) {
-    builder.StartTable(28);
+      bool SHOW_COVARIANCE = false,
+      Offset<SCNDisplayStyle> DISPLAY_STYLEOffset = default(Offset<SCNDisplayStyle>)) {
+    builder.StartTable(29);
+    SCNReference.AddDISPLAY_STYLE(builder, DISPLAY_STYLEOffset);
     SCNReference.AddCOLOR(builder, COLOROffset);
     SCNReference.AddOBSERVATION_RADAR(builder, OBSERVATION_RADAROffset);
     SCNReference.AddOBSERVATION_EO(builder, OBSERVATION_EOOffset);
@@ -202,7 +206,7 @@ public struct SCNReference : IFlatbufferObject
     return SCNReference.EndSCNReference(builder);
   }
 
-  public static void StartSCNReference(FlatBufferBuilder builder) { builder.StartTable(28); }
+  public static void StartSCNReference(FlatBufferBuilder builder) { builder.StartTable(29); }
   public static void AddREFERENCE_ID(FlatBufferBuilder builder, StringOffset REFERENCE_IDOffset) { builder.AddOffset(0, REFERENCE_IDOffset.Value, 0); }
   public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(1, NAMEOffset.Value, 0); }
   public static void AddREFERENCE_KIND(FlatBufferBuilder builder, scenarioReferenceKind REFERENCE_KIND) { builder.AddSbyte(2, (sbyte)REFERENCE_KIND, 0); }
@@ -261,6 +265,7 @@ public struct SCNReference : IFlatbufferObject
   public static void AddOBSERVATION_RADAR(FlatBufferBuilder builder, Offset<RDO> OBSERVATION_RADAROffset) { builder.AddOffset(25, OBSERVATION_RADAROffset.Value, 0); }
   public static void AddCOLOR(FlatBufferBuilder builder, StringOffset COLOROffset) { builder.AddOffset(26, COLOROffset.Value, 0); }
   public static void AddSHOW_COVARIANCE(FlatBufferBuilder builder, bool SHOW_COVARIANCE) { builder.AddBool(27, SHOW_COVARIANCE, false); }
+  public static void AddDISPLAY_STYLE(FlatBufferBuilder builder, Offset<SCNDisplayStyle> DISPLAY_STYLEOffset) { builder.AddOffset(28, DISPLAY_STYLEOffset.Value, 0); }
   public static Offset<SCNReference> EndSCNReference(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<SCNReference>(o);
@@ -305,6 +310,7 @@ public struct SCNReference : IFlatbufferObject
     _o.OBSERVATION_RADAR = this.OBSERVATION_RADAR.HasValue ? this.OBSERVATION_RADAR.Value.UnPack() : null;
     _o.COLOR = this.COLOR;
     _o.SHOW_COVARIANCE = this.SHOW_COVARIANCE;
+    _o.DISPLAY_STYLE = this.DISPLAY_STYLE.HasValue ? this.DISPLAY_STYLE.Value.UnPack() : null;
   }
   public static Offset<SCNReference> Pack(FlatBufferBuilder builder, SCNReferenceT _o) {
     if (_o == null) return default(Offset<SCNReference>);
@@ -362,6 +368,7 @@ public struct SCNReference : IFlatbufferObject
     var _OBSERVATION_EO = _o.OBSERVATION_EO == null ? default(Offset<EOO>) : EOO.Pack(builder, _o.OBSERVATION_EO);
     var _OBSERVATION_RADAR = _o.OBSERVATION_RADAR == null ? default(Offset<RDO>) : RDO.Pack(builder, _o.OBSERVATION_RADAR);
     var _COLOR = _o.COLOR == null ? default(StringOffset) : builder.CreateString(_o.COLOR);
+    var _DISPLAY_STYLE = _o.DISPLAY_STYLE == null ? default(Offset<SCNDisplayStyle>) : SCNDisplayStyle.Pack(builder, _o.DISPLAY_STYLE);
     return CreateSCNReference(
       builder,
       _REFERENCE_ID,
@@ -391,7 +398,8 @@ public struct SCNReference : IFlatbufferObject
       _OBSERVATION_EO,
       _OBSERVATION_RADAR,
       _COLOR,
-      _o.SHOW_COVARIANCE);
+      _o.SHOW_COVARIANCE,
+      _DISPLAY_STYLE);
   }
 }
 
@@ -425,6 +433,7 @@ public class SCNReferenceT
   public RDOT OBSERVATION_RADAR { get; set; }
   public string COLOR { get; set; }
   public bool SHOW_COVARIANCE { get; set; }
+  public SCNDisplayStyleT DISPLAY_STYLE { get; set; }
 
   public SCNReferenceT() {
     this.REFERENCE_ID = null;
@@ -455,6 +464,7 @@ public class SCNReferenceT
     this.OBSERVATION_RADAR = null;
     this.COLOR = null;
     this.SHOW_COVARIANCE = false;
+    this.DISPLAY_STYLE = null;
   }
 }
 
@@ -492,6 +502,7 @@ static public class SCNReferenceVerify
       && verifier.VerifyTable(tablePos, 54 /*OBSERVATION_RADAR*/, RDOVerify.Verify, false)
       && verifier.VerifyString(tablePos, 56 /*COLOR*/, false)
       && verifier.VerifyField(tablePos, 58 /*SHOW_COVARIANCE*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyTable(tablePos, 60 /*DISPLAY_STYLE*/, SCNDisplayStyleVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

@@ -190,6 +190,11 @@ public final class SCNReference extends com.google.flatbuffers.Table {
    * True when the 1-sigma covariance ellipsoid is shown on this reference.
    */
   public boolean SHOW_COVARIANCE() { int o = __offset(58); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Typed display-style overrides for this reference (object, group, or folder).
+   */
+  public SCNDisplayStyle DISPLAY_STYLE() { return DISPLAY_STYLE(new SCNDisplayStyle()); }
+  public SCNDisplayStyle DISPLAY_STYLE(SCNDisplayStyle obj) { int o = __offset(60); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createSCNReference(FlatBufferBuilder builder,
       int REFERENCE_IDOffset,
@@ -219,8 +224,10 @@ public final class SCNReference extends com.google.flatbuffers.Table {
       int OBSERVATION_EOOffset,
       int OBSERVATION_RADAROffset,
       int COLOROffset,
-      boolean SHOW_COVARIANCE) {
-    builder.startTable(28);
+      boolean SHOW_COVARIANCE,
+      int DISPLAY_STYLEOffset) {
+    builder.startTable(29);
+    SCNReference.addDisplayStyle(builder, DISPLAY_STYLEOffset);
     SCNReference.addColor(builder, COLOROffset);
     SCNReference.addObservationRadar(builder, OBSERVATION_RADAROffset);
     SCNReference.addObservationEo(builder, OBSERVATION_EOOffset);
@@ -252,7 +259,7 @@ public final class SCNReference extends com.google.flatbuffers.Table {
     return SCNReference.endSCNReference(builder);
   }
 
-  public static void startSCNReference(FlatBufferBuilder builder) { builder.startTable(28); }
+  public static void startSCNReference(FlatBufferBuilder builder) { builder.startTable(29); }
   public static void addReferenceId(FlatBufferBuilder builder, int REFERENCE_IDOffset) { builder.addOffset(0, REFERENCE_IDOffset, 0); }
   public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(1, NAMEOffset, 0); }
   public static void addReferenceKind(FlatBufferBuilder builder, byte REFERENCE_KIND) { builder.addByte(2, REFERENCE_KIND, 0); }
@@ -293,6 +300,7 @@ public final class SCNReference extends com.google.flatbuffers.Table {
   public static void addObservationRadar(FlatBufferBuilder builder, int OBSERVATION_RADAROffset) { builder.addOffset(25, OBSERVATION_RADAROffset, 0); }
   public static void addColor(FlatBufferBuilder builder, int COLOROffset) { builder.addOffset(26, COLOROffset, 0); }
   public static void addShowCovariance(FlatBufferBuilder builder, boolean SHOW_COVARIANCE) { builder.addBoolean(27, SHOW_COVARIANCE, false); }
+  public static void addDisplayStyle(FlatBufferBuilder builder, int DISPLAY_STYLEOffset) { builder.addOffset(28, DISPLAY_STYLEOffset, 0); }
   public static int endSCNReference(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

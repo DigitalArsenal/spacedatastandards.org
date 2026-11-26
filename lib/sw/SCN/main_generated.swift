@@ -31,9 +31,27 @@ public enum scenarioReferenceKind: Int8, FlatbuffersVectorInitializable, Enum, V
   ///  equals REFERENCE_ID. NAME is its label; COUNTRY is its ISO 3166-1
   ///  alpha-2 code when the area is a country.
   case areaOfInterest = 10
+  ///  A console top-level folder (for example SELECTION, GROUPS, OBJECTS) that
+  ///  carries shared display-style overrides in DISPLAY_STYLE.
+  case folder = 11
 
-  public static var max: scenarioReferenceKind { return .areaOfInterest }
+  public static var max: scenarioReferenceKind { return .folder }
   public static var min: scenarioReferenceKind { return .unknown }
+}
+
+
+///  Tri-state toggle for optional display-style switches so absent differs
+///  from explicitly disabled.
+public enum scnToggle: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case unset = 0
+  case off = 1
+  case on = 2
+
+  public static var max: scnToggle { return .on }
+  public static var min: scnToggle { return .unset }
 }
 
 
@@ -77,6 +95,249 @@ public enum scenarioActionCode: Int8, FlatbuffersVectorInitializable, Enum, Veri
   public static var min: scenarioActionCode { return .none_ }
 }
 
+
+///  Typed display customization for a scenario reference (object, group, or
+///  top-level folder). Unset strings are null, unset numeric fields are NaN,
+///  and unset switches are UNSET.
+public struct SCNDisplayStyle: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$SCN" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: SCNDisplayStyle.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let DOT_COLOR: VOffset = 4
+    static let DOT_SIZE: VOffset = 6
+    static let OUTLINE_COLOR: VOffset = 8
+    static let OUTLINE_WIDTH: VOffset = 10
+    static let SHOW_PATH: VOffset = 12
+    static let PATH_RELATIVE_TO: VOffset = 14
+    static let PATH_COLOR: VOffset = 16
+    static let PATH_WIDTH: VOffset = 18
+    static let PATH_AHEAD_MIN: VOffset = 20
+    static let PATH_BEHIND_MIN: VOffset = 22
+    static let SHOW_LABEL: VOffset = 24
+    static let LABEL_COLOR: VOffset = 26
+    static let LABEL_SIZE: VOffset = 28
+    static let LABEL_OPACITY: VOffset = 30
+    static let SHOW_RIC_AXES: VOffset = 32
+    static let RIC_AXES_LENGTH_KM: VOffset = 34
+    static let SHOW_MODEL: VOffset = 36
+    static let SHOW_COVARIANCE: VOffset = 38
+    static let SHOW_SELECTOR: VOffset = 40
+    static let SHOW_SELECTOR_LABEL: VOffset = 42
+    static let SELECTOR_COLOR: VOffset = 44
+    static let SELECTOR_WIDTH: VOffset = 46
+    static let SELECTOR_SEGMENTS: VOffset = 48
+    static let SELECTOR_FILL: VOffset = 50
+    static let SELECTOR_BINDING: VOffset = 52
+    static let SELECTOR_MIN: VOffset = 54
+    static let SELECTOR_MAX: VOffset = 56
+    static let ORIENT_RADIAL_DEG: VOffset = 58
+    static let ORIENT_CROSS_TRACK_DEG: VOffset = 60
+    static let ORIENT_IN_TRACK_DEG: VOffset = 62
+    static let LABEL_COUNT: VOffset = 64
+    static let RIC_AXES_COUNT: VOffset = 66
+    static let MODEL_COUNT: VOffset = 68
+    static let COVARIANCE_COUNT: VOffset = 70
+  }
+
+  public var DOT_COLOR: String? { let o = _accessor.offset(VT.DOT_COLOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DOT_COLORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DOT_COLOR) }
+  public var DOT_SIZE: Double { let o = _accessor.offset(VT.DOT_SIZE); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public var OUTLINE_COLOR: String? { let o = _accessor.offset(VT.OUTLINE_COLOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OUTLINE_COLORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OUTLINE_COLOR) }
+  public var OUTLINE_WIDTH: Double { let o = _accessor.offset(VT.OUTLINE_WIDTH); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SHOW_PATH: scnToggle { let o = _accessor.offset(VT.SHOW_PATH); return o == 0 ? .unset : scnToggle(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unset }
+  public var PATH_RELATIVE_TO: String? { let o = _accessor.offset(VT.PATH_RELATIVE_TO); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PATH_RELATIVE_TOSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PATH_RELATIVE_TO) }
+  public var PATH_COLOR: String? { let o = _accessor.offset(VT.PATH_COLOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PATH_COLORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PATH_COLOR) }
+  public var PATH_WIDTH: Double { let o = _accessor.offset(VT.PATH_WIDTH); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public var PATH_AHEAD_MIN: Double { let o = _accessor.offset(VT.PATH_AHEAD_MIN); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public var PATH_BEHIND_MIN: Double { let o = _accessor.offset(VT.PATH_BEHIND_MIN); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SHOW_LABEL: scnToggle { let o = _accessor.offset(VT.SHOW_LABEL); return o == 0 ? .unset : scnToggle(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unset }
+  public var LABEL_COLOR: String? { let o = _accessor.offset(VT.LABEL_COLOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LABEL_COLORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LABEL_COLOR) }
+  public var LABEL_SIZE: Double { let o = _accessor.offset(VT.LABEL_SIZE); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LABEL_OPACITY: Double { let o = _accessor.offset(VT.LABEL_OPACITY); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SHOW_RIC_AXES: scnToggle { let o = _accessor.offset(VT.SHOW_RIC_AXES); return o == 0 ? .unset : scnToggle(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unset }
+  public var RIC_AXES_LENGTH_KM: Double { let o = _accessor.offset(VT.RIC_AXES_LENGTH_KM); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SHOW_MODEL: scnToggle { let o = _accessor.offset(VT.SHOW_MODEL); return o == 0 ? .unset : scnToggle(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unset }
+  public var SHOW_COVARIANCE: scnToggle { let o = _accessor.offset(VT.SHOW_COVARIANCE); return o == 0 ? .unset : scnToggle(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unset }
+  public var SHOW_SELECTOR: scnToggle { let o = _accessor.offset(VT.SHOW_SELECTOR); return o == 0 ? .unset : scnToggle(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unset }
+  public var SHOW_SELECTOR_LABEL: scnToggle { let o = _accessor.offset(VT.SHOW_SELECTOR_LABEL); return o == 0 ? .unset : scnToggle(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unset }
+  public var SELECTOR_COLOR: String? { let o = _accessor.offset(VT.SELECTOR_COLOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SELECTOR_COLORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SELECTOR_COLOR) }
+  public var SELECTOR_WIDTH: Double { let o = _accessor.offset(VT.SELECTOR_WIDTH); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SELECTOR_SEGMENTS: Double { let o = _accessor.offset(VT.SELECTOR_SEGMENTS); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SELECTOR_FILL: Double { let o = _accessor.offset(VT.SELECTOR_FILL); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SELECTOR_BINDING: String? { let o = _accessor.offset(VT.SELECTOR_BINDING); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SELECTOR_BINDINGSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SELECTOR_BINDING) }
+  public var SELECTOR_MIN: Double { let o = _accessor.offset(VT.SELECTOR_MIN); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SELECTOR_MAX: Double { let o = _accessor.offset(VT.SELECTOR_MAX); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ORIENT_RADIAL_DEG: Double { let o = _accessor.offset(VT.ORIENT_RADIAL_DEG); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ORIENT_CROSS_TRACK_DEG: Double { let o = _accessor.offset(VT.ORIENT_CROSS_TRACK_DEG); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ORIENT_IN_TRACK_DEG: Double { let o = _accessor.offset(VT.ORIENT_IN_TRACK_DEG); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public var LABEL_COUNT: Double { let o = _accessor.offset(VT.LABEL_COUNT); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public var RIC_AXES_COUNT: Double { let o = _accessor.offset(VT.RIC_AXES_COUNT); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MODEL_COUNT: Double { let o = _accessor.offset(VT.MODEL_COUNT); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public var COVARIANCE_COUNT: Double { let o = _accessor.offset(VT.COVARIANCE_COUNT); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startSCNDisplayStyle(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 34) }
+  public static func add(DOT_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DOT_COLOR, at: VT.DOT_COLOR) }
+  public static func add(DOT_SIZE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DOT_SIZE, def: .nan, at: VT.DOT_SIZE) }
+  public static func add(OUTLINE_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OUTLINE_COLOR, at: VT.OUTLINE_COLOR) }
+  public static func add(OUTLINE_WIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTLINE_WIDTH, def: .nan, at: VT.OUTLINE_WIDTH) }
+  public static func add(SHOW_PATH: scnToggle, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHOW_PATH.rawValue, def: 0, at: VT.SHOW_PATH) }
+  public static func add(PATH_RELATIVE_TO: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PATH_RELATIVE_TO, at: VT.PATH_RELATIVE_TO) }
+  public static func add(PATH_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PATH_COLOR, at: VT.PATH_COLOR) }
+  public static func add(PATH_WIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PATH_WIDTH, def: .nan, at: VT.PATH_WIDTH) }
+  public static func add(PATH_AHEAD_MIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PATH_AHEAD_MIN, def: .nan, at: VT.PATH_AHEAD_MIN) }
+  public static func add(PATH_BEHIND_MIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PATH_BEHIND_MIN, def: .nan, at: VT.PATH_BEHIND_MIN) }
+  public static func add(SHOW_LABEL: scnToggle, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHOW_LABEL.rawValue, def: 0, at: VT.SHOW_LABEL) }
+  public static func add(LABEL_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LABEL_COLOR, at: VT.LABEL_COLOR) }
+  public static func add(LABEL_SIZE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LABEL_SIZE, def: .nan, at: VT.LABEL_SIZE) }
+  public static func add(LABEL_OPACITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LABEL_OPACITY, def: .nan, at: VT.LABEL_OPACITY) }
+  public static func add(SHOW_RIC_AXES: scnToggle, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHOW_RIC_AXES.rawValue, def: 0, at: VT.SHOW_RIC_AXES) }
+  public static func add(RIC_AXES_LENGTH_KM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RIC_AXES_LENGTH_KM, def: .nan, at: VT.RIC_AXES_LENGTH_KM) }
+  public static func add(SHOW_MODEL: scnToggle, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHOW_MODEL.rawValue, def: 0, at: VT.SHOW_MODEL) }
+  public static func add(SHOW_COVARIANCE: scnToggle, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHOW_COVARIANCE.rawValue, def: 0, at: VT.SHOW_COVARIANCE) }
+  public static func add(SHOW_SELECTOR: scnToggle, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHOW_SELECTOR.rawValue, def: 0, at: VT.SHOW_SELECTOR) }
+  public static func add(SHOW_SELECTOR_LABEL: scnToggle, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHOW_SELECTOR_LABEL.rawValue, def: 0, at: VT.SHOW_SELECTOR_LABEL) }
+  public static func add(SELECTOR_COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SELECTOR_COLOR, at: VT.SELECTOR_COLOR) }
+  public static func add(SELECTOR_WIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SELECTOR_WIDTH, def: .nan, at: VT.SELECTOR_WIDTH) }
+  public static func add(SELECTOR_SEGMENTS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SELECTOR_SEGMENTS, def: .nan, at: VT.SELECTOR_SEGMENTS) }
+  public static func add(SELECTOR_FILL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SELECTOR_FILL, def: .nan, at: VT.SELECTOR_FILL) }
+  public static func add(SELECTOR_BINDING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SELECTOR_BINDING, at: VT.SELECTOR_BINDING) }
+  public static func add(SELECTOR_MIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SELECTOR_MIN, def: .nan, at: VT.SELECTOR_MIN) }
+  public static func add(SELECTOR_MAX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SELECTOR_MAX, def: .nan, at: VT.SELECTOR_MAX) }
+  public static func add(ORIENT_RADIAL_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ORIENT_RADIAL_DEG, def: .nan, at: VT.ORIENT_RADIAL_DEG) }
+  public static func add(ORIENT_CROSS_TRACK_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ORIENT_CROSS_TRACK_DEG, def: .nan, at: VT.ORIENT_CROSS_TRACK_DEG) }
+  public static func add(ORIENT_IN_TRACK_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ORIENT_IN_TRACK_DEG, def: .nan, at: VT.ORIENT_IN_TRACK_DEG) }
+  public static func add(LABEL_COUNT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LABEL_COUNT, def: .nan, at: VT.LABEL_COUNT) }
+  public static func add(RIC_AXES_COUNT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RIC_AXES_COUNT, def: .nan, at: VT.RIC_AXES_COUNT) }
+  public static func add(MODEL_COUNT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MODEL_COUNT, def: .nan, at: VT.MODEL_COUNT) }
+  public static func add(COVARIANCE_COUNT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COVARIANCE_COUNT, def: .nan, at: VT.COVARIANCE_COUNT) }
+  public static func endSCNDisplayStyle(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createSCNDisplayStyle(
+    _ fbb: inout FlatBufferBuilder,
+    DOT_COLOROffset DOT_COLOR: Offset = Offset(),
+    DOT_SIZE: Double = .nan,
+    OUTLINE_COLOROffset OUTLINE_COLOR: Offset = Offset(),
+    OUTLINE_WIDTH: Double = .nan,
+    SHOW_PATH: scnToggle = .unset,
+    PATH_RELATIVE_TOOffset PATH_RELATIVE_TO: Offset = Offset(),
+    PATH_COLOROffset PATH_COLOR: Offset = Offset(),
+    PATH_WIDTH: Double = .nan,
+    PATH_AHEAD_MIN: Double = .nan,
+    PATH_BEHIND_MIN: Double = .nan,
+    SHOW_LABEL: scnToggle = .unset,
+    LABEL_COLOROffset LABEL_COLOR: Offset = Offset(),
+    LABEL_SIZE: Double = .nan,
+    LABEL_OPACITY: Double = .nan,
+    SHOW_RIC_AXES: scnToggle = .unset,
+    RIC_AXES_LENGTH_KM: Double = .nan,
+    SHOW_MODEL: scnToggle = .unset,
+    SHOW_COVARIANCE: scnToggle = .unset,
+    SHOW_SELECTOR: scnToggle = .unset,
+    SHOW_SELECTOR_LABEL: scnToggle = .unset,
+    SELECTOR_COLOROffset SELECTOR_COLOR: Offset = Offset(),
+    SELECTOR_WIDTH: Double = .nan,
+    SELECTOR_SEGMENTS: Double = .nan,
+    SELECTOR_FILL: Double = .nan,
+    SELECTOR_BINDINGOffset SELECTOR_BINDING: Offset = Offset(),
+    SELECTOR_MIN: Double = .nan,
+    SELECTOR_MAX: Double = .nan,
+    ORIENT_RADIAL_DEG: Double = .nan,
+    ORIENT_CROSS_TRACK_DEG: Double = .nan,
+    ORIENT_IN_TRACK_DEG: Double = .nan,
+    LABEL_COUNT: Double = .nan,
+    RIC_AXES_COUNT: Double = .nan,
+    MODEL_COUNT: Double = .nan,
+    COVARIANCE_COUNT: Double = .nan
+  ) -> Offset {
+    let __start = SCNDisplayStyle.startSCNDisplayStyle(&fbb)
+    SCNDisplayStyle.add(DOT_COLOR: DOT_COLOR, &fbb)
+    SCNDisplayStyle.add(DOT_SIZE: DOT_SIZE, &fbb)
+    SCNDisplayStyle.add(OUTLINE_COLOR: OUTLINE_COLOR, &fbb)
+    SCNDisplayStyle.add(OUTLINE_WIDTH: OUTLINE_WIDTH, &fbb)
+    SCNDisplayStyle.add(SHOW_PATH: SHOW_PATH, &fbb)
+    SCNDisplayStyle.add(PATH_RELATIVE_TO: PATH_RELATIVE_TO, &fbb)
+    SCNDisplayStyle.add(PATH_COLOR: PATH_COLOR, &fbb)
+    SCNDisplayStyle.add(PATH_WIDTH: PATH_WIDTH, &fbb)
+    SCNDisplayStyle.add(PATH_AHEAD_MIN: PATH_AHEAD_MIN, &fbb)
+    SCNDisplayStyle.add(PATH_BEHIND_MIN: PATH_BEHIND_MIN, &fbb)
+    SCNDisplayStyle.add(SHOW_LABEL: SHOW_LABEL, &fbb)
+    SCNDisplayStyle.add(LABEL_COLOR: LABEL_COLOR, &fbb)
+    SCNDisplayStyle.add(LABEL_SIZE: LABEL_SIZE, &fbb)
+    SCNDisplayStyle.add(LABEL_OPACITY: LABEL_OPACITY, &fbb)
+    SCNDisplayStyle.add(SHOW_RIC_AXES: SHOW_RIC_AXES, &fbb)
+    SCNDisplayStyle.add(RIC_AXES_LENGTH_KM: RIC_AXES_LENGTH_KM, &fbb)
+    SCNDisplayStyle.add(SHOW_MODEL: SHOW_MODEL, &fbb)
+    SCNDisplayStyle.add(SHOW_COVARIANCE: SHOW_COVARIANCE, &fbb)
+    SCNDisplayStyle.add(SHOW_SELECTOR: SHOW_SELECTOR, &fbb)
+    SCNDisplayStyle.add(SHOW_SELECTOR_LABEL: SHOW_SELECTOR_LABEL, &fbb)
+    SCNDisplayStyle.add(SELECTOR_COLOR: SELECTOR_COLOR, &fbb)
+    SCNDisplayStyle.add(SELECTOR_WIDTH: SELECTOR_WIDTH, &fbb)
+    SCNDisplayStyle.add(SELECTOR_SEGMENTS: SELECTOR_SEGMENTS, &fbb)
+    SCNDisplayStyle.add(SELECTOR_FILL: SELECTOR_FILL, &fbb)
+    SCNDisplayStyle.add(SELECTOR_BINDING: SELECTOR_BINDING, &fbb)
+    SCNDisplayStyle.add(SELECTOR_MIN: SELECTOR_MIN, &fbb)
+    SCNDisplayStyle.add(SELECTOR_MAX: SELECTOR_MAX, &fbb)
+    SCNDisplayStyle.add(ORIENT_RADIAL_DEG: ORIENT_RADIAL_DEG, &fbb)
+    SCNDisplayStyle.add(ORIENT_CROSS_TRACK_DEG: ORIENT_CROSS_TRACK_DEG, &fbb)
+    SCNDisplayStyle.add(ORIENT_IN_TRACK_DEG: ORIENT_IN_TRACK_DEG, &fbb)
+    SCNDisplayStyle.add(LABEL_COUNT: LABEL_COUNT, &fbb)
+    SCNDisplayStyle.add(RIC_AXES_COUNT: RIC_AXES_COUNT, &fbb)
+    SCNDisplayStyle.add(MODEL_COUNT: MODEL_COUNT, &fbb)
+    SCNDisplayStyle.add(COVARIANCE_COUNT: COVARIANCE_COUNT, &fbb)
+    return SCNDisplayStyle.endSCNDisplayStyle(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.DOT_COLOR, fieldName: "DOT_COLOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DOT_SIZE, fieldName: "DOT_SIZE", required: false, type: Double.self)
+    try _v.visit(field: VT.OUTLINE_COLOR, fieldName: "OUTLINE_COLOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OUTLINE_WIDTH, fieldName: "OUTLINE_WIDTH", required: false, type: Double.self)
+    try _v.visit(field: VT.SHOW_PATH, fieldName: "SHOW_PATH", required: false, type: scnToggle.self)
+    try _v.visit(field: VT.PATH_RELATIVE_TO, fieldName: "PATH_RELATIVE_TO", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PATH_COLOR, fieldName: "PATH_COLOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PATH_WIDTH, fieldName: "PATH_WIDTH", required: false, type: Double.self)
+    try _v.visit(field: VT.PATH_AHEAD_MIN, fieldName: "PATH_AHEAD_MIN", required: false, type: Double.self)
+    try _v.visit(field: VT.PATH_BEHIND_MIN, fieldName: "PATH_BEHIND_MIN", required: false, type: Double.self)
+    try _v.visit(field: VT.SHOW_LABEL, fieldName: "SHOW_LABEL", required: false, type: scnToggle.self)
+    try _v.visit(field: VT.LABEL_COLOR, fieldName: "LABEL_COLOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LABEL_SIZE, fieldName: "LABEL_SIZE", required: false, type: Double.self)
+    try _v.visit(field: VT.LABEL_OPACITY, fieldName: "LABEL_OPACITY", required: false, type: Double.self)
+    try _v.visit(field: VT.SHOW_RIC_AXES, fieldName: "SHOW_RIC_AXES", required: false, type: scnToggle.self)
+    try _v.visit(field: VT.RIC_AXES_LENGTH_KM, fieldName: "RIC_AXES_LENGTH_KM", required: false, type: Double.self)
+    try _v.visit(field: VT.SHOW_MODEL, fieldName: "SHOW_MODEL", required: false, type: scnToggle.self)
+    try _v.visit(field: VT.SHOW_COVARIANCE, fieldName: "SHOW_COVARIANCE", required: false, type: scnToggle.self)
+    try _v.visit(field: VT.SHOW_SELECTOR, fieldName: "SHOW_SELECTOR", required: false, type: scnToggle.self)
+    try _v.visit(field: VT.SHOW_SELECTOR_LABEL, fieldName: "SHOW_SELECTOR_LABEL", required: false, type: scnToggle.self)
+    try _v.visit(field: VT.SELECTOR_COLOR, fieldName: "SELECTOR_COLOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SELECTOR_WIDTH, fieldName: "SELECTOR_WIDTH", required: false, type: Double.self)
+    try _v.visit(field: VT.SELECTOR_SEGMENTS, fieldName: "SELECTOR_SEGMENTS", required: false, type: Double.self)
+    try _v.visit(field: VT.SELECTOR_FILL, fieldName: "SELECTOR_FILL", required: false, type: Double.self)
+    try _v.visit(field: VT.SELECTOR_BINDING, fieldName: "SELECTOR_BINDING", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SELECTOR_MIN, fieldName: "SELECTOR_MIN", required: false, type: Double.self)
+    try _v.visit(field: VT.SELECTOR_MAX, fieldName: "SELECTOR_MAX", required: false, type: Double.self)
+    try _v.visit(field: VT.ORIENT_RADIAL_DEG, fieldName: "ORIENT_RADIAL_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.ORIENT_CROSS_TRACK_DEG, fieldName: "ORIENT_CROSS_TRACK_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.ORIENT_IN_TRACK_DEG, fieldName: "ORIENT_IN_TRACK_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.LABEL_COUNT, fieldName: "LABEL_COUNT", required: false, type: Double.self)
+    try _v.visit(field: VT.RIC_AXES_COUNT, fieldName: "RIC_AXES_COUNT", required: false, type: Double.self)
+    try _v.visit(field: VT.MODEL_COUNT, fieldName: "MODEL_COUNT", required: false, type: Double.self)
+    try _v.visit(field: VT.COVARIANCE_COUNT, fieldName: "COVARIANCE_COUNT", required: false, type: Double.self)
+    _v.finish()
+  }
+}
 
 ///  Relative-motion RIC box and RPO time-lapse settings kept with a scenario.
 public struct SCNRicBox: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
@@ -538,6 +799,7 @@ public struct SCNReference: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
     static let OBSERVATION_RADAR: VOffset = 54
     static let COLOR: VOffset = 56
     static let SHOW_COVARIANCE: VOffset = 58
+    static let DISPLAY_STYLE: VOffset = 60
   }
 
   ///  Stable scenario-local id for this reference.
@@ -606,7 +868,9 @@ public struct SCNReference: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
   public var COLORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COLOR) }
   ///  True when the 1-sigma covariance ellipsoid is shown on this reference.
   public var SHOW_COVARIANCE: Bool { let o = _accessor.offset(VT.SHOW_COVARIANCE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  public static func startSCNReference(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 28) }
+  ///  Typed display-style overrides for this reference (object, group, or folder).
+  public var DISPLAY_STYLE: SCNDisplayStyle? { let o = _accessor.offset(VT.DISPLAY_STYLE); return o == 0 ? nil : SCNDisplayStyle(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startSCNReference(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 29) }
   public static func add(REFERENCE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REFERENCE_ID, at: VT.REFERENCE_ID) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
   public static func add(REFERENCE_KIND: scenarioReferenceKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFERENCE_KIND.rawValue, def: 0, at: VT.REFERENCE_KIND) }
@@ -637,6 +901,7 @@ public struct SCNReference: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
   public static func add(COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR, at: VT.COLOR) }
   public static func add(SHOW_COVARIANCE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHOW_COVARIANCE, def: false,
    at: VT.SHOW_COVARIANCE) }
+  public static func add(DISPLAY_STYLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DISPLAY_STYLE, at: VT.DISPLAY_STYLE) }
   public static func endSCNReference(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSCNReference(
     _ fbb: inout FlatBufferBuilder,
@@ -667,7 +932,8 @@ public struct SCNReference: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
     OBSERVATION_EOOffset OBSERVATION_EO: Offset = Offset(),
     OBSERVATION_RADAROffset OBSERVATION_RADAR: Offset = Offset(),
     COLOROffset COLOR: Offset = Offset(),
-    SHOW_COVARIANCE: Bool = false
+    SHOW_COVARIANCE: Bool = false,
+    DISPLAY_STYLEOffset DISPLAY_STYLE: Offset = Offset()
   ) -> Offset {
     let __start = SCNReference.startSCNReference(&fbb)
     SCNReference.add(REFERENCE_ID: REFERENCE_ID, &fbb)
@@ -698,6 +964,7 @@ public struct SCNReference: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
     SCNReference.add(OBSERVATION_RADAR: OBSERVATION_RADAR, &fbb)
     SCNReference.add(COLOR: COLOR, &fbb)
     SCNReference.add(SHOW_COVARIANCE: SHOW_COVARIANCE, &fbb)
+    SCNReference.add(DISPLAY_STYLE: DISPLAY_STYLE, &fbb)
     return SCNReference.endSCNReference(&fbb, start: __start)
   }
 
@@ -731,6 +998,7 @@ public struct SCNReference: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
     try _v.visit(field: VT.OBSERVATION_RADAR, fieldName: "OBSERVATION_RADAR", required: false, type: ForwardOffset<RDO>.self)
     try _v.visit(field: VT.COLOR, fieldName: "COLOR", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.SHOW_COVARIANCE, fieldName: "SHOW_COVARIANCE", required: false, type: Bool.self)
+    try _v.visit(field: VT.DISPLAY_STYLE, fieldName: "DISPLAY_STYLE", required: false, type: ForwardOffset<SCNDisplayStyle>.self)
     _v.finish()
   }
 }

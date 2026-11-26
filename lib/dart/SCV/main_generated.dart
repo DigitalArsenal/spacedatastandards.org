@@ -207,6 +207,46 @@ class _scvSensorShapeKindReader extends fb.Reader<scvSensorShapeKind> {
       scvSensorShapeKind.fromValue(const fb.Uint8Reader().read(bc, offset));
 }
 
+///  Side-looking geometry capability of a synthetic-aperture radar (SAR)
+///  sensor relative to the spacecraft velocity vector.
+enum scvSarLookSide {
+  UNSPECIFIED(0),
+  LEFT(1),
+  RIGHT(2),
+  BILATERAL(3);
+
+  final int value;
+  const scvSarLookSide(this.value);
+
+  factory scvSarLookSide.fromValue(int value) {
+    switch (value) {
+      case 0: return scvSarLookSide.UNSPECIFIED;
+      case 1: return scvSarLookSide.LEFT;
+      case 2: return scvSarLookSide.RIGHT;
+      case 3: return scvSarLookSide.BILATERAL;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static scvSarLookSide? _createOrNull(int? value) =>
+      value == null ? null : scvSarLookSide.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 3;
+  static const fb.Reader<scvSarLookSide> reader = _scvSarLookSideReader();
+}
+
+class _scvSarLookSideReader extends fb.Reader<scvSarLookSide> {
+  const _scvSarLookSideReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  scvSarLookSide read(fb.BufferContext bc, int offset) =>
+      scvSarLookSide.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
 enum scvSensorAxisConvention {
   LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT(0);
 
@@ -1091,10 +1131,14 @@ class SCVSensorShapeContract {
   ///  on the Earth). SEMI_INTERMEDIATE_M 0 is SEMI_MAJOR_M (an ellipsoid of revolution); a sphere has equal semi-axes.
   SCVEllipsoid? get ALTITUDE_REFERENCE => SCVEllipsoid.reader.vTableGetNullable(_bc, _bcOffset, 40);
   SCVEllipsoid? get altitudeReference => ALTITUDE_REFERENCE;
+  ///  For SAR_ANNULAR_SECTOR: which side(s) of the ground track the sensor can
+  ///  image (LEFT, RIGHT, or BILATERAL when roll/steering supports both sides).
+  scvSarLookSide get SAR_LOOK_SIDE => scvSarLookSide.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 42, 0));
+  scvSarLookSide get sarLookSide => SAR_LOOK_SIDE;
 
   @override
   String toString() {
-    return 'SCVSensorShapeContract{shapeKind: ${shapeKind}, axisConvention: ${axisConvention}, rangeBoundary: ${rangeBoundary}, outerHalfAngleDeg: ${outerHalfAngleDeg}, innerHalfAngleDeg: ${innerHalfAngleDeg}, minClockAngleDeg: ${minClockAngleDeg}, maxClockAngleDeg: ${maxClockAngleDeg}, xHalfAngleDeg: ${xHalfAngleDeg}, yHalfAngleDeg: ${yHalfAngleDeg}, innerLookAngleDeg: ${innerLookAngleDeg}, outerLookAngleDeg: ${outerLookAngleDeg}, sarSamplingDensity: ${sarSamplingDensity}, minRangeM: ${minRangeM}, maxRangeM: ${maxRangeM}, polygonVertices: ${polygonVertices}, polygonFrame: ${polygonFrame}, azElMask: ${azElMask}, maxAltitudeM: ${maxAltitudeM}, altitudeReference: ${altitudeReference}}';
+    return 'SCVSensorShapeContract{shapeKind: ${shapeKind}, axisConvention: ${axisConvention}, rangeBoundary: ${rangeBoundary}, outerHalfAngleDeg: ${outerHalfAngleDeg}, innerHalfAngleDeg: ${innerHalfAngleDeg}, minClockAngleDeg: ${minClockAngleDeg}, maxClockAngleDeg: ${maxClockAngleDeg}, xHalfAngleDeg: ${xHalfAngleDeg}, yHalfAngleDeg: ${yHalfAngleDeg}, innerLookAngleDeg: ${innerLookAngleDeg}, outerLookAngleDeg: ${outerLookAngleDeg}, sarSamplingDensity: ${sarSamplingDensity}, minRangeM: ${minRangeM}, maxRangeM: ${maxRangeM}, polygonVertices: ${polygonVertices}, polygonFrame: ${polygonFrame}, azElMask: ${azElMask}, maxAltitudeM: ${maxAltitudeM}, altitudeReference: ${altitudeReference}, sarLookSide: ${sarLookSide}}';
   }
 }
 
@@ -1112,7 +1156,7 @@ class SCVSensorShapeContractBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(19);
+    fbBuilder.startTable(20);
   }
 
   int addShapeKind(scvSensorShapeKind? SHAPE_KIND) {
@@ -1191,6 +1235,10 @@ class SCVSensorShapeContractBuilder {
     fbBuilder.addOffset(18, offset);
     return fbBuilder.offset;
   }
+  int addSarLookSide(scvSarLookSide? SAR_LOOK_SIDE) {
+    fbBuilder.addUint8(19, SAR_LOOK_SIDE?.value);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1217,6 +1265,7 @@ class SCVSensorShapeContractObjectBuilder extends fb.ObjectBuilder {
   final List<SCVAzElMaskPointObjectBuilder>? _AZ_EL_MASK;
   final double? _MAX_ALTITUDE_M;
   final SCVEllipsoidObjectBuilder? _ALTITUDE_REFERENCE;
+  final scvSarLookSide? _SAR_LOOK_SIDE;
 
   SCVSensorShapeContractObjectBuilder({
     scvSensorShapeKind? SHAPE_KIND,
@@ -1257,6 +1306,8 @@ class SCVSensorShapeContractObjectBuilder extends fb.ObjectBuilder {
     double? maxAltitudeM,
     SCVEllipsoidObjectBuilder? ALTITUDE_REFERENCE,
     SCVEllipsoidObjectBuilder? altitudeReference,
+    scvSarLookSide? SAR_LOOK_SIDE,
+    scvSarLookSide? sarLookSide,
   })
       : _SHAPE_KIND = shapeKind ?? SHAPE_KIND,
         _AXIS_CONVENTION = axisConvention ?? AXIS_CONVENTION,
@@ -1276,7 +1327,8 @@ class SCVSensorShapeContractObjectBuilder extends fb.ObjectBuilder {
         _POLYGON_FRAME = polygonFrame ?? POLYGON_FRAME,
         _AZ_EL_MASK = azElMask ?? AZ_EL_MASK,
         _MAX_ALTITUDE_M = maxAltitudeM ?? MAX_ALTITUDE_M,
-        _ALTITUDE_REFERENCE = altitudeReference ?? ALTITUDE_REFERENCE;
+        _ALTITUDE_REFERENCE = altitudeReference ?? ALTITUDE_REFERENCE,
+        _SAR_LOOK_SIDE = sarLookSide ?? SAR_LOOK_SIDE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1286,7 +1338,7 @@ class SCVSensorShapeContractObjectBuilder extends fb.ObjectBuilder {
     final int? AZ_EL_MASKOffset = _AZ_EL_MASK == null ? null
         : fbBuilder.writeList(_AZ_EL_MASK!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? ALTITUDE_REFERENCEOffset = _ALTITUDE_REFERENCE?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(19);
+    fbBuilder.startTable(20);
     fbBuilder.addUint8(0, _SHAPE_KIND?.value);
     fbBuilder.addUint8(1, _AXIS_CONVENTION?.value);
     fbBuilder.addUint8(2, _RANGE_BOUNDARY?.value);
@@ -1306,6 +1358,7 @@ class SCVSensorShapeContractObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(16, AZ_EL_MASKOffset);
     fbBuilder.addFloat64(17, _MAX_ALTITUDE_M);
     fbBuilder.addOffset(18, ALTITUDE_REFERENCEOffset);
+    fbBuilder.addUint8(19, _SAR_LOOK_SIDE?.value);
     return fbBuilder.endTable();
   }
 

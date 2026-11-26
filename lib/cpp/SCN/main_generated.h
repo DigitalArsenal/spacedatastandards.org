@@ -24,6 +24,9 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 #include "../STV/main_generated.h"
 #include "../VST/main_generated.h"
 
+struct SCNDisplayStyle;
+struct SCNDisplayStyleBuilder;
+
 struct SCNRicBox;
 struct SCNRicBoxBuilder;
 
@@ -74,11 +77,14 @@ enum scenarioReferenceKind : int8_t {
   /// equals REFERENCE_ID. NAME is its label; COUNTRY is its ISO 3166-1
   /// alpha-2 code when the area is a country.
   scenarioReferenceKind_AREA_OF_INTEREST = 10,
+  /// A console top-level folder (for example SELECTION, GROUPS, OBJECTS) that
+  /// carries shared display-style overrides in DISPLAY_STYLE.
+  scenarioReferenceKind_FOLDER = 11,
   scenarioReferenceKind_MIN = scenarioReferenceKind_UNKNOWN,
-  scenarioReferenceKind_MAX = scenarioReferenceKind_AREA_OF_INTEREST
+  scenarioReferenceKind_MAX = scenarioReferenceKind_FOLDER
 };
 
-inline const scenarioReferenceKind (&EnumValuesscenarioReferenceKind())[11] {
+inline const scenarioReferenceKind (&EnumValuesscenarioReferenceKind())[12] {
   static const scenarioReferenceKind values[] = {
     scenarioReferenceKind_UNKNOWN,
     scenarioReferenceKind_SATELLITE,
@@ -90,13 +96,14 @@ inline const scenarioReferenceKind (&EnumValuesscenarioReferenceKind())[11] {
     scenarioReferenceKind_EXCLUSION_ZONE,
     scenarioReferenceKind_OBSERVATION,
     scenarioReferenceKind_GROUP,
-    scenarioReferenceKind_AREA_OF_INTEREST
+    scenarioReferenceKind_AREA_OF_INTEREST,
+    scenarioReferenceKind_FOLDER
   };
   return values;
 }
 
 inline const char * const *EnumNamesscenarioReferenceKind() {
-  static const char * const names[12] = {
+  static const char * const names[13] = {
     "UNKNOWN",
     "SATELLITE",
     "GROUND_SITE",
@@ -108,15 +115,51 @@ inline const char * const *EnumNamesscenarioReferenceKind() {
     "OBSERVATION",
     "GROUP",
     "AREA_OF_INTEREST",
+    "FOLDER",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamescenarioReferenceKind(scenarioReferenceKind e) {
-  if (::flatbuffers::IsOutRange(e, scenarioReferenceKind_UNKNOWN, scenarioReferenceKind_AREA_OF_INTEREST)) return "";
+  if (::flatbuffers::IsOutRange(e, scenarioReferenceKind_UNKNOWN, scenarioReferenceKind_FOLDER)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesscenarioReferenceKind()[index];
+}
+
+/// Tri-state toggle for optional display-style switches so absent differs
+/// from explicitly disabled.
+enum scnToggle : int8_t {
+  scnToggle_UNSET = 0,
+  scnToggle_OFF = 1,
+  scnToggle_ON = 2,
+  scnToggle_MIN = scnToggle_UNSET,
+  scnToggle_MAX = scnToggle_ON
+};
+
+inline const scnToggle (&EnumValuesscnToggle())[3] {
+  static const scnToggle values[] = {
+    scnToggle_UNSET,
+    scnToggle_OFF,
+    scnToggle_ON
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesscnToggle() {
+  static const char * const names[4] = {
+    "UNSET",
+    "OFF",
+    "ON",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamescnToggle(scnToggle e) {
+  if (::flatbuffers::IsOutRange(e, scnToggle_UNSET, scnToggle_ON)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesscnToggle()[index];
 }
 
 /// Coordinate convention for a relative-motion RIC box.
@@ -216,6 +259,469 @@ inline const char *EnumNamescenarioActionCode(scenarioActionCode e) {
   if (::flatbuffers::IsOutRange(e, scenarioActionCode_NONE, scenarioActionCode_RESET)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesscenarioActionCode()[index];
+}
+
+/// Typed display customization for a scenario reference (object, group, or
+/// top-level folder). Unset strings are null, unset numeric fields are NaN,
+/// and unset switches are UNSET.
+struct SCNDisplayStyle FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef SCNDisplayStyleBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_DOT_COLOR = 4,
+    VT_DOT_SIZE = 6,
+    VT_OUTLINE_COLOR = 8,
+    VT_OUTLINE_WIDTH = 10,
+    VT_SHOW_PATH = 12,
+    VT_PATH_RELATIVE_TO = 14,
+    VT_PATH_COLOR = 16,
+    VT_PATH_WIDTH = 18,
+    VT_PATH_AHEAD_MIN = 20,
+    VT_PATH_BEHIND_MIN = 22,
+    VT_SHOW_LABEL = 24,
+    VT_LABEL_COLOR = 26,
+    VT_LABEL_SIZE = 28,
+    VT_LABEL_OPACITY = 30,
+    VT_SHOW_RIC_AXES = 32,
+    VT_RIC_AXES_LENGTH_KM = 34,
+    VT_SHOW_MODEL = 36,
+    VT_SHOW_COVARIANCE = 38,
+    VT_SHOW_SELECTOR = 40,
+    VT_SHOW_SELECTOR_LABEL = 42,
+    VT_SELECTOR_COLOR = 44,
+    VT_SELECTOR_WIDTH = 46,
+    VT_SELECTOR_SEGMENTS = 48,
+    VT_SELECTOR_FILL = 50,
+    VT_SELECTOR_BINDING = 52,
+    VT_SELECTOR_MIN = 54,
+    VT_SELECTOR_MAX = 56,
+    VT_ORIENT_RADIAL_DEG = 58,
+    VT_ORIENT_CROSS_TRACK_DEG = 60,
+    VT_ORIENT_IN_TRACK_DEG = 62,
+    VT_LABEL_COUNT = 64,
+    VT_RIC_AXES_COUNT = 66,
+    VT_MODEL_COUNT = 68,
+    VT_COVARIANCE_COUNT = 70
+  };
+  const ::flatbuffers::String *DOT_COLOR() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DOT_COLOR);
+  }
+  double DOT_SIZE() const {
+    return GetField<double>(VT_DOT_SIZE, std::numeric_limits<double>::quiet_NaN());
+  }
+  const ::flatbuffers::String *OUTLINE_COLOR() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_OUTLINE_COLOR);
+  }
+  double OUTLINE_WIDTH() const {
+    return GetField<double>(VT_OUTLINE_WIDTH, std::numeric_limits<double>::quiet_NaN());
+  }
+  scnToggle SHOW_PATH() const {
+    return static_cast<scnToggle>(GetField<int8_t>(VT_SHOW_PATH, 0));
+  }
+  const ::flatbuffers::String *PATH_RELATIVE_TO() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PATH_RELATIVE_TO);
+  }
+  const ::flatbuffers::String *PATH_COLOR() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PATH_COLOR);
+  }
+  double PATH_WIDTH() const {
+    return GetField<double>(VT_PATH_WIDTH, std::numeric_limits<double>::quiet_NaN());
+  }
+  double PATH_AHEAD_MIN() const {
+    return GetField<double>(VT_PATH_AHEAD_MIN, std::numeric_limits<double>::quiet_NaN());
+  }
+  double PATH_BEHIND_MIN() const {
+    return GetField<double>(VT_PATH_BEHIND_MIN, std::numeric_limits<double>::quiet_NaN());
+  }
+  scnToggle SHOW_LABEL() const {
+    return static_cast<scnToggle>(GetField<int8_t>(VT_SHOW_LABEL, 0));
+  }
+  const ::flatbuffers::String *LABEL_COLOR() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_LABEL_COLOR);
+  }
+  double LABEL_SIZE() const {
+    return GetField<double>(VT_LABEL_SIZE, std::numeric_limits<double>::quiet_NaN());
+  }
+  double LABEL_OPACITY() const {
+    return GetField<double>(VT_LABEL_OPACITY, std::numeric_limits<double>::quiet_NaN());
+  }
+  scnToggle SHOW_RIC_AXES() const {
+    return static_cast<scnToggle>(GetField<int8_t>(VT_SHOW_RIC_AXES, 0));
+  }
+  double RIC_AXES_LENGTH_KM() const {
+    return GetField<double>(VT_RIC_AXES_LENGTH_KM, std::numeric_limits<double>::quiet_NaN());
+  }
+  scnToggle SHOW_MODEL() const {
+    return static_cast<scnToggle>(GetField<int8_t>(VT_SHOW_MODEL, 0));
+  }
+  scnToggle SHOW_COVARIANCE() const {
+    return static_cast<scnToggle>(GetField<int8_t>(VT_SHOW_COVARIANCE, 0));
+  }
+  scnToggle SHOW_SELECTOR() const {
+    return static_cast<scnToggle>(GetField<int8_t>(VT_SHOW_SELECTOR, 0));
+  }
+  scnToggle SHOW_SELECTOR_LABEL() const {
+    return static_cast<scnToggle>(GetField<int8_t>(VT_SHOW_SELECTOR_LABEL, 0));
+  }
+  const ::flatbuffers::String *SELECTOR_COLOR() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SELECTOR_COLOR);
+  }
+  double SELECTOR_WIDTH() const {
+    return GetField<double>(VT_SELECTOR_WIDTH, std::numeric_limits<double>::quiet_NaN());
+  }
+  double SELECTOR_SEGMENTS() const {
+    return GetField<double>(VT_SELECTOR_SEGMENTS, std::numeric_limits<double>::quiet_NaN());
+  }
+  double SELECTOR_FILL() const {
+    return GetField<double>(VT_SELECTOR_FILL, std::numeric_limits<double>::quiet_NaN());
+  }
+  const ::flatbuffers::String *SELECTOR_BINDING() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SELECTOR_BINDING);
+  }
+  double SELECTOR_MIN() const {
+    return GetField<double>(VT_SELECTOR_MIN, std::numeric_limits<double>::quiet_NaN());
+  }
+  double SELECTOR_MAX() const {
+    return GetField<double>(VT_SELECTOR_MAX, std::numeric_limits<double>::quiet_NaN());
+  }
+  double ORIENT_RADIAL_DEG() const {
+    return GetField<double>(VT_ORIENT_RADIAL_DEG, std::numeric_limits<double>::quiet_NaN());
+  }
+  double ORIENT_CROSS_TRACK_DEG() const {
+    return GetField<double>(VT_ORIENT_CROSS_TRACK_DEG, std::numeric_limits<double>::quiet_NaN());
+  }
+  double ORIENT_IN_TRACK_DEG() const {
+    return GetField<double>(VT_ORIENT_IN_TRACK_DEG, std::numeric_limits<double>::quiet_NaN());
+  }
+  double LABEL_COUNT() const {
+    return GetField<double>(VT_LABEL_COUNT, std::numeric_limits<double>::quiet_NaN());
+  }
+  double RIC_AXES_COUNT() const {
+    return GetField<double>(VT_RIC_AXES_COUNT, std::numeric_limits<double>::quiet_NaN());
+  }
+  double MODEL_COUNT() const {
+    return GetField<double>(VT_MODEL_COUNT, std::numeric_limits<double>::quiet_NaN());
+  }
+  double COVARIANCE_COUNT() const {
+    return GetField<double>(VT_COVARIANCE_COUNT, std::numeric_limits<double>::quiet_NaN());
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_DOT_COLOR) &&
+           verifier.VerifyString(DOT_COLOR()) &&
+           VerifyField<double>(verifier, VT_DOT_SIZE, 8) &&
+           VerifyOffset(verifier, VT_OUTLINE_COLOR) &&
+           verifier.VerifyString(OUTLINE_COLOR()) &&
+           VerifyField<double>(verifier, VT_OUTLINE_WIDTH, 8) &&
+           VerifyField<int8_t>(verifier, VT_SHOW_PATH, 1) &&
+           VerifyOffset(verifier, VT_PATH_RELATIVE_TO) &&
+           verifier.VerifyString(PATH_RELATIVE_TO()) &&
+           VerifyOffset(verifier, VT_PATH_COLOR) &&
+           verifier.VerifyString(PATH_COLOR()) &&
+           VerifyField<double>(verifier, VT_PATH_WIDTH, 8) &&
+           VerifyField<double>(verifier, VT_PATH_AHEAD_MIN, 8) &&
+           VerifyField<double>(verifier, VT_PATH_BEHIND_MIN, 8) &&
+           VerifyField<int8_t>(verifier, VT_SHOW_LABEL, 1) &&
+           VerifyOffset(verifier, VT_LABEL_COLOR) &&
+           verifier.VerifyString(LABEL_COLOR()) &&
+           VerifyField<double>(verifier, VT_LABEL_SIZE, 8) &&
+           VerifyField<double>(verifier, VT_LABEL_OPACITY, 8) &&
+           VerifyField<int8_t>(verifier, VT_SHOW_RIC_AXES, 1) &&
+           VerifyField<double>(verifier, VT_RIC_AXES_LENGTH_KM, 8) &&
+           VerifyField<int8_t>(verifier, VT_SHOW_MODEL, 1) &&
+           VerifyField<int8_t>(verifier, VT_SHOW_COVARIANCE, 1) &&
+           VerifyField<int8_t>(verifier, VT_SHOW_SELECTOR, 1) &&
+           VerifyField<int8_t>(verifier, VT_SHOW_SELECTOR_LABEL, 1) &&
+           VerifyOffset(verifier, VT_SELECTOR_COLOR) &&
+           verifier.VerifyString(SELECTOR_COLOR()) &&
+           VerifyField<double>(verifier, VT_SELECTOR_WIDTH, 8) &&
+           VerifyField<double>(verifier, VT_SELECTOR_SEGMENTS, 8) &&
+           VerifyField<double>(verifier, VT_SELECTOR_FILL, 8) &&
+           VerifyOffset(verifier, VT_SELECTOR_BINDING) &&
+           verifier.VerifyString(SELECTOR_BINDING()) &&
+           VerifyField<double>(verifier, VT_SELECTOR_MIN, 8) &&
+           VerifyField<double>(verifier, VT_SELECTOR_MAX, 8) &&
+           VerifyField<double>(verifier, VT_ORIENT_RADIAL_DEG, 8) &&
+           VerifyField<double>(verifier, VT_ORIENT_CROSS_TRACK_DEG, 8) &&
+           VerifyField<double>(verifier, VT_ORIENT_IN_TRACK_DEG, 8) &&
+           VerifyField<double>(verifier, VT_LABEL_COUNT, 8) &&
+           VerifyField<double>(verifier, VT_RIC_AXES_COUNT, 8) &&
+           VerifyField<double>(verifier, VT_MODEL_COUNT, 8) &&
+           VerifyField<double>(verifier, VT_COVARIANCE_COUNT, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct SCNDisplayStyleBuilder {
+  typedef SCNDisplayStyle Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_DOT_COLOR(::flatbuffers::Offset<::flatbuffers::String> DOT_COLOR) {
+    fbb_.AddOffset(SCNDisplayStyle::VT_DOT_COLOR, DOT_COLOR);
+  }
+  void add_DOT_SIZE(double DOT_SIZE) {
+    fbb_.AddElement<double>(SCNDisplayStyle::VT_DOT_SIZE, DOT_SIZE, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_OUTLINE_COLOR(::flatbuffers::Offset<::flatbuffers::String> OUTLINE_COLOR) {
+    fbb_.AddOffset(SCNDisplayStyle::VT_OUTLINE_COLOR, OUTLINE_COLOR);
+  }
+  void add_OUTLINE_WIDTH(double OUTLINE_WIDTH) {
+    fbb_.AddElement<double>(SCNDisplayStyle::VT_OUTLINE_WIDTH, OUTLINE_WIDTH, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_SHOW_PATH(scnToggle SHOW_PATH) {
+    fbb_.AddElement<int8_t>(SCNDisplayStyle::VT_SHOW_PATH, static_cast<int8_t>(SHOW_PATH), 0);
+  }
+  void add_PATH_RELATIVE_TO(::flatbuffers::Offset<::flatbuffers::String> PATH_RELATIVE_TO) {
+    fbb_.AddOffset(SCNDisplayStyle::VT_PATH_RELATIVE_TO, PATH_RELATIVE_TO);
+  }
+  void add_PATH_COLOR(::flatbuffers::Offset<::flatbuffers::String> PATH_COLOR) {
+    fbb_.AddOffset(SCNDisplayStyle::VT_PATH_COLOR, PATH_COLOR);
+  }
+  void add_PATH_WIDTH(double PATH_WIDTH) {
+    fbb_.AddElement<double>(SCNDisplayStyle::VT_PATH_WIDTH, PATH_WIDTH, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_PATH_AHEAD_MIN(double PATH_AHEAD_MIN) {
+    fbb_.AddElement<double>(SCNDisplayStyle::VT_PATH_AHEAD_MIN, PATH_AHEAD_MIN, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_PATH_BEHIND_MIN(double PATH_BEHIND_MIN) {
+    fbb_.AddElement<double>(SCNDisplayStyle::VT_PATH_BEHIND_MIN, PATH_BEHIND_MIN, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_SHOW_LABEL(scnToggle SHOW_LABEL) {
+    fbb_.AddElement<int8_t>(SCNDisplayStyle::VT_SHOW_LABEL, static_cast<int8_t>(SHOW_LABEL), 0);
+  }
+  void add_LABEL_COLOR(::flatbuffers::Offset<::flatbuffers::String> LABEL_COLOR) {
+    fbb_.AddOffset(SCNDisplayStyle::VT_LABEL_COLOR, LABEL_COLOR);
+  }
+  void add_LABEL_SIZE(double LABEL_SIZE) {
+    fbb_.AddElement<double>(SCNDisplayStyle::VT_LABEL_SIZE, LABEL_SIZE, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_LABEL_OPACITY(double LABEL_OPACITY) {
+    fbb_.AddElement<double>(SCNDisplayStyle::VT_LABEL_OPACITY, LABEL_OPACITY, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_SHOW_RIC_AXES(scnToggle SHOW_RIC_AXES) {
+    fbb_.AddElement<int8_t>(SCNDisplayStyle::VT_SHOW_RIC_AXES, static_cast<int8_t>(SHOW_RIC_AXES), 0);
+  }
+  void add_RIC_AXES_LENGTH_KM(double RIC_AXES_LENGTH_KM) {
+    fbb_.AddElement<double>(SCNDisplayStyle::VT_RIC_AXES_LENGTH_KM, RIC_AXES_LENGTH_KM, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_SHOW_MODEL(scnToggle SHOW_MODEL) {
+    fbb_.AddElement<int8_t>(SCNDisplayStyle::VT_SHOW_MODEL, static_cast<int8_t>(SHOW_MODEL), 0);
+  }
+  void add_SHOW_COVARIANCE(scnToggle SHOW_COVARIANCE) {
+    fbb_.AddElement<int8_t>(SCNDisplayStyle::VT_SHOW_COVARIANCE, static_cast<int8_t>(SHOW_COVARIANCE), 0);
+  }
+  void add_SHOW_SELECTOR(scnToggle SHOW_SELECTOR) {
+    fbb_.AddElement<int8_t>(SCNDisplayStyle::VT_SHOW_SELECTOR, static_cast<int8_t>(SHOW_SELECTOR), 0);
+  }
+  void add_SHOW_SELECTOR_LABEL(scnToggle SHOW_SELECTOR_LABEL) {
+    fbb_.AddElement<int8_t>(SCNDisplayStyle::VT_SHOW_SELECTOR_LABEL, static_cast<int8_t>(SHOW_SELECTOR_LABEL), 0);
+  }
+  void add_SELECTOR_COLOR(::flatbuffers::Offset<::flatbuffers::String> SELECTOR_COLOR) {
+    fbb_.AddOffset(SCNDisplayStyle::VT_SELECTOR_COLOR, SELECTOR_COLOR);
+  }
+  void add_SELECTOR_WIDTH(double SELECTOR_WIDTH) {
+    fbb_.AddElement<double>(SCNDisplayStyle::VT_SELECTOR_WIDTH, SELECTOR_WIDTH, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_SELECTOR_SEGMENTS(double SELECTOR_SEGMENTS) {
+    fbb_.AddElement<double>(SCNDisplayStyle::VT_SELECTOR_SEGMENTS, SELECTOR_SEGMENTS, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_SELECTOR_FILL(double SELECTOR_FILL) {
+    fbb_.AddElement<double>(SCNDisplayStyle::VT_SELECTOR_FILL, SELECTOR_FILL, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_SELECTOR_BINDING(::flatbuffers::Offset<::flatbuffers::String> SELECTOR_BINDING) {
+    fbb_.AddOffset(SCNDisplayStyle::VT_SELECTOR_BINDING, SELECTOR_BINDING);
+  }
+  void add_SELECTOR_MIN(double SELECTOR_MIN) {
+    fbb_.AddElement<double>(SCNDisplayStyle::VT_SELECTOR_MIN, SELECTOR_MIN, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_SELECTOR_MAX(double SELECTOR_MAX) {
+    fbb_.AddElement<double>(SCNDisplayStyle::VT_SELECTOR_MAX, SELECTOR_MAX, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_ORIENT_RADIAL_DEG(double ORIENT_RADIAL_DEG) {
+    fbb_.AddElement<double>(SCNDisplayStyle::VT_ORIENT_RADIAL_DEG, ORIENT_RADIAL_DEG, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_ORIENT_CROSS_TRACK_DEG(double ORIENT_CROSS_TRACK_DEG) {
+    fbb_.AddElement<double>(SCNDisplayStyle::VT_ORIENT_CROSS_TRACK_DEG, ORIENT_CROSS_TRACK_DEG, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_ORIENT_IN_TRACK_DEG(double ORIENT_IN_TRACK_DEG) {
+    fbb_.AddElement<double>(SCNDisplayStyle::VT_ORIENT_IN_TRACK_DEG, ORIENT_IN_TRACK_DEG, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_LABEL_COUNT(double LABEL_COUNT) {
+    fbb_.AddElement<double>(SCNDisplayStyle::VT_LABEL_COUNT, LABEL_COUNT, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_RIC_AXES_COUNT(double RIC_AXES_COUNT) {
+    fbb_.AddElement<double>(SCNDisplayStyle::VT_RIC_AXES_COUNT, RIC_AXES_COUNT, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_MODEL_COUNT(double MODEL_COUNT) {
+    fbb_.AddElement<double>(SCNDisplayStyle::VT_MODEL_COUNT, MODEL_COUNT, std::numeric_limits<double>::quiet_NaN());
+  }
+  void add_COVARIANCE_COUNT(double COVARIANCE_COUNT) {
+    fbb_.AddElement<double>(SCNDisplayStyle::VT_COVARIANCE_COUNT, COVARIANCE_COUNT, std::numeric_limits<double>::quiet_NaN());
+  }
+  explicit SCNDisplayStyleBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<SCNDisplayStyle> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<SCNDisplayStyle>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<SCNDisplayStyle> CreateSCNDisplayStyle(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> DOT_COLOR = 0,
+    double DOT_SIZE = std::numeric_limits<double>::quiet_NaN(),
+    ::flatbuffers::Offset<::flatbuffers::String> OUTLINE_COLOR = 0,
+    double OUTLINE_WIDTH = std::numeric_limits<double>::quiet_NaN(),
+    scnToggle SHOW_PATH = scnToggle_UNSET,
+    ::flatbuffers::Offset<::flatbuffers::String> PATH_RELATIVE_TO = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> PATH_COLOR = 0,
+    double PATH_WIDTH = std::numeric_limits<double>::quiet_NaN(),
+    double PATH_AHEAD_MIN = std::numeric_limits<double>::quiet_NaN(),
+    double PATH_BEHIND_MIN = std::numeric_limits<double>::quiet_NaN(),
+    scnToggle SHOW_LABEL = scnToggle_UNSET,
+    ::flatbuffers::Offset<::flatbuffers::String> LABEL_COLOR = 0,
+    double LABEL_SIZE = std::numeric_limits<double>::quiet_NaN(),
+    double LABEL_OPACITY = std::numeric_limits<double>::quiet_NaN(),
+    scnToggle SHOW_RIC_AXES = scnToggle_UNSET,
+    double RIC_AXES_LENGTH_KM = std::numeric_limits<double>::quiet_NaN(),
+    scnToggle SHOW_MODEL = scnToggle_UNSET,
+    scnToggle SHOW_COVARIANCE = scnToggle_UNSET,
+    scnToggle SHOW_SELECTOR = scnToggle_UNSET,
+    scnToggle SHOW_SELECTOR_LABEL = scnToggle_UNSET,
+    ::flatbuffers::Offset<::flatbuffers::String> SELECTOR_COLOR = 0,
+    double SELECTOR_WIDTH = std::numeric_limits<double>::quiet_NaN(),
+    double SELECTOR_SEGMENTS = std::numeric_limits<double>::quiet_NaN(),
+    double SELECTOR_FILL = std::numeric_limits<double>::quiet_NaN(),
+    ::flatbuffers::Offset<::flatbuffers::String> SELECTOR_BINDING = 0,
+    double SELECTOR_MIN = std::numeric_limits<double>::quiet_NaN(),
+    double SELECTOR_MAX = std::numeric_limits<double>::quiet_NaN(),
+    double ORIENT_RADIAL_DEG = std::numeric_limits<double>::quiet_NaN(),
+    double ORIENT_CROSS_TRACK_DEG = std::numeric_limits<double>::quiet_NaN(),
+    double ORIENT_IN_TRACK_DEG = std::numeric_limits<double>::quiet_NaN(),
+    double LABEL_COUNT = std::numeric_limits<double>::quiet_NaN(),
+    double RIC_AXES_COUNT = std::numeric_limits<double>::quiet_NaN(),
+    double MODEL_COUNT = std::numeric_limits<double>::quiet_NaN(),
+    double COVARIANCE_COUNT = std::numeric_limits<double>::quiet_NaN()) {
+  SCNDisplayStyleBuilder builder_(_fbb);
+  builder_.add_COVARIANCE_COUNT(COVARIANCE_COUNT);
+  builder_.add_MODEL_COUNT(MODEL_COUNT);
+  builder_.add_RIC_AXES_COUNT(RIC_AXES_COUNT);
+  builder_.add_LABEL_COUNT(LABEL_COUNT);
+  builder_.add_ORIENT_IN_TRACK_DEG(ORIENT_IN_TRACK_DEG);
+  builder_.add_ORIENT_CROSS_TRACK_DEG(ORIENT_CROSS_TRACK_DEG);
+  builder_.add_ORIENT_RADIAL_DEG(ORIENT_RADIAL_DEG);
+  builder_.add_SELECTOR_MAX(SELECTOR_MAX);
+  builder_.add_SELECTOR_MIN(SELECTOR_MIN);
+  builder_.add_SELECTOR_FILL(SELECTOR_FILL);
+  builder_.add_SELECTOR_SEGMENTS(SELECTOR_SEGMENTS);
+  builder_.add_SELECTOR_WIDTH(SELECTOR_WIDTH);
+  builder_.add_RIC_AXES_LENGTH_KM(RIC_AXES_LENGTH_KM);
+  builder_.add_LABEL_OPACITY(LABEL_OPACITY);
+  builder_.add_LABEL_SIZE(LABEL_SIZE);
+  builder_.add_PATH_BEHIND_MIN(PATH_BEHIND_MIN);
+  builder_.add_PATH_AHEAD_MIN(PATH_AHEAD_MIN);
+  builder_.add_PATH_WIDTH(PATH_WIDTH);
+  builder_.add_OUTLINE_WIDTH(OUTLINE_WIDTH);
+  builder_.add_DOT_SIZE(DOT_SIZE);
+  builder_.add_SELECTOR_BINDING(SELECTOR_BINDING);
+  builder_.add_SELECTOR_COLOR(SELECTOR_COLOR);
+  builder_.add_LABEL_COLOR(LABEL_COLOR);
+  builder_.add_PATH_COLOR(PATH_COLOR);
+  builder_.add_PATH_RELATIVE_TO(PATH_RELATIVE_TO);
+  builder_.add_OUTLINE_COLOR(OUTLINE_COLOR);
+  builder_.add_DOT_COLOR(DOT_COLOR);
+  builder_.add_SHOW_SELECTOR_LABEL(SHOW_SELECTOR_LABEL);
+  builder_.add_SHOW_SELECTOR(SHOW_SELECTOR);
+  builder_.add_SHOW_COVARIANCE(SHOW_COVARIANCE);
+  builder_.add_SHOW_MODEL(SHOW_MODEL);
+  builder_.add_SHOW_RIC_AXES(SHOW_RIC_AXES);
+  builder_.add_SHOW_LABEL(SHOW_LABEL);
+  builder_.add_SHOW_PATH(SHOW_PATH);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<SCNDisplayStyle> CreateSCNDisplayStyleDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *DOT_COLOR = nullptr,
+    double DOT_SIZE = std::numeric_limits<double>::quiet_NaN(),
+    const char *OUTLINE_COLOR = nullptr,
+    double OUTLINE_WIDTH = std::numeric_limits<double>::quiet_NaN(),
+    scnToggle SHOW_PATH = scnToggle_UNSET,
+    const char *PATH_RELATIVE_TO = nullptr,
+    const char *PATH_COLOR = nullptr,
+    double PATH_WIDTH = std::numeric_limits<double>::quiet_NaN(),
+    double PATH_AHEAD_MIN = std::numeric_limits<double>::quiet_NaN(),
+    double PATH_BEHIND_MIN = std::numeric_limits<double>::quiet_NaN(),
+    scnToggle SHOW_LABEL = scnToggle_UNSET,
+    const char *LABEL_COLOR = nullptr,
+    double LABEL_SIZE = std::numeric_limits<double>::quiet_NaN(),
+    double LABEL_OPACITY = std::numeric_limits<double>::quiet_NaN(),
+    scnToggle SHOW_RIC_AXES = scnToggle_UNSET,
+    double RIC_AXES_LENGTH_KM = std::numeric_limits<double>::quiet_NaN(),
+    scnToggle SHOW_MODEL = scnToggle_UNSET,
+    scnToggle SHOW_COVARIANCE = scnToggle_UNSET,
+    scnToggle SHOW_SELECTOR = scnToggle_UNSET,
+    scnToggle SHOW_SELECTOR_LABEL = scnToggle_UNSET,
+    const char *SELECTOR_COLOR = nullptr,
+    double SELECTOR_WIDTH = std::numeric_limits<double>::quiet_NaN(),
+    double SELECTOR_SEGMENTS = std::numeric_limits<double>::quiet_NaN(),
+    double SELECTOR_FILL = std::numeric_limits<double>::quiet_NaN(),
+    const char *SELECTOR_BINDING = nullptr,
+    double SELECTOR_MIN = std::numeric_limits<double>::quiet_NaN(),
+    double SELECTOR_MAX = std::numeric_limits<double>::quiet_NaN(),
+    double ORIENT_RADIAL_DEG = std::numeric_limits<double>::quiet_NaN(),
+    double ORIENT_CROSS_TRACK_DEG = std::numeric_limits<double>::quiet_NaN(),
+    double ORIENT_IN_TRACK_DEG = std::numeric_limits<double>::quiet_NaN(),
+    double LABEL_COUNT = std::numeric_limits<double>::quiet_NaN(),
+    double RIC_AXES_COUNT = std::numeric_limits<double>::quiet_NaN(),
+    double MODEL_COUNT = std::numeric_limits<double>::quiet_NaN(),
+    double COVARIANCE_COUNT = std::numeric_limits<double>::quiet_NaN()) {
+  auto DOT_COLOR__ = DOT_COLOR ? _fbb.CreateString(DOT_COLOR) : 0;
+  auto OUTLINE_COLOR__ = OUTLINE_COLOR ? _fbb.CreateString(OUTLINE_COLOR) : 0;
+  auto PATH_RELATIVE_TO__ = PATH_RELATIVE_TO ? _fbb.CreateString(PATH_RELATIVE_TO) : 0;
+  auto PATH_COLOR__ = PATH_COLOR ? _fbb.CreateString(PATH_COLOR) : 0;
+  auto LABEL_COLOR__ = LABEL_COLOR ? _fbb.CreateString(LABEL_COLOR) : 0;
+  auto SELECTOR_COLOR__ = SELECTOR_COLOR ? _fbb.CreateString(SELECTOR_COLOR) : 0;
+  auto SELECTOR_BINDING__ = SELECTOR_BINDING ? _fbb.CreateString(SELECTOR_BINDING) : 0;
+  return CreateSCNDisplayStyle(
+      _fbb,
+      DOT_COLOR__,
+      DOT_SIZE,
+      OUTLINE_COLOR__,
+      OUTLINE_WIDTH,
+      SHOW_PATH,
+      PATH_RELATIVE_TO__,
+      PATH_COLOR__,
+      PATH_WIDTH,
+      PATH_AHEAD_MIN,
+      PATH_BEHIND_MIN,
+      SHOW_LABEL,
+      LABEL_COLOR__,
+      LABEL_SIZE,
+      LABEL_OPACITY,
+      SHOW_RIC_AXES,
+      RIC_AXES_LENGTH_KM,
+      SHOW_MODEL,
+      SHOW_COVARIANCE,
+      SHOW_SELECTOR,
+      SHOW_SELECTOR_LABEL,
+      SELECTOR_COLOR__,
+      SELECTOR_WIDTH,
+      SELECTOR_SEGMENTS,
+      SELECTOR_FILL,
+      SELECTOR_BINDING__,
+      SELECTOR_MIN,
+      SELECTOR_MAX,
+      ORIENT_RADIAL_DEG,
+      ORIENT_CROSS_TRACK_DEG,
+      ORIENT_IN_TRACK_DEG,
+      LABEL_COUNT,
+      RIC_AXES_COUNT,
+      MODEL_COUNT,
+      COVARIANCE_COUNT);
 }
 
 /// Relative-motion RIC box and RPO time-lapse settings kept with a scenario.
@@ -947,7 +1453,8 @@ struct SCNReference FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_OBSERVATION_EO = 52,
     VT_OBSERVATION_RADAR = 54,
     VT_COLOR = 56,
-    VT_SHOW_COVARIANCE = 58
+    VT_SHOW_COVARIANCE = 58,
+    VT_DISPLAY_STYLE = 60
   };
   /// Stable scenario-local id for this reference.
   const ::flatbuffers::String *REFERENCE_ID() const {
@@ -1061,6 +1568,10 @@ struct SCNReference FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   bool SHOW_COVARIANCE() const {
     return GetField<uint8_t>(VT_SHOW_COVARIANCE, 0) != 0;
   }
+  /// Typed display-style overrides for this reference (object, group, or folder).
+  const SCNDisplayStyle *DISPLAY_STYLE() const {
+    return GetPointer<const SCNDisplayStyle *>(VT_DISPLAY_STYLE);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -1122,6 +1633,8 @@ struct SCNReference FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_COLOR) &&
            verifier.VerifyString(COLOR()) &&
            VerifyField<uint8_t>(verifier, VT_SHOW_COVARIANCE, 1) &&
+           VerifyOffset(verifier, VT_DISPLAY_STYLE) &&
+           verifier.VerifyTable(DISPLAY_STYLE()) &&
            verifier.EndTable();
   }
 };
@@ -1214,6 +1727,9 @@ struct SCNReferenceBuilder {
   void add_SHOW_COVARIANCE(bool SHOW_COVARIANCE) {
     fbb_.AddElement<uint8_t>(SCNReference::VT_SHOW_COVARIANCE, static_cast<uint8_t>(SHOW_COVARIANCE), 0);
   }
+  void add_DISPLAY_STYLE(::flatbuffers::Offset<SCNDisplayStyle> DISPLAY_STYLE) {
+    fbb_.AddOffset(SCNReference::VT_DISPLAY_STYLE, DISPLAY_STYLE);
+  }
   explicit SCNReferenceBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1254,8 +1770,10 @@ inline ::flatbuffers::Offset<SCNReference> CreateSCNReference(
     ::flatbuffers::Offset<EOO> OBSERVATION_EO = 0,
     ::flatbuffers::Offset<RDO> OBSERVATION_RADAR = 0,
     ::flatbuffers::Offset<::flatbuffers::String> COLOR = 0,
-    bool SHOW_COVARIANCE = false) {
+    bool SHOW_COVARIANCE = false,
+    ::flatbuffers::Offset<SCNDisplayStyle> DISPLAY_STYLE = 0) {
   SCNReferenceBuilder builder_(_fbb);
+  builder_.add_DISPLAY_STYLE(DISPLAY_STYLE);
   builder_.add_COLOR(COLOR);
   builder_.add_OBSERVATION_RADAR(OBSERVATION_RADAR);
   builder_.add_OBSERVATION_EO(OBSERVATION_EO);
@@ -1316,7 +1834,8 @@ inline ::flatbuffers::Offset<SCNReference> CreateSCNReferenceDirect(
     ::flatbuffers::Offset<EOO> OBSERVATION_EO = 0,
     ::flatbuffers::Offset<RDO> OBSERVATION_RADAR = 0,
     const char *COLOR = nullptr,
-    bool SHOW_COVARIANCE = false) {
+    bool SHOW_COVARIANCE = false,
+    ::flatbuffers::Offset<SCNDisplayStyle> DISPLAY_STYLE = 0) {
   auto REFERENCE_ID__ = REFERENCE_ID ? _fbb.CreateString(REFERENCE_ID) : 0;
   auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
   auto OBJECT_ID__ = OBJECT_ID ? _fbb.CreateString(OBJECT_ID) : 0;
@@ -1362,7 +1881,8 @@ inline ::flatbuffers::Offset<SCNReference> CreateSCNReferenceDirect(
       OBSERVATION_EO,
       OBSERVATION_RADAR,
       COLOR__,
-      SHOW_COVARIANCE);
+      SHOW_COVARIANCE,
+      DISPLAY_STYLE);
 }
 
 /// Imported scenario event payload composed from existing SDS records.
