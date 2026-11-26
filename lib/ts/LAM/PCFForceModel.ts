@@ -243,11 +243,11 @@ EPHEMERIS_SOURCE(optionalEncoding?:any):string|Uint8Array {
 /**
  * Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth
  * orientation (the request's Earth orientation rows) to apply them. Default
- * NONE.
+ * UNSPECIFIED (the propagator's own default).
  */
 SOLID_TIDES():pcfSolidTideModel {
   const offset = this.bb!.__offset(this.bb_pos, 48);
-  return offset ? this.bb!.readUint8(this.bb_pos + offset) : pcfSolidTideModel.NONE;
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : pcfSolidTideModel.UNSPECIFIED;
 }
 
 /**
@@ -611,7 +611,7 @@ static addEphemerisSource(builder:flatbuffers.Builder, EPHEMERIS_SOURCEOffset:fl
 }
 
 static addSolidTides(builder:flatbuffers.Builder, SOLID_TIDES:pcfSolidTideModel) {
-  builder.addFieldInt8(22, SOLID_TIDES, pcfSolidTideModel.NONE);
+  builder.addFieldInt8(22, SOLID_TIDES, pcfSolidTideModel.UNSPECIFIED);
 }
 
 static addRelativity(builder:flatbuffers.Builder, RELATIVITY:pcfRelativityTerms) {
@@ -869,7 +869,7 @@ constructor(
   public ATMOSPHERE_MODEL: pcfAtmosphereFamily = pcfAtmosphereFamily.NRLMSISE00,
   public WEATHER: PCFSpaceWeatherT|null = null,
   public EPHEMERIS_SOURCE: string|Uint8Array|null = null,
-  public SOLID_TIDES: pcfSolidTideModel = pcfSolidTideModel.NONE,
+  public SOLID_TIDES: pcfSolidTideModel = pcfSolidTideModel.UNSPECIFIED,
   public RELATIVITY: pcfRelativityTerms = pcfRelativityTerms.NONE,
   public IN_TRACK_ACCELERATION_M_S2: number = 0.0,
   public HAS_IN_TRACK_ACCELERATION_M_S2: boolean = false,

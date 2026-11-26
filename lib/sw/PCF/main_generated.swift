@@ -454,22 +454,24 @@ public enum pcfAtmosphereFamily: UInt8, FlatbuffersVectorInitializable, Enum, Ve
 }
 
 
-///  Solid Earth tide model for the central body's field. NONE leaves the
-///  tides out. IERS_2010 is IERS Conventions (2010) section 6.2: the degree 2
-///  and 3 tides raised by the Sun and Moon with Table 6.3's anelastic Love
-///  numbers and the degree 4 terms through k+ (step 1, eqs. 6.6-6.7), the
-///  frequency-dependent corrections of Tables 6.5a-c (step 2, eq. 6.8), and
-///  the permanent tide handled for the field's own tide system. Pole tide is
-///  not included.
+///  Solid Earth tide model for the central body's field. UNSPECIFIED uses the
+///  propagator's own default (IERS 2010 when supported). NONE disables solid
+///  Earth tides explicitly. IERS_2010 is IERS Conventions (2010) section 6.2:
+///  degree 2 and 3 tides raised by the Sun and Moon with Table 6.3's anelastic
+///  Love numbers, degree 4 terms through k+ (step 1, eqs. 6.6-6.7),
+///  frequency-dependent corrections of Tables 6.5a-c (step 2, eq. 6.8), and the
+///  permanent tide handled for the field's own tide system. Pole tide is not
+///  included.
 public enum pcfSolidTideModel: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = UInt8
   public static var byteSize: Int { return MemoryLayout<UInt8>.size }
   public var value: UInt8 { return self.rawValue }
-  case none_ = 0
-  case iers2010 = 1
+  case unspecified = 0
+  case none_ = 1
+  case iers2010 = 2
 
   public static var max: pcfSolidTideModel { return .iers2010 }
-  public static var min: pcfSolidTideModel { return .none_ }
+  public static var min: pcfSolidTideModel { return .unspecified }
 }
 
 
@@ -559,19 +561,14 @@ public enum pcfGnssSpacecraftBlock: UInt8, FlatbuffersVectorInitializable, Enum,
 }
 
 
-///  The form of a fitted parameter's prior (PCFFitPolicy DRAG_PRIOR_FORM and
-///  SRP_PRIOR_FORM). Append new values only.
+///  Prior distribution form for an optional parameter constraint.
 public enum pcfPriorForm: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = UInt8
   public static var byteSize: Int { return MemoryLayout<UInt8>.size }
   public var value: UInt8 { return self.rawValue }
-  ///  Gaussian on the parameter itself, which may take either sign (the
-  ///  default): the prior's MEAN and SIGMA are in the parameter's unit.
+  ///  Gaussian distribution on the parameter value.
   case gaussianSigned = 0
-  ///  Log-normal: the fit estimates the natural log of the parameter, so the
-  ///  parameter is never <= 0. The prior's MEAN is the median, in the
-  ///  parameter's unit, and must be > 0; its SIGMA is the standard deviation of
-  ///  the natural log of the parameter. The prior is required (HAS_SIGMA true).
+  ///  Log-normal distribution on a positive parameter value.
   case logNormal = 1
 
   public static var max: pcfPriorForm { return .logNormal }
@@ -579,8 +576,7 @@ public enum pcfPriorForm: UInt8, FlatbuffersVectorInitializable, Enum, Verifiabl
 }
 
 
-///  A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps
-///  the theory's own sigma and moves only the mean.
+///  Optional Gaussian parameter prior.
 public struct PCFGaussianPrior: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
@@ -598,11 +594,11 @@ public struct PCFGaussianPrior: FlatBufferVerifiableTable, FlatbuffersVectorInit
     static let HAS_SIGMA: VOffset = 8
   }
 
-  ///  Prior mean, in the unit of the parameter it is attached to. Default 0.
+  ///  Prior mean in the parameter's unit.
   public var MEAN: Double { let o = _accessor.offset(VT.MEAN); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Prior standard deviation, in the same unit; > 0 when HAS_SIGMA.
+  ///  Prior standard deviation in the parameter's unit; > 0 when HAS_SIGMA is true.
   public var SIGMA: Double { let o = _accessor.offset(VT.SIGMA); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  True when SIGMA carries a value; false keeps the theory's own sigma.
+  ///  True when SIGMA is explicitly provided.
   public var HAS_SIGMA: Bool { let o = _accessor.offset(VT.HAS_SIGMA); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   public static func startPCFGaussianPrior(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
   public static func add(MEAN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN, def: 0.0, at: VT.MEAN) }
@@ -632,8 +628,7 @@ public struct PCFGaussianPrior: FlatBufferVerifiableTable, FlatbuffersVectorInit
   }
 }
 
-///  Fit policy: how long an arc a fit uses, how that is validated, and what a
-///  fit refuses.
+///  Optional configuration parameters for orbit estimation.
 public struct PCFFitPolicy: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
@@ -666,105 +661,84 @@ public struct PCFFitPolicy: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
     static let WEATHER_HORIZON_DAYS: VOffset = 38
   }
 
-  ///  Fit span used when the span rule is not run, hours. Default 48.
-  public var DEFAULT_SPAN_HOURS: Double { let o = _accessor.offset(VT.DEFAULT_SPAN_HOURS); return o == 0 ? 48.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Shortest span a fit may take, hours. Default 24.
-  public var MINIMUM_SPAN_HOURS: Double { let o = _accessor.offset(VT.MINIMUM_SPAN_HOURS); return o == 0 ? 24.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Longest span a fit may take, hours. Default 120.
-  public var MAXIMUM_SPAN_HOURS: Double { let o = _accessor.offset(VT.MAXIMUM_SPAN_HOURS); return o == 0 ? 120.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Spans the extension rule scores, ascending, hours, each within
-  ///  [MINIMUM_SPAN_HOURS, MAXIMUM_SPAN_HOURS]. Empty: 48, 72 and 120; with
-  ///  24 in front when the eccentricity exceeds ECCENTRICITY_THRESHOLD.
+  ///  Optional span parameter in hours; 0 means unspecified.
+  public var DEFAULT_SPAN_HOURS: Double { let o = _accessor.offset(VT.DEFAULT_SPAN_HOURS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Optional minimum span in hours; 0 means unspecified.
+  public var MINIMUM_SPAN_HOURS: Double { let o = _accessor.offset(VT.MINIMUM_SPAN_HOURS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Optional maximum span in hours; 0 means unspecified.
+  public var MAXIMUM_SPAN_HOURS: Double { let o = _accessor.offset(VT.MAXIMUM_SPAN_HOURS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Optional candidate span list in hours.
   public var CANDIDATE_SPANS_HOURS: FlatbufferVector<Double> { return _accessor.vector(at: VT.CANDIDATE_SPANS_HOURS, byteSize: 8) }
   public func withUnsafePointerToCandidateSpansHours<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.CANDIDATE_SPANS_HOURS, body: body) }
-  ///  Validation tail: each candidate is fitted to the data before the latest
-  ///  TAIL_HOURS and scored on that tail, hours. Default 24.
-  public var TAIL_HOURS: Double { let o = _accessor.offset(VT.TAIL_HOURS); return o == 0 ? 24.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Extension rule: a longer candidate is taken only when its tail error is
-  ///  at most this fraction of the best shorter candidate's. Default 0.9.
-  public var EXTENSION_MARGIN: Double { let o = _accessor.offset(VT.EXTENSION_MARGIN); return o == 0 ? 0.9 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Hours held out at the end of the data and reported as error growth; the
-  ///  fit then ends HOLDOUT_HOURS before the data does. Absent, the data
-  ///  block's own useable stop time decides.
+  ///  Optional evaluation tail length in hours; 0 means unspecified.
+  public var TAIL_HOURS: Double { let o = _accessor.offset(VT.TAIL_HOURS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Optional relative selection margin; 0 means unspecified.
+  public var EXTENSION_MARGIN: Double { let o = _accessor.offset(VT.EXTENSION_MARGIN); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Optional holdout window length in hours.
   public var HOLDOUT_HOURS: Double { let o = _accessor.offset(VT.HOLDOUT_HOURS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  True when HOLDOUT_HOURS carries a value; false means absent.
+  ///  True when HOLDOUT_HOURS is explicitly provided.
   public var HAS_HOLDOUT_HOURS: Bool { let o = _accessor.offset(VT.HAS_HOLDOUT_HOURS); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  Eccentricity above which the eccentric-orbit rule applies. Default 0.5.
-  public var ECCENTRICITY_THRESHOLD: Double { let o = _accessor.offset(VT.ECCENTRICITY_THRESHOLD); return o == 0 ? 0.5 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Eccentric orbits: the default span, hours. Default 24.
-  public var ECCENTRIC_DEFAULT_SPAN_HOURS: Double { let o = _accessor.offset(VT.ECCENTRIC_DEFAULT_SPAN_HOURS); return o == 0 ? 24.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Eccentric orbits: EXTENSION_MARGIN. Default 0.7.
-  public var ECCENTRIC_EXTENSION_MARGIN: Double { let o = _accessor.offset(VT.ECCENTRIC_EXTENSION_MARGIN); return o == 0 ? 0.7 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Eccentric orbits: no candidate longer than this is tried once the orbital
-  ///  period passes it, hours. Default 36.
-  public var ECCENTRIC_MAXIMUM_PERIOD_HOURS: Double { let o = _accessor.offset(VT.ECCENTRIC_MAXIMUM_PERIOD_HOURS); return o == 0 ? 36.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  A fit whose RMS passes this is refused as fit-implausible, km. Default
-  ///  100.
-  public var IMPLAUSIBLE_RMS_KM: Double { let o = _accessor.offset(VT.IMPLAUSIBLE_RMS_KM); return o == 0 ? 100.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent
-  ///  or without sigma: mean 0, sigma 0.05.
+  ///  Optional eccentricity threshold; 0 means unspecified.
+  public var ECCENTRICITY_THRESHOLD: Double { let o = _accessor.offset(VT.ECCENTRICITY_THRESHOLD); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Optional eccentric-orbit span in hours; 0 means unspecified.
+  public var ECCENTRIC_DEFAULT_SPAN_HOURS: Double { let o = _accessor.offset(VT.ECCENTRIC_DEFAULT_SPAN_HOURS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Optional eccentric-orbit relative margin; 0 means unspecified.
+  public var ECCENTRIC_EXTENSION_MARGIN: Double { let o = _accessor.offset(VT.ECCENTRIC_EXTENSION_MARGIN); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Optional eccentric-orbit period bound in hours; 0 means unspecified.
+  public var ECCENTRIC_MAXIMUM_PERIOD_HOURS: Double { let o = _accessor.offset(VT.ECCENTRIC_MAXIMUM_PERIOD_HOURS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Optional maximum acceptable RMS in km; 0 means unspecified.
+  public var IMPLAUSIBLE_RMS_KM: Double { let o = _accessor.offset(VT.IMPLAUSIBLE_RMS_KM); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Optional prior on drag parameter.
   public var DRAG_PRIOR: PCFGaussianPrior? { let o = _accessor.offset(VT.DRAG_PRIOR); return o == 0 ? nil : PCFGaussianPrior(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.
-  ///  Absent or without sigma: mean 0, sigma 0.05.
+  ///  Optional prior on solar radiation pressure parameter.
   public var SRP_PRIOR: PCFGaussianPrior? { let o = _accessor.offset(VT.SRP_PRIOR); return o == 0 ? nil : PCFGaussianPrior(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
-  ///  estimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its
-  ///  MEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation
-  ///  of ln B_eff.
+  ///  Optional distribution form for DRAG_PRIOR.
   public var DRAG_PRIOR_FORM: pcfPriorForm { let o = _accessor.offset(VT.DRAG_PRIOR_FORM); return o == 0 ? .gaussianSigned : pcfPriorForm(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .gaussianSigned }
-  ///  The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
-  ///  estimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN
-  ///  the median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of
-  ///  ln AGOM.
+  ///  Optional distribution form for SRP_PRIOR.
   public var SRP_PRIOR_FORM: pcfPriorForm { let o = _accessor.offset(VT.SRP_PRIOR_FORM); return o == 0 ? .gaussianSigned : pcfPriorForm(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .gaussianSigned }
-  ///  Days past the element set's epoch day through which the fit writes the
-  ///  daily space weather into the record it emits (OCM
-  ///  PERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows
-  ///  (WEATHER_SOURCE RECORDS). The last day written is the later of the fit
-  ///  arc's last day and the epoch's day plus this count; rows supplied with
-  ///  the request must reach it, or the fit is refused by name. Default 30.
-  public var WEATHER_HORIZON_DAYS: UInt16 { let o = _accessor.offset(VT.WEATHER_HORIZON_DAYS); return o == 0 ? 30 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  ///  Optional space-weather horizon in days past epoch; 0 means unspecified.
+  public var WEATHER_HORIZON_DAYS: UInt16 { let o = _accessor.offset(VT.WEATHER_HORIZON_DAYS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
   public static func startPCFFitPolicy(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 18) }
-  public static func add(DEFAULT_SPAN_HOURS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DEFAULT_SPAN_HOURS, def: 48.0, at: VT.DEFAULT_SPAN_HOURS) }
-  public static func add(MINIMUM_SPAN_HOURS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MINIMUM_SPAN_HOURS, def: 24.0, at: VT.MINIMUM_SPAN_HOURS) }
-  public static func add(MAXIMUM_SPAN_HOURS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAXIMUM_SPAN_HOURS, def: 120.0, at: VT.MAXIMUM_SPAN_HOURS) }
+  public static func add(DEFAULT_SPAN_HOURS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DEFAULT_SPAN_HOURS, def: 0.0, at: VT.DEFAULT_SPAN_HOURS) }
+  public static func add(MINIMUM_SPAN_HOURS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MINIMUM_SPAN_HOURS, def: 0.0, at: VT.MINIMUM_SPAN_HOURS) }
+  public static func add(MAXIMUM_SPAN_HOURS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAXIMUM_SPAN_HOURS, def: 0.0, at: VT.MAXIMUM_SPAN_HOURS) }
   public static func addVectorOf(CANDIDATE_SPANS_HOURS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CANDIDATE_SPANS_HOURS, at: VT.CANDIDATE_SPANS_HOURS) }
-  public static func add(TAIL_HOURS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TAIL_HOURS, def: 24.0, at: VT.TAIL_HOURS) }
-  public static func add(EXTENSION_MARGIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXTENSION_MARGIN, def: 0.9, at: VT.EXTENSION_MARGIN) }
+  public static func add(TAIL_HOURS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TAIL_HOURS, def: 0.0, at: VT.TAIL_HOURS) }
+  public static func add(EXTENSION_MARGIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXTENSION_MARGIN, def: 0.0, at: VT.EXTENSION_MARGIN) }
   public static func add(HOLDOUT_HOURS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HOLDOUT_HOURS, def: 0.0, at: VT.HOLDOUT_HOURS) }
   public static func add(HAS_HOLDOUT_HOURS: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_HOLDOUT_HOURS, def: false,
    at: VT.HAS_HOLDOUT_HOURS) }
-  public static func add(ECCENTRICITY_THRESHOLD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ECCENTRICITY_THRESHOLD, def: 0.5, at: VT.ECCENTRICITY_THRESHOLD) }
-  public static func add(ECCENTRIC_DEFAULT_SPAN_HOURS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ECCENTRIC_DEFAULT_SPAN_HOURS, def: 24.0, at: VT.ECCENTRIC_DEFAULT_SPAN_HOURS) }
-  public static func add(ECCENTRIC_EXTENSION_MARGIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ECCENTRIC_EXTENSION_MARGIN, def: 0.7, at: VT.ECCENTRIC_EXTENSION_MARGIN) }
-  public static func add(ECCENTRIC_MAXIMUM_PERIOD_HOURS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ECCENTRIC_MAXIMUM_PERIOD_HOURS, def: 36.0, at: VT.ECCENTRIC_MAXIMUM_PERIOD_HOURS) }
-  public static func add(IMPLAUSIBLE_RMS_KM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMPLAUSIBLE_RMS_KM, def: 100.0, at: VT.IMPLAUSIBLE_RMS_KM) }
+  public static func add(ECCENTRICITY_THRESHOLD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ECCENTRICITY_THRESHOLD, def: 0.0, at: VT.ECCENTRICITY_THRESHOLD) }
+  public static func add(ECCENTRIC_DEFAULT_SPAN_HOURS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ECCENTRIC_DEFAULT_SPAN_HOURS, def: 0.0, at: VT.ECCENTRIC_DEFAULT_SPAN_HOURS) }
+  public static func add(ECCENTRIC_EXTENSION_MARGIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ECCENTRIC_EXTENSION_MARGIN, def: 0.0, at: VT.ECCENTRIC_EXTENSION_MARGIN) }
+  public static func add(ECCENTRIC_MAXIMUM_PERIOD_HOURS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ECCENTRIC_MAXIMUM_PERIOD_HOURS, def: 0.0, at: VT.ECCENTRIC_MAXIMUM_PERIOD_HOURS) }
+  public static func add(IMPLAUSIBLE_RMS_KM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMPLAUSIBLE_RMS_KM, def: 0.0, at: VT.IMPLAUSIBLE_RMS_KM) }
   public static func add(DRAG_PRIOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DRAG_PRIOR, at: VT.DRAG_PRIOR) }
   public static func add(SRP_PRIOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SRP_PRIOR, at: VT.SRP_PRIOR) }
   public static func add(DRAG_PRIOR_FORM: pcfPriorForm, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRAG_PRIOR_FORM.rawValue, def: 0, at: VT.DRAG_PRIOR_FORM) }
   public static func add(SRP_PRIOR_FORM: pcfPriorForm, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SRP_PRIOR_FORM.rawValue, def: 0, at: VT.SRP_PRIOR_FORM) }
-  public static func add(WEATHER_HORIZON_DAYS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WEATHER_HORIZON_DAYS, def: 30, at: VT.WEATHER_HORIZON_DAYS) }
+  public static func add(WEATHER_HORIZON_DAYS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WEATHER_HORIZON_DAYS, def: 0, at: VT.WEATHER_HORIZON_DAYS) }
   public static func endPCFFitPolicy(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createPCFFitPolicy(
     _ fbb: inout FlatBufferBuilder,
-    DEFAULT_SPAN_HOURS: Double = 48.0,
-    MINIMUM_SPAN_HOURS: Double = 24.0,
-    MAXIMUM_SPAN_HOURS: Double = 120.0,
+    DEFAULT_SPAN_HOURS: Double = 0.0,
+    MINIMUM_SPAN_HOURS: Double = 0.0,
+    MAXIMUM_SPAN_HOURS: Double = 0.0,
     CANDIDATE_SPANS_HOURSVectorOffset CANDIDATE_SPANS_HOURS: Offset = Offset(),
-    TAIL_HOURS: Double = 24.0,
-    EXTENSION_MARGIN: Double = 0.9,
+    TAIL_HOURS: Double = 0.0,
+    EXTENSION_MARGIN: Double = 0.0,
     HOLDOUT_HOURS: Double = 0.0,
     HAS_HOLDOUT_HOURS: Bool = false,
-    ECCENTRICITY_THRESHOLD: Double = 0.5,
-    ECCENTRIC_DEFAULT_SPAN_HOURS: Double = 24.0,
-    ECCENTRIC_EXTENSION_MARGIN: Double = 0.7,
-    ECCENTRIC_MAXIMUM_PERIOD_HOURS: Double = 36.0,
-    IMPLAUSIBLE_RMS_KM: Double = 100.0,
+    ECCENTRICITY_THRESHOLD: Double = 0.0,
+    ECCENTRIC_DEFAULT_SPAN_HOURS: Double = 0.0,
+    ECCENTRIC_EXTENSION_MARGIN: Double = 0.0,
+    ECCENTRIC_MAXIMUM_PERIOD_HOURS: Double = 0.0,
+    IMPLAUSIBLE_RMS_KM: Double = 0.0,
     DRAG_PRIOROffset DRAG_PRIOR: Offset = Offset(),
     SRP_PRIOROffset SRP_PRIOR: Offset = Offset(),
     DRAG_PRIOR_FORM: pcfPriorForm = .gaussianSigned,
     SRP_PRIOR_FORM: pcfPriorForm = .gaussianSigned,
-    WEATHER_HORIZON_DAYS: UInt16 = 30
+    WEATHER_HORIZON_DAYS: UInt16 = 0
   ) -> Offset {
     let __start = PCFFitPolicy.startPCFFitPolicy(&fbb)
     PCFFitPolicy.add(DEFAULT_SPAN_HOURS: DEFAULT_SPAN_HOURS, &fbb)
@@ -1451,8 +1425,8 @@ public struct PCFForceModel: FlatBufferVerifiableTable, FlatbuffersVectorInitial
   public var EPHEMERIS_SOURCESegmentArray: [UInt8]! { return _accessor.getVector(at: VT.EPHEMERIS_SOURCE) }
   ///  Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth
   ///  orientation (the request's Earth orientation rows) to apply them. Default
-  ///  NONE.
-  public var SOLID_TIDES: pcfSolidTideModel { let o = _accessor.offset(VT.SOLID_TIDES); return o == 0 ? .none_ : pcfSolidTideModel(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .none_ }
+  ///  UNSPECIFIED (the propagator's own default).
+  public var SOLID_TIDES: pcfSolidTideModel { let o = _accessor.offset(VT.SOLID_TIDES); return o == 0 ? .unspecified : pcfSolidTideModel(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
   ///  Post-Newtonian terms. Default NONE.
   public var RELATIVITY: pcfRelativityTerms { let o = _accessor.offset(VT.RELATIVITY); return o == 0 ? .none_ : pcfRelativityTerms(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .none_ }
   ///  Constant acceleration along the in-track axis, m/s2: T of RTN,
@@ -1628,7 +1602,7 @@ public struct PCFForceModel: FlatBufferVerifiableTable, FlatbuffersVectorInitial
     ATMOSPHERE_MODEL: pcfAtmosphereFamily = .nrlmsise00,
     WEATHEROffset WEATHER: Offset = Offset(),
     EPHEMERIS_SOURCEOffset EPHEMERIS_SOURCE: Offset,
-    SOLID_TIDES: pcfSolidTideModel = .none_,
+    SOLID_TIDES: pcfSolidTideModel = .unspecified,
     RELATIVITY: pcfRelativityTerms = .none_,
     IN_TRACK_ACCELERATION_M_S2: Double = 0.0,
     HAS_IN_TRACK_ACCELERATION_M_S2: Bool = false,

@@ -29,7 +29,7 @@ public final class OCMFitStatistics extends com.google.flatbuffers.Table {
   public OCMFitStatistics __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   /**
-   * Reference states fitted.
+   * Reference states reported; 0 means not stated.
    */
   public long FIT_STATES() { int o = __offset(4); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
   /**
@@ -48,11 +48,11 @@ public final class OCMFitStatistics extends com.google.flatbuffers.Table {
   public double FIT_IN_TRACK_RMS_KM() { int o = __offset(12); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
   public double FIT_CROSS_TRACK_RMS_KM() { int o = __offset(14); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
   /**
-   * Iterations the fit took.
+   * Iterations reported; 0 means not stated.
    */
   public long ITERATIONS() { int o = __offset(16); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
   /**
-   * True when the fit converged.
+   * True when converged.
    */
   public boolean CONVERGED() { int o = __offset(18); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
   /**
@@ -76,7 +76,7 @@ public final class OCMFitStatistics extends com.google.flatbuffers.Table {
   public OCMHeldOutDay.Vector heldOutDaysVector() { return heldOutDaysVector(new OCMHeldOutDay.Vector()); }
   public OCMHeldOutDay.Vector heldOutDaysVector(OCMHeldOutDay.Vector obj) { int o = __offset(28); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   /**
-   * CID of the $PCF the fit ran under: its span rule, priors and holdout.
+   * CID of the $PCF configuration associated with the record.
    */
   public String PCF_CID() { int o = __offset(30); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer PCF_CIDAsByteBuffer() { return __vector_as_bytebuffer(30, 1); }

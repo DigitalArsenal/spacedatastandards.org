@@ -31,7 +31,7 @@ class OCMFitStatistics : Table() {
         return this
     }
     /**
-     * Reference states fitted.
+     * Reference states reported; 0 means not stated.
      */
     val fitStates : UInt
         get() {
@@ -74,7 +74,7 @@ class OCMFitStatistics : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
         }
     /**
-     * Iterations the fit took.
+     * Iterations reported; 0 means not stated.
      */
     val iterations : UInt
         get() {
@@ -82,7 +82,7 @@ class OCMFitStatistics : Table() {
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
     /**
-     * True when the fit converged.
+     * True when converged.
      */
     val converged : Boolean
         get() {
@@ -138,7 +138,7 @@ class OCMFitStatistics : Table() {
             val o = __offset(28); return if (o != 0) __vector_len(o) else 0
         }
     /**
-     * CID of the $PCF the fit ran under: its span rule, priors and holdout.
+     * CID of the $PCF configuration associated with the record.
      */
     val pcfCid : String?
         get() {

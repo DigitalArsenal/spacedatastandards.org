@@ -195,8 +195,25 @@ class CQRScreeningControls(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
         return o == 0
 
+    # When true and DENSITY_LOG_SIGMA > 0 with both objects supplying
+    # DENSITY_SENSITIVITY_KM, apply common-mode density cross-covariance.
+    # CQRScreeningControls
+    def APPLY_DENSITY_CROSS_CORRELATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Dimensionless 1-sigma common-mode log-density uncertainty (sigma_s); 0 disables.
+    # CQRScreeningControls
+    def DENSITY_LOG_SIGMA(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
 def CQRScreeningControlsStart(builder):
-    builder.StartObject(19)
+    builder.StartObject(21)
 
 def Start(builder):
     CQRScreeningControlsStart(builder)
@@ -327,6 +344,18 @@ def CQRScreeningControlsCreateVERIFIED_COVARIANCE_PRODUCERSVector(builder, data)
 def CreateVERIFIED_COVARIANCE_PRODUCERSVector(builder, data):
     return CQRScreeningControlsCreateVERIFIED_COVARIANCE_PRODUCERSVector(builder, data)
 
+def CQRScreeningControlsAddAPPLY_DENSITY_CROSS_CORRELATION(builder, APPLY_DENSITY_CROSS_CORRELATION):
+    builder.PrependBoolSlot(19, APPLY_DENSITY_CROSS_CORRELATION, 0)
+
+def AddAPPLY_DENSITY_CROSS_CORRELATION(builder, APPLY_DENSITY_CROSS_CORRELATION):
+    CQRScreeningControlsAddAPPLY_DENSITY_CROSS_CORRELATION(builder, APPLY_DENSITY_CROSS_CORRELATION)
+
+def CQRScreeningControlsAddDENSITY_LOG_SIGMA(builder, DENSITY_LOG_SIGMA):
+    builder.PrependFloat64Slot(20, DENSITY_LOG_SIGMA, 0.0)
+
+def AddDENSITY_LOG_SIGMA(builder, DENSITY_LOG_SIGMA):
+    CQRScreeningControlsAddDENSITY_LOG_SIGMA(builder, DENSITY_LOG_SIGMA)
+
 def CQRScreeningControlsEnd(builder):
     return builder.EndObject()
 
@@ -364,6 +393,8 @@ class CQRScreeningControlsT(object):
         CROSS_TRACK_M = 0.0,
         VOLUME_CENTER = 1,
         VERIFIED_COVARIANCE_PRODUCERS = None,
+        APPLY_DENSITY_CROSS_CORRELATION = False,
+        DENSITY_LOG_SIGMA = 0.0,
     ):
         self.START_EPOCH = START_EPOCH  # type: Optional[TIMInstant.TIMInstantT]
         self.DURATION_SECONDS = DURATION_SECONDS  # type: float
@@ -384,6 +415,8 @@ class CQRScreeningControlsT(object):
         self.CROSS_TRACK_M = CROSS_TRACK_M  # type: float
         self.VOLUME_CENTER = VOLUME_CENTER  # type: int
         self.VERIFIED_COVARIANCE_PRODUCERS = VERIFIED_COVARIANCE_PRODUCERS  # type: Optional[List[CQRVerifiedCovarianceProducer.CQRVerifiedCovarianceProducerT]]
+        self.APPLY_DENSITY_CROSS_CORRELATION = APPLY_DENSITY_CROSS_CORRELATION  # type: bool
+        self.DENSITY_LOG_SIGMA = DENSITY_LOG_SIGMA  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -433,6 +466,8 @@ class CQRScreeningControlsT(object):
                 else:
                     cQRVerifiedCovarianceProducer_ = CQRVerifiedCovarianceProducer.CQRVerifiedCovarianceProducerT.InitFromObj(CQRScreeningControls.VERIFIED_COVARIANCE_PRODUCERS(i))
                     self.VERIFIED_COVARIANCE_PRODUCERS.append(cQRVerifiedCovarianceProducer_)
+        self.APPLY_DENSITY_CROSS_CORRELATION = CQRScreeningControls.APPLY_DENSITY_CROSS_CORRELATION()
+        self.DENSITY_LOG_SIGMA = CQRScreeningControls.DENSITY_LOG_SIGMA()
 
     # CQRScreeningControlsT
     def Pack(self, builder):
@@ -468,5 +503,7 @@ class CQRScreeningControlsT(object):
         CQRScreeningControlsAddVOLUME_CENTER(builder, self.VOLUME_CENTER)
         if self.VERIFIED_COVARIANCE_PRODUCERS is not None:
             CQRScreeningControlsAddVERIFIED_COVARIANCE_PRODUCERS(builder, VERIFIED_COVARIANCE_PRODUCERS)
+        CQRScreeningControlsAddAPPLY_DENSITY_CROSS_CORRELATION(builder, self.APPLY_DENSITY_CROSS_CORRELATION)
+        CQRScreeningControlsAddDENSITY_LOG_SIGMA(builder, self.DENSITY_LOG_SIGMA)
         CQRScreeningControls = CQRScreeningControlsEnd(builder)
         return CQRScreeningControls

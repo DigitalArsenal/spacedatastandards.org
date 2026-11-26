@@ -2075,34 +2075,38 @@ impl ::flatbuffers::SimpleToVerifyInSlice for pcfAtmosphereFamily {}
 pub const ENUM_MIN_PCF_SOLID_TIDE_MODEL: u8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_PCF_SOLID_TIDE_MODEL: u8 = 1;
+pub const ENUM_MAX_PCF_SOLID_TIDE_MODEL: u8 = 2;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_PCF_SOLID_TIDE_MODEL: [pcfSolidTideModel; 2] = [
+pub const ENUM_VALUES_PCF_SOLID_TIDE_MODEL: [pcfSolidTideModel; 3] = [
+    pcfSolidTideModel::UNSPECIFIED,
     pcfSolidTideModel::NONE,
     pcfSolidTideModel::IERS_2010,
 ];
 
-/// Solid Earth tide model for the central body's field. NONE leaves the
-/// tides out. IERS_2010 is IERS Conventions (2010) section 6.2: the degree 2
-/// and 3 tides raised by the Sun and Moon with Table 6.3's anelastic Love
-/// numbers and the degree 4 terms through k+ (step 1, eqs. 6.6-6.7), the
-/// frequency-dependent corrections of Tables 6.5a-c (step 2, eq. 6.8), and
-/// the permanent tide handled for the field's own tide system. Pole tide is
-/// not included.
+/// Solid Earth tide model for the central body's field. UNSPECIFIED uses the
+/// propagator's own default (IERS 2010 when supported). NONE disables solid
+/// Earth tides explicitly. IERS_2010 is IERS Conventions (2010) section 6.2:
+/// degree 2 and 3 tides raised by the Sun and Moon with Table 6.3's anelastic
+/// Love numbers, degree 4 terms through k+ (step 1, eqs. 6.6-6.7),
+/// frequency-dependent corrections of Tables 6.5a-c (step 2, eq. 6.8), and the
+/// permanent tide handled for the field's own tide system. Pole tide is not
+/// included.
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
 pub struct pcfSolidTideModel(pub u8);
 
 #[allow(non_upper_case_globals)]
 impl pcfSolidTideModel {
-    pub const NONE: Self = Self(0);
-    pub const IERS_2010: Self = Self(1);
+    pub const UNSPECIFIED: Self = Self(0);
+    pub const NONE: Self = Self(1);
+    pub const IERS_2010: Self = Self(2);
 
     pub const ENUM_MIN: u8 = 0;
-    pub const ENUM_MAX: u8 = 1;
+    pub const ENUM_MAX: u8 = 2;
     pub const ENUM_VALUES: &'static [Self] = &[
+        Self::UNSPECIFIED,
         Self::NONE,
         Self::IERS_2010,
     ];
@@ -2110,6 +2114,7 @@ impl pcfSolidTideModel {
     /// Returns the variant's name or "" if unknown.
     pub fn variant_name(self) -> Option<&'static str> {
         match self {
+            Self::UNSPECIFIED => Some("UNSPECIFIED"),
             Self::NONE => Some("NONE"),
             Self::IERS_2010 => Some("IERS_2010"),
             _ => None,
@@ -2699,21 +2704,16 @@ pub const ENUM_VALUES_PCF_PRIOR_FORM: [pcfPriorForm; 2] = [
     pcfPriorForm::LOG_NORMAL,
 ];
 
-/// The form of a fitted parameter's prior (PCFFitPolicy DRAG_PRIOR_FORM and
-/// SRP_PRIOR_FORM). Append new values only.
+/// Prior distribution form for an optional parameter constraint.
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
 pub struct pcfPriorForm(pub u8);
 
 #[allow(non_upper_case_globals)]
 impl pcfPriorForm {
-    /// Gaussian on the parameter itself, which may take either sign (the
-    /// default): the prior's MEAN and SIGMA are in the parameter's unit.
+    /// Gaussian distribution on the parameter value.
     pub const GAUSSIAN_SIGNED: Self = Self(0);
-    /// Log-normal: the fit estimates the natural log of the parameter, so the
-    /// parameter is never <= 0. The prior's MEAN is the median, in the
-    /// parameter's unit, and must be > 0; its SIGMA is the standard deviation of
-    /// the natural log of the parameter. The prior is required (HAS_SIGMA true).
+    /// Log-normal distribution on a positive parameter value.
     pub const LOG_NORMAL: Self = Self(1);
 
     pub const ENUM_MIN: u8 = 0;
@@ -2791,8 +2791,7 @@ impl ::flatbuffers::SimpleToVerifyInSlice for pcfPriorForm {}
 
 pub enum PCFGaussianPriorOffset {}
 
-/// A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps
-/// the theory's own sigma and moves only the mean.
+/// Optional Gaussian parameter prior.
 #[derive(Copy, Clone, PartialEq)]
 pub struct PCFGaussianPrior<'a> {
     pub _tab: ::flatbuffers::Table<'a>,
@@ -2840,7 +2839,7 @@ impl<'a> PCFGaussianPrior<'a> {
         }
     }
 
-    /// Prior mean, in the unit of the parameter it is attached to. Default 0.
+    /// Prior mean in the parameter's unit.
     #[inline]
     pub fn MEAN(&self) -> f64 {
         // Safety:
@@ -2849,7 +2848,7 @@ impl<'a> PCFGaussianPrior<'a> {
         unsafe { self._tab.get::<f64>(PCFGaussianPrior::VT_MEAN, Some(0.0)).unwrap()}
     }
 
-    /// Prior standard deviation, in the same unit; > 0 when HAS_SIGMA.
+    /// Prior standard deviation in the parameter's unit; > 0 when HAS_SIGMA is true.
     #[inline]
     pub fn SIGMA(&self) -> f64 {
         // Safety:
@@ -2858,7 +2857,7 @@ impl<'a> PCFGaussianPrior<'a> {
         unsafe { self._tab.get::<f64>(PCFGaussianPrior::VT_SIGMA, Some(0.0)).unwrap()}
     }
 
-    /// True when SIGMA carries a value; false keeps the theory's own sigma.
+    /// True when SIGMA is explicitly provided.
     #[inline]
     pub fn HAS_SIGMA(&self) -> bool {
         // Safety:
@@ -2982,8 +2981,7 @@ impl PCFGaussianPriorT {
 
 pub enum PCFFitPolicyOffset {}
 
-/// Fit policy: how long an arc a fit uses, how that is validated, and what a
-/// fit refuses.
+/// Optional configuration parameters for orbit estimation.
 #[derive(Copy, Clone, PartialEq)]
 pub struct PCFFitPolicy<'a> {
     pub _tab: ::flatbuffers::Table<'a>,
@@ -3097,36 +3095,34 @@ impl<'a> PCFFitPolicy<'a> {
         }
     }
 
-    /// Fit span used when the span rule is not run, hours. Default 48.
+    /// Optional span parameter in hours; 0 means unspecified.
     #[inline]
     pub fn DEFAULT_SPAN_HOURS(&self) -> f64 {
         // Safety:
         // Created from valid Table for this object
         // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(PCFFitPolicy::VT_DEFAULT_SPAN_HOURS, Some(48.0)).unwrap()}
+        unsafe { self._tab.get::<f64>(PCFFitPolicy::VT_DEFAULT_SPAN_HOURS, Some(0.0)).unwrap()}
     }
 
-    /// Shortest span a fit may take, hours. Default 24.
+    /// Optional minimum span in hours; 0 means unspecified.
     #[inline]
     pub fn MINIMUM_SPAN_HOURS(&self) -> f64 {
         // Safety:
         // Created from valid Table for this object
         // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(PCFFitPolicy::VT_MINIMUM_SPAN_HOURS, Some(24.0)).unwrap()}
+        unsafe { self._tab.get::<f64>(PCFFitPolicy::VT_MINIMUM_SPAN_HOURS, Some(0.0)).unwrap()}
     }
 
-    /// Longest span a fit may take, hours. Default 120.
+    /// Optional maximum span in hours; 0 means unspecified.
     #[inline]
     pub fn MAXIMUM_SPAN_HOURS(&self) -> f64 {
         // Safety:
         // Created from valid Table for this object
         // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(PCFFitPolicy::VT_MAXIMUM_SPAN_HOURS, Some(120.0)).unwrap()}
+        unsafe { self._tab.get::<f64>(PCFFitPolicy::VT_MAXIMUM_SPAN_HOURS, Some(0.0)).unwrap()}
     }
 
-    /// Spans the extension rule scores, ascending, hours, each within
-    /// [MINIMUM_SPAN_HOURS, MAXIMUM_SPAN_HOURS]. Empty: 48, 72 and 120; with
-    /// 24 in front when the eccentricity exceeds ECCENTRICITY_THRESHOLD.
+    /// Optional candidate span list in hours.
     #[inline]
     pub fn CANDIDATE_SPANS_HOURS(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
         // Safety:
@@ -3135,29 +3131,25 @@ impl<'a> PCFFitPolicy<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(PCFFitPolicy::VT_CANDIDATE_SPANS_HOURS, None)}
     }
 
-    /// Validation tail: each candidate is fitted to the data before the latest
-    /// TAIL_HOURS and scored on that tail, hours. Default 24.
+    /// Optional evaluation tail length in hours; 0 means unspecified.
     #[inline]
     pub fn TAIL_HOURS(&self) -> f64 {
         // Safety:
         // Created from valid Table for this object
         // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(PCFFitPolicy::VT_TAIL_HOURS, Some(24.0)).unwrap()}
+        unsafe { self._tab.get::<f64>(PCFFitPolicy::VT_TAIL_HOURS, Some(0.0)).unwrap()}
     }
 
-    /// Extension rule: a longer candidate is taken only when its tail error is
-    /// at most this fraction of the best shorter candidate's. Default 0.9.
+    /// Optional relative selection margin; 0 means unspecified.
     #[inline]
     pub fn EXTENSION_MARGIN(&self) -> f64 {
         // Safety:
         // Created from valid Table for this object
         // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(PCFFitPolicy::VT_EXTENSION_MARGIN, Some(0.9)).unwrap()}
+        unsafe { self._tab.get::<f64>(PCFFitPolicy::VT_EXTENSION_MARGIN, Some(0.0)).unwrap()}
     }
 
-    /// Hours held out at the end of the data and reported as error growth; the
-    /// fit then ends HOLDOUT_HOURS before the data does. Absent, the data
-    /// block's own useable stop time decides.
+    /// Optional holdout window length in hours.
     #[inline]
     pub fn HOLDOUT_HOURS(&self) -> f64 {
         // Safety:
@@ -3166,7 +3158,7 @@ impl<'a> PCFFitPolicy<'a> {
         unsafe { self._tab.get::<f64>(PCFFitPolicy::VT_HOLDOUT_HOURS, Some(0.0)).unwrap()}
     }
 
-    /// True when HOLDOUT_HOURS carries a value; false means absent.
+    /// True when HOLDOUT_HOURS is explicitly provided.
     #[inline]
     pub fn HAS_HOLDOUT_HOURS(&self) -> bool {
         // Safety:
@@ -3175,55 +3167,52 @@ impl<'a> PCFFitPolicy<'a> {
         unsafe { self._tab.get::<bool>(PCFFitPolicy::VT_HAS_HOLDOUT_HOURS, Some(false)).unwrap()}
     }
 
-    /// Eccentricity above which the eccentric-orbit rule applies. Default 0.5.
+    /// Optional eccentricity threshold; 0 means unspecified.
     #[inline]
     pub fn ECCENTRICITY_THRESHOLD(&self) -> f64 {
         // Safety:
         // Created from valid Table for this object
         // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(PCFFitPolicy::VT_ECCENTRICITY_THRESHOLD, Some(0.5)).unwrap()}
+        unsafe { self._tab.get::<f64>(PCFFitPolicy::VT_ECCENTRICITY_THRESHOLD, Some(0.0)).unwrap()}
     }
 
-    /// Eccentric orbits: the default span, hours. Default 24.
+    /// Optional eccentric-orbit span in hours; 0 means unspecified.
     #[inline]
     pub fn ECCENTRIC_DEFAULT_SPAN_HOURS(&self) -> f64 {
         // Safety:
         // Created from valid Table for this object
         // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(PCFFitPolicy::VT_ECCENTRIC_DEFAULT_SPAN_HOURS, Some(24.0)).unwrap()}
+        unsafe { self._tab.get::<f64>(PCFFitPolicy::VT_ECCENTRIC_DEFAULT_SPAN_HOURS, Some(0.0)).unwrap()}
     }
 
-    /// Eccentric orbits: EXTENSION_MARGIN. Default 0.7.
+    /// Optional eccentric-orbit relative margin; 0 means unspecified.
     #[inline]
     pub fn ECCENTRIC_EXTENSION_MARGIN(&self) -> f64 {
         // Safety:
         // Created from valid Table for this object
         // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(PCFFitPolicy::VT_ECCENTRIC_EXTENSION_MARGIN, Some(0.7)).unwrap()}
+        unsafe { self._tab.get::<f64>(PCFFitPolicy::VT_ECCENTRIC_EXTENSION_MARGIN, Some(0.0)).unwrap()}
     }
 
-    /// Eccentric orbits: no candidate longer than this is tried once the orbital
-    /// period passes it, hours. Default 36.
+    /// Optional eccentric-orbit period bound in hours; 0 means unspecified.
     #[inline]
     pub fn ECCENTRIC_MAXIMUM_PERIOD_HOURS(&self) -> f64 {
         // Safety:
         // Created from valid Table for this object
         // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(PCFFitPolicy::VT_ECCENTRIC_MAXIMUM_PERIOD_HOURS, Some(36.0)).unwrap()}
+        unsafe { self._tab.get::<f64>(PCFFitPolicy::VT_ECCENTRIC_MAXIMUM_PERIOD_HOURS, Some(0.0)).unwrap()}
     }
 
-    /// A fit whose RMS passes this is refused as fit-implausible, km. Default
-    /// 100.
+    /// Optional maximum acceptable RMS in km; 0 means unspecified.
     #[inline]
     pub fn IMPLAUSIBLE_RMS_KM(&self) -> f64 {
         // Safety:
         // Created from valid Table for this object
         // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(PCFFitPolicy::VT_IMPLAUSIBLE_RMS_KM, Some(100.0)).unwrap()}
+        unsafe { self._tab.get::<f64>(PCFFitPolicy::VT_IMPLAUSIBLE_RMS_KM, Some(0.0)).unwrap()}
     }
 
-    /// Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent
-    /// or without sigma: mean 0, sigma 0.05.
+    /// Optional prior on drag parameter.
     #[inline]
     pub fn DRAG_PRIOR(&self) -> Option<PCFGaussianPrior<'a>> {
         // Safety:
@@ -3232,8 +3221,7 @@ impl<'a> PCFFitPolicy<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PCFGaussianPrior>>(PCFFitPolicy::VT_DRAG_PRIOR, None)}
     }
 
-    /// Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.
-    /// Absent or without sigma: mean 0, sigma 0.05.
+    /// Optional prior on solar radiation pressure parameter.
     #[inline]
     pub fn SRP_PRIOR(&self) -> Option<PCFGaussianPrior<'a>> {
         // Safety:
@@ -3242,10 +3230,7 @@ impl<'a> PCFFitPolicy<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PCFGaussianPrior>>(PCFFitPolicy::VT_SRP_PRIOR, None)}
     }
 
-    /// The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
-    /// estimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its
-    /// MEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation
-    /// of ln B_eff.
+    /// Optional distribution form for DRAG_PRIOR.
     #[inline]
     pub fn DRAG_PRIOR_FORM(&self) -> pcfPriorForm {
         // Safety:
@@ -3254,10 +3239,7 @@ impl<'a> PCFFitPolicy<'a> {
         unsafe { self._tab.get::<pcfPriorForm>(PCFFitPolicy::VT_DRAG_PRIOR_FORM, Some(pcfPriorForm::GAUSSIAN_SIGNED)).unwrap()}
     }
 
-    /// The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
-    /// estimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN
-    /// the median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of
-    /// ln AGOM.
+    /// Optional distribution form for SRP_PRIOR.
     #[inline]
     pub fn SRP_PRIOR_FORM(&self) -> pcfPriorForm {
         // Safety:
@@ -3266,18 +3248,13 @@ impl<'a> PCFFitPolicy<'a> {
         unsafe { self._tab.get::<pcfPriorForm>(PCFFitPolicy::VT_SRP_PRIOR_FORM, Some(pcfPriorForm::GAUSSIAN_SIGNED)).unwrap()}
     }
 
-    /// Days past the element set's epoch day through which the fit writes the
-    /// daily space weather into the record it emits (OCM
-    /// PERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows
-    /// (WEATHER_SOURCE RECORDS). The last day written is the later of the fit
-    /// arc's last day and the epoch's day plus this count; rows supplied with
-    /// the request must reach it, or the fit is refused by name. Default 30.
+    /// Optional space-weather horizon in days past epoch; 0 means unspecified.
     #[inline]
     pub fn WEATHER_HORIZON_DAYS(&self) -> u16 {
         // Safety:
         // Created from valid Table for this object
         // which contains a valid value in this slot
-        unsafe { self._tab.get::<u16>(PCFFitPolicy::VT_WEATHER_HORIZON_DAYS, Some(30)).unwrap()}
+        unsafe { self._tab.get::<u16>(PCFFitPolicy::VT_WEATHER_HORIZON_DAYS, Some(0)).unwrap()}
     }
 }
 
@@ -3335,24 +3312,24 @@ impl<'a> Default for PCFFitPolicyArgs<'a> {
     #[inline]
     fn default() -> Self {
         PCFFitPolicyArgs {
-            DEFAULT_SPAN_HOURS: 48.0,
-            MINIMUM_SPAN_HOURS: 24.0,
-            MAXIMUM_SPAN_HOURS: 120.0,
+            DEFAULT_SPAN_HOURS: 0.0,
+            MINIMUM_SPAN_HOURS: 0.0,
+            MAXIMUM_SPAN_HOURS: 0.0,
             CANDIDATE_SPANS_HOURS: None,
-            TAIL_HOURS: 24.0,
-            EXTENSION_MARGIN: 0.9,
+            TAIL_HOURS: 0.0,
+            EXTENSION_MARGIN: 0.0,
             HOLDOUT_HOURS: 0.0,
             HAS_HOLDOUT_HOURS: false,
-            ECCENTRICITY_THRESHOLD: 0.5,
-            ECCENTRIC_DEFAULT_SPAN_HOURS: 24.0,
-            ECCENTRIC_EXTENSION_MARGIN: 0.7,
-            ECCENTRIC_MAXIMUM_PERIOD_HOURS: 36.0,
-            IMPLAUSIBLE_RMS_KM: 100.0,
+            ECCENTRICITY_THRESHOLD: 0.0,
+            ECCENTRIC_DEFAULT_SPAN_HOURS: 0.0,
+            ECCENTRIC_EXTENSION_MARGIN: 0.0,
+            ECCENTRIC_MAXIMUM_PERIOD_HOURS: 0.0,
+            IMPLAUSIBLE_RMS_KM: 0.0,
             DRAG_PRIOR: None,
             SRP_PRIOR: None,
             DRAG_PRIOR_FORM: pcfPriorForm::GAUSSIAN_SIGNED,
             SRP_PRIOR_FORM: pcfPriorForm::GAUSSIAN_SIGNED,
-            WEATHER_HORIZON_DAYS: 30,
+            WEATHER_HORIZON_DAYS: 0,
         }
     }
 }
@@ -3365,17 +3342,17 @@ pub struct PCFFitPolicyBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
 impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PCFFitPolicyBuilder<'a, 'b, A> {
     #[inline]
     pub fn add_DEFAULT_SPAN_HOURS(&mut self, DEFAULT_SPAN_HOURS: f64) {
-        self.fbb_.push_slot::<f64>(PCFFitPolicy::VT_DEFAULT_SPAN_HOURS, DEFAULT_SPAN_HOURS, 48.0);
+        self.fbb_.push_slot::<f64>(PCFFitPolicy::VT_DEFAULT_SPAN_HOURS, DEFAULT_SPAN_HOURS, 0.0);
     }
 
     #[inline]
     pub fn add_MINIMUM_SPAN_HOURS(&mut self, MINIMUM_SPAN_HOURS: f64) {
-        self.fbb_.push_slot::<f64>(PCFFitPolicy::VT_MINIMUM_SPAN_HOURS, MINIMUM_SPAN_HOURS, 24.0);
+        self.fbb_.push_slot::<f64>(PCFFitPolicy::VT_MINIMUM_SPAN_HOURS, MINIMUM_SPAN_HOURS, 0.0);
     }
 
     #[inline]
     pub fn add_MAXIMUM_SPAN_HOURS(&mut self, MAXIMUM_SPAN_HOURS: f64) {
-        self.fbb_.push_slot::<f64>(PCFFitPolicy::VT_MAXIMUM_SPAN_HOURS, MAXIMUM_SPAN_HOURS, 120.0);
+        self.fbb_.push_slot::<f64>(PCFFitPolicy::VT_MAXIMUM_SPAN_HOURS, MAXIMUM_SPAN_HOURS, 0.0);
     }
 
     #[inline]
@@ -3385,12 +3362,12 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PCFFitPolicyBuilder<'a, 'b, A
 
     #[inline]
     pub fn add_TAIL_HOURS(&mut self, TAIL_HOURS: f64) {
-        self.fbb_.push_slot::<f64>(PCFFitPolicy::VT_TAIL_HOURS, TAIL_HOURS, 24.0);
+        self.fbb_.push_slot::<f64>(PCFFitPolicy::VT_TAIL_HOURS, TAIL_HOURS, 0.0);
     }
 
     #[inline]
     pub fn add_EXTENSION_MARGIN(&mut self, EXTENSION_MARGIN: f64) {
-        self.fbb_.push_slot::<f64>(PCFFitPolicy::VT_EXTENSION_MARGIN, EXTENSION_MARGIN, 0.9);
+        self.fbb_.push_slot::<f64>(PCFFitPolicy::VT_EXTENSION_MARGIN, EXTENSION_MARGIN, 0.0);
     }
 
     #[inline]
@@ -3405,27 +3382,27 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PCFFitPolicyBuilder<'a, 'b, A
 
     #[inline]
     pub fn add_ECCENTRICITY_THRESHOLD(&mut self, ECCENTRICITY_THRESHOLD: f64) {
-        self.fbb_.push_slot::<f64>(PCFFitPolicy::VT_ECCENTRICITY_THRESHOLD, ECCENTRICITY_THRESHOLD, 0.5);
+        self.fbb_.push_slot::<f64>(PCFFitPolicy::VT_ECCENTRICITY_THRESHOLD, ECCENTRICITY_THRESHOLD, 0.0);
     }
 
     #[inline]
     pub fn add_ECCENTRIC_DEFAULT_SPAN_HOURS(&mut self, ECCENTRIC_DEFAULT_SPAN_HOURS: f64) {
-        self.fbb_.push_slot::<f64>(PCFFitPolicy::VT_ECCENTRIC_DEFAULT_SPAN_HOURS, ECCENTRIC_DEFAULT_SPAN_HOURS, 24.0);
+        self.fbb_.push_slot::<f64>(PCFFitPolicy::VT_ECCENTRIC_DEFAULT_SPAN_HOURS, ECCENTRIC_DEFAULT_SPAN_HOURS, 0.0);
     }
 
     #[inline]
     pub fn add_ECCENTRIC_EXTENSION_MARGIN(&mut self, ECCENTRIC_EXTENSION_MARGIN: f64) {
-        self.fbb_.push_slot::<f64>(PCFFitPolicy::VT_ECCENTRIC_EXTENSION_MARGIN, ECCENTRIC_EXTENSION_MARGIN, 0.7);
+        self.fbb_.push_slot::<f64>(PCFFitPolicy::VT_ECCENTRIC_EXTENSION_MARGIN, ECCENTRIC_EXTENSION_MARGIN, 0.0);
     }
 
     #[inline]
     pub fn add_ECCENTRIC_MAXIMUM_PERIOD_HOURS(&mut self, ECCENTRIC_MAXIMUM_PERIOD_HOURS: f64) {
-        self.fbb_.push_slot::<f64>(PCFFitPolicy::VT_ECCENTRIC_MAXIMUM_PERIOD_HOURS, ECCENTRIC_MAXIMUM_PERIOD_HOURS, 36.0);
+        self.fbb_.push_slot::<f64>(PCFFitPolicy::VT_ECCENTRIC_MAXIMUM_PERIOD_HOURS, ECCENTRIC_MAXIMUM_PERIOD_HOURS, 0.0);
     }
 
     #[inline]
     pub fn add_IMPLAUSIBLE_RMS_KM(&mut self, IMPLAUSIBLE_RMS_KM: f64) {
-        self.fbb_.push_slot::<f64>(PCFFitPolicy::VT_IMPLAUSIBLE_RMS_KM, IMPLAUSIBLE_RMS_KM, 100.0);
+        self.fbb_.push_slot::<f64>(PCFFitPolicy::VT_IMPLAUSIBLE_RMS_KM, IMPLAUSIBLE_RMS_KM, 0.0);
     }
 
     #[inline]
@@ -3450,7 +3427,7 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PCFFitPolicyBuilder<'a, 'b, A
 
     #[inline]
     pub fn add_WEATHER_HORIZON_DAYS(&mut self, WEATHER_HORIZON_DAYS: u16) {
-        self.fbb_.push_slot::<u16>(PCFFitPolicy::VT_WEATHER_HORIZON_DAYS, WEATHER_HORIZON_DAYS, 30);
+        self.fbb_.push_slot::<u16>(PCFFitPolicy::VT_WEATHER_HORIZON_DAYS, WEATHER_HORIZON_DAYS, 0);
     }
 
     #[inline]
@@ -3520,24 +3497,24 @@ pub struct PCFFitPolicyT {
 impl Default for PCFFitPolicyT {
     fn default() -> Self {
         Self {
-            DEFAULT_SPAN_HOURS: 48.0,
-            MINIMUM_SPAN_HOURS: 24.0,
-            MAXIMUM_SPAN_HOURS: 120.0,
+            DEFAULT_SPAN_HOURS: 0.0,
+            MINIMUM_SPAN_HOURS: 0.0,
+            MAXIMUM_SPAN_HOURS: 0.0,
             CANDIDATE_SPANS_HOURS: None,
-            TAIL_HOURS: 24.0,
-            EXTENSION_MARGIN: 0.9,
+            TAIL_HOURS: 0.0,
+            EXTENSION_MARGIN: 0.0,
             HOLDOUT_HOURS: 0.0,
             HAS_HOLDOUT_HOURS: false,
-            ECCENTRICITY_THRESHOLD: 0.5,
-            ECCENTRIC_DEFAULT_SPAN_HOURS: 24.0,
-            ECCENTRIC_EXTENSION_MARGIN: 0.7,
-            ECCENTRIC_MAXIMUM_PERIOD_HOURS: 36.0,
-            IMPLAUSIBLE_RMS_KM: 100.0,
+            ECCENTRICITY_THRESHOLD: 0.0,
+            ECCENTRIC_DEFAULT_SPAN_HOURS: 0.0,
+            ECCENTRIC_EXTENSION_MARGIN: 0.0,
+            ECCENTRIC_MAXIMUM_PERIOD_HOURS: 0.0,
+            IMPLAUSIBLE_RMS_KM: 0.0,
             DRAG_PRIOR: None,
             SRP_PRIOR: None,
             DRAG_PRIOR_FORM: pcfPriorForm::GAUSSIAN_SIGNED,
             SRP_PRIOR_FORM: pcfPriorForm::GAUSSIAN_SIGNED,
-            WEATHER_HORIZON_DAYS: 30,
+            WEATHER_HORIZON_DAYS: 0,
         }
     }
 }
@@ -5980,13 +5957,13 @@ impl<'a> PCFForceModel<'a> {
 
     /// Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth
     /// orientation (the request's Earth orientation rows) to apply them. Default
-    /// NONE.
+    /// UNSPECIFIED (the propagator's own default).
     #[inline]
     pub fn SOLID_TIDES(&self) -> pcfSolidTideModel {
         // Safety:
         // Created from valid Table for this object
         // which contains a valid value in this slot
-        unsafe { self._tab.get::<pcfSolidTideModel>(PCFForceModel::VT_SOLID_TIDES, Some(pcfSolidTideModel::NONE)).unwrap()}
+        unsafe { self._tab.get::<pcfSolidTideModel>(PCFForceModel::VT_SOLID_TIDES, Some(pcfSolidTideModel::UNSPECIFIED)).unwrap()}
     }
 
     /// Post-Newtonian terms. Default NONE.
@@ -6411,7 +6388,7 @@ impl<'a> Default for PCFForceModelArgs<'a> {
             ATMOSPHERE_MODEL: pcfAtmosphereFamily::NRLMSISE00,
             WEATHER: None,
             EPHEMERIS_SOURCE: None, // required field
-            SOLID_TIDES: pcfSolidTideModel::NONE,
+            SOLID_TIDES: pcfSolidTideModel::UNSPECIFIED,
             RELATIVITY: pcfRelativityTerms::NONE,
             IN_TRACK_ACCELERATION_M_S2: 0.0,
             HAS_IN_TRACK_ACCELERATION_M_S2: false,
@@ -6562,7 +6539,7 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PCFForceModelBuilder<'a, 'b, 
 
     #[inline]
     pub fn add_SOLID_TIDES(&mut self, SOLID_TIDES: pcfSolidTideModel) {
-        self.fbb_.push_slot::<pcfSolidTideModel>(PCFForceModel::VT_SOLID_TIDES, SOLID_TIDES, pcfSolidTideModel::NONE);
+        self.fbb_.push_slot::<pcfSolidTideModel>(PCFForceModel::VT_SOLID_TIDES, SOLID_TIDES, pcfSolidTideModel::UNSPECIFIED);
     }
 
     #[inline]
@@ -6861,7 +6838,7 @@ impl Default for PCFForceModelT {
             ATMOSPHERE_MODEL: pcfAtmosphereFamily::NRLMSISE00,
             WEATHER: None,
             EPHEMERIS_SOURCE: alloc::string::ToString::to_string(""),
-            SOLID_TIDES: pcfSolidTideModel::NONE,
+            SOLID_TIDES: pcfSolidTideModel::UNSPECIFIED,
             RELATIVITY: pcfRelativityTerms::NONE,
             IN_TRACK_ACCELERATION_M_S2: 0.0,
             HAS_IN_TRACK_ACCELERATION_M_S2: false,

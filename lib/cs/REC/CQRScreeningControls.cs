@@ -48,6 +48,11 @@ public struct CQRScreeningControls : IFlatbufferObject
   /// absent list means no collision probability from AP covariance.
   public CQRVerifiedCovarianceProducer? VERIFIED_COVARIANCE_PRODUCERS(int j) { int o = __p.__offset(40); return o != 0 ? (CQRVerifiedCovarianceProducer?)(new CQRVerifiedCovarianceProducer()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int VERIFIED_COVARIANCE_PRODUCERSLength { get { int o = __p.__offset(40); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// When true and DENSITY_LOG_SIGMA > 0 with both objects supplying
+  /// DENSITY_SENSITIVITY_KM, apply common-mode density cross-covariance.
+  public bool APPLY_DENSITY_CROSS_CORRELATION { get { int o = __p.__offset(42); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Dimensionless 1-sigma common-mode log-density uncertainty (sigma_s); 0 disables.
+  public double DENSITY_LOG_SIGMA { get { int o = __p.__offset(44); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
 
   public static Offset<CQRScreeningControls> CreateCQRScreeningControls(FlatBufferBuilder builder,
       Offset<TIMInstant> START_EPOCHOffset = default(Offset<TIMInstant>),
@@ -68,8 +73,11 @@ public struct CQRScreeningControls : IFlatbufferObject
       double IN_TRACK_M = 0.0,
       double CROSS_TRACK_M = 0.0,
       cqrVolumeAnchor VOLUME_CENTER = cqrVolumeAnchor.PRIMARY,
-      VectorOffset VERIFIED_COVARIANCE_PRODUCERSOffset = default(VectorOffset)) {
-    builder.StartTable(19);
+      VectorOffset VERIFIED_COVARIANCE_PRODUCERSOffset = default(VectorOffset),
+      bool APPLY_DENSITY_CROSS_CORRELATION = false,
+      double DENSITY_LOG_SIGMA = 0.0) {
+    builder.StartTable(21);
+    CQRScreeningControls.AddDENSITY_LOG_SIGMA(builder, DENSITY_LOG_SIGMA);
     CQRScreeningControls.AddCROSS_TRACK_M(builder, CROSS_TRACK_M);
     CQRScreeningControls.AddIN_TRACK_M(builder, IN_TRACK_M);
     CQRScreeningControls.AddRADIAL_M(builder, RADIAL_M);
@@ -82,6 +90,7 @@ public struct CQRScreeningControls : IFlatbufferObject
     CQRScreeningControls.AddVERIFIED_COVARIANCE_PRODUCERS(builder, VERIFIED_COVARIANCE_PRODUCERSOffset);
     CQRScreeningControls.AddREQUESTED_WORKERS(builder, REQUESTED_WORKERS);
     CQRScreeningControls.AddSTART_EPOCH(builder, START_EPOCHOffset);
+    CQRScreeningControls.AddAPPLY_DENSITY_CROSS_CORRELATION(builder, APPLY_DENSITY_CROSS_CORRELATION);
     CQRScreeningControls.AddVOLUME_CENTER(builder, VOLUME_CENTER);
     CQRScreeningControls.AddSCREENING(builder, SCREENING);
     CQRScreeningControls.AddALGORITHM(builder, ALGORITHM);
@@ -92,7 +101,7 @@ public struct CQRScreeningControls : IFlatbufferObject
     return CQRScreeningControls.EndCQRScreeningControls(builder);
   }
 
-  public static void StartCQRScreeningControls(FlatBufferBuilder builder) { builder.StartTable(19); }
+  public static void StartCQRScreeningControls(FlatBufferBuilder builder) { builder.StartTable(21); }
   public static void AddSTART_EPOCH(FlatBufferBuilder builder, Offset<TIMInstant> START_EPOCHOffset) { builder.AddOffset(0, START_EPOCHOffset.Value, 0); }
   public static void AddDURATION_SECONDS(FlatBufferBuilder builder, double DURATION_SECONDS) { builder.AddDouble(1, DURATION_SECONDS, 604800.0); }
   public static void AddTHRESHOLD_M(FlatBufferBuilder builder, double THRESHOLD_M) { builder.AddDouble(2, THRESHOLD_M, 5000.0); }
@@ -117,6 +126,8 @@ public struct CQRScreeningControls : IFlatbufferObject
   public static VectorOffset CreateVERIFIED_COVARIANCE_PRODUCERSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<CQRVerifiedCovarianceProducer>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateVERIFIED_COVARIANCE_PRODUCERSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<CQRVerifiedCovarianceProducer>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartVERIFIED_COVARIANCE_PRODUCERSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddAPPLY_DENSITY_CROSS_CORRELATION(FlatBufferBuilder builder, bool APPLY_DENSITY_CROSS_CORRELATION) { builder.AddBool(19, APPLY_DENSITY_CROSS_CORRELATION, false); }
+  public static void AddDENSITY_LOG_SIGMA(FlatBufferBuilder builder, double DENSITY_LOG_SIGMA) { builder.AddDouble(20, DENSITY_LOG_SIGMA, 0.0); }
   public static Offset<CQRScreeningControls> EndCQRScreeningControls(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // START_EPOCH
@@ -148,6 +159,8 @@ public struct CQRScreeningControls : IFlatbufferObject
     _o.VOLUME_CENTER = this.VOLUME_CENTER;
     _o.VERIFIED_COVARIANCE_PRODUCERS = new List<CQRVerifiedCovarianceProducerT>();
     for (var _j = 0; _j < this.VERIFIED_COVARIANCE_PRODUCERSLength; ++_j) {_o.VERIFIED_COVARIANCE_PRODUCERS.Add(this.VERIFIED_COVARIANCE_PRODUCERS(_j).HasValue ? this.VERIFIED_COVARIANCE_PRODUCERS(_j).Value.UnPack() : null);}
+    _o.APPLY_DENSITY_CROSS_CORRELATION = this.APPLY_DENSITY_CROSS_CORRELATION;
+    _o.DENSITY_LOG_SIGMA = this.DENSITY_LOG_SIGMA;
   }
   public static Offset<CQRScreeningControls> Pack(FlatBufferBuilder builder, CQRScreeningControlsT _o) {
     if (_o == null) return default(Offset<CQRScreeningControls>);
@@ -178,7 +191,9 @@ public struct CQRScreeningControls : IFlatbufferObject
       _o.IN_TRACK_M,
       _o.CROSS_TRACK_M,
       _o.VOLUME_CENTER,
-      _VERIFIED_COVARIANCE_PRODUCERS);
+      _VERIFIED_COVARIANCE_PRODUCERS,
+      _o.APPLY_DENSITY_CROSS_CORRELATION,
+      _o.DENSITY_LOG_SIGMA);
   }
 }
 
@@ -203,6 +218,8 @@ public class CQRScreeningControlsT
   public double CROSS_TRACK_M { get; set; }
   public cqrVolumeAnchor VOLUME_CENTER { get; set; }
   public List<CQRVerifiedCovarianceProducerT> VERIFIED_COVARIANCE_PRODUCERS { get; set; }
+  public bool APPLY_DENSITY_CROSS_CORRELATION { get; set; }
+  public double DENSITY_LOG_SIGMA { get; set; }
 
   public CQRScreeningControlsT() {
     this.START_EPOCH = null;
@@ -224,6 +241,8 @@ public class CQRScreeningControlsT
     this.CROSS_TRACK_M = 0.0;
     this.VOLUME_CENTER = cqrVolumeAnchor.PRIMARY;
     this.VERIFIED_COVARIANCE_PRODUCERS = null;
+    this.APPLY_DENSITY_CROSS_CORRELATION = false;
+    this.DENSITY_LOG_SIGMA = 0.0;
   }
 }
 
@@ -252,6 +271,8 @@ static public class CQRScreeningControlsVerify
       && verifier.VerifyField(tablePos, 36 /*CROSS_TRACK_M*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 38 /*VOLUME_CENTER*/, 1 /*cqrVolumeAnchor*/, 1, false)
       && verifier.VerifyVectorOfTables(tablePos, 40 /*VERIFIED_COVARIANCE_PRODUCERS*/, CQRVerifiedCovarianceProducerVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 42 /*APPLY_DENSITY_CROSS_CORRELATION*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 44 /*DENSITY_LOG_SIGMA*/, 8 /*double*/, 8, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

@@ -17,8 +17,7 @@ import java.nio.ByteOrder
 import kotlin.math.sign
 
 /**
- * A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps
- * the theory's own sigma and moves only the mean.
+ * Optional Gaussian parameter prior.
  */
 @Suppress("unused")
 class PCFGaussianPrior : Table() {
@@ -31,7 +30,7 @@ class PCFGaussianPrior : Table() {
         return this
     }
     /**
-     * Prior mean, in the unit of the parameter it is attached to. Default 0.
+     * Prior mean in the parameter's unit.
      */
     val mean : Double
         get() {
@@ -39,7 +38,7 @@ class PCFGaussianPrior : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Prior standard deviation, in the same unit; > 0 when HAS_SIGMA.
+     * Prior standard deviation in the parameter's unit; > 0 when HAS_SIGMA is true.
      */
     val sigma : Double
         get() {
@@ -47,7 +46,7 @@ class PCFGaussianPrior : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * True when SIGMA carries a value; false keeps the theory's own sigma.
+     * True when SIGMA is explicitly provided.
      */
     val hasSigma : Boolean
         get() {

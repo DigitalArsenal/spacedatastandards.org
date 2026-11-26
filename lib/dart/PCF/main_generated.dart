@@ -759,24 +759,27 @@ class _pcfAtmosphereFamilyReader extends fb.Reader<pcfAtmosphereFamily> {
       pcfAtmosphereFamily.fromValue(const fb.Uint8Reader().read(bc, offset));
 }
 
-///  Solid Earth tide model for the central body's field. NONE leaves the
-///  tides out. IERS_2010 is IERS Conventions (2010) section 6.2: the degree 2
-///  and 3 tides raised by the Sun and Moon with Table 6.3's anelastic Love
-///  numbers and the degree 4 terms through k+ (step 1, eqs. 6.6-6.7), the
-///  frequency-dependent corrections of Tables 6.5a-c (step 2, eq. 6.8), and
-///  the permanent tide handled for the field's own tide system. Pole tide is
-///  not included.
+///  Solid Earth tide model for the central body's field. UNSPECIFIED uses the
+///  propagator's own default (IERS 2010 when supported). NONE disables solid
+///  Earth tides explicitly. IERS_2010 is IERS Conventions (2010) section 6.2:
+///  degree 2 and 3 tides raised by the Sun and Moon with Table 6.3's anelastic
+///  Love numbers, degree 4 terms through k+ (step 1, eqs. 6.6-6.7),
+///  frequency-dependent corrections of Tables 6.5a-c (step 2, eq. 6.8), and the
+///  permanent tide handled for the field's own tide system. Pole tide is not
+///  included.
 enum pcfSolidTideModel {
-  NONE(0),
-  IERS_2010(1);
+  UNSPECIFIED(0),
+  NONE(1),
+  IERS_2010(2);
 
   final int value;
   const pcfSolidTideModel(this.value);
 
   factory pcfSolidTideModel.fromValue(int value) {
     switch (value) {
-      case 0: return pcfSolidTideModel.NONE;
-      case 1: return pcfSolidTideModel.IERS_2010;
+      case 0: return pcfSolidTideModel.UNSPECIFIED;
+      case 1: return pcfSolidTideModel.NONE;
+      case 2: return pcfSolidTideModel.IERS_2010;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -785,7 +788,7 @@ enum pcfSolidTideModel {
       value == null ? null : pcfSolidTideModel.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 1;
+  static const int maxValue = 2;
   static const fb.Reader<pcfSolidTideModel> reader = _pcfSolidTideModelReader();
 }
 
@@ -1000,8 +1003,7 @@ class _pcfGnssSpacecraftBlockReader extends fb.Reader<pcfGnssSpacecraftBlock> {
       pcfGnssSpacecraftBlock.fromValue(const fb.Uint8Reader().read(bc, offset));
 }
 
-///  The form of a fitted parameter's prior (PCFFitPolicy DRAG_PRIOR_FORM and
-///  SRP_PRIOR_FORM). Append new values only.
+///  Prior distribution form for an optional parameter constraint.
 enum pcfPriorForm {
   GAUSSIAN_SIGNED(0),
   LOG_NORMAL(1);
@@ -1036,8 +1038,7 @@ class _pcfPriorFormReader extends fb.Reader<pcfPriorForm> {
       pcfPriorForm.fromValue(const fb.Uint8Reader().read(bc, offset));
 }
 
-///  A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps
-///  the theory's own sigma and moves only the mean.
+///  Optional Gaussian parameter prior.
 class PCFGaussianPrior {
   PCFGaussianPrior._(this._bc, this._bcOffset);
   factory PCFGaussianPrior(List<int> bytes) {
@@ -1050,11 +1051,11 @@ class PCFGaussianPrior {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Prior mean, in the unit of the parameter it is attached to. Default 0.
+  ///  Prior mean in the parameter's unit.
   double get MEAN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
-  ///  Prior standard deviation, in the same unit; > 0 when HAS_SIGMA.
+  ///  Prior standard deviation in the parameter's unit; > 0 when HAS_SIGMA is true.
   double get SIGMA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
-  ///  True when SIGMA carries a value; false keeps the theory's own sigma.
+  ///  True when SIGMA is explicitly provided.
   bool get HAS_SIGMA => const fb.BoolReader().vTableGet(_bc, _bcOffset, 8, false);
   bool get hasSigma => HAS_SIGMA;
 
@@ -1132,8 +1133,7 @@ class PCFGaussianPriorObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-///  Fit policy: how long an arc a fit uses, how that is validated, and what a
-///  fit refuses.
+///  Optional configuration parameters for orbit estimation.
 class PCFFitPolicy {
   PCFFitPolicy._(this._bc, this._bcOffset);
   factory PCFFitPolicy(List<int> bytes) {
@@ -1146,80 +1146,59 @@ class PCFFitPolicy {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Fit span used when the span rule is not run, hours. Default 48.
-  double get DEFAULT_SPAN_HOURS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 48.0);
+  ///  Optional span parameter in hours; 0 means unspecified.
+  double get DEFAULT_SPAN_HOURS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
   double get defaultSpanHours => DEFAULT_SPAN_HOURS;
-  ///  Shortest span a fit may take, hours. Default 24.
-  double get MINIMUM_SPAN_HOURS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 24.0);
+  ///  Optional minimum span in hours; 0 means unspecified.
+  double get MINIMUM_SPAN_HOURS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
   double get minimumSpanHours => MINIMUM_SPAN_HOURS;
-  ///  Longest span a fit may take, hours. Default 120.
-  double get MAXIMUM_SPAN_HOURS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 120.0);
+  ///  Optional maximum span in hours; 0 means unspecified.
+  double get MAXIMUM_SPAN_HOURS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
   double get maximumSpanHours => MAXIMUM_SPAN_HOURS;
-  ///  Spans the extension rule scores, ascending, hours, each within
-  ///  [MINIMUM_SPAN_HOURS, MAXIMUM_SPAN_HOURS]. Empty: 48, 72 and 120; with
-  ///  24 in front when the eccentricity exceeds ECCENTRICITY_THRESHOLD.
+  ///  Optional candidate span list in hours.
   List<double>? get CANDIDATE_SPANS_HOURS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 10);
   List<double>? get candidateSpansHours => CANDIDATE_SPANS_HOURS;
-  ///  Validation tail: each candidate is fitted to the data before the latest
-  ///  TAIL_HOURS and scored on that tail, hours. Default 24.
-  double get TAIL_HOURS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 24.0);
+  ///  Optional evaluation tail length in hours; 0 means unspecified.
+  double get TAIL_HOURS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
   double get tailHours => TAIL_HOURS;
-  ///  Extension rule: a longer candidate is taken only when its tail error is
-  ///  at most this fraction of the best shorter candidate's. Default 0.9.
-  double get EXTENSION_MARGIN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.9);
+  ///  Optional relative selection margin; 0 means unspecified.
+  double get EXTENSION_MARGIN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
   double get extensionMargin => EXTENSION_MARGIN;
-  ///  Hours held out at the end of the data and reported as error growth; the
-  ///  fit then ends HOLDOUT_HOURS before the data does. Absent, the data
-  ///  block's own useable stop time decides.
+  ///  Optional holdout window length in hours.
   double get HOLDOUT_HOURS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
   double get holdoutHours => HOLDOUT_HOURS;
-  ///  True when HOLDOUT_HOURS carries a value; false means absent.
+  ///  True when HOLDOUT_HOURS is explicitly provided.
   bool get HAS_HOLDOUT_HOURS => const fb.BoolReader().vTableGet(_bc, _bcOffset, 18, false);
   bool get hasHoldoutHours => HAS_HOLDOUT_HOURS;
-  ///  Eccentricity above which the eccentric-orbit rule applies. Default 0.5.
-  double get ECCENTRICITY_THRESHOLD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.5);
+  ///  Optional eccentricity threshold; 0 means unspecified.
+  double get ECCENTRICITY_THRESHOLD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
   double get eccentricityThreshold => ECCENTRICITY_THRESHOLD;
-  ///  Eccentric orbits: the default span, hours. Default 24.
-  double get ECCENTRIC_DEFAULT_SPAN_HOURS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 24.0);
+  ///  Optional eccentric-orbit span in hours; 0 means unspecified.
+  double get ECCENTRIC_DEFAULT_SPAN_HOURS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
   double get eccentricDefaultSpanHours => ECCENTRIC_DEFAULT_SPAN_HOURS;
-  ///  Eccentric orbits: EXTENSION_MARGIN. Default 0.7.
-  double get ECCENTRIC_EXTENSION_MARGIN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.7);
+  ///  Optional eccentric-orbit relative margin; 0 means unspecified.
+  double get ECCENTRIC_EXTENSION_MARGIN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
   double get eccentricExtensionMargin => ECCENTRIC_EXTENSION_MARGIN;
-  ///  Eccentric orbits: no candidate longer than this is tried once the orbital
-  ///  period passes it, hours. Default 36.
-  double get ECCENTRIC_MAXIMUM_PERIOD_HOURS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 36.0);
+  ///  Optional eccentric-orbit period bound in hours; 0 means unspecified.
+  double get ECCENTRIC_MAXIMUM_PERIOD_HOURS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
   double get eccentricMaximumPeriodHours => ECCENTRIC_MAXIMUM_PERIOD_HOURS;
-  ///  A fit whose RMS passes this is refused as fit-implausible, km. Default
-  ///  100.
-  double get IMPLAUSIBLE_RMS_KM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 100.0);
+  ///  Optional maximum acceptable RMS in km; 0 means unspecified.
+  double get IMPLAUSIBLE_RMS_KM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
   double get implausibleRmsKm => IMPLAUSIBLE_RMS_KM;
-  ///  Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent
-  ///  or without sigma: mean 0, sigma 0.05.
+  ///  Optional prior on drag parameter.
   PCFGaussianPrior? get DRAG_PRIOR => PCFGaussianPrior.reader.vTableGetNullable(_bc, _bcOffset, 30);
   PCFGaussianPrior? get dragPrior => DRAG_PRIOR;
-  ///  Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.
-  ///  Absent or without sigma: mean 0, sigma 0.05.
+  ///  Optional prior on solar radiation pressure parameter.
   PCFGaussianPrior? get SRP_PRIOR => PCFGaussianPrior.reader.vTableGetNullable(_bc, _bcOffset, 32);
   PCFGaussianPrior? get srpPrior => SRP_PRIOR;
-  ///  The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
-  ///  estimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its
-  ///  MEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation
-  ///  of ln B_eff.
+  ///  Optional distribution form for DRAG_PRIOR.
   pcfPriorForm get DRAG_PRIOR_FORM => pcfPriorForm.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 34, 0));
   pcfPriorForm get dragPriorForm => DRAG_PRIOR_FORM;
-  ///  The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
-  ///  estimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN
-  ///  the median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of
-  ///  ln AGOM.
+  ///  Optional distribution form for SRP_PRIOR.
   pcfPriorForm get SRP_PRIOR_FORM => pcfPriorForm.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 36, 0));
   pcfPriorForm get srpPriorForm => SRP_PRIOR_FORM;
-  ///  Days past the element set's epoch day through which the fit writes the
-  ///  daily space weather into the record it emits (OCM
-  ///  PERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows
-  ///  (WEATHER_SOURCE RECORDS). The last day written is the later of the fit
-  ///  arc's last day and the epoch's day plus this count; rows supplied with
-  ///  the request must reach it, or the fit is refused by name. Default 30.
-  int get WEATHER_HORIZON_DAYS => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 38, 30);
+  ///  Optional space-weather horizon in days past epoch; 0 means unspecified.
+  int get WEATHER_HORIZON_DAYS => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 38, 0);
   int get weatherHorizonDays => WEATHER_HORIZON_DAYS;
 
   @override
@@ -2466,7 +2445,7 @@ class PCFForceModel {
   String? get ephemerisSource => EPHEMERIS_SOURCE;
   ///  Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth
   ///  orientation (the request's Earth orientation rows) to apply them. Default
-  ///  NONE.
+  ///  UNSPECIFIED (the propagator's own default).
   pcfSolidTideModel get SOLID_TIDES => pcfSolidTideModel.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 48, 0));
   pcfSolidTideModel get solidTides => SOLID_TIDES;
   ///  Post-Newtonian terms. Default NONE.

@@ -192,8 +192,38 @@ class OCMCovarianceBlock(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         return o == 0
 
+    # Optional position sensitivity to a unit dimensionless log-density shift
+    # (dr/ds), flattened 3 doubles per line of LINES in COV_REF_FRAME, km.
+    # Empty when absent.
+    # OCMCovarianceBlock
+    def DENSITY_SENSITIVITY_KM(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # OCMCovarianceBlock
+    def DENSITY_SENSITIVITY_KMAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # OCMCovarianceBlock
+    def DENSITY_SENSITIVITY_KMLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # OCMCovarianceBlock
+    def DENSITY_SENSITIVITY_KMIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        return o == 0
+
 def OCMCovarianceBlockStart(builder):
-    builder.StartObject(16)
+    builder.StartObject(17)
 
 def Start(builder):
     OCMCovarianceBlockStart(builder)
@@ -318,6 +348,28 @@ def OCMCovarianceBlockCreateCOV_REALISMVector(builder, data):
 def CreateCOV_REALISMVector(builder, data):
     return OCMCovarianceBlockCreateCOV_REALISMVector(builder, data)
 
+def OCMCovarianceBlockAddDENSITY_SENSITIVITY_KM(builder, DENSITY_SENSITIVITY_KM):
+    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(DENSITY_SENSITIVITY_KM), 0)
+
+def AddDENSITY_SENSITIVITY_KM(builder, DENSITY_SENSITIVITY_KM):
+    OCMCovarianceBlockAddDENSITY_SENSITIVITY_KM(builder, DENSITY_SENSITIVITY_KM)
+
+def OCMCovarianceBlockStartDENSITY_SENSITIVITY_KMVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartDENSITY_SENSITIVITY_KMVector(builder, numElems):
+    return OCMCovarianceBlockStartDENSITY_SENSITIVITY_KMVector(builder, numElems)
+
+def OCMCovarianceBlockCreateDENSITY_SENSITIVITY_KMVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateDENSITY_SENSITIVITY_KMVector(builder, data):
+    return OCMCovarianceBlockCreateDENSITY_SENSITIVITY_KMVector(builder, data)
+
 def OCMCovarianceBlockEnd(builder):
     return builder.EndObject()
 
@@ -351,6 +403,7 @@ class OCMCovarianceBlockT(object):
         COV_UNITS = None,
         LINES = None,
         COV_REALISM = None,
+        DENSITY_SENSITIVITY_KM = None,
     ):
         self.COMMENT = COMMENT  # type: Optional[str]
         self.COV_ID = COV_ID  # type: Optional[str]
@@ -368,6 +421,7 @@ class OCMCovarianceBlockT(object):
         self.COV_UNITS = COV_UNITS  # type: Optional[str]
         self.LINES = LINES  # type: Optional[List[Optional[str]]]
         self.COV_REALISM = COV_REALISM  # type: Optional[List[CVR.CVRT]]
+        self.DENSITY_SENSITIVITY_KM = DENSITY_SENSITIVITY_KM  # type: Optional[List[float]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -416,6 +470,13 @@ class OCMCovarianceBlockT(object):
                 else:
                     cVR_ = CVR.CVRT.InitFromObj(OCMCovarianceBlock.COV_REALISM(i))
                     self.COV_REALISM.append(cVR_)
+        if not OCMCovarianceBlock.DENSITY_SENSITIVITY_KMIsNone():
+            if np is None:
+                self.DENSITY_SENSITIVITY_KM = []
+                for i in range(OCMCovarianceBlock.DENSITY_SENSITIVITY_KMLength()):
+                    self.DENSITY_SENSITIVITY_KM.append(OCMCovarianceBlock.DENSITY_SENSITIVITY_KM(i))
+            else:
+                self.DENSITY_SENSITIVITY_KM = OCMCovarianceBlock.DENSITY_SENSITIVITY_KMAsNumpy()
 
     # OCMCovarianceBlockT
     def Pack(self, builder):
@@ -455,6 +516,14 @@ class OCMCovarianceBlockT(object):
             for i in reversed(range(len(self.COV_REALISM))):
                 builder.PrependUOffsetTRelative(COV_REALISMlist[i])
             COV_REALISM = builder.EndVector()
+        if self.DENSITY_SENSITIVITY_KM is not None:
+            if np is not None and type(self.DENSITY_SENSITIVITY_KM) is np.ndarray:
+                DENSITY_SENSITIVITY_KM = builder.CreateNumpyVector(self.DENSITY_SENSITIVITY_KM)
+            else:
+                OCMCovarianceBlockStartDENSITY_SENSITIVITY_KMVector(builder, len(self.DENSITY_SENSITIVITY_KM))
+                for i in reversed(range(len(self.DENSITY_SENSITIVITY_KM))):
+                    builder.PrependFloat64(self.DENSITY_SENSITIVITY_KM[i])
+                DENSITY_SENSITIVITY_KM = builder.EndVector()
         OCMCovarianceBlockStart(builder)
         if self.COMMENT is not None:
             OCMCovarianceBlockAddCOMMENT(builder, COMMENT)
@@ -484,5 +553,7 @@ class OCMCovarianceBlockT(object):
             OCMCovarianceBlockAddLINES(builder, LINES)
         if self.COV_REALISM is not None:
             OCMCovarianceBlockAddCOV_REALISM(builder, COV_REALISM)
+        if self.DENSITY_SENSITIVITY_KM is not None:
+            OCMCovarianceBlockAddDENSITY_SENSITIVITY_KM(builder, DENSITY_SENSITIVITY_KM)
         OCMCovarianceBlock = OCMCovarianceBlockEnd(builder)
         return OCMCovarianceBlock

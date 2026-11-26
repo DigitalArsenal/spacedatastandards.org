@@ -159,6 +159,23 @@ class CQRScreeningControls : Table() {
         get() {
             val o = __offset(40); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * When true and DENSITY_LOG_SIGMA > 0 with both objects supplying
+     * DENSITY_SENSITIVITY_KM, apply common-mode density cross-covariance.
+     */
+    val applyDensityCrossCorrelation : Boolean
+        get() {
+            val o = __offset(42)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * Dimensionless 1-sigma common-mode log-density uncertainty (sigma_s); 0 disables.
+     */
+    val densityLogSigma : Double
+        get() {
+            val o = __offset(44)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCQRScreeningControls(_bb: ByteBuffer): CQRScreeningControls = getRootAsCQRScreeningControls(_bb, CQRScreeningControls())
@@ -166,8 +183,9 @@ class CQRScreeningControls : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCQRScreeningControls(builder: FlatBufferBuilder, startEpochOffset: Int, durationSeconds: Double, thresholdM: Double, requestedWorkers: UInt, coarseStepSeconds: Double, refinementToleranceSeconds: Double, combinedRadiusM: Double, useKdTree: Boolean, useDynamicWindow: Boolean, usePerigeeFilter: Boolean, progressIntervalSeconds: Double, hasProgressIntervalSeconds: Boolean, algorithm: UByte, screening: UByte, radialM: Double, inTrackM: Double, crossTrackM: Double, volumeCenter: UByte, verifiedCovarianceProducersOffset: Int) : Int {
-            builder.startTable(19)
+        fun createCQRScreeningControls(builder: FlatBufferBuilder, startEpochOffset: Int, durationSeconds: Double, thresholdM: Double, requestedWorkers: UInt, coarseStepSeconds: Double, refinementToleranceSeconds: Double, combinedRadiusM: Double, useKdTree: Boolean, useDynamicWindow: Boolean, usePerigeeFilter: Boolean, progressIntervalSeconds: Double, hasProgressIntervalSeconds: Boolean, algorithm: UByte, screening: UByte, radialM: Double, inTrackM: Double, crossTrackM: Double, volumeCenter: UByte, verifiedCovarianceProducersOffset: Int, applyDensityCrossCorrelation: Boolean, densityLogSigma: Double) : Int {
+            builder.startTable(21)
+            addDENSITYLOGSIGMA(builder, densityLogSigma)
             addCROSSTRACKM(builder, crossTrackM)
             addINTRACKM(builder, inTrackM)
             addRADIALM(builder, radialM)
@@ -180,6 +198,7 @@ class CQRScreeningControls : Table() {
             addVERIFIEDCOVARIANCEPRODUCERS(builder, verifiedCovarianceProducersOffset)
             addREQUESTEDWORKERS(builder, requestedWorkers)
             addSTARTEPOCH(builder, startEpochOffset)
+            addAPPLYDENSITYCROSSCORRELATION(builder, applyDensityCrossCorrelation)
             addVOLUMECENTER(builder, volumeCenter)
             addSCREENING(builder, screening)
             addALGORITHM(builder, algorithm)
@@ -189,7 +208,7 @@ class CQRScreeningControls : Table() {
             addUSEKDTREE(builder, useKdTree)
             return endCQRScreeningControls(builder)
         }
-        fun startCQRScreeningControls(builder: FlatBufferBuilder) = builder.startTable(19)
+        fun startCQRScreeningControls(builder: FlatBufferBuilder) = builder.startTable(21)
         fun addSTARTEPOCH(builder: FlatBufferBuilder, startEpoch: Int) = builder.addOffset(0, startEpoch, 0)
         fun addDURATIONSECONDS(builder: FlatBufferBuilder, durationSeconds: Double) = builder.addDouble(1, durationSeconds, 604800.0)
         fun addTHRESHOLDM(builder: FlatBufferBuilder, thresholdM: Double) = builder.addDouble(2, thresholdM, 5000.0)
@@ -217,6 +236,8 @@ class CQRScreeningControls : Table() {
             return builder.endVector()
         }
         fun startVerifiedCovarianceProducersVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addAPPLYDENSITYCROSSCORRELATION(builder: FlatBufferBuilder, applyDensityCrossCorrelation: Boolean) = builder.addBoolean(19, applyDensityCrossCorrelation, false)
+        fun addDENSITYLOGSIGMA(builder: FlatBufferBuilder, densityLogSigma: Double) = builder.addDouble(20, densityLogSigma, 0.0)
         fun endCQRScreeningControls(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

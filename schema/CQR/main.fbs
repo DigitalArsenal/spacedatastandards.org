@@ -1,5 +1,5 @@
-// Hash: 57fb9c0f02106deb779ad0477585c0f1c34573724c8fadeeb654696918ceaf35
-// Version: 1.219.4
+// Hash: 96539c8a59b644b6288ba9cdaaafdd2980491f1a9cb19dd90b66a547ce9cb062
+// Version: 1.219.5
 // -----------------------------------END_HEADER
 include "../PRW/main.fbs";
 include "../OMM/main.fbs";
@@ -66,7 +66,10 @@ enum cqrCovarianceCorrelation : ubyte {
   /// Independent errors: the combined covariance is the sum of the two.
   INDEPENDENT = 1,
   /// A cross covariance was supplied and used.
-  SUPPLIED_CROSS_COVARIANCE = 2
+  SUPPLIED_CROSS_COVARIANCE = 2,
+  /// Cross covariance derived from per-object atmospheric density sensitivity
+  /// vectors and a shared log-density uncertainty.
+  SHARED_DENSITY_SENSITIVITY = 3
 }
 enum cqrDocumentSyntax : ubyte {
   UNSPECIFIED = 0, CCSDS_CDM_KVN = 1, CCSDS_CDM_XML = 2
@@ -131,6 +134,9 @@ table CQRObjectSource {
   /// The object's catalog entry. Without a supplied radius, its SIZE, else
   /// its RCS, gives the hard-body radius (see cqrHardBodyRadiusBasis).
   CATALOG_ENTRY:CAT;
+  /// Optional position sensitivity to a unit dimensionless log-density shift
+  /// (dr/ds) in EVALUATION_FRAME, 3 doubles in km. Empty when absent.
+  DENSITY_SENSITIVITY_KM:[double];
 }
 
 /// On-orbit screening geometry; dimensions are metres.
@@ -193,6 +199,11 @@ table CQRScreeningControls {
   /// Builds whose AP covariance a collision probability may use. An empty or
   /// absent list means no collision probability from AP covariance.
   VERIFIED_COVARIANCE_PRODUCERS:[CQRVerifiedCovarianceProducer];
+  /// When true and DENSITY_LOG_SIGMA > 0 with both objects supplying
+  /// DENSITY_SENSITIVITY_KM, apply common-mode density cross-covariance.
+  APPLY_DENSITY_CROSS_CORRELATION:bool = false;
+  /// Dimensionless 1-sigma common-mode log-density uncertainty (sigma_s); 0 disables.
+  DENSITY_LOG_SIGMA:double = 0;
 }
 
 /// CONTROLS.COMBINED_RADIUS_M must equal PRIMARY_RADIUS_M + SECONDARY_RADIUS_M.

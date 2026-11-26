@@ -9,8 +9,7 @@ import { pcfPriorForm } from './pcfPriorForm.js';
 
 
 /**
- * Fit policy: how long an arc a fit uses, how that is validated, and what a
- * fit refuses.
+ * Optional configuration parameters for orbit estimation.
  */
 export class PCFFitPolicy implements flatbuffers.IUnpackableObject<PCFFitPolicyT> {
   bb: flatbuffers.ByteBuffer|null = null;
@@ -31,33 +30,31 @@ static getSizePrefixedRootAsPCFFitPolicy(bb:flatbuffers.ByteBuffer, obj?:PCFFitP
 }
 
 /**
- * Fit span used when the span rule is not run, hours. Default 48.
+ * Optional span parameter in hours; 0 means unspecified.
  */
 DEFAULT_SPAN_HOURS():number {
   const offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 48.0;
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
 /**
- * Shortest span a fit may take, hours. Default 24.
+ * Optional minimum span in hours; 0 means unspecified.
  */
 MINIMUM_SPAN_HOURS():number {
   const offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 24.0;
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
 /**
- * Longest span a fit may take, hours. Default 120.
+ * Optional maximum span in hours; 0 means unspecified.
  */
 MAXIMUM_SPAN_HOURS():number {
   const offset = this.bb!.__offset(this.bb_pos, 8);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 120.0;
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
 /**
- * Spans the extension rule scores, ascending, hours, each within
- * [MINIMUM_SPAN_HOURS, MAXIMUM_SPAN_HOURS]. Empty: 48, 72 and 120; with
- * 24 in front when the eccentricity exceeds ECCENTRICITY_THRESHOLD.
+ * Optional candidate span list in hours.
  */
 CANDIDATE_SPANS_HOURS(index: number):number|null {
   const offset = this.bb!.__offset(this.bb_pos, 10);
@@ -75,27 +72,23 @@ candidateSpansHoursArray():Float64Array|null {
 }
 
 /**
- * Validation tail: each candidate is fitted to the data before the latest
- * TAIL_HOURS and scored on that tail, hours. Default 24.
+ * Optional evaluation tail length in hours; 0 means unspecified.
  */
 TAIL_HOURS():number {
   const offset = this.bb!.__offset(this.bb_pos, 12);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 24.0;
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
 /**
- * Extension rule: a longer candidate is taken only when its tail error is
- * at most this fraction of the best shorter candidate's. Default 0.9.
+ * Optional relative selection margin; 0 means unspecified.
  */
 EXTENSION_MARGIN():number {
   const offset = this.bb!.__offset(this.bb_pos, 14);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.9;
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
 /**
- * Hours held out at the end of the data and reported as error growth; the
- * fit then ends HOLDOUT_HOURS before the data does. Absent, the data
- * block's own useable stop time decides.
+ * Optional holdout window length in hours.
  */
 HOLDOUT_HOURS():number {
   const offset = this.bb!.__offset(this.bb_pos, 16);
@@ -103,7 +96,7 @@ HOLDOUT_HOURS():number {
 }
 
 /**
- * True when HOLDOUT_HOURS carries a value; false means absent.
+ * True when HOLDOUT_HOURS is explicitly provided.
  */
 HAS_HOLDOUT_HOURS():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 18);
@@ -111,50 +104,47 @@ HAS_HOLDOUT_HOURS():boolean {
 }
 
 /**
- * Eccentricity above which the eccentric-orbit rule applies. Default 0.5.
+ * Optional eccentricity threshold; 0 means unspecified.
  */
 ECCENTRICITY_THRESHOLD():number {
   const offset = this.bb!.__offset(this.bb_pos, 20);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.5;
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
 /**
- * Eccentric orbits: the default span, hours. Default 24.
+ * Optional eccentric-orbit span in hours; 0 means unspecified.
  */
 ECCENTRIC_DEFAULT_SPAN_HOURS():number {
   const offset = this.bb!.__offset(this.bb_pos, 22);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 24.0;
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
 /**
- * Eccentric orbits: EXTENSION_MARGIN. Default 0.7.
+ * Optional eccentric-orbit relative margin; 0 means unspecified.
  */
 ECCENTRIC_EXTENSION_MARGIN():number {
   const offset = this.bb!.__offset(this.bb_pos, 24);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.7;
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
 /**
- * Eccentric orbits: no candidate longer than this is tried once the orbital
- * period passes it, hours. Default 36.
+ * Optional eccentric-orbit period bound in hours; 0 means unspecified.
  */
 ECCENTRIC_MAXIMUM_PERIOD_HOURS():number {
   const offset = this.bb!.__offset(this.bb_pos, 26);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 36.0;
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
 /**
- * A fit whose RMS passes this is refused as fit-implausible, km. Default
- * 100.
+ * Optional maximum acceptable RMS in km; 0 means unspecified.
  */
 IMPLAUSIBLE_RMS_KM():number {
   const offset = this.bb!.__offset(this.bb_pos, 28);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 100.0;
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
 /**
- * Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent
- * or without sigma: mean 0, sigma 0.05.
+ * Optional prior on drag parameter.
  */
 DRAG_PRIOR(obj?:PCFGaussianPrior):PCFGaussianPrior|null {
   const offset = this.bb!.__offset(this.bb_pos, 30);
@@ -162,8 +152,7 @@ DRAG_PRIOR(obj?:PCFGaussianPrior):PCFGaussianPrior|null {
 }
 
 /**
- * Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.
- * Absent or without sigma: mean 0, sigma 0.05.
+ * Optional prior on solar radiation pressure parameter.
  */
 SRP_PRIOR(obj?:PCFGaussianPrior):PCFGaussianPrior|null {
   const offset = this.bb!.__offset(this.bb_pos, 32);
@@ -171,10 +160,7 @@ SRP_PRIOR(obj?:PCFGaussianPrior):PCFGaussianPrior|null {
 }
 
 /**
- * The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
- * estimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its
- * MEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation
- * of ln B_eff.
+ * Optional distribution form for DRAG_PRIOR.
  */
 DRAG_PRIOR_FORM():pcfPriorForm {
   const offset = this.bb!.__offset(this.bb_pos, 34);
@@ -182,10 +168,7 @@ DRAG_PRIOR_FORM():pcfPriorForm {
 }
 
 /**
- * The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
- * estimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN
- * the median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of
- * ln AGOM.
+ * Optional distribution form for SRP_PRIOR.
  */
 SRP_PRIOR_FORM():pcfPriorForm {
   const offset = this.bb!.__offset(this.bb_pos, 36);
@@ -193,16 +176,11 @@ SRP_PRIOR_FORM():pcfPriorForm {
 }
 
 /**
- * Days past the element set's epoch day through which the fit writes the
- * daily space weather into the record it emits (OCM
- * PERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows
- * (WEATHER_SOURCE RECORDS). The last day written is the later of the fit
- * arc's last day and the epoch's day plus this count; rows supplied with
- * the request must reach it, or the fit is refused by name. Default 30.
+ * Optional space-weather horizon in days past epoch; 0 means unspecified.
  */
 WEATHER_HORIZON_DAYS():number {
   const offset = this.bb!.__offset(this.bb_pos, 38);
-  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 30;
+  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
 }
 
 static startPCFFitPolicy(builder:flatbuffers.Builder) {
@@ -210,15 +188,15 @@ static startPCFFitPolicy(builder:flatbuffers.Builder) {
 }
 
 static addDefaultSpanHours(builder:flatbuffers.Builder, DEFAULT_SPAN_HOURS:number) {
-  builder.addFieldFloat64(0, DEFAULT_SPAN_HOURS, 48.0);
+  builder.addFieldFloat64(0, DEFAULT_SPAN_HOURS, 0.0);
 }
 
 static addMinimumSpanHours(builder:flatbuffers.Builder, MINIMUM_SPAN_HOURS:number) {
-  builder.addFieldFloat64(1, MINIMUM_SPAN_HOURS, 24.0);
+  builder.addFieldFloat64(1, MINIMUM_SPAN_HOURS, 0.0);
 }
 
 static addMaximumSpanHours(builder:flatbuffers.Builder, MAXIMUM_SPAN_HOURS:number) {
-  builder.addFieldFloat64(2, MAXIMUM_SPAN_HOURS, 120.0);
+  builder.addFieldFloat64(2, MAXIMUM_SPAN_HOURS, 0.0);
 }
 
 static addCandidateSpansHours(builder:flatbuffers.Builder, CANDIDATE_SPANS_HOURSOffset:flatbuffers.Offset) {
@@ -243,11 +221,11 @@ static startCandidateSpansHoursVector(builder:flatbuffers.Builder, numElems:numb
 }
 
 static addTailHours(builder:flatbuffers.Builder, TAIL_HOURS:number) {
-  builder.addFieldFloat64(4, TAIL_HOURS, 24.0);
+  builder.addFieldFloat64(4, TAIL_HOURS, 0.0);
 }
 
 static addExtensionMargin(builder:flatbuffers.Builder, EXTENSION_MARGIN:number) {
-  builder.addFieldFloat64(5, EXTENSION_MARGIN, 0.9);
+  builder.addFieldFloat64(5, EXTENSION_MARGIN, 0.0);
 }
 
 static addHoldoutHours(builder:flatbuffers.Builder, HOLDOUT_HOURS:number) {
@@ -259,23 +237,23 @@ static addHasHoldoutHours(builder:flatbuffers.Builder, HAS_HOLDOUT_HOURS:boolean
 }
 
 static addEccentricityThreshold(builder:flatbuffers.Builder, ECCENTRICITY_THRESHOLD:number) {
-  builder.addFieldFloat64(8, ECCENTRICITY_THRESHOLD, 0.5);
+  builder.addFieldFloat64(8, ECCENTRICITY_THRESHOLD, 0.0);
 }
 
 static addEccentricDefaultSpanHours(builder:flatbuffers.Builder, ECCENTRIC_DEFAULT_SPAN_HOURS:number) {
-  builder.addFieldFloat64(9, ECCENTRIC_DEFAULT_SPAN_HOURS, 24.0);
+  builder.addFieldFloat64(9, ECCENTRIC_DEFAULT_SPAN_HOURS, 0.0);
 }
 
 static addEccentricExtensionMargin(builder:flatbuffers.Builder, ECCENTRIC_EXTENSION_MARGIN:number) {
-  builder.addFieldFloat64(10, ECCENTRIC_EXTENSION_MARGIN, 0.7);
+  builder.addFieldFloat64(10, ECCENTRIC_EXTENSION_MARGIN, 0.0);
 }
 
 static addEccentricMaximumPeriodHours(builder:flatbuffers.Builder, ECCENTRIC_MAXIMUM_PERIOD_HOURS:number) {
-  builder.addFieldFloat64(11, ECCENTRIC_MAXIMUM_PERIOD_HOURS, 36.0);
+  builder.addFieldFloat64(11, ECCENTRIC_MAXIMUM_PERIOD_HOURS, 0.0);
 }
 
 static addImplausibleRmsKm(builder:flatbuffers.Builder, IMPLAUSIBLE_RMS_KM:number) {
-  builder.addFieldFloat64(12, IMPLAUSIBLE_RMS_KM, 100.0);
+  builder.addFieldFloat64(12, IMPLAUSIBLE_RMS_KM, 0.0);
 }
 
 static addDragPrior(builder:flatbuffers.Builder, DRAG_PRIOROffset:flatbuffers.Offset) {
@@ -295,7 +273,7 @@ static addSrpPriorForm(builder:flatbuffers.Builder, SRP_PRIOR_FORM:pcfPriorForm)
 }
 
 static addWeatherHorizonDays(builder:flatbuffers.Builder, WEATHER_HORIZON_DAYS:number) {
-  builder.addFieldInt16(17, WEATHER_HORIZON_DAYS, 30);
+  builder.addFieldInt16(17, WEATHER_HORIZON_DAYS, 0);
 }
 
 static endPCFFitPolicy(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -352,24 +330,24 @@ unpackTo(_o: PCFFitPolicyT): void {
 
 export class PCFFitPolicyT implements flatbuffers.IGeneratedObject {
 constructor(
-  public DEFAULT_SPAN_HOURS: number = 48.0,
-  public MINIMUM_SPAN_HOURS: number = 24.0,
-  public MAXIMUM_SPAN_HOURS: number = 120.0,
+  public DEFAULT_SPAN_HOURS: number = 0.0,
+  public MINIMUM_SPAN_HOURS: number = 0.0,
+  public MAXIMUM_SPAN_HOURS: number = 0.0,
   public CANDIDATE_SPANS_HOURS: (number)[] = [],
-  public TAIL_HOURS: number = 24.0,
-  public EXTENSION_MARGIN: number = 0.9,
+  public TAIL_HOURS: number = 0.0,
+  public EXTENSION_MARGIN: number = 0.0,
   public HOLDOUT_HOURS: number = 0.0,
   public HAS_HOLDOUT_HOURS: boolean = false,
-  public ECCENTRICITY_THRESHOLD: number = 0.5,
-  public ECCENTRIC_DEFAULT_SPAN_HOURS: number = 24.0,
-  public ECCENTRIC_EXTENSION_MARGIN: number = 0.7,
-  public ECCENTRIC_MAXIMUM_PERIOD_HOURS: number = 36.0,
-  public IMPLAUSIBLE_RMS_KM: number = 100.0,
+  public ECCENTRICITY_THRESHOLD: number = 0.0,
+  public ECCENTRIC_DEFAULT_SPAN_HOURS: number = 0.0,
+  public ECCENTRIC_EXTENSION_MARGIN: number = 0.0,
+  public ECCENTRIC_MAXIMUM_PERIOD_HOURS: number = 0.0,
+  public IMPLAUSIBLE_RMS_KM: number = 0.0,
   public DRAG_PRIOR: PCFGaussianPriorT|null = null,
   public SRP_PRIOR: PCFGaussianPriorT|null = null,
   public DRAG_PRIOR_FORM: pcfPriorForm = pcfPriorForm.GAUSSIAN_SIGNED,
   public SRP_PRIOR_FORM: pcfPriorForm = pcfPriorForm.GAUSSIAN_SIGNED,
-  public WEATHER_HORIZON_DAYS: number = 30
+  public WEATHER_HORIZON_DAYS: number = 0
 ){}
 
 

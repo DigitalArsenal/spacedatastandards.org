@@ -1791,7 +1791,7 @@ struct OCMHeldOutDayBuilder:
 /// Position statistics of an element set fitted to a reference ephemeris, km. SDS addition:
 /// CCSDS 502.0-B-3 WEIGHTED_RMS and OD_RESIDUAL_RMS state no position unit.
 class OCMFitStatistics : flatbuffers.handle
-    /// Reference states fitted.
+    /// Reference states reported; 0 means not stated.
     def FIT_STATES() -> int:
         return flatbuffers.field_uint32(buf_, pos_, 4, 0)
     /// Position RMS over the fit arc, km.
@@ -1808,10 +1808,10 @@ class OCMFitStatistics : flatbuffers.handle
         return flatbuffers.field_float64(buf_, pos_, 12, nan)
     def FIT_CROSS_TRACK_RMS_KM() -> float:
         return flatbuffers.field_float64(buf_, pos_, 14, nan)
-    /// Iterations the fit took.
+    /// Iterations reported; 0 means not stated.
     def ITERATIONS() -> int:
         return flatbuffers.field_uint32(buf_, pos_, 16, 0)
-    /// True when the fit converged.
+    /// True when converged.
     def CONVERGED() -> bool:
         return bool(flatbuffers.field_int8(buf_, pos_, 18, 0))
     /// End of the held-out window (ISO 8601 UTC); empty without one.
@@ -1829,7 +1829,7 @@ class OCMFitStatistics : flatbuffers.handle
         return OCMHeldOutDay { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 28) + i * 4) }
     def HELD_OUT_DAYS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 28)
-    /// CID of the $PCF the fit ran under: its span rule, priors and holdout.
+    /// CID of the $PCF configuration associated with the record.
     def PCF_CID() -> string:
         return flatbuffers.field_string(buf_, pos_, 30)
     /// First epoch of the fit arc (ISO 8601 UTC).
@@ -3346,13 +3346,20 @@ class OCMCovarianceBlock : flatbuffers.handle
         return CVR { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 34) + i * 4) }
     def COV_REALISM_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 34)
+    /// Optional position sensitivity to a unit dimensionless log-density shift
+    /// (dr/ds), flattened 3 doubles per line of LINES in COV_REF_FRAME, km.
+    /// Empty when absent.
+    def DENSITY_SENSITIVITY_KM(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 36) + i * 8)
+    def DENSITY_SENSITIVITY_KM_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 36)
 
 def GetRootAsOCMCovarianceBlock(buf:string): return OCMCovarianceBlock { buf, flatbuffers.indirect(buf, 0) }
 
 struct OCMCovarianceBlockBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(16)
+        b_.StartObject(17)
         return this
     def add_COMMENT(COMMENT:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, COMMENT)
@@ -3402,6 +3409,9 @@ struct OCMCovarianceBlockBuilder:
     def add_COV_REALISM(COV_REALISM:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(15, COV_REALISM)
         return this
+    def add_DENSITY_SENSITIVITY_KM(DENSITY_SENSITIVITY_KM:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(16, DENSITY_SENSITIVITY_KM)
+        return this
     def end():
         return b_.EndObject()
 
@@ -3417,6 +3427,13 @@ def OCMCovarianceBlockStartCOVREALISMVector(b_:flatbuffers.builder, n_:int):
 def OCMCovarianceBlockCreateCOVREALISMVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def OCMCovarianceBlockStartDENSITYSENSITIVITYKMVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def OCMCovarianceBlockCreateDENSITYSENSITIVITYKMVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
 class UserDefinedParameters : flatbuffers.handle

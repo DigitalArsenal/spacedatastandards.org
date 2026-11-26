@@ -9,11 +9,15 @@ class cqrCovarianceCorrelation
     const INDEPENDENT = 1;
     /// A cross covariance was supplied and used.
     const SUPPLIED_CROSS_COVARIANCE = 2;
+    /// Cross covariance derived from per-object atmospheric density sensitivity
+    /// vectors and a shared log-density uncertainty.
+    const SHARED_DENSITY_SENSITIVITY = 3;
 
     private static $names = array(
         cqrCovarianceCorrelation::UNSPECIFIED=>"UNSPECIFIED",
         cqrCovarianceCorrelation::INDEPENDENT=>"INDEPENDENT",
         cqrCovarianceCorrelation::SUPPLIED_CROSS_COVARIANCE=>"SUPPLIED_CROSS_COVARIANCE",
+        cqrCovarianceCorrelation::SHARED_DENSITY_SENSITIVITY=>"SHARED_DENSITY_SENSITIVITY",
     );
 
     public static function Name($e)

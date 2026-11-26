@@ -87,6 +87,16 @@ public final class CQRObjectSource extends com.google.flatbuffers.Table {
    */
   public CAT CATALOG_ENTRY() { return CATALOG_ENTRY(new CAT()); }
   public CAT CATALOG_ENTRY(CAT obj) { int o = __offset(42); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Optional position sensitivity to a unit dimensionless log-density shift
+   * (dr/ds) in EVALUATION_FRAME, 3 doubles in km. Empty when absent.
+   */
+  public double DENSITY_SENSITIVITY_KM(int j) { int o = __offset(44); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int DENSITY_SENSITIVITY_KMLength() { int o = __offset(44); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector densitySensitivityKmVector() { return densitySensitivityKmVector(new DoubleVector()); }
+  public DoubleVector densitySensitivityKmVector(DoubleVector obj) { int o = __offset(44); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer DENSITY_SENSITIVITY_KMAsByteBuffer() { return __vector_as_bytebuffer(44, 8); }
+  public ByteBuffer DENSITY_SENSITIVITY_KMInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 44, 8); }
 
   public static int createCQRObjectSource(FlatBufferBuilder builder,
       int OBJECT_IDOffset,
@@ -108,11 +118,13 @@ public final class CQRObjectSource extends com.google.flatbuffers.Table {
       boolean HAS_APOGEE_ALTITUDE_M,
       double HARD_BODY_RADIUS_M,
       boolean HAS_HARD_BODY_RADIUS_M,
-      int CATALOG_ENTRYOffset) {
-    builder.startTable(20);
+      int CATALOG_ENTRYOffset,
+      int DENSITY_SENSITIVITY_KMOffset) {
+    builder.startTable(21);
     CQRObjectSource.addHardBodyRadiusM(builder, HARD_BODY_RADIUS_M);
     CQRObjectSource.addApogeeAltitudeM(builder, APOGEE_ALTITUDE_M);
     CQRObjectSource.addPerigeeAltitudeM(builder, PERIGEE_ALTITUDE_M);
+    CQRObjectSource.addDensitySensitivityKm(builder, DENSITY_SENSITIVITY_KMOffset);
     CQRObjectSource.addCatalogEntry(builder, CATALOG_ENTRYOffset);
     CQRObjectSource.addSourceEpoch(builder, SOURCE_EPOCHOffset);
     CQRObjectSource.addProvenance(builder, PROVENANCEOffset);
@@ -133,7 +145,7 @@ public final class CQRObjectSource extends com.google.flatbuffers.Table {
     return CQRObjectSource.endCQRObjectSource(builder);
   }
 
-  public static void startCQRObjectSource(FlatBufferBuilder builder) { builder.startTable(20); }
+  public static void startCQRObjectSource(FlatBufferBuilder builder) { builder.startTable(21); }
   public static void addObjectId(FlatBufferBuilder builder, int OBJECT_IDOffset) { builder.addOffset(0, OBJECT_IDOffset, 0); }
   public static void addObjectName(FlatBufferBuilder builder, int OBJECT_NAMEOffset) { builder.addOffset(1, OBJECT_NAMEOffset, 0); }
   public static void addNoradCatalogId(FlatBufferBuilder builder, long NORAD_CATALOG_ID) { builder.addInt(2, (int) NORAD_CATALOG_ID, (int) 0L); }
@@ -154,6 +166,9 @@ public final class CQRObjectSource extends com.google.flatbuffers.Table {
   public static void addHardBodyRadiusM(FlatBufferBuilder builder, double HARD_BODY_RADIUS_M) { builder.addDouble(17, HARD_BODY_RADIUS_M, 0.0); }
   public static void addHasHardBodyRadiusM(FlatBufferBuilder builder, boolean HAS_HARD_BODY_RADIUS_M) { builder.addBoolean(18, HAS_HARD_BODY_RADIUS_M, false); }
   public static void addCatalogEntry(FlatBufferBuilder builder, int CATALOG_ENTRYOffset) { builder.addOffset(19, CATALOG_ENTRYOffset, 0); }
+  public static void addDensitySensitivityKm(FlatBufferBuilder builder, int DENSITY_SENSITIVITY_KMOffset) { builder.addOffset(20, DENSITY_SENSITIVITY_KMOffset, 0); }
+  public static int createDensitySensitivityKmVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startDensitySensitivityKmVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
   public static int endCQRObjectSource(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // OBJECT_ID

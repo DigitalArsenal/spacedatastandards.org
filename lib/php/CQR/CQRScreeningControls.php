@@ -231,22 +231,43 @@ class CQRScreeningControls extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// When true and DENSITY_LOG_SIGMA > 0 with both objects supplying
+    /// DENSITY_SENSITIVITY_KM, apply common-mode density cross-covariance.
+    /**
+     * @return bool
+     */
+    public function getAPPLY_DENSITY_CROSS_CORRELATION()
+    {
+        $o = $this->__offset(42);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// Dimensionless 1-sigma common-mode log-density uncertainty (sigma_s); 0 disables.
+    /**
+     * @return double
+     */
+    public function getDENSITY_LOG_SIGMA()
+    {
+        $o = $this->__offset(44);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startCQRScreeningControls(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(19);
+        $builder->StartObject(21);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return CQRScreeningControls
      */
-    public static function createCQRScreeningControls(FlatBufferBuilder $builder, $START_EPOCH, $DURATION_SECONDS, $THRESHOLD_M, $REQUESTED_WORKERS, $COARSE_STEP_SECONDS, $REFINEMENT_TOLERANCE_SECONDS, $COMBINED_RADIUS_M, $USE_KD_TREE, $USE_DYNAMIC_WINDOW, $USE_PERIGEE_FILTER, $PROGRESS_INTERVAL_SECONDS, $HAS_PROGRESS_INTERVAL_SECONDS, $ALGORITHM, $SCREENING, $RADIAL_M, $IN_TRACK_M, $CROSS_TRACK_M, $VOLUME_CENTER, $VERIFIED_COVARIANCE_PRODUCERS)
+    public static function createCQRScreeningControls(FlatBufferBuilder $builder, $START_EPOCH, $DURATION_SECONDS, $THRESHOLD_M, $REQUESTED_WORKERS, $COARSE_STEP_SECONDS, $REFINEMENT_TOLERANCE_SECONDS, $COMBINED_RADIUS_M, $USE_KD_TREE, $USE_DYNAMIC_WINDOW, $USE_PERIGEE_FILTER, $PROGRESS_INTERVAL_SECONDS, $HAS_PROGRESS_INTERVAL_SECONDS, $ALGORITHM, $SCREENING, $RADIAL_M, $IN_TRACK_M, $CROSS_TRACK_M, $VOLUME_CENTER, $VERIFIED_COVARIANCE_PRODUCERS, $APPLY_DENSITY_CROSS_CORRELATION, $DENSITY_LOG_SIGMA)
     {
-        $builder->startObject(19);
+        $builder->startObject(21);
         self::addSTART_EPOCH($builder, $START_EPOCH);
         self::addDURATION_SECONDS($builder, $DURATION_SECONDS);
         self::addTHRESHOLD_M($builder, $THRESHOLD_M);
@@ -266,6 +287,8 @@ class CQRScreeningControls extends Table
         self::addCROSS_TRACK_M($builder, $CROSS_TRACK_M);
         self::addVOLUME_CENTER($builder, $VOLUME_CENTER);
         self::addVERIFIED_COVARIANCE_PRODUCERS($builder, $VERIFIED_COVARIANCE_PRODUCERS);
+        self::addAPPLY_DENSITY_CROSS_CORRELATION($builder, $APPLY_DENSITY_CROSS_CORRELATION);
+        self::addDENSITY_LOG_SIGMA($builder, $DENSITY_LOG_SIGMA);
         $o = $builder->endObject();
         $builder->required($o, 4);  // START_EPOCH
         return $o;
@@ -483,6 +506,26 @@ class CQRScreeningControls extends Table
     public static function startVERIFIED_COVARIANCE_PRODUCERSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addAPPLY_DENSITY_CROSS_CORRELATION(FlatBufferBuilder $builder, $APPLY_DENSITY_CROSS_CORRELATION)
+    {
+        $builder->addBoolX(19, $APPLY_DENSITY_CROSS_CORRELATION, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDENSITY_LOG_SIGMA(FlatBufferBuilder $builder, $DENSITY_LOG_SIGMA)
+    {
+        $builder->addDoubleX(20, $DENSITY_LOG_SIGMA, 0.0);
     }
 
     /**

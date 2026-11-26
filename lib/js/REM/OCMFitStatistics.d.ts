@@ -11,7 +11,7 @@ export declare class OCMFitStatistics implements flatbuffers.IUnpackableObject<O
     static getRootAsOCMFitStatistics(bb: flatbuffers.ByteBuffer, obj?: OCMFitStatistics): OCMFitStatistics;
     static getSizePrefixedRootAsOCMFitStatistics(bb: flatbuffers.ByteBuffer, obj?: OCMFitStatistics): OCMFitStatistics;
     /**
-     * Reference states fitted.
+     * Reference states reported; 0 means not stated.
      */
     FIT_STATES(): number;
     /**
@@ -30,11 +30,11 @@ export declare class OCMFitStatistics implements flatbuffers.IUnpackableObject<O
     FIT_IN_TRACK_RMS_KM(): number;
     FIT_CROSS_TRACK_RMS_KM(): number;
     /**
-     * Iterations the fit took.
+     * Iterations reported; 0 means not stated.
      */
     ITERATIONS(): number;
     /**
-     * True when the fit converged.
+     * True when converged.
      */
     CONVERGED(): boolean;
     /**
@@ -54,7 +54,7 @@ export declare class OCMFitStatistics implements flatbuffers.IUnpackableObject<O
     HELD_OUT_DAYS(index: number, obj?: OCMHeldOutDay): OCMHeldOutDay | null;
     heldOutDaysLength(): number;
     /**
-     * CID of the $PCF the fit ran under: its span rule, priors and holdout.
+     * CID of the $PCF configuration associated with the record.
      */
     PCF_CID(): string | null;
     PCF_CID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;

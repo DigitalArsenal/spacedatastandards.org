@@ -6,8 +6,7 @@ import flatbuffers
 from flatbuffers.compat import import_numpy
 np = import_numpy()
 
-# Fit policy: how long an arc a fit uses, how that is validated, and what a
-# fit refuses.
+# Optional configuration parameters for orbit estimation.
 class PCFFitPolicy(object):
     __slots__ = ['_tab']
 
@@ -30,33 +29,31 @@ class PCFFitPolicy(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
-    # Fit span used when the span rule is not run, hours. Default 48.
+    # Optional span parameter in hours; 0 means unspecified.
     # PCFFitPolicy
     def DEFAULT_SPAN_HOURS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 48.0
+        return 0.0
 
-    # Shortest span a fit may take, hours. Default 24.
+    # Optional minimum span in hours; 0 means unspecified.
     # PCFFitPolicy
     def MINIMUM_SPAN_HOURS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 24.0
+        return 0.0
 
-    # Longest span a fit may take, hours. Default 120.
+    # Optional maximum span in hours; 0 means unspecified.
     # PCFFitPolicy
     def MAXIMUM_SPAN_HOURS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 120.0
+        return 0.0
 
-    # Spans the extension rule scores, ascending, hours, each within
-    # [MINIMUM_SPAN_HOURS, MAXIMUM_SPAN_HOURS]. Empty: 48, 72 and 120; with
-    # 24 in front when the eccentricity exceeds ECCENTRICITY_THRESHOLD.
+    # Optional candidate span list in hours.
     # PCFFitPolicy
     def CANDIDATE_SPANS_HOURS(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
@@ -84,27 +81,23 @@ class PCFFitPolicy(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         return o == 0
 
-    # Validation tail: each candidate is fitted to the data before the latest
-    # TAIL_HOURS and scored on that tail, hours. Default 24.
+    # Optional evaluation tail length in hours; 0 means unspecified.
     # PCFFitPolicy
     def TAIL_HOURS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 24.0
+        return 0.0
 
-    # Extension rule: a longer candidate is taken only when its tail error is
-    # at most this fraction of the best shorter candidate's. Default 0.9.
+    # Optional relative selection margin; 0 means unspecified.
     # PCFFitPolicy
     def EXTENSION_MARGIN(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.9
+        return 0.0
 
-    # Hours held out at the end of the data and reported as error growth; the
-    # fit then ends HOLDOUT_HOURS before the data does. Absent, the data
-    # block's own useable stop time decides.
+    # Optional holdout window length in hours.
     # PCFFitPolicy
     def HOLDOUT_HOURS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
@@ -112,7 +105,7 @@ class PCFFitPolicy(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # True when HOLDOUT_HOURS carries a value; false means absent.
+    # True when HOLDOUT_HOURS is explicitly provided.
     # PCFFitPolicy
     def HAS_HOLDOUT_HOURS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
@@ -120,50 +113,47 @@ class PCFFitPolicy(object):
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
-    # Eccentricity above which the eccentric-orbit rule applies. Default 0.5.
+    # Optional eccentricity threshold; 0 means unspecified.
     # PCFFitPolicy
     def ECCENTRICITY_THRESHOLD(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.5
+        return 0.0
 
-    # Eccentric orbits: the default span, hours. Default 24.
+    # Optional eccentric-orbit span in hours; 0 means unspecified.
     # PCFFitPolicy
     def ECCENTRIC_DEFAULT_SPAN_HOURS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 24.0
+        return 0.0
 
-    # Eccentric orbits: EXTENSION_MARGIN. Default 0.7.
+    # Optional eccentric-orbit relative margin; 0 means unspecified.
     # PCFFitPolicy
     def ECCENTRIC_EXTENSION_MARGIN(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.7
+        return 0.0
 
-    # Eccentric orbits: no candidate longer than this is tried once the orbital
-    # period passes it, hours. Default 36.
+    # Optional eccentric-orbit period bound in hours; 0 means unspecified.
     # PCFFitPolicy
     def ECCENTRIC_MAXIMUM_PERIOD_HOURS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 36.0
+        return 0.0
 
-    # A fit whose RMS passes this is refused as fit-implausible, km. Default
-    # 100.
+    # Optional maximum acceptable RMS in km; 0 means unspecified.
     # PCFFitPolicy
     def IMPLAUSIBLE_RMS_KM(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 100.0
+        return 0.0
 
-    # Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent
-    # or without sigma: mean 0, sigma 0.05.
+    # Optional prior on drag parameter.
     # PCFFitPolicy
     def DRAG_PRIOR(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
@@ -175,8 +165,7 @@ class PCFFitPolicy(object):
             return obj
         return None
 
-    # Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.
-    # Absent or without sigma: mean 0, sigma 0.05.
+    # Optional prior on solar radiation pressure parameter.
     # PCFFitPolicy
     def SRP_PRIOR(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
@@ -188,10 +177,7 @@ class PCFFitPolicy(object):
             return obj
         return None
 
-    # The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
-    # estimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its
-    # MEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation
-    # of ln B_eff.
+    # Optional distribution form for DRAG_PRIOR.
     # PCFFitPolicy
     def DRAG_PRIOR_FORM(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
@@ -199,10 +185,7 @@ class PCFFitPolicy(object):
             return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
         return 0
 
-    # The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
-    # estimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN
-    # the median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of
-    # ln AGOM.
+    # Optional distribution form for SRP_PRIOR.
     # PCFFitPolicy
     def SRP_PRIOR_FORM(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
@@ -210,18 +193,13 @@ class PCFFitPolicy(object):
             return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
         return 0
 
-    # Days past the element set's epoch day through which the fit writes the
-    # daily space weather into the record it emits (OCM
-    # PERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows
-    # (WEATHER_SOURCE RECORDS). The last day written is the later of the fit
-    # arc's last day and the epoch's day plus this count; rows supplied with
-    # the request must reach it, or the fit is refused by name. Default 30.
+    # Optional space-weather horizon in days past epoch; 0 means unspecified.
     # PCFFitPolicy
     def WEATHER_HORIZON_DAYS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
-        return 30
+        return 0
 
 def PCFFitPolicyStart(builder):
     builder.StartObject(18)
@@ -230,19 +208,19 @@ def Start(builder):
     PCFFitPolicyStart(builder)
 
 def PCFFitPolicyAddDEFAULT_SPAN_HOURS(builder, DEFAULT_SPAN_HOURS):
-    builder.PrependFloat64Slot(0, DEFAULT_SPAN_HOURS, 48.0)
+    builder.PrependFloat64Slot(0, DEFAULT_SPAN_HOURS, 0.0)
 
 def AddDEFAULT_SPAN_HOURS(builder, DEFAULT_SPAN_HOURS):
     PCFFitPolicyAddDEFAULT_SPAN_HOURS(builder, DEFAULT_SPAN_HOURS)
 
 def PCFFitPolicyAddMINIMUM_SPAN_HOURS(builder, MINIMUM_SPAN_HOURS):
-    builder.PrependFloat64Slot(1, MINIMUM_SPAN_HOURS, 24.0)
+    builder.PrependFloat64Slot(1, MINIMUM_SPAN_HOURS, 0.0)
 
 def AddMINIMUM_SPAN_HOURS(builder, MINIMUM_SPAN_HOURS):
     PCFFitPolicyAddMINIMUM_SPAN_HOURS(builder, MINIMUM_SPAN_HOURS)
 
 def PCFFitPolicyAddMAXIMUM_SPAN_HOURS(builder, MAXIMUM_SPAN_HOURS):
-    builder.PrependFloat64Slot(2, MAXIMUM_SPAN_HOURS, 120.0)
+    builder.PrependFloat64Slot(2, MAXIMUM_SPAN_HOURS, 0.0)
 
 def AddMAXIMUM_SPAN_HOURS(builder, MAXIMUM_SPAN_HOURS):
     PCFFitPolicyAddMAXIMUM_SPAN_HOURS(builder, MAXIMUM_SPAN_HOURS)
@@ -270,13 +248,13 @@ def CreateCANDIDATE_SPANS_HOURSVector(builder, data):
     return PCFFitPolicyCreateCANDIDATE_SPANS_HOURSVector(builder, data)
 
 def PCFFitPolicyAddTAIL_HOURS(builder, TAIL_HOURS):
-    builder.PrependFloat64Slot(4, TAIL_HOURS, 24.0)
+    builder.PrependFloat64Slot(4, TAIL_HOURS, 0.0)
 
 def AddTAIL_HOURS(builder, TAIL_HOURS):
     PCFFitPolicyAddTAIL_HOURS(builder, TAIL_HOURS)
 
 def PCFFitPolicyAddEXTENSION_MARGIN(builder, EXTENSION_MARGIN):
-    builder.PrependFloat64Slot(5, EXTENSION_MARGIN, 0.9)
+    builder.PrependFloat64Slot(5, EXTENSION_MARGIN, 0.0)
 
 def AddEXTENSION_MARGIN(builder, EXTENSION_MARGIN):
     PCFFitPolicyAddEXTENSION_MARGIN(builder, EXTENSION_MARGIN)
@@ -294,31 +272,31 @@ def AddHAS_HOLDOUT_HOURS(builder, HAS_HOLDOUT_HOURS):
     PCFFitPolicyAddHAS_HOLDOUT_HOURS(builder, HAS_HOLDOUT_HOURS)
 
 def PCFFitPolicyAddECCENTRICITY_THRESHOLD(builder, ECCENTRICITY_THRESHOLD):
-    builder.PrependFloat64Slot(8, ECCENTRICITY_THRESHOLD, 0.5)
+    builder.PrependFloat64Slot(8, ECCENTRICITY_THRESHOLD, 0.0)
 
 def AddECCENTRICITY_THRESHOLD(builder, ECCENTRICITY_THRESHOLD):
     PCFFitPolicyAddECCENTRICITY_THRESHOLD(builder, ECCENTRICITY_THRESHOLD)
 
 def PCFFitPolicyAddECCENTRIC_DEFAULT_SPAN_HOURS(builder, ECCENTRIC_DEFAULT_SPAN_HOURS):
-    builder.PrependFloat64Slot(9, ECCENTRIC_DEFAULT_SPAN_HOURS, 24.0)
+    builder.PrependFloat64Slot(9, ECCENTRIC_DEFAULT_SPAN_HOURS, 0.0)
 
 def AddECCENTRIC_DEFAULT_SPAN_HOURS(builder, ECCENTRIC_DEFAULT_SPAN_HOURS):
     PCFFitPolicyAddECCENTRIC_DEFAULT_SPAN_HOURS(builder, ECCENTRIC_DEFAULT_SPAN_HOURS)
 
 def PCFFitPolicyAddECCENTRIC_EXTENSION_MARGIN(builder, ECCENTRIC_EXTENSION_MARGIN):
-    builder.PrependFloat64Slot(10, ECCENTRIC_EXTENSION_MARGIN, 0.7)
+    builder.PrependFloat64Slot(10, ECCENTRIC_EXTENSION_MARGIN, 0.0)
 
 def AddECCENTRIC_EXTENSION_MARGIN(builder, ECCENTRIC_EXTENSION_MARGIN):
     PCFFitPolicyAddECCENTRIC_EXTENSION_MARGIN(builder, ECCENTRIC_EXTENSION_MARGIN)
 
 def PCFFitPolicyAddECCENTRIC_MAXIMUM_PERIOD_HOURS(builder, ECCENTRIC_MAXIMUM_PERIOD_HOURS):
-    builder.PrependFloat64Slot(11, ECCENTRIC_MAXIMUM_PERIOD_HOURS, 36.0)
+    builder.PrependFloat64Slot(11, ECCENTRIC_MAXIMUM_PERIOD_HOURS, 0.0)
 
 def AddECCENTRIC_MAXIMUM_PERIOD_HOURS(builder, ECCENTRIC_MAXIMUM_PERIOD_HOURS):
     PCFFitPolicyAddECCENTRIC_MAXIMUM_PERIOD_HOURS(builder, ECCENTRIC_MAXIMUM_PERIOD_HOURS)
 
 def PCFFitPolicyAddIMPLAUSIBLE_RMS_KM(builder, IMPLAUSIBLE_RMS_KM):
-    builder.PrependFloat64Slot(12, IMPLAUSIBLE_RMS_KM, 100.0)
+    builder.PrependFloat64Slot(12, IMPLAUSIBLE_RMS_KM, 0.0)
 
 def AddIMPLAUSIBLE_RMS_KM(builder, IMPLAUSIBLE_RMS_KM):
     PCFFitPolicyAddIMPLAUSIBLE_RMS_KM(builder, IMPLAUSIBLE_RMS_KM)
@@ -348,7 +326,7 @@ def AddSRP_PRIOR_FORM(builder, SRP_PRIOR_FORM):
     PCFFitPolicyAddSRP_PRIOR_FORM(builder, SRP_PRIOR_FORM)
 
 def PCFFitPolicyAddWEATHER_HORIZON_DAYS(builder, WEATHER_HORIZON_DAYS):
-    builder.PrependUint16Slot(17, WEATHER_HORIZON_DAYS, 30)
+    builder.PrependUint16Slot(17, WEATHER_HORIZON_DAYS, 0)
 
 def AddWEATHER_HORIZON_DAYS(builder, WEATHER_HORIZON_DAYS):
     PCFFitPolicyAddWEATHER_HORIZON_DAYS(builder, WEATHER_HORIZON_DAYS)
@@ -370,24 +348,24 @@ class PCFFitPolicyT(object):
     # PCFFitPolicyT
     def __init__(
         self,
-        DEFAULT_SPAN_HOURS = 48.0,
-        MINIMUM_SPAN_HOURS = 24.0,
-        MAXIMUM_SPAN_HOURS = 120.0,
+        DEFAULT_SPAN_HOURS = 0.0,
+        MINIMUM_SPAN_HOURS = 0.0,
+        MAXIMUM_SPAN_HOURS = 0.0,
         CANDIDATE_SPANS_HOURS = None,
-        TAIL_HOURS = 24.0,
-        EXTENSION_MARGIN = 0.9,
+        TAIL_HOURS = 0.0,
+        EXTENSION_MARGIN = 0.0,
         HOLDOUT_HOURS = 0.0,
         HAS_HOLDOUT_HOURS = False,
-        ECCENTRICITY_THRESHOLD = 0.5,
-        ECCENTRIC_DEFAULT_SPAN_HOURS = 24.0,
-        ECCENTRIC_EXTENSION_MARGIN = 0.7,
-        ECCENTRIC_MAXIMUM_PERIOD_HOURS = 36.0,
-        IMPLAUSIBLE_RMS_KM = 100.0,
+        ECCENTRICITY_THRESHOLD = 0.0,
+        ECCENTRIC_DEFAULT_SPAN_HOURS = 0.0,
+        ECCENTRIC_EXTENSION_MARGIN = 0.0,
+        ECCENTRIC_MAXIMUM_PERIOD_HOURS = 0.0,
+        IMPLAUSIBLE_RMS_KM = 0.0,
         DRAG_PRIOR = None,
         SRP_PRIOR = None,
         DRAG_PRIOR_FORM = 0,
         SRP_PRIOR_FORM = 0,
-        WEATHER_HORIZON_DAYS = 30,
+        WEATHER_HORIZON_DAYS = 0,
     ):
         self.DEFAULT_SPAN_HOURS = DEFAULT_SPAN_HOURS  # type: float
         self.MINIMUM_SPAN_HOURS = MINIMUM_SPAN_HOURS  # type: float

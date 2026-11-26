@@ -56,6 +56,15 @@ export declare class CQRScreeningControls implements flatbuffers.IUnpackableObje
      */
     VERIFIED_COVARIANCE_PRODUCERS(index: number, obj?: CQRVerifiedCovarianceProducer): CQRVerifiedCovarianceProducer | null;
     verifiedCovarianceProducersLength(): number;
+    /**
+     * When true and DENSITY_LOG_SIGMA > 0 with both objects supplying
+     * DENSITY_SENSITIVITY_KM, apply common-mode density cross-covariance.
+     */
+    APPLY_DENSITY_CROSS_CORRELATION(): boolean;
+    /**
+     * Dimensionless 1-sigma common-mode log-density uncertainty (sigma_s); 0 disables.
+     */
+    DENSITY_LOG_SIGMA(): number;
     static startCQRScreeningControls(builder: flatbuffers.Builder): void;
     static addStartEpoch(builder: flatbuffers.Builder, START_EPOCHOffset: flatbuffers.Offset): void;
     static addDurationSeconds(builder: flatbuffers.Builder, DURATION_SECONDS: number): void;
@@ -78,8 +87,10 @@ export declare class CQRScreeningControls implements flatbuffers.IUnpackableObje
     static addVerifiedCovarianceProducers(builder: flatbuffers.Builder, VERIFIED_COVARIANCE_PRODUCERSOffset: flatbuffers.Offset): void;
     static createVerifiedCovarianceProducersVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startVerifiedCovarianceProducersVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addApplyDensityCrossCorrelation(builder: flatbuffers.Builder, APPLY_DENSITY_CROSS_CORRELATION: boolean): void;
+    static addDensityLogSigma(builder: flatbuffers.Builder, DENSITY_LOG_SIGMA: number): void;
     static endCQRScreeningControls(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createCQRScreeningControls(builder: flatbuffers.Builder, START_EPOCHOffset: flatbuffers.Offset, DURATION_SECONDS: number, THRESHOLD_M: number, REQUESTED_WORKERS: number, COARSE_STEP_SECONDS: number, REFINEMENT_TOLERANCE_SECONDS: number, COMBINED_RADIUS_M: number, USE_KD_TREE: boolean, USE_DYNAMIC_WINDOW: boolean, USE_PERIGEE_FILTER: boolean, PROGRESS_INTERVAL_SECONDS: number, HAS_PROGRESS_INTERVAL_SECONDS: boolean, ALGORITHM: cqrProbabilityAlgorithm, SCREENING: cqrVolumeGeometry, RADIAL_M: number, IN_TRACK_M: number, CROSS_TRACK_M: number, VOLUME_CENTER: cqrVolumeAnchor, VERIFIED_COVARIANCE_PRODUCERSOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createCQRScreeningControls(builder: flatbuffers.Builder, START_EPOCHOffset: flatbuffers.Offset, DURATION_SECONDS: number, THRESHOLD_M: number, REQUESTED_WORKERS: number, COARSE_STEP_SECONDS: number, REFINEMENT_TOLERANCE_SECONDS: number, COMBINED_RADIUS_M: number, USE_KD_TREE: boolean, USE_DYNAMIC_WINDOW: boolean, USE_PERIGEE_FILTER: boolean, PROGRESS_INTERVAL_SECONDS: number, HAS_PROGRESS_INTERVAL_SECONDS: boolean, ALGORITHM: cqrProbabilityAlgorithm, SCREENING: cqrVolumeGeometry, RADIAL_M: number, IN_TRACK_M: number, CROSS_TRACK_M: number, VOLUME_CENTER: cqrVolumeAnchor, VERIFIED_COVARIANCE_PRODUCERSOffset: flatbuffers.Offset, APPLY_DENSITY_CROSS_CORRELATION: boolean, DENSITY_LOG_SIGMA: number): flatbuffers.Offset;
     unpack(): CQRScreeningControlsT;
     unpackTo(_o: CQRScreeningControlsT): void;
 }
@@ -103,7 +114,9 @@ export declare class CQRScreeningControlsT implements flatbuffers.IGeneratedObje
     CROSS_TRACK_M: number;
     VOLUME_CENTER: cqrVolumeAnchor;
     VERIFIED_COVARIANCE_PRODUCERS: (CQRVerifiedCovarianceProducerT)[];
-    constructor(START_EPOCH?: TIMInstantT | null, DURATION_SECONDS?: number, THRESHOLD_M?: number, REQUESTED_WORKERS?: number, COARSE_STEP_SECONDS?: number, REFINEMENT_TOLERANCE_SECONDS?: number, COMBINED_RADIUS_M?: number, USE_KD_TREE?: boolean, USE_DYNAMIC_WINDOW?: boolean, USE_PERIGEE_FILTER?: boolean, PROGRESS_INTERVAL_SECONDS?: number, HAS_PROGRESS_INTERVAL_SECONDS?: boolean, ALGORITHM?: cqrProbabilityAlgorithm, SCREENING?: cqrVolumeGeometry, RADIAL_M?: number, IN_TRACK_M?: number, CROSS_TRACK_M?: number, VOLUME_CENTER?: cqrVolumeAnchor, VERIFIED_COVARIANCE_PRODUCERS?: (CQRVerifiedCovarianceProducerT)[]);
+    APPLY_DENSITY_CROSS_CORRELATION: boolean;
+    DENSITY_LOG_SIGMA: number;
+    constructor(START_EPOCH?: TIMInstantT | null, DURATION_SECONDS?: number, THRESHOLD_M?: number, REQUESTED_WORKERS?: number, COARSE_STEP_SECONDS?: number, REFINEMENT_TOLERANCE_SECONDS?: number, COMBINED_RADIUS_M?: number, USE_KD_TREE?: boolean, USE_DYNAMIC_WINDOW?: boolean, USE_PERIGEE_FILTER?: boolean, PROGRESS_INTERVAL_SECONDS?: number, HAS_PROGRESS_INTERVAL_SECONDS?: boolean, ALGORITHM?: cqrProbabilityAlgorithm, SCREENING?: cqrVolumeGeometry, RADIAL_M?: number, IN_TRACK_M?: number, CROSS_TRACK_M?: number, VOLUME_CENTER?: cqrVolumeAnchor, VERIFIED_COVARIANCE_PRODUCERS?: (CQRVerifiedCovarianceProducerT)[], APPLY_DENSITY_CROSS_CORRELATION?: boolean, DENSITY_LOG_SIGMA?: number);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=CQRScreeningControls.d.ts.map

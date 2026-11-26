@@ -127,7 +127,7 @@ export declare class PCFForceModel implements flatbuffers.IUnpackableObject<PCFF
     /**
      * Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth
      * orientation (the request's Earth orientation rows) to apply them. Default
-     * NONE.
+     * UNSPECIFIED (the propagator's own default).
      */
     SOLID_TIDES(): pcfSolidTideModel;
     /**

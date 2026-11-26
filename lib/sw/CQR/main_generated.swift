@@ -111,8 +111,11 @@ public enum cqrCovarianceCorrelation: UInt8, FlatbuffersVectorInitializable, Enu
   case independent = 1
   ///  A cross covariance was supplied and used.
   case suppliedCrossCovariance = 2
+  ///  Cross covariance derived from per-object atmospheric density sensitivity
+  ///  vectors and a shared log-density uncertainty.
+  case sharedDensitySensitivity = 3
 
-  public static var max: cqrCovarianceCorrelation { return .suppliedCrossCovariance }
+  public static var max: cqrCovarianceCorrelation { return .sharedDensitySensitivity }
   public static var min: cqrCovarianceCorrelation { return .unspecified }
 }
 
@@ -391,6 +394,7 @@ public struct CQRObjectSource: FlatBufferVerifiableTable, FlatbuffersVectorIniti
     static let HARD_BODY_RADIUS_M: VOffset = 38
     static let HAS_HARD_BODY_RADIUS_M: VOffset = 40
     static let CATALOG_ENTRY: VOffset = 42
+    static let DENSITY_SENSITIVITY_KM: VOffset = 44
   }
 
   public var OBJECT_ID: String! { let o = _accessor.offset(VT.OBJECT_ID); return _accessor.string(at: o) }
@@ -425,7 +429,11 @@ public struct CQRObjectSource: FlatBufferVerifiableTable, FlatbuffersVectorIniti
   ///  The object's catalog entry. Without a supplied radius, its SIZE, else
   ///  its RCS, gives the hard-body radius (see cqrHardBodyRadiusBasis).
   public var CATALOG_ENTRY: CAT? { let o = _accessor.offset(VT.CATALOG_ENTRY); return o == 0 ? nil : CAT(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public static func startCQRObjectSource(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 20) }
+  ///  Optional position sensitivity to a unit dimensionless log-density shift
+  ///  (dr/ds) in EVALUATION_FRAME, 3 doubles in km. Empty when absent.
+  public var DENSITY_SENSITIVITY_KM: FlatbufferVector<Double> { return _accessor.vector(at: VT.DENSITY_SENSITIVITY_KM, byteSize: 8) }
+  public func withUnsafePointerToDensitySensitivityKm<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.DENSITY_SENSITIVITY_KM, body: body) }
+  public static func startCQRObjectSource(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 21) }
   public static func add(OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_ID, at: VT.OBJECT_ID) }
   public static func add(OBJECT_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_NAME, at: VT.OBJECT_NAME) }
   public static func add(NORAD_CATALOG_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORAD_CATALOG_ID, def: 0, at: VT.NORAD_CATALOG_ID) }
@@ -449,6 +457,7 @@ public struct CQRObjectSource: FlatBufferVerifiableTable, FlatbuffersVectorIniti
   public static func add(HAS_HARD_BODY_RADIUS_M: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_HARD_BODY_RADIUS_M, def: false,
    at: VT.HAS_HARD_BODY_RADIUS_M) }
   public static func add(CATALOG_ENTRY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CATALOG_ENTRY, at: VT.CATALOG_ENTRY) }
+  public static func addVectorOf(DENSITY_SENSITIVITY_KM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DENSITY_SENSITIVITY_KM, at: VT.DENSITY_SENSITIVITY_KM) }
   public static func endCQRObjectSource(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
   public static func createCQRObjectSource(
     _ fbb: inout FlatBufferBuilder,
@@ -471,7 +480,8 @@ public struct CQRObjectSource: FlatBufferVerifiableTable, FlatbuffersVectorIniti
     HAS_APOGEE_ALTITUDE_M: Bool = false,
     HARD_BODY_RADIUS_M: Double = 0.0,
     HAS_HARD_BODY_RADIUS_M: Bool = false,
-    CATALOG_ENTRYOffset CATALOG_ENTRY: Offset = Offset()
+    CATALOG_ENTRYOffset CATALOG_ENTRY: Offset = Offset(),
+    DENSITY_SENSITIVITY_KMVectorOffset DENSITY_SENSITIVITY_KM: Offset = Offset()
   ) -> Offset {
     let __start = CQRObjectSource.startCQRObjectSource(&fbb)
     CQRObjectSource.add(OBJECT_ID: OBJECT_ID, &fbb)
@@ -494,6 +504,7 @@ public struct CQRObjectSource: FlatBufferVerifiableTable, FlatbuffersVectorIniti
     CQRObjectSource.add(HARD_BODY_RADIUS_M: HARD_BODY_RADIUS_M, &fbb)
     CQRObjectSource.add(HAS_HARD_BODY_RADIUS_M: HAS_HARD_BODY_RADIUS_M, &fbb)
     CQRObjectSource.add(CATALOG_ENTRY: CATALOG_ENTRY, &fbb)
+    CQRObjectSource.addVectorOf(DENSITY_SENSITIVITY_KM: DENSITY_SENSITIVITY_KM, &fbb)
     return CQRObjectSource.endCQRObjectSource(&fbb, start: __start)
   }
 
@@ -519,6 +530,7 @@ public struct CQRObjectSource: FlatBufferVerifiableTable, FlatbuffersVectorIniti
     try _v.visit(field: VT.HARD_BODY_RADIUS_M, fieldName: "HARD_BODY_RADIUS_M", required: false, type: Double.self)
     try _v.visit(field: VT.HAS_HARD_BODY_RADIUS_M, fieldName: "HAS_HARD_BODY_RADIUS_M", required: false, type: Bool.self)
     try _v.visit(field: VT.CATALOG_ENTRY, fieldName: "CATALOG_ENTRY", required: false, type: ForwardOffset<CAT>.self)
+    try _v.visit(field: VT.DENSITY_SENSITIVITY_KM, fieldName: "DENSITY_SENSITIVITY_KM", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
     _v.finish()
   }
 }
@@ -612,6 +624,8 @@ public struct CQRScreeningControls: FlatBufferVerifiableTable, FlatbuffersVector
     static let CROSS_TRACK_M: VOffset = 36
     static let VOLUME_CENTER: VOffset = 38
     static let VERIFIED_COVARIANCE_PRODUCERS: VOffset = 40
+    static let APPLY_DENSITY_CROSS_CORRELATION: VOffset = 42
+    static let DENSITY_LOG_SIGMA: VOffset = 44
   }
 
   public var START_EPOCH: TIMInstant! { let o = _accessor.offset(VT.START_EPOCH); return TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
@@ -644,7 +658,12 @@ public struct CQRScreeningControls: FlatBufferVerifiableTable, FlatbuffersVector
   ///  Builds whose AP covariance a collision probability may use. An empty or
   ///  absent list means no collision probability from AP covariance.
   public var VERIFIED_COVARIANCE_PRODUCERS: FlatbufferVector<CQRVerifiedCovarianceProducer> { return _accessor.vector(at: VT.VERIFIED_COVARIANCE_PRODUCERS, byteSize: 4) }
-  public static func startCQRScreeningControls(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 19) }
+  ///  When true and DENSITY_LOG_SIGMA > 0 with both objects supplying
+  ///  DENSITY_SENSITIVITY_KM, apply common-mode density cross-covariance.
+  public var APPLY_DENSITY_CROSS_CORRELATION: Bool { let o = _accessor.offset(VT.APPLY_DENSITY_CROSS_CORRELATION); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Dimensionless 1-sigma common-mode log-density uncertainty (sigma_s); 0 disables.
+  public var DENSITY_LOG_SIGMA: Double { let o = _accessor.offset(VT.DENSITY_LOG_SIGMA); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startCQRScreeningControls(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 21) }
   public static func add(START_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: START_EPOCH, at: VT.START_EPOCH) }
   public static func add(DURATION_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DURATION_SECONDS, def: 604800.0, at: VT.DURATION_SECONDS) }
   public static func add(THRESHOLD_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: THRESHOLD_M, def: 5000.0, at: VT.THRESHOLD_M) }
@@ -668,6 +687,9 @@ public struct CQRScreeningControls: FlatBufferVerifiableTable, FlatbuffersVector
   public static func add(CROSS_TRACK_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CROSS_TRACK_M, def: 0.0, at: VT.CROSS_TRACK_M) }
   public static func add(VOLUME_CENTER: cqrVolumeAnchor, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VOLUME_CENTER.rawValue, def: 1, at: VT.VOLUME_CENTER) }
   public static func addVectorOf(VERIFIED_COVARIANCE_PRODUCERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VERIFIED_COVARIANCE_PRODUCERS, at: VT.VERIFIED_COVARIANCE_PRODUCERS) }
+  public static func add(APPLY_DENSITY_CROSS_CORRELATION: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: APPLY_DENSITY_CROSS_CORRELATION, def: false,
+   at: VT.APPLY_DENSITY_CROSS_CORRELATION) }
+  public static func add(DENSITY_LOG_SIGMA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DENSITY_LOG_SIGMA, def: 0.0, at: VT.DENSITY_LOG_SIGMA) }
   public static func endCQRScreeningControls(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
   public static func createCQRScreeningControls(
     _ fbb: inout FlatBufferBuilder,
@@ -689,7 +711,9 @@ public struct CQRScreeningControls: FlatBufferVerifiableTable, FlatbuffersVector
     IN_TRACK_M: Double = 0.0,
     CROSS_TRACK_M: Double = 0.0,
     VOLUME_CENTER: cqrVolumeAnchor = .primary,
-    VERIFIED_COVARIANCE_PRODUCERSVectorOffset VERIFIED_COVARIANCE_PRODUCERS: Offset = Offset()
+    VERIFIED_COVARIANCE_PRODUCERSVectorOffset VERIFIED_COVARIANCE_PRODUCERS: Offset = Offset(),
+    APPLY_DENSITY_CROSS_CORRELATION: Bool = false,
+    DENSITY_LOG_SIGMA: Double = 0.0
   ) -> Offset {
     let __start = CQRScreeningControls.startCQRScreeningControls(&fbb)
     CQRScreeningControls.add(START_EPOCH: START_EPOCH, &fbb)
@@ -711,6 +735,8 @@ public struct CQRScreeningControls: FlatBufferVerifiableTable, FlatbuffersVector
     CQRScreeningControls.add(CROSS_TRACK_M: CROSS_TRACK_M, &fbb)
     CQRScreeningControls.add(VOLUME_CENTER: VOLUME_CENTER, &fbb)
     CQRScreeningControls.addVectorOf(VERIFIED_COVARIANCE_PRODUCERS: VERIFIED_COVARIANCE_PRODUCERS, &fbb)
+    CQRScreeningControls.add(APPLY_DENSITY_CROSS_CORRELATION: APPLY_DENSITY_CROSS_CORRELATION, &fbb)
+    CQRScreeningControls.add(DENSITY_LOG_SIGMA: DENSITY_LOG_SIGMA, &fbb)
     return CQRScreeningControls.endCQRScreeningControls(&fbb, start: __start)
   }
 
@@ -735,6 +761,8 @@ public struct CQRScreeningControls: FlatBufferVerifiableTable, FlatbuffersVector
     try _v.visit(field: VT.CROSS_TRACK_M, fieldName: "CROSS_TRACK_M", required: false, type: Double.self)
     try _v.visit(field: VT.VOLUME_CENTER, fieldName: "VOLUME_CENTER", required: false, type: cqrVolumeAnchor.self)
     try _v.visit(field: VT.VERIFIED_COVARIANCE_PRODUCERS, fieldName: "VERIFIED_COVARIANCE_PRODUCERS", required: false, type: ForwardOffset<Vector<ForwardOffset<CQRVerifiedCovarianceProducer>, CQRVerifiedCovarianceProducer>>.self)
+    try _v.visit(field: VT.APPLY_DENSITY_CROSS_CORRELATION, fieldName: "APPLY_DENSITY_CROSS_CORRELATION", required: false, type: Bool.self)
+    try _v.visit(field: VT.DENSITY_LOG_SIGMA, fieldName: "DENSITY_LOG_SIGMA", required: false, type: Double.self)
     _v.finish()
   }
 }

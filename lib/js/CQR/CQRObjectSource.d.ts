@@ -65,6 +65,13 @@ export declare class CQRObjectSource implements flatbuffers.IUnpackableObject<CQ
      * its RCS, gives the hard-body radius (see cqrHardBodyRadiusBasis).
      */
     CATALOG_ENTRY(obj?: CAT): CAT | null;
+    /**
+     * Optional position sensitivity to a unit dimensionless log-density shift
+     * (dr/ds) in EVALUATION_FRAME, 3 doubles in km. Empty when absent.
+     */
+    DENSITY_SENSITIVITY_KM(index: number): number | null;
+    densitySensitivityKmLength(): number;
+    densitySensitivityKmArray(): Float64Array | null;
     static startCQRObjectSource(builder: flatbuffers.Builder): void;
     static addObjectId(builder: flatbuffers.Builder, OBJECT_IDOffset: flatbuffers.Offset): void;
     static addObjectName(builder: flatbuffers.Builder, OBJECT_NAMEOffset: flatbuffers.Offset): void;
@@ -86,6 +93,13 @@ export declare class CQRObjectSource implements flatbuffers.IUnpackableObject<CQ
     static addHardBodyRadiusM(builder: flatbuffers.Builder, HARD_BODY_RADIUS_M: number): void;
     static addHasHardBodyRadiusM(builder: flatbuffers.Builder, HAS_HARD_BODY_RADIUS_M: boolean): void;
     static addCatalogEntry(builder: flatbuffers.Builder, CATALOG_ENTRYOffset: flatbuffers.Offset): void;
+    static addDensitySensitivityKm(builder: flatbuffers.Builder, DENSITY_SENSITIVITY_KMOffset: flatbuffers.Offset): void;
+    static createDensitySensitivityKmVector(builder: flatbuffers.Builder, data: number[] | Float64Array): flatbuffers.Offset;
+    /**
+     * @deprecated This Uint8Array overload will be removed in the future.
+     */
+    static createDensitySensitivityKmVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startDensitySensitivityKmVector(builder: flatbuffers.Builder, numElems: number): void;
     static endCQRObjectSource(builder: flatbuffers.Builder): flatbuffers.Offset;
     unpack(): CQRObjectSourceT;
     unpackTo(_o: CQRObjectSourceT): void;
@@ -111,7 +125,8 @@ export declare class CQRObjectSourceT implements flatbuffers.IGeneratedObject {
     HARD_BODY_RADIUS_M: number;
     HAS_HARD_BODY_RADIUS_M: boolean;
     CATALOG_ENTRY: CATT | null;
-    constructor(OBJECT_ID?: string | Uint8Array | null, OBJECT_NAME?: string | Uint8Array | null, NORAD_CATALOG_ID?: number, INSTANCE?: PRWInstanceT | null, SOURCE_HANDLE?: number, PROPAGATOR_PORT_ID?: string | Uint8Array | null, MEAN_ELEMENTS?: OMMT | null, EPHEMERIS?: OEMT | null, COMPREHENSIVE_ORBIT?: OCMT | null, POLYNOMIAL_EPHEMERIS?: PPET | null, TLE_LINES?: PRWTleLinesT | null, PROVENANCE?: CQRSourceProvenanceT | null, SOURCE_EPOCH?: TIMInstantT | null, PERIGEE_ALTITUDE_M?: number, HAS_PERIGEE_ALTITUDE_M?: boolean, APOGEE_ALTITUDE_M?: number, HAS_APOGEE_ALTITUDE_M?: boolean, HARD_BODY_RADIUS_M?: number, HAS_HARD_BODY_RADIUS_M?: boolean, CATALOG_ENTRY?: CATT | null);
+    DENSITY_SENSITIVITY_KM: (number)[];
+    constructor(OBJECT_ID?: string | Uint8Array | null, OBJECT_NAME?: string | Uint8Array | null, NORAD_CATALOG_ID?: number, INSTANCE?: PRWInstanceT | null, SOURCE_HANDLE?: number, PROPAGATOR_PORT_ID?: string | Uint8Array | null, MEAN_ELEMENTS?: OMMT | null, EPHEMERIS?: OEMT | null, COMPREHENSIVE_ORBIT?: OCMT | null, POLYNOMIAL_EPHEMERIS?: PPET | null, TLE_LINES?: PRWTleLinesT | null, PROVENANCE?: CQRSourceProvenanceT | null, SOURCE_EPOCH?: TIMInstantT | null, PERIGEE_ALTITUDE_M?: number, HAS_PERIGEE_ALTITUDE_M?: boolean, APOGEE_ALTITUDE_M?: number, HAS_APOGEE_ALTITUDE_M?: boolean, HARD_BODY_RADIUS_M?: number, HAS_HARD_BODY_RADIUS_M?: boolean, CATALOG_ENTRY?: CATT | null, DENSITY_SENSITIVITY_KM?: (number)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=CQRObjectSource.d.ts.map

@@ -2,8 +2,7 @@ import * as flatbuffers from 'flatbuffers';
 import { PCFGaussianPrior, PCFGaussianPriorT } from './PCFGaussianPrior.js';
 import { pcfPriorForm } from './pcfPriorForm.js';
 /**
- * Fit policy: how long an arc a fit uses, how that is validated, and what a
- * fit refuses.
+ * Optional configuration parameters for orbit estimation.
  */
 export declare class PCFFitPolicy implements flatbuffers.IUnpackableObject<PCFFitPolicyT> {
     bb: flatbuffers.ByteBuffer | null;
@@ -12,98 +11,77 @@ export declare class PCFFitPolicy implements flatbuffers.IUnpackableObject<PCFFi
     static getRootAsPCFFitPolicy(bb: flatbuffers.ByteBuffer, obj?: PCFFitPolicy): PCFFitPolicy;
     static getSizePrefixedRootAsPCFFitPolicy(bb: flatbuffers.ByteBuffer, obj?: PCFFitPolicy): PCFFitPolicy;
     /**
-     * Fit span used when the span rule is not run, hours. Default 48.
+     * Optional span parameter in hours; 0 means unspecified.
      */
     DEFAULT_SPAN_HOURS(): number;
     /**
-     * Shortest span a fit may take, hours. Default 24.
+     * Optional minimum span in hours; 0 means unspecified.
      */
     MINIMUM_SPAN_HOURS(): number;
     /**
-     * Longest span a fit may take, hours. Default 120.
+     * Optional maximum span in hours; 0 means unspecified.
      */
     MAXIMUM_SPAN_HOURS(): number;
     /**
-     * Spans the extension rule scores, ascending, hours, each within
-     * [MINIMUM_SPAN_HOURS, MAXIMUM_SPAN_HOURS]. Empty: 48, 72 and 120; with
-     * 24 in front when the eccentricity exceeds ECCENTRICITY_THRESHOLD.
+     * Optional candidate span list in hours.
      */
     CANDIDATE_SPANS_HOURS(index: number): number | null;
     candidateSpansHoursLength(): number;
     candidateSpansHoursArray(): Float64Array | null;
     /**
-     * Validation tail: each candidate is fitted to the data before the latest
-     * TAIL_HOURS and scored on that tail, hours. Default 24.
+     * Optional evaluation tail length in hours; 0 means unspecified.
      */
     TAIL_HOURS(): number;
     /**
-     * Extension rule: a longer candidate is taken only when its tail error is
-     * at most this fraction of the best shorter candidate's. Default 0.9.
+     * Optional relative selection margin; 0 means unspecified.
      */
     EXTENSION_MARGIN(): number;
     /**
-     * Hours held out at the end of the data and reported as error growth; the
-     * fit then ends HOLDOUT_HOURS before the data does. Absent, the data
-     * block's own useable stop time decides.
+     * Optional holdout window length in hours.
      */
     HOLDOUT_HOURS(): number;
     /**
-     * True when HOLDOUT_HOURS carries a value; false means absent.
+     * True when HOLDOUT_HOURS is explicitly provided.
      */
     HAS_HOLDOUT_HOURS(): boolean;
     /**
-     * Eccentricity above which the eccentric-orbit rule applies. Default 0.5.
+     * Optional eccentricity threshold; 0 means unspecified.
      */
     ECCENTRICITY_THRESHOLD(): number;
     /**
-     * Eccentric orbits: the default span, hours. Default 24.
+     * Optional eccentric-orbit span in hours; 0 means unspecified.
      */
     ECCENTRIC_DEFAULT_SPAN_HOURS(): number;
     /**
-     * Eccentric orbits: EXTENSION_MARGIN. Default 0.7.
+     * Optional eccentric-orbit relative margin; 0 means unspecified.
      */
     ECCENTRIC_EXTENSION_MARGIN(): number;
     /**
-     * Eccentric orbits: no candidate longer than this is tried once the orbital
-     * period passes it, hours. Default 36.
+     * Optional eccentric-orbit period bound in hours; 0 means unspecified.
      */
     ECCENTRIC_MAXIMUM_PERIOD_HOURS(): number;
     /**
-     * A fit whose RMS passes this is refused as fit-implausible, km. Default
-     * 100.
+     * Optional maximum acceptable RMS in km; 0 means unspecified.
      */
     IMPLAUSIBLE_RMS_KM(): number;
     /**
-     * Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent
-     * or without sigma: mean 0, sigma 0.05.
+     * Optional prior on drag parameter.
      */
     DRAG_PRIOR(obj?: PCFGaussianPrior): PCFGaussianPrior | null;
     /**
-     * Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.
-     * Absent or without sigma: mean 0, sigma 0.05.
+     * Optional prior on solar radiation pressure parameter.
      */
     SRP_PRIOR(obj?: PCFGaussianPrior): PCFGaussianPrior | null;
     /**
-     * The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
-     * estimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its
-     * MEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation
-     * of ln B_eff.
+     * Optional distribution form for DRAG_PRIOR.
      */
     DRAG_PRIOR_FORM(): pcfPriorForm;
     /**
-     * The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
-     * estimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN
-     * the median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of
-     * ln AGOM.
+     * Optional distribution form for SRP_PRIOR.
      */
     SRP_PRIOR_FORM(): pcfPriorForm;
     /**
-     * Days past the element set's epoch day through which the fit writes the
-     * daily space weather into the record it emits (OCM
-     * PERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows
-     * (WEATHER_SOURCE RECORDS). The last day written is the later of the fit
-     * arc's last day and the epoch's day plus this count; rows supplied with
-     * the request must reach it, or the fit is refused by name. Default 30.
+     * Optional space-weather horizon in days past epoch; 0 means unspecified.
      */
     WEATHER_HORIZON_DAYS(): number;
     static startPCFFitPolicy(builder: flatbuffers.Builder): void;

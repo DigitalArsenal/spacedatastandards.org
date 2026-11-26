@@ -240,7 +240,7 @@ class PCFForceModel(object):
 
     # Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth
     # orientation (the request's Earth orientation rows) to apply them. Default
-    # NONE.
+    # UNSPECIFIED (the propagator's own default).
     # PCFForceModel
     def SOLID_TIDES(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))

@@ -6,8 +6,7 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
-/// A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps
-/// the theory's own sigma and moves only the mean.
+/// Optional Gaussian parameter prior.
 public struct PCFGaussianPrior : IFlatbufferObject
 {
   private Table __p;
@@ -18,11 +17,11 @@ public struct PCFGaussianPrior : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public PCFGaussianPrior __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  /// Prior mean, in the unit of the parameter it is attached to. Default 0.
+  /// Prior mean in the parameter's unit.
   public double MEAN { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Prior standard deviation, in the same unit; > 0 when HAS_SIGMA.
+  /// Prior standard deviation in the parameter's unit; > 0 when HAS_SIGMA is true.
   public double SIGMA { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// True when SIGMA carries a value; false keeps the theory's own sigma.
+  /// True when SIGMA is explicitly provided.
   public bool HAS_SIGMA { get { int o = __p.__offset(8); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
 
   public static Offset<PCFGaussianPrior> CreatePCFGaussianPrior(FlatBufferBuilder builder,

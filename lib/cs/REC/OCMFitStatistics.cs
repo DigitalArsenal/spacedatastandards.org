@@ -18,7 +18,7 @@ public struct OCMFitStatistics : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public OCMFitStatistics __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  /// Reference states fitted.
+  /// Reference states reported; 0 means not stated.
   public uint FIT_STATES { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
   /// Position RMS over the fit arc, km.
   public double FIT_RMS_KM { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
@@ -29,9 +29,9 @@ public struct OCMFitStatistics : IFlatbufferObject
   public double FIT_RADIAL_RMS_KM { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
   public double FIT_IN_TRACK_RMS_KM { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
   public double FIT_CROSS_TRACK_RMS_KM { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
-  /// Iterations the fit took.
+  /// Iterations reported; 0 means not stated.
   public uint ITERATIONS { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
-  /// True when the fit converged.
+  /// True when converged.
   public bool CONVERGED { get { int o = __p.__offset(18); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
   /// End of the held-out window (ISO 8601 UTC); empty without one.
   public string HELD_OUT_STOP { get { int o = __p.__offset(20); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
@@ -48,7 +48,7 @@ public struct OCMFitStatistics : IFlatbufferObject
   /// The held-out error by day after the fit arc.
   public OCMHeldOutDay? HELD_OUT_DAYS(int j) { int o = __p.__offset(28); return o != 0 ? (OCMHeldOutDay?)(new OCMHeldOutDay()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int HELD_OUT_DAYSLength { get { int o = __p.__offset(28); return o != 0 ? __p.__vector_len(o) : 0; } }
-  /// CID of the $PCF the fit ran under: its span rule, priors and holdout.
+  /// CID of the $PCF configuration associated with the record.
   public string PCF_CID { get { int o = __p.__offset(30); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetPCF_CIDBytes() { return __p.__vector_as_span<byte>(30, 1); }

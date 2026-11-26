@@ -7,8 +7,7 @@ import * as flatbuffers from 'flatbuffers';
 
 
 /**
- * A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps
- * the theory's own sigma and moves only the mean.
+ * Optional Gaussian parameter prior.
  */
 export class PCFGaussianPrior implements flatbuffers.IUnpackableObject<PCFGaussianPriorT> {
   bb: flatbuffers.ByteBuffer|null = null;
@@ -29,7 +28,7 @@ static getSizePrefixedRootAsPCFGaussianPrior(bb:flatbuffers.ByteBuffer, obj?:PCF
 }
 
 /**
- * Prior mean, in the unit of the parameter it is attached to. Default 0.
+ * Prior mean in the parameter's unit.
  */
 MEAN():number {
   const offset = this.bb!.__offset(this.bb_pos, 4);
@@ -37,7 +36,7 @@ MEAN():number {
 }
 
 /**
- * Prior standard deviation, in the same unit; > 0 when HAS_SIGMA.
+ * Prior standard deviation in the parameter's unit; > 0 when HAS_SIGMA is true.
  */
 SIGMA():number {
   const offset = this.bb!.__offset(this.bb_pos, 6);
@@ -45,7 +44,7 @@ SIGMA():number {
 }
 
 /**
- * True when SIGMA carries a value; false keeps the theory's own sigma.
+ * True when SIGMA is explicitly provided.
  */
 HAS_SIGMA():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 8);

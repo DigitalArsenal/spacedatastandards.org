@@ -8,23 +8,28 @@ import "strconv"
 type cqrCovarianceCorrelation byte
 
 const (
-	cqrCovarianceCorrelationUNSPECIFIED               cqrCovarianceCorrelation = 0
+	cqrCovarianceCorrelationUNSPECIFIED                cqrCovarianceCorrelation = 0
 	/// Independent errors: the combined covariance is the sum of the two.
-	cqrCovarianceCorrelationINDEPENDENT               cqrCovarianceCorrelation = 1
+	cqrCovarianceCorrelationINDEPENDENT                cqrCovarianceCorrelation = 1
 	/// A cross covariance was supplied and used.
-	cqrCovarianceCorrelationSUPPLIED_CROSS_COVARIANCE cqrCovarianceCorrelation = 2
+	cqrCovarianceCorrelationSUPPLIED_CROSS_COVARIANCE  cqrCovarianceCorrelation = 2
+	/// Cross covariance derived from per-object atmospheric density sensitivity
+	/// vectors and a shared log-density uncertainty.
+	cqrCovarianceCorrelationSHARED_DENSITY_SENSITIVITY cqrCovarianceCorrelation = 3
 )
 
 var EnumNamescqrCovarianceCorrelation = map[cqrCovarianceCorrelation]string{
-	cqrCovarianceCorrelationUNSPECIFIED:               "UNSPECIFIED",
-	cqrCovarianceCorrelationINDEPENDENT:               "INDEPENDENT",
-	cqrCovarianceCorrelationSUPPLIED_CROSS_COVARIANCE: "SUPPLIED_CROSS_COVARIANCE",
+	cqrCovarianceCorrelationUNSPECIFIED:                "UNSPECIFIED",
+	cqrCovarianceCorrelationINDEPENDENT:                "INDEPENDENT",
+	cqrCovarianceCorrelationSUPPLIED_CROSS_COVARIANCE:  "SUPPLIED_CROSS_COVARIANCE",
+	cqrCovarianceCorrelationSHARED_DENSITY_SENSITIVITY: "SHARED_DENSITY_SENSITIVITY",
 }
 
 var EnumValuescqrCovarianceCorrelation = map[string]cqrCovarianceCorrelation{
-	"UNSPECIFIED":               cqrCovarianceCorrelationUNSPECIFIED,
-	"INDEPENDENT":               cqrCovarianceCorrelationINDEPENDENT,
-	"SUPPLIED_CROSS_COVARIANCE": cqrCovarianceCorrelationSUPPLIED_CROSS_COVARIANCE,
+	"UNSPECIFIED":                cqrCovarianceCorrelationUNSPECIFIED,
+	"INDEPENDENT":                cqrCovarianceCorrelationINDEPENDENT,
+	"SUPPLIED_CROSS_COVARIANCE":  cqrCovarianceCorrelationSUPPLIED_CROSS_COVARIANCE,
+	"SHARED_DENSITY_SENSITIVITY": cqrCovarianceCorrelationSHARED_DENSITY_SENSITIVITY,
 }
 
 func (v cqrCovarianceCorrelation) String() string {

@@ -44,7 +44,7 @@ func (rcv *OCMFitStatistics) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-/// Reference states fitted.
+/// Reference states reported; 0 means not stated.
 func (rcv *OCMFitStatistics) FIT_STATES() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -57,7 +57,7 @@ func (rcv *OCMFitStatistics) FitStates() uint32 {
 	return rcv.FIT_STATES()
 }
 
-/// Reference states fitted.
+/// Reference states reported; 0 means not stated.
 func (rcv *OCMFitStatistics) MutateFIT_STATES(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(4, n)
 }
@@ -174,7 +174,7 @@ func (rcv *OCMFitStatistics) MutateFitCrossTrackRmsKm(n float64) bool {
 	return rcv.MutateFIT_CROSS_TRACK_RMS_KM(n)
 }
 
-/// Iterations the fit took.
+/// Iterations reported; 0 means not stated.
 func (rcv *OCMFitStatistics) ITERATIONS() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
@@ -187,7 +187,7 @@ func (rcv *OCMFitStatistics) Iterations() uint32 {
 	return rcv.ITERATIONS()
 }
 
-/// Iterations the fit took.
+/// Iterations reported; 0 means not stated.
 func (rcv *OCMFitStatistics) MutateITERATIONS(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(16, n)
 }
@@ -196,7 +196,7 @@ func (rcv *OCMFitStatistics) MutateIterations(n uint32) bool {
 	return rcv.MutateITERATIONS(n)
 }
 
-/// True when the fit converged.
+/// True when converged.
 func (rcv *OCMFitStatistics) CONVERGED() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
@@ -209,7 +209,7 @@ func (rcv *OCMFitStatistics) Converged() bool {
 	return rcv.CONVERGED()
 }
 
-/// True when the fit converged.
+/// True when converged.
 func (rcv *OCMFitStatistics) MutateCONVERGED(n bool) bool {
 	return rcv._tab.MutateBoolSlot(18, n)
 }
@@ -327,7 +327,7 @@ func (rcv *OCMFitStatistics) HeldOutDaysLength() int {
 }
 
 /// The held-out error by day after the fit arc.
-/// CID of the $PCF the fit ran under: its span rule, priors and holdout.
+/// CID of the $PCF configuration associated with the record.
 func (rcv *OCMFitStatistics) PCF_CID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
@@ -340,7 +340,7 @@ func (rcv *OCMFitStatistics) PcfCid() []byte {
 	return rcv.PCF_CID()
 }
 
-/// CID of the $PCF the fit ran under: its span rule, priors and holdout.
+/// CID of the $PCF configuration associated with the record.
 /// First epoch of the fit arc (ISO 8601 UTC).
 func (rcv *OCMFitStatistics) FIT_START() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))

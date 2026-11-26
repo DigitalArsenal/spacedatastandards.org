@@ -316,16 +316,18 @@ enum pcfAtmosphereFamily:
     /// element set's PERTURBATIONS.ATMOSPHERIC_MODEL.
     pcfAtmosphereFamily_JACCHIA70 = 8
 
-/// Solid Earth tide model for the central body's field. NONE leaves the
-/// tides out. IERS_2010 is IERS Conventions (2010) section 6.2: the degree 2
-/// and 3 tides raised by the Sun and Moon with Table 6.3's anelastic Love
-/// numbers and the degree 4 terms through k+ (step 1, eqs. 6.6-6.7), the
-/// frequency-dependent corrections of Tables 6.5a-c (step 2, eq. 6.8), and
-/// the permanent tide handled for the field's own tide system. Pole tide is
-/// not included.
+/// Solid Earth tide model for the central body's field. UNSPECIFIED uses the
+/// propagator's own default (IERS 2010 when supported). NONE disables solid
+/// Earth tides explicitly. IERS_2010 is IERS Conventions (2010) section 6.2:
+/// degree 2 and 3 tides raised by the Sun and Moon with Table 6.3's anelastic
+/// Love numbers, degree 4 terms through k+ (step 1, eqs. 6.6-6.7),
+/// frequency-dependent corrections of Tables 6.5a-c (step 2, eq. 6.8), and the
+/// permanent tide handled for the field's own tide system. Pole tide is not
+/// included.
 enum pcfSolidTideModel:
-    pcfSolidTideModel_NONE = 0
-    pcfSolidTideModel_IERS_2010 = 1
+    pcfSolidTideModel_UNSPECIFIED = 0
+    pcfSolidTideModel_NONE = 1
+    pcfSolidTideModel_IERS_2010 = 2
 
 /// Post-Newtonian corrections to the central body's acceleration (IERS
 /// Conventions (2010) eq. 10.12). NONE leaves them out. SCHWARZSCHILD is the
@@ -373,16 +375,11 @@ enum pcfGnssSpacecraftBlock:
     pcfGnssSpacecraftBlock_GPS_IIR_M = 2
     pcfGnssSpacecraftBlock_GPS_IIF = 3
 
-/// The form of a fitted parameter's prior (PCFFitPolicy DRAG_PRIOR_FORM and
-/// SRP_PRIOR_FORM). Append new values only.
+/// Prior distribution form for an optional parameter constraint.
 enum pcfPriorForm:
-    /// Gaussian on the parameter itself, which may take either sign (the
-    /// default): the prior's MEAN and SIGMA are in the parameter's unit.
+    /// Gaussian distribution on the parameter value.
     pcfPriorForm_GAUSSIAN_SIGNED = 0
-    /// Log-normal: the fit estimates the natural log of the parameter, so the
-    /// parameter is never <= 0. The prior's MEAN is the median, in the
-    /// parameter's unit, and must be > 0; its SIGMA is the standard deviation of
-    /// the natural log of the parameter. The prior is required (HAS_SIGMA true).
+    /// Log-normal distribution on a positive parameter value.
     pcfPriorForm_LOG_NORMAL = 1
 
 class PCFGaussianPrior
@@ -409,16 +406,15 @@ class PCFEpochStore
 
 class PCF
 
-/// A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps
-/// the theory's own sigma and moves only the mean.
+/// Optional Gaussian parameter prior.
 class PCFGaussianPrior : flatbuffers.handle
-    /// Prior mean, in the unit of the parameter it is attached to. Default 0.
+    /// Prior mean in the parameter's unit.
     def MEAN() -> float:
         return flatbuffers.field_float64(buf_, pos_, 4, 0.0)
-    /// Prior standard deviation, in the same unit; > 0 when HAS_SIGMA.
+    /// Prior standard deviation in the parameter's unit; > 0 when HAS_SIGMA is true.
     def SIGMA() -> float:
         return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
-    /// True when SIGMA carries a value; false keeps the theory's own sigma.
+    /// True when SIGMA is explicitly provided.
     def HAS_SIGMA() -> bool:
         return bool(flatbuffers.field_int8(buf_, pos_, 8, 0))
 
@@ -441,88 +437,66 @@ struct PCFGaussianPriorBuilder:
     def end():
         return b_.EndObject()
 
-/// Fit policy: how long an arc a fit uses, how that is validated, and what a
-/// fit refuses.
+/// Optional configuration parameters for orbit estimation.
 class PCFFitPolicy : flatbuffers.handle
-    /// Fit span used when the span rule is not run, hours. Default 48.
+    /// Optional span parameter in hours; 0 means unspecified.
     def DEFAULT_SPAN_HOURS() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 4, 48.0)
-    /// Shortest span a fit may take, hours. Default 24.
+        return flatbuffers.field_float64(buf_, pos_, 4, 0.0)
+    /// Optional minimum span in hours; 0 means unspecified.
     def MINIMUM_SPAN_HOURS() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 6, 24.0)
-    /// Longest span a fit may take, hours. Default 120.
+        return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
+    /// Optional maximum span in hours; 0 means unspecified.
     def MAXIMUM_SPAN_HOURS() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 8, 120.0)
-    /// Spans the extension rule scores, ascending, hours, each within
-    /// [MINIMUM_SPAN_HOURS, MAXIMUM_SPAN_HOURS]. Empty: 48, 72 and 120; with
-    /// 24 in front when the eccentricity exceeds ECCENTRICITY_THRESHOLD.
+        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
+    /// Optional candidate span list in hours.
     def CANDIDATE_SPANS_HOURS(i:int) -> float:
         return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 10) + i * 8)
     def CANDIDATE_SPANS_HOURS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 10)
-    /// Validation tail: each candidate is fitted to the data before the latest
-    /// TAIL_HOURS and scored on that tail, hours. Default 24.
+    /// Optional evaluation tail length in hours; 0 means unspecified.
     def TAIL_HOURS() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 12, 24.0)
-    /// Extension rule: a longer candidate is taken only when its tail error is
-    /// at most this fraction of the best shorter candidate's. Default 0.9.
+        return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
+    /// Optional relative selection margin; 0 means unspecified.
     def EXTENSION_MARGIN() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 14, 0.9)
-    /// Hours held out at the end of the data and reported as error growth; the
-    /// fit then ends HOLDOUT_HOURS before the data does. Absent, the data
-    /// block's own useable stop time decides.
+        return flatbuffers.field_float64(buf_, pos_, 14, 0.0)
+    /// Optional holdout window length in hours.
     def HOLDOUT_HOURS() -> float:
         return flatbuffers.field_float64(buf_, pos_, 16, 0.0)
-    /// True when HOLDOUT_HOURS carries a value; false means absent.
+    /// True when HOLDOUT_HOURS is explicitly provided.
     def HAS_HOLDOUT_HOURS() -> bool:
         return bool(flatbuffers.field_int8(buf_, pos_, 18, 0))
-    /// Eccentricity above which the eccentric-orbit rule applies. Default 0.5.
+    /// Optional eccentricity threshold; 0 means unspecified.
     def ECCENTRICITY_THRESHOLD() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 20, 0.5)
-    /// Eccentric orbits: the default span, hours. Default 24.
+        return flatbuffers.field_float64(buf_, pos_, 20, 0.0)
+    /// Optional eccentric-orbit span in hours; 0 means unspecified.
     def ECCENTRIC_DEFAULT_SPAN_HOURS() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 22, 24.0)
-    /// Eccentric orbits: EXTENSION_MARGIN. Default 0.7.
+        return flatbuffers.field_float64(buf_, pos_, 22, 0.0)
+    /// Optional eccentric-orbit relative margin; 0 means unspecified.
     def ECCENTRIC_EXTENSION_MARGIN() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 24, 0.7)
-    /// Eccentric orbits: no candidate longer than this is tried once the orbital
-    /// period passes it, hours. Default 36.
+        return flatbuffers.field_float64(buf_, pos_, 24, 0.0)
+    /// Optional eccentric-orbit period bound in hours; 0 means unspecified.
     def ECCENTRIC_MAXIMUM_PERIOD_HOURS() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 26, 36.0)
-    /// A fit whose RMS passes this is refused as fit-implausible, km. Default
-    /// 100.
+        return flatbuffers.field_float64(buf_, pos_, 26, 0.0)
+    /// Optional maximum acceptable RMS in km; 0 means unspecified.
     def IMPLAUSIBLE_RMS_KM() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 28, 100.0)
-    /// Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent
-    /// or without sigma: mean 0, sigma 0.05.
+        return flatbuffers.field_float64(buf_, pos_, 28, 0.0)
+    /// Optional prior on drag parameter.
     def DRAG_PRIOR() -> PCFGaussianPrior?:
         let o = flatbuffers.field_table(buf_, pos_, 30)
         return if o: PCFGaussianPrior { buf_, o } else: nil
-    /// Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.
-    /// Absent or without sigma: mean 0, sigma 0.05.
+    /// Optional prior on solar radiation pressure parameter.
     def SRP_PRIOR() -> PCFGaussianPrior?:
         let o = flatbuffers.field_table(buf_, pos_, 32)
         return if o: PCFGaussianPrior { buf_, o } else: nil
-    /// The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
-    /// estimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its
-    /// MEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation
-    /// of ln B_eff.
+    /// Optional distribution form for DRAG_PRIOR.
     def DRAG_PRIOR_FORM() -> pcfPriorForm:
         return pcfPriorForm(flatbuffers.field_uint8(buf_, pos_, 34, 0))
-    /// The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
-    /// estimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN
-    /// the median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of
-    /// ln AGOM.
+    /// Optional distribution form for SRP_PRIOR.
     def SRP_PRIOR_FORM() -> pcfPriorForm:
         return pcfPriorForm(flatbuffers.field_uint8(buf_, pos_, 36, 0))
-    /// Days past the element set's epoch day through which the fit writes the
-    /// daily space weather into the record it emits (OCM
-    /// PERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows
-    /// (WEATHER_SOURCE RECORDS). The last day written is the later of the fit
-    /// arc's last day and the epoch's day plus this count; rows supplied with
-    /// the request must reach it, or the fit is refused by name. Default 30.
+    /// Optional space-weather horizon in days past epoch; 0 means unspecified.
     def WEATHER_HORIZON_DAYS() -> int:
-        return flatbuffers.field_uint16(buf_, pos_, 38, 30)
+        return flatbuffers.field_uint16(buf_, pos_, 38, 0)
 
 def GetRootAsPCFFitPolicy(buf:string): return PCFFitPolicy { buf, flatbuffers.indirect(buf, 0) }
 
@@ -532,22 +506,22 @@ struct PCFFitPolicyBuilder:
         b_.StartObject(18)
         return this
     def add_DEFAULT_SPAN_HOURS(DEFAULT_SPAN_HOURS:float):
-        b_.PrependFloat64Slot(0, DEFAULT_SPAN_HOURS, 48.0)
+        b_.PrependFloat64Slot(0, DEFAULT_SPAN_HOURS, 0.0)
         return this
     def add_MINIMUM_SPAN_HOURS(MINIMUM_SPAN_HOURS:float):
-        b_.PrependFloat64Slot(1, MINIMUM_SPAN_HOURS, 24.0)
+        b_.PrependFloat64Slot(1, MINIMUM_SPAN_HOURS, 0.0)
         return this
     def add_MAXIMUM_SPAN_HOURS(MAXIMUM_SPAN_HOURS:float):
-        b_.PrependFloat64Slot(2, MAXIMUM_SPAN_HOURS, 120.0)
+        b_.PrependFloat64Slot(2, MAXIMUM_SPAN_HOURS, 0.0)
         return this
     def add_CANDIDATE_SPANS_HOURS(CANDIDATE_SPANS_HOURS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(3, CANDIDATE_SPANS_HOURS)
         return this
     def add_TAIL_HOURS(TAIL_HOURS:float):
-        b_.PrependFloat64Slot(4, TAIL_HOURS, 24.0)
+        b_.PrependFloat64Slot(4, TAIL_HOURS, 0.0)
         return this
     def add_EXTENSION_MARGIN(EXTENSION_MARGIN:float):
-        b_.PrependFloat64Slot(5, EXTENSION_MARGIN, 0.9)
+        b_.PrependFloat64Slot(5, EXTENSION_MARGIN, 0.0)
         return this
     def add_HOLDOUT_HOURS(HOLDOUT_HOURS:float):
         b_.PrependFloat64Slot(6, HOLDOUT_HOURS, 0.0)
@@ -556,19 +530,19 @@ struct PCFFitPolicyBuilder:
         b_.PrependBoolSlot(7, HAS_HOLDOUT_HOURS, 0)
         return this
     def add_ECCENTRICITY_THRESHOLD(ECCENTRICITY_THRESHOLD:float):
-        b_.PrependFloat64Slot(8, ECCENTRICITY_THRESHOLD, 0.5)
+        b_.PrependFloat64Slot(8, ECCENTRICITY_THRESHOLD, 0.0)
         return this
     def add_ECCENTRIC_DEFAULT_SPAN_HOURS(ECCENTRIC_DEFAULT_SPAN_HOURS:float):
-        b_.PrependFloat64Slot(9, ECCENTRIC_DEFAULT_SPAN_HOURS, 24.0)
+        b_.PrependFloat64Slot(9, ECCENTRIC_DEFAULT_SPAN_HOURS, 0.0)
         return this
     def add_ECCENTRIC_EXTENSION_MARGIN(ECCENTRIC_EXTENSION_MARGIN:float):
-        b_.PrependFloat64Slot(10, ECCENTRIC_EXTENSION_MARGIN, 0.7)
+        b_.PrependFloat64Slot(10, ECCENTRIC_EXTENSION_MARGIN, 0.0)
         return this
     def add_ECCENTRIC_MAXIMUM_PERIOD_HOURS(ECCENTRIC_MAXIMUM_PERIOD_HOURS:float):
-        b_.PrependFloat64Slot(11, ECCENTRIC_MAXIMUM_PERIOD_HOURS, 36.0)
+        b_.PrependFloat64Slot(11, ECCENTRIC_MAXIMUM_PERIOD_HOURS, 0.0)
         return this
     def add_IMPLAUSIBLE_RMS_KM(IMPLAUSIBLE_RMS_KM:float):
-        b_.PrependFloat64Slot(12, IMPLAUSIBLE_RMS_KM, 100.0)
+        b_.PrependFloat64Slot(12, IMPLAUSIBLE_RMS_KM, 0.0)
         return this
     def add_DRAG_PRIOR(DRAG_PRIOR:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(13, DRAG_PRIOR)
@@ -583,7 +557,7 @@ struct PCFFitPolicyBuilder:
         b_.PrependUint8Slot(16, SRP_PRIOR_FORM, 0)
         return this
     def add_WEATHER_HORIZON_DAYS(WEATHER_HORIZON_DAYS:int):
-        b_.PrependUint16Slot(17, WEATHER_HORIZON_DAYS, 30)
+        b_.PrependUint16Slot(17, WEATHER_HORIZON_DAYS, 0)
         return this
     def end():
         return b_.EndObject()
@@ -1058,7 +1032,7 @@ class PCFForceModel : flatbuffers.handle
         return flatbuffers.field_string(buf_, pos_, 46)
     /// Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth
     /// orientation (the request's Earth orientation rows) to apply them. Default
-    /// NONE.
+    /// UNSPECIFIED (the propagator's own default).
     def SOLID_TIDES() -> pcfSolidTideModel:
         return pcfSolidTideModel(flatbuffers.field_uint8(buf_, pos_, 48, 0))
     /// Post-Newtonian terms. Default NONE.

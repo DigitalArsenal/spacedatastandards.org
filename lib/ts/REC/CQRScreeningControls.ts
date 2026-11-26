@@ -155,8 +155,25 @@ verifiedCovarianceProducersLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * When true and DENSITY_LOG_SIGMA > 0 with both objects supplying
+ * DENSITY_SENSITIVITY_KM, apply common-mode density cross-covariance.
+ */
+APPLY_DENSITY_CROSS_CORRELATION():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * Dimensionless 1-sigma common-mode log-density uncertainty (sigma_s); 0 disables.
+ */
+DENSITY_LOG_SIGMA():number {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
 static startCQRScreeningControls(builder:flatbuffers.Builder) {
-  builder.startObject(19);
+  builder.startObject(21);
 }
 
 static addStartEpoch(builder:flatbuffers.Builder, START_EPOCHOffset:flatbuffers.Offset) {
@@ -247,13 +264,21 @@ static startVerifiedCovarianceProducersVector(builder:flatbuffers.Builder, numEl
   builder.startVector(4, numElems, 4);
 }
 
+static addApplyDensityCrossCorrelation(builder:flatbuffers.Builder, APPLY_DENSITY_CROSS_CORRELATION:boolean) {
+  builder.addFieldInt8(19, +APPLY_DENSITY_CROSS_CORRELATION, +false);
+}
+
+static addDensityLogSigma(builder:flatbuffers.Builder, DENSITY_LOG_SIGMA:number) {
+  builder.addFieldFloat64(20, DENSITY_LOG_SIGMA, 0.0);
+}
+
 static endCQRScreeningControls(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // START_EPOCH
   return offset;
 }
 
-static createCQRScreeningControls(builder:flatbuffers.Builder, START_EPOCHOffset:flatbuffers.Offset, DURATION_SECONDS:number, THRESHOLD_M:number, REQUESTED_WORKERS:number, COARSE_STEP_SECONDS:number, REFINEMENT_TOLERANCE_SECONDS:number, COMBINED_RADIUS_M:number, USE_KD_TREE:boolean, USE_DYNAMIC_WINDOW:boolean, USE_PERIGEE_FILTER:boolean, PROGRESS_INTERVAL_SECONDS:number, HAS_PROGRESS_INTERVAL_SECONDS:boolean, ALGORITHM:cqrProbabilityAlgorithm, SCREENING:cqrVolumeGeometry, RADIAL_M:number, IN_TRACK_M:number, CROSS_TRACK_M:number, VOLUME_CENTER:cqrVolumeAnchor, VERIFIED_COVARIANCE_PRODUCERSOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createCQRScreeningControls(builder:flatbuffers.Builder, START_EPOCHOffset:flatbuffers.Offset, DURATION_SECONDS:number, THRESHOLD_M:number, REQUESTED_WORKERS:number, COARSE_STEP_SECONDS:number, REFINEMENT_TOLERANCE_SECONDS:number, COMBINED_RADIUS_M:number, USE_KD_TREE:boolean, USE_DYNAMIC_WINDOW:boolean, USE_PERIGEE_FILTER:boolean, PROGRESS_INTERVAL_SECONDS:number, HAS_PROGRESS_INTERVAL_SECONDS:boolean, ALGORITHM:cqrProbabilityAlgorithm, SCREENING:cqrVolumeGeometry, RADIAL_M:number, IN_TRACK_M:number, CROSS_TRACK_M:number, VOLUME_CENTER:cqrVolumeAnchor, VERIFIED_COVARIANCE_PRODUCERSOffset:flatbuffers.Offset, APPLY_DENSITY_CROSS_CORRELATION:boolean, DENSITY_LOG_SIGMA:number):flatbuffers.Offset {
   CQRScreeningControls.startCQRScreeningControls(builder);
   CQRScreeningControls.addStartEpoch(builder, START_EPOCHOffset);
   CQRScreeningControls.addDurationSeconds(builder, DURATION_SECONDS);
@@ -274,6 +299,8 @@ static createCQRScreeningControls(builder:flatbuffers.Builder, START_EPOCHOffset
   CQRScreeningControls.addCrossTrackM(builder, CROSS_TRACK_M);
   CQRScreeningControls.addVolumeCenter(builder, VOLUME_CENTER);
   CQRScreeningControls.addVerifiedCovarianceProducers(builder, VERIFIED_COVARIANCE_PRODUCERSOffset);
+  CQRScreeningControls.addApplyDensityCrossCorrelation(builder, APPLY_DENSITY_CROSS_CORRELATION);
+  CQRScreeningControls.addDensityLogSigma(builder, DENSITY_LOG_SIGMA);
   return CQRScreeningControls.endCQRScreeningControls(builder);
 }
 
@@ -297,7 +324,9 @@ unpack(): CQRScreeningControlsT {
     this.IN_TRACK_M(),
     this.CROSS_TRACK_M(),
     this.VOLUME_CENTER(),
-    this.bb!.createObjList<CQRVerifiedCovarianceProducer, CQRVerifiedCovarianceProducerT>(this.VERIFIED_COVARIANCE_PRODUCERS.bind(this), this.verifiedCovarianceProducersLength())
+    this.bb!.createObjList<CQRVerifiedCovarianceProducer, CQRVerifiedCovarianceProducerT>(this.VERIFIED_COVARIANCE_PRODUCERS.bind(this), this.verifiedCovarianceProducersLength()),
+    this.APPLY_DENSITY_CROSS_CORRELATION(),
+    this.DENSITY_LOG_SIGMA()
   );
 }
 
@@ -322,6 +351,8 @@ unpackTo(_o: CQRScreeningControlsT): void {
   _o.CROSS_TRACK_M = this.CROSS_TRACK_M();
   _o.VOLUME_CENTER = this.VOLUME_CENTER();
   _o.VERIFIED_COVARIANCE_PRODUCERS = this.bb!.createObjList<CQRVerifiedCovarianceProducer, CQRVerifiedCovarianceProducerT>(this.VERIFIED_COVARIANCE_PRODUCERS.bind(this), this.verifiedCovarianceProducersLength());
+  _o.APPLY_DENSITY_CROSS_CORRELATION = this.APPLY_DENSITY_CROSS_CORRELATION();
+  _o.DENSITY_LOG_SIGMA = this.DENSITY_LOG_SIGMA();
 }
 }
 
@@ -345,7 +376,9 @@ constructor(
   public IN_TRACK_M: number = 0.0,
   public CROSS_TRACK_M: number = 0.0,
   public VOLUME_CENTER: cqrVolumeAnchor = cqrVolumeAnchor.PRIMARY,
-  public VERIFIED_COVARIANCE_PRODUCERS: (CQRVerifiedCovarianceProducerT)[] = []
+  public VERIFIED_COVARIANCE_PRODUCERS: (CQRVerifiedCovarianceProducerT)[] = [],
+  public APPLY_DENSITY_CROSS_CORRELATION: boolean = false,
+  public DENSITY_LOG_SIGMA: number = 0.0
 ){}
 
 
@@ -372,7 +405,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.IN_TRACK_M,
     this.CROSS_TRACK_M,
     this.VOLUME_CENTER,
-    VERIFIED_COVARIANCE_PRODUCERS
+    VERIFIED_COVARIANCE_PRODUCERS,
+    this.APPLY_DENSITY_CROSS_CORRELATION,
+    this.DENSITY_LOG_SIGMA
   );
 }
 }

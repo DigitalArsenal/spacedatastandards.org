@@ -30,7 +30,7 @@ class OCMFitStatistics(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
-    # Reference states fitted.
+    # Reference states reported; 0 means not stated.
     # OCMFitStatistics
     def FIT_STATES(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -77,7 +77,7 @@ class OCMFitStatistics(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return float('nan')
 
-    # Iterations the fit took.
+    # Iterations reported; 0 means not stated.
     # OCMFitStatistics
     def ITERATIONS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
@@ -85,7 +85,7 @@ class OCMFitStatistics(object):
             return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
         return 0
 
-    # True when the fit converged.
+    # True when converged.
     # OCMFitStatistics
     def CONVERGED(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
@@ -149,7 +149,7 @@ class OCMFitStatistics(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         return o == 0
 
-    # CID of the $PCF the fit ran under: its span rule, priors and holdout.
+    # CID of the $PCF configuration associated with the record.
     # OCMFitStatistics
     def PCF_CID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))

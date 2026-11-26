@@ -224,7 +224,8 @@ class _cqrCovarianceBasisReader extends fb.Reader<cqrCovarianceBasis> {
 enum cqrCovarianceCorrelation {
   UNSPECIFIED(0),
   INDEPENDENT(1),
-  SUPPLIED_CROSS_COVARIANCE(2);
+  SUPPLIED_CROSS_COVARIANCE(2),
+  SHARED_DENSITY_SENSITIVITY(3);
 
   final int value;
   const cqrCovarianceCorrelation(this.value);
@@ -234,6 +235,7 @@ enum cqrCovarianceCorrelation {
       case 0: return cqrCovarianceCorrelation.UNSPECIFIED;
       case 1: return cqrCovarianceCorrelation.INDEPENDENT;
       case 2: return cqrCovarianceCorrelation.SUPPLIED_CROSS_COVARIANCE;
+      case 3: return cqrCovarianceCorrelation.SHARED_DENSITY_SENSITIVITY;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -242,7 +244,7 @@ enum cqrCovarianceCorrelation {
       value == null ? null : cqrCovarianceCorrelation.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 2;
+  static const int maxValue = 3;
   static const fb.Reader<cqrCovarianceCorrelation> reader = _cqrCovarianceCorrelationReader();
 }
 
@@ -832,10 +834,14 @@ class CQRObjectSource {
   ///  its RCS, gives the hard-body radius (see cqrHardBodyRadiusBasis).
   CAT? get CATALOG_ENTRY => CAT.reader.vTableGetNullable(_bc, _bcOffset, 42);
   CAT? get catalogEntry => CATALOG_ENTRY;
+  ///  Optional position sensitivity to a unit dimensionless log-density shift
+  ///  (dr/ds) in EVALUATION_FRAME, 3 doubles in km. Empty when absent.
+  List<double>? get DENSITY_SENSITIVITY_KM => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 44);
+  List<double>? get densitySensitivityKm => DENSITY_SENSITIVITY_KM;
 
   @override
   String toString() {
-    return 'CQRObjectSource{objectId: ${objectId}, objectName: ${objectName}, noradCatalogId: ${noradCatalogId}, INSTANCE: ${INSTANCE}, sourceHandle: ${sourceHandle}, propagatorPortId: ${propagatorPortId}, meanElements: ${meanElements}, EPHEMERIS: ${EPHEMERIS}, comprehensiveOrbit: ${comprehensiveOrbit}, polynomialEphemeris: ${polynomialEphemeris}, tleLines: ${tleLines}, PROVENANCE: ${PROVENANCE}, sourceEpoch: ${sourceEpoch}, perigeeAltitudeM: ${perigeeAltitudeM}, hasPerigeeAltitudeM: ${hasPerigeeAltitudeM}, apogeeAltitudeM: ${apogeeAltitudeM}, hasApogeeAltitudeM: ${hasApogeeAltitudeM}, hardBodyRadiusM: ${hardBodyRadiusM}, hasHardBodyRadiusM: ${hasHardBodyRadiusM}, catalogEntry: ${catalogEntry}}';
+    return 'CQRObjectSource{objectId: ${objectId}, objectName: ${objectName}, noradCatalogId: ${noradCatalogId}, INSTANCE: ${INSTANCE}, sourceHandle: ${sourceHandle}, propagatorPortId: ${propagatorPortId}, meanElements: ${meanElements}, EPHEMERIS: ${EPHEMERIS}, comprehensiveOrbit: ${comprehensiveOrbit}, polynomialEphemeris: ${polynomialEphemeris}, tleLines: ${tleLines}, PROVENANCE: ${PROVENANCE}, sourceEpoch: ${sourceEpoch}, perigeeAltitudeM: ${perigeeAltitudeM}, hasPerigeeAltitudeM: ${hasPerigeeAltitudeM}, apogeeAltitudeM: ${apogeeAltitudeM}, hasApogeeAltitudeM: ${hasApogeeAltitudeM}, hardBodyRadiusM: ${hardBodyRadiusM}, hasHardBodyRadiusM: ${hasHardBodyRadiusM}, catalogEntry: ${catalogEntry}, densitySensitivityKm: ${densitySensitivityKm}}';
   }
 }
 
@@ -853,7 +859,7 @@ class CQRObjectSourceBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(20);
+    fbBuilder.startTable(21);
   }
 
   int addObjectIdOffset(int? offset) {
@@ -936,6 +942,10 @@ class CQRObjectSourceBuilder {
     fbBuilder.addOffset(19, offset);
     return fbBuilder.offset;
   }
+  int addDensitySensitivityKmOffset(int? offset) {
+    fbBuilder.addOffset(20, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -963,6 +973,7 @@ class CQRObjectSourceObjectBuilder extends fb.ObjectBuilder {
   final double? _HARD_BODY_RADIUS_M;
   final bool? _HAS_HARD_BODY_RADIUS_M;
   final CATObjectBuilder? _CATALOG_ENTRY;
+  final List<double>? _DENSITY_SENSITIVITY_KM;
 
   CQRObjectSourceObjectBuilder({
     String? OBJECT_ID,
@@ -1002,6 +1013,8 @@ class CQRObjectSourceObjectBuilder extends fb.ObjectBuilder {
     bool? hasHardBodyRadiusM,
     CATObjectBuilder? CATALOG_ENTRY,
     CATObjectBuilder? catalogEntry,
+    List<double>? DENSITY_SENSITIVITY_KM,
+    List<double>? densitySensitivityKm,
   })
       : _OBJECT_ID = objectId ?? OBJECT_ID,
         _OBJECT_NAME = objectName ?? OBJECT_NAME,
@@ -1022,7 +1035,8 @@ class CQRObjectSourceObjectBuilder extends fb.ObjectBuilder {
         _HAS_APOGEE_ALTITUDE_M = hasApogeeAltitudeM ?? HAS_APOGEE_ALTITUDE_M,
         _HARD_BODY_RADIUS_M = hardBodyRadiusM ?? HARD_BODY_RADIUS_M,
         _HAS_HARD_BODY_RADIUS_M = hasHardBodyRadiusM ?? HAS_HARD_BODY_RADIUS_M,
-        _CATALOG_ENTRY = catalogEntry ?? CATALOG_ENTRY;
+        _CATALOG_ENTRY = catalogEntry ?? CATALOG_ENTRY,
+        _DENSITY_SENSITIVITY_KM = densitySensitivityKm ?? DENSITY_SENSITIVITY_KM;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1042,7 +1056,9 @@ class CQRObjectSourceObjectBuilder extends fb.ObjectBuilder {
     final int? PROVENANCEOffset = _PROVENANCE?.getOrCreateOffset(fbBuilder);
     final int? SOURCE_EPOCHOffset = _SOURCE_EPOCH?.getOrCreateOffset(fbBuilder);
     final int? CATALOG_ENTRYOffset = _CATALOG_ENTRY?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(20);
+    final int? DENSITY_SENSITIVITY_KMOffset = _DENSITY_SENSITIVITY_KM == null ? null
+        : fbBuilder.writeListFloat64(_DENSITY_SENSITIVITY_KM!);
+    fbBuilder.startTable(21);
     fbBuilder.addOffset(0, OBJECT_IDOffset);
     fbBuilder.addOffset(1, OBJECT_NAMEOffset);
     fbBuilder.addUint32(2, _NORAD_CATALOG_ID);
@@ -1063,6 +1079,7 @@ class CQRObjectSourceObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addFloat64(17, _HARD_BODY_RADIUS_M);
     fbBuilder.addBool(18, _HAS_HARD_BODY_RADIUS_M);
     fbBuilder.addOffset(19, CATALOG_ENTRYOffset);
+    fbBuilder.addOffset(20, DENSITY_SENSITIVITY_KMOffset);
     return fbBuilder.endTable();
   }
 
@@ -1240,10 +1257,17 @@ class CQRScreeningControls {
   ///  absent list means no collision probability from AP covariance.
   List<CQRVerifiedCovarianceProducer>? get VERIFIED_COVARIANCE_PRODUCERS => const fb.ListReader<CQRVerifiedCovarianceProducer>(CQRVerifiedCovarianceProducer.reader).vTableGetNullable(_bc, _bcOffset, 40);
   List<CQRVerifiedCovarianceProducer>? get verifiedCovarianceProducers => VERIFIED_COVARIANCE_PRODUCERS;
+  ///  When true and DENSITY_LOG_SIGMA > 0 with both objects supplying
+  ///  DENSITY_SENSITIVITY_KM, apply common-mode density cross-covariance.
+  bool get APPLY_DENSITY_CROSS_CORRELATION => const fb.BoolReader().vTableGet(_bc, _bcOffset, 42, false);
+  bool get applyDensityCrossCorrelation => APPLY_DENSITY_CROSS_CORRELATION;
+  ///  Dimensionless 1-sigma common-mode log-density uncertainty (sigma_s); 0 disables.
+  double get DENSITY_LOG_SIGMA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
+  double get densityLogSigma => DENSITY_LOG_SIGMA;
 
   @override
   String toString() {
-    return 'CQRScreeningControls{startEpoch: ${startEpoch}, durationSeconds: ${durationSeconds}, thresholdM: ${thresholdM}, requestedWorkers: ${requestedWorkers}, coarseStepSeconds: ${coarseStepSeconds}, refinementToleranceSeconds: ${refinementToleranceSeconds}, combinedRadiusM: ${combinedRadiusM}, useKdTree: ${useKdTree}, useDynamicWindow: ${useDynamicWindow}, usePerigeeFilter: ${usePerigeeFilter}, progressIntervalSeconds: ${progressIntervalSeconds}, hasProgressIntervalSeconds: ${hasProgressIntervalSeconds}, ALGORITHM: ${ALGORITHM}, SCREENING: ${SCREENING}, radialM: ${radialM}, inTrackM: ${inTrackM}, crossTrackM: ${crossTrackM}, volumeCenter: ${volumeCenter}, verifiedCovarianceProducers: ${verifiedCovarianceProducers}}';
+    return 'CQRScreeningControls{startEpoch: ${startEpoch}, durationSeconds: ${durationSeconds}, thresholdM: ${thresholdM}, requestedWorkers: ${requestedWorkers}, coarseStepSeconds: ${coarseStepSeconds}, refinementToleranceSeconds: ${refinementToleranceSeconds}, combinedRadiusM: ${combinedRadiusM}, useKdTree: ${useKdTree}, useDynamicWindow: ${useDynamicWindow}, usePerigeeFilter: ${usePerigeeFilter}, progressIntervalSeconds: ${progressIntervalSeconds}, hasProgressIntervalSeconds: ${hasProgressIntervalSeconds}, ALGORITHM: ${ALGORITHM}, SCREENING: ${SCREENING}, radialM: ${radialM}, inTrackM: ${inTrackM}, crossTrackM: ${crossTrackM}, volumeCenter: ${volumeCenter}, verifiedCovarianceProducers: ${verifiedCovarianceProducers}, applyDensityCrossCorrelation: ${applyDensityCrossCorrelation}, densityLogSigma: ${densityLogSigma}}';
   }
 }
 
@@ -1261,7 +1285,7 @@ class CQRScreeningControlsBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(19);
+    fbBuilder.startTable(21);
   }
 
   int addStartEpochOffset(int? offset) {
@@ -1340,6 +1364,14 @@ class CQRScreeningControlsBuilder {
     fbBuilder.addOffset(18, offset);
     return fbBuilder.offset;
   }
+  int addApplyDensityCrossCorrelation(bool? APPLY_DENSITY_CROSS_CORRELATION) {
+    fbBuilder.addBool(19, APPLY_DENSITY_CROSS_CORRELATION);
+    return fbBuilder.offset;
+  }
+  int addDensityLogSigma(double? DENSITY_LOG_SIGMA) {
+    fbBuilder.addFloat64(20, DENSITY_LOG_SIGMA);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1366,6 +1398,8 @@ class CQRScreeningControlsObjectBuilder extends fb.ObjectBuilder {
   final double? _CROSS_TRACK_M;
   final cqrVolumeAnchor? _VOLUME_CENTER;
   final List<CQRVerifiedCovarianceProducerObjectBuilder>? _VERIFIED_COVARIANCE_PRODUCERS;
+  final bool? _APPLY_DENSITY_CROSS_CORRELATION;
+  final double? _DENSITY_LOG_SIGMA;
 
   CQRScreeningControlsObjectBuilder({
     TIMInstantObjectBuilder? START_EPOCH,
@@ -1404,6 +1438,10 @@ class CQRScreeningControlsObjectBuilder extends fb.ObjectBuilder {
     cqrVolumeAnchor? volumeCenter,
     List<CQRVerifiedCovarianceProducerObjectBuilder>? VERIFIED_COVARIANCE_PRODUCERS,
     List<CQRVerifiedCovarianceProducerObjectBuilder>? verifiedCovarianceProducers,
+    bool? APPLY_DENSITY_CROSS_CORRELATION,
+    bool? applyDensityCrossCorrelation,
+    double? DENSITY_LOG_SIGMA,
+    double? densityLogSigma,
   })
       : _START_EPOCH = startEpoch ?? START_EPOCH,
         _DURATION_SECONDS = durationSeconds ?? DURATION_SECONDS,
@@ -1423,7 +1461,9 @@ class CQRScreeningControlsObjectBuilder extends fb.ObjectBuilder {
         _IN_TRACK_M = inTrackM ?? IN_TRACK_M,
         _CROSS_TRACK_M = crossTrackM ?? CROSS_TRACK_M,
         _VOLUME_CENTER = volumeCenter ?? VOLUME_CENTER,
-        _VERIFIED_COVARIANCE_PRODUCERS = verifiedCovarianceProducers ?? VERIFIED_COVARIANCE_PRODUCERS;
+        _VERIFIED_COVARIANCE_PRODUCERS = verifiedCovarianceProducers ?? VERIFIED_COVARIANCE_PRODUCERS,
+        _APPLY_DENSITY_CROSS_CORRELATION = applyDensityCrossCorrelation ?? APPLY_DENSITY_CROSS_CORRELATION,
+        _DENSITY_LOG_SIGMA = densityLogSigma ?? DENSITY_LOG_SIGMA;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1431,7 +1471,7 @@ class CQRScreeningControlsObjectBuilder extends fb.ObjectBuilder {
     final int? START_EPOCHOffset = _START_EPOCH?.getOrCreateOffset(fbBuilder);
     final int? VERIFIED_COVARIANCE_PRODUCERSOffset = _VERIFIED_COVARIANCE_PRODUCERS == null ? null
         : fbBuilder.writeList(_VERIFIED_COVARIANCE_PRODUCERS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(19);
+    fbBuilder.startTable(21);
     fbBuilder.addOffset(0, START_EPOCHOffset);
     fbBuilder.addFloat64(1, _DURATION_SECONDS);
     fbBuilder.addFloat64(2, _THRESHOLD_M);
@@ -1451,6 +1491,8 @@ class CQRScreeningControlsObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addFloat64(16, _CROSS_TRACK_M);
     fbBuilder.addUint8(17, _VOLUME_CENTER?.value);
     fbBuilder.addOffset(18, VERIFIED_COVARIANCE_PRODUCERSOffset);
+    fbBuilder.addBool(19, _APPLY_DENSITY_CROSS_CORRELATION);
+    fbBuilder.addFloat64(20, _DENSITY_LOG_SIGMA);
     return fbBuilder.endTable();
   }
 

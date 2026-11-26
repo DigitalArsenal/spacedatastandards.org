@@ -550,7 +550,7 @@ func (rcv *PCFForceModel) EphemerisSource() []byte {
 /// kernel. Required; no default.
 /// Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth
 /// orientation (the request's Earth orientation rows) to apply them. Default
-/// NONE.
+/// UNSPECIFIED (the propagator's own default).
 func (rcv *PCFForceModel) SOLID_TIDES() pcfSolidTideModel {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
 	if o != 0 {
@@ -565,7 +565,7 @@ func (rcv *PCFForceModel) SolidTides() pcfSolidTideModel {
 
 /// Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth
 /// orientation (the request's Earth orientation rows) to apply them. Default
-/// NONE.
+/// UNSPECIFIED (the propagator's own default).
 func (rcv *PCFForceModel) MutateSOLID_TIDES(n pcfSolidTideModel) bool {
 	return rcv._tab.MutateByteSlot(48, byte(n))
 }

@@ -6,8 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
-/// A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps
-/// the theory's own sigma and moves only the mean.
+/// Optional Gaussian parameter prior.
 type PCFGaussianPrior struct {
 	_tab flatbuffers.Table
 }
@@ -43,7 +42,7 @@ func (rcv *PCFGaussianPrior) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-/// Prior mean, in the unit of the parameter it is attached to. Default 0.
+/// Prior mean in the parameter's unit.
 func (rcv *PCFGaussianPrior) MEAN() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -56,7 +55,7 @@ func (rcv *PCFGaussianPrior) Mean() float64 {
 	return rcv.MEAN()
 }
 
-/// Prior mean, in the unit of the parameter it is attached to. Default 0.
+/// Prior mean in the parameter's unit.
 func (rcv *PCFGaussianPrior) MutateMEAN(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(4, n)
 }
@@ -65,7 +64,7 @@ func (rcv *PCFGaussianPrior) MutateMean(n float64) bool {
 	return rcv.MutateMEAN(n)
 }
 
-/// Prior standard deviation, in the same unit; > 0 when HAS_SIGMA.
+/// Prior standard deviation in the parameter's unit; > 0 when HAS_SIGMA is true.
 func (rcv *PCFGaussianPrior) SIGMA() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -78,7 +77,7 @@ func (rcv *PCFGaussianPrior) Sigma() float64 {
 	return rcv.SIGMA()
 }
 
-/// Prior standard deviation, in the same unit; > 0 when HAS_SIGMA.
+/// Prior standard deviation in the parameter's unit; > 0 when HAS_SIGMA is true.
 func (rcv *PCFGaussianPrior) MutateSIGMA(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
 }
@@ -87,7 +86,7 @@ func (rcv *PCFGaussianPrior) MutateSigma(n float64) bool {
 	return rcv.MutateSIGMA(n)
 }
 
-/// True when SIGMA carries a value; false keeps the theory's own sigma.
+/// True when SIGMA is explicitly provided.
 func (rcv *PCFGaussianPrior) HAS_SIGMA() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -100,7 +99,7 @@ func (rcv *PCFGaussianPrior) HasSigma() bool {
 	return rcv.HAS_SIGMA()
 }
 
-/// True when SIGMA carries a value; false keeps the theory's own sigma.
+/// True when SIGMA is explicitly provided.
 func (rcv *PCFGaussianPrior) MutateHAS_SIGMA(n bool) bool {
 	return rcv._tab.MutateBoolSlot(8, n)
 }

@@ -8205,7 +8205,7 @@ impl<'a> OCMFitStatistics<'a> {
         }
     }
 
-    /// Reference states fitted.
+    /// Reference states reported; 0 means not stated.
     #[inline]
     pub fn FIT_STATES(&self) -> u32 {
         // Safety:
@@ -8258,7 +8258,7 @@ impl<'a> OCMFitStatistics<'a> {
         unsafe { self._tab.get::<f64>(OCMFitStatistics::VT_FIT_CROSS_TRACK_RMS_KM, Some(f64::NAN)).unwrap()}
     }
 
-    /// Iterations the fit took.
+    /// Iterations reported; 0 means not stated.
     #[inline]
     pub fn ITERATIONS(&self) -> u32 {
         // Safety:
@@ -8267,7 +8267,7 @@ impl<'a> OCMFitStatistics<'a> {
         unsafe { self._tab.get::<u32>(OCMFitStatistics::VT_ITERATIONS, Some(0)).unwrap()}
     }
 
-    /// True when the fit converged.
+    /// True when converged.
     #[inline]
     pub fn CONVERGED(&self) -> bool {
         // Safety:
@@ -8319,7 +8319,7 @@ impl<'a> OCMFitStatistics<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OCMHeldOutDay>>>>(OCMFitStatistics::VT_HELD_OUT_DAYS, None)}
     }
 
-    /// CID of the $PCF the fit ran under: its span rule, priors and holdout.
+    /// CID of the $PCF configuration associated with the record.
     #[inline]
     pub fn PCF_CID(&self) -> Option<&'a str> {
         // Safety:
@@ -13816,6 +13816,7 @@ impl<'a> OCMCovarianceBlock<'a> {
     pub const VT_COV_UNITS: ::flatbuffers::VOffsetT = 30;
     pub const VT_LINES: ::flatbuffers::VOffsetT = 32;
     pub const VT_COV_REALISM: ::flatbuffers::VOffsetT = 34;
+    pub const VT_DENSITY_SENSITIVITY_KM: ::flatbuffers::VOffsetT = 36;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -13831,6 +13832,7 @@ impl<'a> OCMCovarianceBlock<'a> {
         builder.add_COV_CONFIDENCE(args.COV_CONFIDENCE);
         builder.add_COV_SCALE_MAX(args.COV_SCALE_MAX);
         builder.add_COV_SCALE_MIN(args.COV_SCALE_MIN);
+        if let Some(x) = args.DENSITY_SENSITIVITY_KM { builder.add_DENSITY_SENSITIVITY_KM(x); }
         if let Some(x) = args.COV_REALISM { builder.add_COV_REALISM(x); }
         if let Some(x) = args.LINES { builder.add_LINES(x); }
         if let Some(x) = args.COV_UNITS { builder.add_COV_UNITS(x); }
@@ -13888,6 +13890,9 @@ impl<'a> OCMCovarianceBlock<'a> {
         let COV_REALISM = self.COV_REALISM().map(|x| {
             x.iter().map(|t| t.unpack()).collect()
         });
+        let DENSITY_SENSITIVITY_KM = self.DENSITY_SENSITIVITY_KM().map(|x| {
+            x.into_iter().collect()
+        });
         OCMCovarianceBlockT {
             COMMENT,
             COV_ID,
@@ -13905,6 +13910,7 @@ impl<'a> OCMCovarianceBlock<'a> {
             COV_UNITS,
             LINES,
             COV_REALISM,
+            DENSITY_SENSITIVITY_KM,
         }
     }
 
@@ -14052,6 +14058,17 @@ impl<'a> OCMCovarianceBlock<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<CVR>>>>(OCMCovarianceBlock::VT_COV_REALISM, None)}
     }
+
+    /// Optional position sensitivity to a unit dimensionless log-density shift
+    /// (dr/ds), flattened 3 doubles per line of LINES in COV_REF_FRAME, km.
+    /// Empty when absent.
+    #[inline]
+    pub fn DENSITY_SENSITIVITY_KM(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(OCMCovarianceBlock::VT_DENSITY_SENSITIVITY_KM, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for OCMCovarianceBlock<'_> {
@@ -14076,6 +14093,7 @@ impl ::flatbuffers::Verifiable for OCMCovarianceBlock<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("COV_UNITS", Self::VT_COV_UNITS, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("LINES", Self::VT_LINES, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<CVR>>>>("COV_REALISM", Self::VT_COV_REALISM, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("DENSITY_SENSITIVITY_KM", Self::VT_DENSITY_SENSITIVITY_KM, false)?
             .finish();
         Ok(())
     }
@@ -14098,6 +14116,7 @@ pub struct OCMCovarianceBlockArgs<'a> {
     pub COV_UNITS: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub LINES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub COV_REALISM: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<CVR<'a>>>>>,
+    pub DENSITY_SENSITIVITY_KM: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
 }
 
 impl<'a> Default for OCMCovarianceBlockArgs<'a> {
@@ -14120,6 +14139,7 @@ impl<'a> Default for OCMCovarianceBlockArgs<'a> {
             COV_UNITS: None,
             LINES: None,
             COV_REALISM: None,
+            DENSITY_SENSITIVITY_KM: None,
         }
     }
 }
@@ -14211,6 +14231,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> OCMCovarianceBlockBuilder<'a,
     }
 
     #[inline]
+    pub fn add_DENSITY_SENSITIVITY_KM(&mut self, DENSITY_SENSITIVITY_KM: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OCMCovarianceBlock::VT_DENSITY_SENSITIVITY_KM, DENSITY_SENSITIVITY_KM);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> OCMCovarianceBlockBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         OCMCovarianceBlockBuilder {
@@ -14245,6 +14270,7 @@ impl ::core::fmt::Debug for OCMCovarianceBlock<'_> {
         ds.field("COV_UNITS", &self.COV_UNITS());
         ds.field("LINES", &self.LINES());
         ds.field("COV_REALISM", &self.COV_REALISM());
+        ds.field("DENSITY_SENSITIVITY_KM", &self.DENSITY_SENSITIVITY_KM());
         ds.finish()
     }
 }
@@ -14268,6 +14294,7 @@ pub struct OCMCovarianceBlockT {
     pub COV_UNITS: Option<alloc::string::String>,
     pub LINES: Option<alloc::vec::Vec<alloc::string::String>>,
     pub COV_REALISM: Option<alloc::vec::Vec<CVRT>>,
+    pub DENSITY_SENSITIVITY_KM: Option<alloc::vec::Vec<f64>>,
 }
 
 impl Default for OCMCovarianceBlockT {
@@ -14289,6 +14316,7 @@ impl Default for OCMCovarianceBlockT {
             COV_UNITS: None,
             LINES: None,
             COV_REALISM: None,
+            DENSITY_SENSITIVITY_KM: None,
         }
     }
 }
@@ -14338,6 +14366,9 @@ impl OCMCovarianceBlockT {
         let COV_REALISM = self.COV_REALISM.as_ref().map(|x|{
             let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
         });
+        let DENSITY_SENSITIVITY_KM = self.DENSITY_SENSITIVITY_KM.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
         OCMCovarianceBlock::create(_fbb, &OCMCovarianceBlockArgs{
             COMMENT,
             COV_ID,
@@ -14355,6 +14386,7 @@ impl OCMCovarianceBlockT {
             COV_UNITS,
             LINES,
             COV_REALISM,
+            DENSITY_SENSITIVITY_KM,
         })
     }
 }

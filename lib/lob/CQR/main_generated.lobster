@@ -95,6 +95,9 @@ enum cqrCovarianceCorrelation:
     cqrCovarianceCorrelation_INDEPENDENT = 1
     /// A cross covariance was supplied and used.
     cqrCovarianceCorrelation_SUPPLIED_CROSS_COVARIANCE = 2
+    /// Cross covariance derived from per-object atmospheric density sensitivity
+    /// vectors and a shared log-density uncertainty.
+    cqrCovarianceCorrelation_SHARED_DENSITY_SENSITIVITY = 3
 
 enum cqrDocumentSyntax:
     cqrDocumentSyntax_UNSPECIFIED = 0
@@ -353,13 +356,19 @@ class CQRObjectSource : flatbuffers.handle
     def CATALOG_ENTRY() -> CAT?:
         let o = flatbuffers.field_table(buf_, pos_, 42)
         return if o: CAT { buf_, o } else: nil
+    /// Optional position sensitivity to a unit dimensionless log-density shift
+    /// (dr/ds) in EVALUATION_FRAME, 3 doubles in km. Empty when absent.
+    def DENSITY_SENSITIVITY_KM(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 44) + i * 8)
+    def DENSITY_SENSITIVITY_KM_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 44)
 
 def GetRootAsCQRObjectSource(buf:string): return CQRObjectSource { buf, flatbuffers.indirect(buf, 0) }
 
 struct CQRObjectSourceBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(20)
+        b_.StartObject(21)
         return this
     def add_OBJECT_ID(OBJECT_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, OBJECT_ID)
@@ -421,8 +430,18 @@ struct CQRObjectSourceBuilder:
     def add_CATALOG_ENTRY(CATALOG_ENTRY:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(19, CATALOG_ENTRY)
         return this
+    def add_DENSITY_SENSITIVITY_KM(DENSITY_SENSITIVITY_KM:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(20, DENSITY_SENSITIVITY_KM)
+        return this
     def end():
         return b_.EndObject()
+
+def CQRObjectSourceStartDENSITYSENSITIVITYKMVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def CQRObjectSourceCreateDENSITYSENSITIVITYKMVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
 
 /// One covariance-producing build whose covariance realism was verified. A
 /// collision probability uses AP covariance only when the covariance's PVN
@@ -512,13 +531,20 @@ class CQRScreeningControls : flatbuffers.handle
         return CQRVerifiedCovarianceProducer { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 40) + i * 4) }
     def VERIFIED_COVARIANCE_PRODUCERS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 40)
+    /// When true and DENSITY_LOG_SIGMA > 0 with both objects supplying
+    /// DENSITY_SENSITIVITY_KM, apply common-mode density cross-covariance.
+    def APPLY_DENSITY_CROSS_CORRELATION() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 42, 0))
+    /// Dimensionless 1-sigma common-mode log-density uncertainty (sigma_s); 0 disables.
+    def DENSITY_LOG_SIGMA() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 44, 0.0)
 
 def GetRootAsCQRScreeningControls(buf:string): return CQRScreeningControls { buf, flatbuffers.indirect(buf, 0) }
 
 struct CQRScreeningControlsBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(19)
+        b_.StartObject(21)
         return this
     def add_START_EPOCH(START_EPOCH:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, START_EPOCH)
@@ -576,6 +602,12 @@ struct CQRScreeningControlsBuilder:
         return this
     def add_VERIFIED_COVARIANCE_PRODUCERS(VERIFIED_COVARIANCE_PRODUCERS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(18, VERIFIED_COVARIANCE_PRODUCERS)
+        return this
+    def add_APPLY_DENSITY_CROSS_CORRELATION(APPLY_DENSITY_CROSS_CORRELATION:bool):
+        b_.PrependBoolSlot(19, APPLY_DENSITY_CROSS_CORRELATION, 0)
+        return this
+    def add_DENSITY_LOG_SIGMA(DENSITY_LOG_SIGMA:float):
+        b_.PrependFloat64Slot(20, DENSITY_LOG_SIGMA, 0.0)
         return this
     def end():
         return b_.EndObject()

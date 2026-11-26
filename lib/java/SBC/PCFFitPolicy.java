@@ -17,8 +17,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * Fit policy: how long an arc a fit uses, how that is validated, and what a
- * fit refuses.
+ * Optional configuration parameters for orbit estimation.
  */
 @SuppressWarnings("unused")
 public final class PCFFitPolicy extends com.google.flatbuffers.Table {
@@ -29,21 +28,19 @@ public final class PCFFitPolicy extends com.google.flatbuffers.Table {
   public PCFFitPolicy __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   /**
-   * Fit span used when the span rule is not run, hours. Default 48.
+   * Optional span parameter in hours; 0 means unspecified.
    */
-  public double DEFAULT_SPAN_HOURS() { int o = __offset(4); return o != 0 ? bb.getDouble(o + bb_pos) : 48.0; }
+  public double DEFAULT_SPAN_HOURS() { int o = __offset(4); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Shortest span a fit may take, hours. Default 24.
+   * Optional minimum span in hours; 0 means unspecified.
    */
-  public double MINIMUM_SPAN_HOURS() { int o = __offset(6); return o != 0 ? bb.getDouble(o + bb_pos) : 24.0; }
+  public double MINIMUM_SPAN_HOURS() { int o = __offset(6); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Longest span a fit may take, hours. Default 120.
+   * Optional maximum span in hours; 0 means unspecified.
    */
-  public double MAXIMUM_SPAN_HOURS() { int o = __offset(8); return o != 0 ? bb.getDouble(o + bb_pos) : 120.0; }
+  public double MAXIMUM_SPAN_HOURS() { int o = __offset(8); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Spans the extension rule scores, ascending, hours, each within
-   * [MINIMUM_SPAN_HOURS, MAXIMUM_SPAN_HOURS]. Empty: 48, 72 and 120; with
-   * 24 in front when the eccentricity exceeds ECCENTRICITY_THRESHOLD.
+   * Optional candidate span list in hours.
    */
   public double CANDIDATE_SPANS_HOURS(int j) { int o = __offset(10); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
   public int CANDIDATE_SPANS_HOURSLength() { int o = __offset(10); return o != 0 ? __vector_len(o) : 0; }
@@ -52,82 +49,63 @@ public final class PCFFitPolicy extends com.google.flatbuffers.Table {
   public ByteBuffer CANDIDATE_SPANS_HOURSAsByteBuffer() { return __vector_as_bytebuffer(10, 8); }
   public ByteBuffer CANDIDATE_SPANS_HOURSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 8); }
   /**
-   * Validation tail: each candidate is fitted to the data before the latest
-   * TAIL_HOURS and scored on that tail, hours. Default 24.
+   * Optional evaluation tail length in hours; 0 means unspecified.
    */
-  public double TAIL_HOURS() { int o = __offset(12); return o != 0 ? bb.getDouble(o + bb_pos) : 24.0; }
+  public double TAIL_HOURS() { int o = __offset(12); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Extension rule: a longer candidate is taken only when its tail error is
-   * at most this fraction of the best shorter candidate's. Default 0.9.
+   * Optional relative selection margin; 0 means unspecified.
    */
-  public double EXTENSION_MARGIN() { int o = __offset(14); return o != 0 ? bb.getDouble(o + bb_pos) : 0.9; }
+  public double EXTENSION_MARGIN() { int o = __offset(14); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Hours held out at the end of the data and reported as error growth; the
-   * fit then ends HOLDOUT_HOURS before the data does. Absent, the data
-   * block's own useable stop time decides.
+   * Optional holdout window length in hours.
    */
   public double HOLDOUT_HOURS() { int o = __offset(16); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * True when HOLDOUT_HOURS carries a value; false means absent.
+   * True when HOLDOUT_HOURS is explicitly provided.
    */
   public boolean HAS_HOLDOUT_HOURS() { int o = __offset(18); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
   /**
-   * Eccentricity above which the eccentric-orbit rule applies. Default 0.5.
+   * Optional eccentricity threshold; 0 means unspecified.
    */
-  public double ECCENTRICITY_THRESHOLD() { int o = __offset(20); return o != 0 ? bb.getDouble(o + bb_pos) : 0.5; }
+  public double ECCENTRICITY_THRESHOLD() { int o = __offset(20); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Eccentric orbits: the default span, hours. Default 24.
+   * Optional eccentric-orbit span in hours; 0 means unspecified.
    */
-  public double ECCENTRIC_DEFAULT_SPAN_HOURS() { int o = __offset(22); return o != 0 ? bb.getDouble(o + bb_pos) : 24.0; }
+  public double ECCENTRIC_DEFAULT_SPAN_HOURS() { int o = __offset(22); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Eccentric orbits: EXTENSION_MARGIN. Default 0.7.
+   * Optional eccentric-orbit relative margin; 0 means unspecified.
    */
-  public double ECCENTRIC_EXTENSION_MARGIN() { int o = __offset(24); return o != 0 ? bb.getDouble(o + bb_pos) : 0.7; }
+  public double ECCENTRIC_EXTENSION_MARGIN() { int o = __offset(24); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Eccentric orbits: no candidate longer than this is tried once the orbital
-   * period passes it, hours. Default 36.
+   * Optional eccentric-orbit period bound in hours; 0 means unspecified.
    */
-  public double ECCENTRIC_MAXIMUM_PERIOD_HOURS() { int o = __offset(26); return o != 0 ? bb.getDouble(o + bb_pos) : 36.0; }
+  public double ECCENTRIC_MAXIMUM_PERIOD_HOURS() { int o = __offset(26); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * A fit whose RMS passes this is refused as fit-implausible, km. Default
-   * 100.
+   * Optional maximum acceptable RMS in km; 0 means unspecified.
    */
-  public double IMPLAUSIBLE_RMS_KM() { int o = __offset(28); return o != 0 ? bb.getDouble(o + bb_pos) : 100.0; }
+  public double IMPLAUSIBLE_RMS_KM() { int o = __offset(28); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent
-   * or without sigma: mean 0, sigma 0.05.
+   * Optional prior on drag parameter.
    */
   public PCFGaussianPrior DRAG_PRIOR() { return DRAG_PRIOR(new PCFGaussianPrior()); }
   public PCFGaussianPrior DRAG_PRIOR(PCFGaussianPrior obj) { int o = __offset(30); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   /**
-   * Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.
-   * Absent or without sigma: mean 0, sigma 0.05.
+   * Optional prior on solar radiation pressure parameter.
    */
   public PCFGaussianPrior SRP_PRIOR() { return SRP_PRIOR(new PCFGaussianPrior()); }
   public PCFGaussianPrior SRP_PRIOR(PCFGaussianPrior obj) { int o = __offset(32); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   /**
-   * The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
-   * estimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its
-   * MEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation
-   * of ln B_eff.
+   * Optional distribution form for DRAG_PRIOR.
    */
   public int DRAG_PRIOR_FORM() { int o = __offset(34); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
   /**
-   * The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
-   * estimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN
-   * the median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of
-   * ln AGOM.
+   * Optional distribution form for SRP_PRIOR.
    */
   public int SRP_PRIOR_FORM() { int o = __offset(36); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
   /**
-   * Days past the element set's epoch day through which the fit writes the
-   * daily space weather into the record it emits (OCM
-   * PERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows
-   * (WEATHER_SOURCE RECORDS). The last day written is the later of the fit
-   * arc's last day and the epoch's day plus this count; rows supplied with
-   * the request must reach it, or the fit is refused by name. Default 30.
+   * Optional space-weather horizon in days past epoch; 0 means unspecified.
    */
-  public int WEATHER_HORIZON_DAYS() { int o = __offset(38); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 30; }
+  public int WEATHER_HORIZON_DAYS() { int o = __offset(38); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
 
   public static int createPCFFitPolicy(FlatBufferBuilder builder,
       double DEFAULT_SPAN_HOURS,
@@ -171,26 +149,26 @@ public final class PCFFitPolicy extends com.google.flatbuffers.Table {
   }
 
   public static void startPCFFitPolicy(FlatBufferBuilder builder) { builder.startTable(18); }
-  public static void addDefaultSpanHours(FlatBufferBuilder builder, double DEFAULT_SPAN_HOURS) { builder.addDouble(0, DEFAULT_SPAN_HOURS, 48.0); }
-  public static void addMinimumSpanHours(FlatBufferBuilder builder, double MINIMUM_SPAN_HOURS) { builder.addDouble(1, MINIMUM_SPAN_HOURS, 24.0); }
-  public static void addMaximumSpanHours(FlatBufferBuilder builder, double MAXIMUM_SPAN_HOURS) { builder.addDouble(2, MAXIMUM_SPAN_HOURS, 120.0); }
+  public static void addDefaultSpanHours(FlatBufferBuilder builder, double DEFAULT_SPAN_HOURS) { builder.addDouble(0, DEFAULT_SPAN_HOURS, 0.0); }
+  public static void addMinimumSpanHours(FlatBufferBuilder builder, double MINIMUM_SPAN_HOURS) { builder.addDouble(1, MINIMUM_SPAN_HOURS, 0.0); }
+  public static void addMaximumSpanHours(FlatBufferBuilder builder, double MAXIMUM_SPAN_HOURS) { builder.addDouble(2, MAXIMUM_SPAN_HOURS, 0.0); }
   public static void addCandidateSpansHours(FlatBufferBuilder builder, int CANDIDATE_SPANS_HOURSOffset) { builder.addOffset(3, CANDIDATE_SPANS_HOURSOffset, 0); }
   public static int createCandidateSpansHoursVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
   public static void startCandidateSpansHoursVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
-  public static void addTailHours(FlatBufferBuilder builder, double TAIL_HOURS) { builder.addDouble(4, TAIL_HOURS, 24.0); }
-  public static void addExtensionMargin(FlatBufferBuilder builder, double EXTENSION_MARGIN) { builder.addDouble(5, EXTENSION_MARGIN, 0.9); }
+  public static void addTailHours(FlatBufferBuilder builder, double TAIL_HOURS) { builder.addDouble(4, TAIL_HOURS, 0.0); }
+  public static void addExtensionMargin(FlatBufferBuilder builder, double EXTENSION_MARGIN) { builder.addDouble(5, EXTENSION_MARGIN, 0.0); }
   public static void addHoldoutHours(FlatBufferBuilder builder, double HOLDOUT_HOURS) { builder.addDouble(6, HOLDOUT_HOURS, 0.0); }
   public static void addHasHoldoutHours(FlatBufferBuilder builder, boolean HAS_HOLDOUT_HOURS) { builder.addBoolean(7, HAS_HOLDOUT_HOURS, false); }
-  public static void addEccentricityThreshold(FlatBufferBuilder builder, double ECCENTRICITY_THRESHOLD) { builder.addDouble(8, ECCENTRICITY_THRESHOLD, 0.5); }
-  public static void addEccentricDefaultSpanHours(FlatBufferBuilder builder, double ECCENTRIC_DEFAULT_SPAN_HOURS) { builder.addDouble(9, ECCENTRIC_DEFAULT_SPAN_HOURS, 24.0); }
-  public static void addEccentricExtensionMargin(FlatBufferBuilder builder, double ECCENTRIC_EXTENSION_MARGIN) { builder.addDouble(10, ECCENTRIC_EXTENSION_MARGIN, 0.7); }
-  public static void addEccentricMaximumPeriodHours(FlatBufferBuilder builder, double ECCENTRIC_MAXIMUM_PERIOD_HOURS) { builder.addDouble(11, ECCENTRIC_MAXIMUM_PERIOD_HOURS, 36.0); }
-  public static void addImplausibleRmsKm(FlatBufferBuilder builder, double IMPLAUSIBLE_RMS_KM) { builder.addDouble(12, IMPLAUSIBLE_RMS_KM, 100.0); }
+  public static void addEccentricityThreshold(FlatBufferBuilder builder, double ECCENTRICITY_THRESHOLD) { builder.addDouble(8, ECCENTRICITY_THRESHOLD, 0.0); }
+  public static void addEccentricDefaultSpanHours(FlatBufferBuilder builder, double ECCENTRIC_DEFAULT_SPAN_HOURS) { builder.addDouble(9, ECCENTRIC_DEFAULT_SPAN_HOURS, 0.0); }
+  public static void addEccentricExtensionMargin(FlatBufferBuilder builder, double ECCENTRIC_EXTENSION_MARGIN) { builder.addDouble(10, ECCENTRIC_EXTENSION_MARGIN, 0.0); }
+  public static void addEccentricMaximumPeriodHours(FlatBufferBuilder builder, double ECCENTRIC_MAXIMUM_PERIOD_HOURS) { builder.addDouble(11, ECCENTRIC_MAXIMUM_PERIOD_HOURS, 0.0); }
+  public static void addImplausibleRmsKm(FlatBufferBuilder builder, double IMPLAUSIBLE_RMS_KM) { builder.addDouble(12, IMPLAUSIBLE_RMS_KM, 0.0); }
   public static void addDragPrior(FlatBufferBuilder builder, int DRAG_PRIOROffset) { builder.addOffset(13, DRAG_PRIOROffset, 0); }
   public static void addSrpPrior(FlatBufferBuilder builder, int SRP_PRIOROffset) { builder.addOffset(14, SRP_PRIOROffset, 0); }
   public static void addDragPriorForm(FlatBufferBuilder builder, int DRAG_PRIOR_FORM) { builder.addByte(15, (byte) DRAG_PRIOR_FORM, (byte) 0); }
   public static void addSrpPriorForm(FlatBufferBuilder builder, int SRP_PRIOR_FORM) { builder.addByte(16, (byte) SRP_PRIOR_FORM, (byte) 0); }
-  public static void addWeatherHorizonDays(FlatBufferBuilder builder, int WEATHER_HORIZON_DAYS) { builder.addShort(17, (short) WEATHER_HORIZON_DAYS, (short) 30); }
+  public static void addWeatherHorizonDays(FlatBufferBuilder builder, int WEATHER_HORIZON_DAYS) { builder.addShort(17, (short) WEATHER_HORIZON_DAYS, (short) 0); }
   public static int endPCFFitPolicy(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

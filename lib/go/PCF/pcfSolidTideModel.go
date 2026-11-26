@@ -4,28 +4,32 @@ package PCF
 
 import "strconv"
 
-/// Solid Earth tide model for the central body's field. NONE leaves the
-/// tides out. IERS_2010 is IERS Conventions (2010) section 6.2: the degree 2
-/// and 3 tides raised by the Sun and Moon with Table 6.3's anelastic Love
-/// numbers and the degree 4 terms through k+ (step 1, eqs. 6.6-6.7), the
-/// frequency-dependent corrections of Tables 6.5a-c (step 2, eq. 6.8), and
-/// the permanent tide handled for the field's own tide system. Pole tide is
-/// not included.
+/// Solid Earth tide model for the central body's field. UNSPECIFIED uses the
+/// propagator's own default (IERS 2010 when supported). NONE disables solid
+/// Earth tides explicitly. IERS_2010 is IERS Conventions (2010) section 6.2:
+/// degree 2 and 3 tides raised by the Sun and Moon with Table 6.3's anelastic
+/// Love numbers, degree 4 terms through k+ (step 1, eqs. 6.6-6.7),
+/// frequency-dependent corrections of Tables 6.5a-c (step 2, eq. 6.8), and the
+/// permanent tide handled for the field's own tide system. Pole tide is not
+/// included.
 type pcfSolidTideModel byte
 
 const (
-	pcfSolidTideModelNONE      pcfSolidTideModel = 0
-	pcfSolidTideModelIERS_2010 pcfSolidTideModel = 1
+	pcfSolidTideModelUNSPECIFIED pcfSolidTideModel = 0
+	pcfSolidTideModelNONE        pcfSolidTideModel = 1
+	pcfSolidTideModelIERS_2010   pcfSolidTideModel = 2
 )
 
 var EnumNamespcfSolidTideModel = map[pcfSolidTideModel]string{
-	pcfSolidTideModelNONE:      "NONE",
-	pcfSolidTideModelIERS_2010: "IERS_2010",
+	pcfSolidTideModelUNSPECIFIED: "UNSPECIFIED",
+	pcfSolidTideModelNONE:        "NONE",
+	pcfSolidTideModelIERS_2010:   "IERS_2010",
 }
 
 var EnumValuespcfSolidTideModel = map[string]pcfSolidTideModel{
-	"NONE":      pcfSolidTideModelNONE,
-	"IERS_2010": pcfSolidTideModelIERS_2010,
+	"UNSPECIFIED": pcfSolidTideModelUNSPECIFIED,
+	"NONE":        pcfSolidTideModelNONE,
+	"IERS_2010":   pcfSolidTideModelIERS_2010,
 }
 
 func (v pcfSolidTideModel) String() string {

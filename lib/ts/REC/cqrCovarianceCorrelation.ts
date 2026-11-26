@@ -16,5 +16,11 @@ export enum cqrCovarianceCorrelation {
   /**
    * A cross covariance was supplied and used.
    */
-  SUPPLIED_CROSS_COVARIANCE = 2
+  SUPPLIED_CROSS_COVARIANCE = 2,
+
+  /**
+   * Cross covariance derived from per-object atmospheric density sensitivity
+   * vectors and a shared log-density uncertainty.
+   */
+  SHARED_DENSITY_SENSITIVITY = 3
 }

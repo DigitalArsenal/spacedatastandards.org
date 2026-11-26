@@ -91,6 +91,14 @@ export declare class OCMCovarianceBlock implements flatbuffers.IUnpackableObject
      */
     COV_REALISM(index: number, obj?: CVR): CVR | null;
     covRealismLength(): number;
+    /**
+     * Optional position sensitivity to a unit dimensionless log-density shift
+     * (dr/ds), flattened 3 doubles per line of LINES in COV_REF_FRAME, km.
+     * Empty when absent.
+     */
+    DENSITY_SENSITIVITY_KM(index: number): number | null;
+    densitySensitivityKmLength(): number;
+    densitySensitivityKmArray(): Float64Array | null;
     static startOCMCovarianceBlock(builder: flatbuffers.Builder): void;
     static addComment(builder: flatbuffers.Builder, COMMENTOffset: flatbuffers.Offset): void;
     static addCovId(builder: flatbuffers.Builder, COV_IDOffset: flatbuffers.Offset): void;
@@ -112,8 +120,15 @@ export declare class OCMCovarianceBlock implements flatbuffers.IUnpackableObject
     static addCovRealism(builder: flatbuffers.Builder, COV_REALISMOffset: flatbuffers.Offset): void;
     static createCovRealismVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startCovRealismVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addDensitySensitivityKm(builder: flatbuffers.Builder, DENSITY_SENSITIVITY_KMOffset: flatbuffers.Offset): void;
+    static createDensitySensitivityKmVector(builder: flatbuffers.Builder, data: number[] | Float64Array): flatbuffers.Offset;
+    /**
+     * @deprecated This Uint8Array overload will be removed in the future.
+     */
+    static createDensitySensitivityKmVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startDensitySensitivityKmVector(builder: flatbuffers.Builder, numElems: number): void;
     static endOCMCovarianceBlock(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createOCMCovarianceBlock(builder: flatbuffers.Builder, COMMENTOffset: flatbuffers.Offset, COV_IDOffset: flatbuffers.Offset, COV_PREV_IDOffset: flatbuffers.Offset, COV_NEXT_IDOffset: flatbuffers.Offset, COV_BASISOffset: flatbuffers.Offset, COV_BASIS_IDOffset: flatbuffers.Offset, COV_REF_FRAMEOffset: flatbuffers.Offset, COV_FRAME_EPOCHOffset: flatbuffers.Offset, COV_SCALE_MIN: number, COV_SCALE_MAX: number, COV_CONFIDENCE: number, COV_TYPEOffset: flatbuffers.Offset, COV_ORDERING: covarianceOrdering, COV_UNITSOffset: flatbuffers.Offset, LINESOffset: flatbuffers.Offset, COV_REALISMOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createOCMCovarianceBlock(builder: flatbuffers.Builder, COMMENTOffset: flatbuffers.Offset, COV_IDOffset: flatbuffers.Offset, COV_PREV_IDOffset: flatbuffers.Offset, COV_NEXT_IDOffset: flatbuffers.Offset, COV_BASISOffset: flatbuffers.Offset, COV_BASIS_IDOffset: flatbuffers.Offset, COV_REF_FRAMEOffset: flatbuffers.Offset, COV_FRAME_EPOCHOffset: flatbuffers.Offset, COV_SCALE_MIN: number, COV_SCALE_MAX: number, COV_CONFIDENCE: number, COV_TYPEOffset: flatbuffers.Offset, COV_ORDERING: covarianceOrdering, COV_UNITSOffset: flatbuffers.Offset, LINESOffset: flatbuffers.Offset, COV_REALISMOffset: flatbuffers.Offset, DENSITY_SENSITIVITY_KMOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): OCMCovarianceBlockT;
     unpackTo(_o: OCMCovarianceBlockT): void;
 }
@@ -134,7 +149,8 @@ export declare class OCMCovarianceBlockT implements flatbuffers.IGeneratedObject
     COV_UNITS: string | Uint8Array | null;
     LINES: (string)[];
     COV_REALISM: (CVRT)[];
-    constructor(COMMENT?: string | Uint8Array | null, COV_ID?: string | Uint8Array | null, COV_PREV_ID?: string | Uint8Array | null, COV_NEXT_ID?: string | Uint8Array | null, COV_BASIS?: string | Uint8Array | null, COV_BASIS_ID?: string | Uint8Array | null, COV_REF_FRAME?: string | Uint8Array | null, COV_FRAME_EPOCH?: string | Uint8Array | null, COV_SCALE_MIN?: number, COV_SCALE_MAX?: number, COV_CONFIDENCE?: number, COV_TYPE?: string | Uint8Array | null, COV_ORDERING?: covarianceOrdering, COV_UNITS?: string | Uint8Array | null, LINES?: (string)[], COV_REALISM?: (CVRT)[]);
+    DENSITY_SENSITIVITY_KM: (number)[];
+    constructor(COMMENT?: string | Uint8Array | null, COV_ID?: string | Uint8Array | null, COV_PREV_ID?: string | Uint8Array | null, COV_NEXT_ID?: string | Uint8Array | null, COV_BASIS?: string | Uint8Array | null, COV_BASIS_ID?: string | Uint8Array | null, COV_REF_FRAME?: string | Uint8Array | null, COV_FRAME_EPOCH?: string | Uint8Array | null, COV_SCALE_MIN?: number, COV_SCALE_MAX?: number, COV_CONFIDENCE?: number, COV_TYPE?: string | Uint8Array | null, COV_ORDERING?: covarianceOrdering, COV_UNITS?: string | Uint8Array | null, LINES?: (string)[], COV_REALISM?: (CVRT)[], DENSITY_SENSITIVITY_KM?: (number)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=OCMCovarianceBlock.d.ts.map

@@ -115,6 +115,17 @@ public struct OCMCovarianceBlock : IFlatbufferObject
   /// or one entry for every line.
   public CVR? COV_REALISM(int j) { int o = __p.__offset(34); return o != 0 ? (CVR?)(new CVR()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int COV_REALISMLength { get { int o = __p.__offset(34); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Optional position sensitivity to a unit dimensionless log-density shift
+  /// (dr/ds), flattened 3 doubles per line of LINES in COV_REF_FRAME, km.
+  /// Empty when absent.
+  public double DENSITY_SENSITIVITY_KM(int j) { int o = __p.__offset(36); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int DENSITY_SENSITIVITY_KMLength { get { int o = __p.__offset(36); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetDENSITY_SENSITIVITY_KMBytes() { return __p.__vector_as_span<double>(36, 8); }
+#else
+  public ArraySegment<byte>? GetDENSITY_SENSITIVITY_KMBytes() { return __p.__vector_as_arraysegment(36); }
+#endif
+  public double[] GetDENSITY_SENSITIVITY_KMArray() { return __p.__vector_as_array<double>(36); }
 
   public static Offset<OCMCovarianceBlock> CreateOCMCovarianceBlock(FlatBufferBuilder builder,
       StringOffset COMMENTOffset = default(StringOffset),
@@ -132,11 +143,13 @@ public struct OCMCovarianceBlock : IFlatbufferObject
       covarianceOrdering COV_ORDERING = covarianceOrdering.LTM,
       StringOffset COV_UNITSOffset = default(StringOffset),
       VectorOffset LINESOffset = default(VectorOffset),
-      VectorOffset COV_REALISMOffset = default(VectorOffset)) {
-    builder.StartTable(16);
+      VectorOffset COV_REALISMOffset = default(VectorOffset),
+      VectorOffset DENSITY_SENSITIVITY_KMOffset = default(VectorOffset)) {
+    builder.StartTable(17);
     OCMCovarianceBlock.AddCOV_CONFIDENCE(builder, COV_CONFIDENCE);
     OCMCovarianceBlock.AddCOV_SCALE_MAX(builder, COV_SCALE_MAX);
     OCMCovarianceBlock.AddCOV_SCALE_MIN(builder, COV_SCALE_MIN);
+    OCMCovarianceBlock.AddDENSITY_SENSITIVITY_KM(builder, DENSITY_SENSITIVITY_KMOffset);
     OCMCovarianceBlock.AddCOV_REALISM(builder, COV_REALISMOffset);
     OCMCovarianceBlock.AddLINES(builder, LINESOffset);
     OCMCovarianceBlock.AddCOV_UNITS(builder, COV_UNITSOffset);
@@ -153,7 +166,7 @@ public struct OCMCovarianceBlock : IFlatbufferObject
     return OCMCovarianceBlock.EndOCMCovarianceBlock(builder);
   }
 
-  public static void StartOCMCovarianceBlock(FlatBufferBuilder builder) { builder.StartTable(16); }
+  public static void StartOCMCovarianceBlock(FlatBufferBuilder builder) { builder.StartTable(17); }
   public static void AddCOMMENT(FlatBufferBuilder builder, StringOffset COMMENTOffset) { builder.AddOffset(0, COMMENTOffset.Value, 0); }
   public static void AddCOV_ID(FlatBufferBuilder builder, StringOffset COV_IDOffset) { builder.AddOffset(1, COV_IDOffset.Value, 0); }
   public static void AddCOV_PREV_ID(FlatBufferBuilder builder, StringOffset COV_PREV_IDOffset) { builder.AddOffset(2, COV_PREV_IDOffset.Value, 0); }
@@ -180,6 +193,12 @@ public struct OCMCovarianceBlock : IFlatbufferObject
   public static VectorOffset CreateCOV_REALISMVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<CVR>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateCOV_REALISMVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<CVR>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartCOV_REALISMVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddDENSITY_SENSITIVITY_KM(FlatBufferBuilder builder, VectorOffset DENSITY_SENSITIVITY_KMOffset) { builder.AddOffset(16, DENSITY_SENSITIVITY_KMOffset.Value, 0); }
+  public static VectorOffset CreateDENSITY_SENSITIVITY_KMVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateDENSITY_SENSITIVITY_KMVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateDENSITY_SENSITIVITY_KMVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateDENSITY_SENSITIVITY_KMVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartDENSITY_SENSITIVITY_KMVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
   public static Offset<OCMCovarianceBlock> EndOCMCovarianceBlock(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<OCMCovarianceBlock>(o);
@@ -208,6 +227,8 @@ public struct OCMCovarianceBlock : IFlatbufferObject
     for (var _j = 0; _j < this.LINESLength; ++_j) {_o.LINES.Add(this.LINES(_j));}
     _o.COV_REALISM = new List<CVRT>();
     for (var _j = 0; _j < this.COV_REALISMLength; ++_j) {_o.COV_REALISM.Add(this.COV_REALISM(_j).HasValue ? this.COV_REALISM(_j).Value.UnPack() : null);}
+    _o.DENSITY_SENSITIVITY_KM = new List<double>();
+    for (var _j = 0; _j < this.DENSITY_SENSITIVITY_KMLength; ++_j) {_o.DENSITY_SENSITIVITY_KM.Add(this.DENSITY_SENSITIVITY_KM(_j));}
   }
   public static Offset<OCMCovarianceBlock> Pack(FlatBufferBuilder builder, OCMCovarianceBlockT _o) {
     if (_o == null) return default(Offset<OCMCovarianceBlock>);
@@ -233,6 +254,11 @@ public struct OCMCovarianceBlock : IFlatbufferObject
       for (var _j = 0; _j < __COV_REALISM.Length; ++_j) { __COV_REALISM[_j] = CVR.Pack(builder, _o.COV_REALISM[_j]); }
       _COV_REALISM = CreateCOV_REALISMVector(builder, __COV_REALISM);
     }
+    var _DENSITY_SENSITIVITY_KM = default(VectorOffset);
+    if (_o.DENSITY_SENSITIVITY_KM != null) {
+      var __DENSITY_SENSITIVITY_KM = _o.DENSITY_SENSITIVITY_KM.ToArray();
+      _DENSITY_SENSITIVITY_KM = CreateDENSITY_SENSITIVITY_KMVector(builder, __DENSITY_SENSITIVITY_KM);
+    }
     return CreateOCMCovarianceBlock(
       builder,
       _COMMENT,
@@ -250,7 +276,8 @@ public struct OCMCovarianceBlock : IFlatbufferObject
       _o.COV_ORDERING,
       _COV_UNITS,
       _LINES,
-      _COV_REALISM);
+      _COV_REALISM,
+      _DENSITY_SENSITIVITY_KM);
   }
 }
 
@@ -272,6 +299,7 @@ public class OCMCovarianceBlockT
   public string COV_UNITS { get; set; }
   public List<string> LINES { get; set; }
   public List<CVRT> COV_REALISM { get; set; }
+  public List<double> DENSITY_SENSITIVITY_KM { get; set; }
 
   public OCMCovarianceBlockT() {
     this.COMMENT = null;
@@ -290,6 +318,7 @@ public class OCMCovarianceBlockT
     this.COV_UNITS = null;
     this.LINES = null;
     this.COV_REALISM = null;
+    this.DENSITY_SENSITIVITY_KM = null;
   }
 }
 
@@ -315,6 +344,7 @@ static public class OCMCovarianceBlockVerify
       && verifier.VerifyString(tablePos, 30 /*COV_UNITS*/, false)
       && verifier.VerifyVectorOfStrings(tablePos, 32 /*LINES*/, false)
       && verifier.VerifyVectorOfTables(tablePos, 34 /*COV_REALISM*/, CVRVerify.Verify, false)
+      && verifier.VerifyVectorOfData(tablePos, 36 /*DENSITY_SENSITIVITY_KM*/, 8 /*double*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

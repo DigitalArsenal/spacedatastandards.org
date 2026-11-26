@@ -193,8 +193,28 @@ covRealismLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Optional position sensitivity to a unit dimensionless log-density shift
+ * (dr/ds), flattened 3 doubles per line of LINES in COV_REF_FRAME, km.
+ * Empty when absent.
+ */
+DENSITY_SENSITIVITY_KM(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+densitySensitivityKmLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+densitySensitivityKmArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
 static startOCMCovarianceBlock(builder:flatbuffers.Builder) {
-  builder.startObject(16);
+  builder.startObject(17);
 }
 
 static addComment(builder:flatbuffers.Builder, COMMENTOffset:flatbuffers.Offset) {
@@ -285,12 +305,33 @@ static startCovRealismVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
+static addDensitySensitivityKm(builder:flatbuffers.Builder, DENSITY_SENSITIVITY_KMOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(16, DENSITY_SENSITIVITY_KMOffset, 0);
+}
+
+static createDensitySensitivityKmVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createDensitySensitivityKmVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createDensitySensitivityKmVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startDensitySensitivityKmVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
 static endOCMCovarianceBlock(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createOCMCovarianceBlock(builder:flatbuffers.Builder, COMMENTOffset:flatbuffers.Offset, COV_IDOffset:flatbuffers.Offset, COV_PREV_IDOffset:flatbuffers.Offset, COV_NEXT_IDOffset:flatbuffers.Offset, COV_BASISOffset:flatbuffers.Offset, COV_BASIS_IDOffset:flatbuffers.Offset, COV_REF_FRAMEOffset:flatbuffers.Offset, COV_FRAME_EPOCHOffset:flatbuffers.Offset, COV_SCALE_MIN:number, COV_SCALE_MAX:number, COV_CONFIDENCE:number, COV_TYPEOffset:flatbuffers.Offset, COV_ORDERING:covarianceOrdering, COV_UNITSOffset:flatbuffers.Offset, LINESOffset:flatbuffers.Offset, COV_REALISMOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createOCMCovarianceBlock(builder:flatbuffers.Builder, COMMENTOffset:flatbuffers.Offset, COV_IDOffset:flatbuffers.Offset, COV_PREV_IDOffset:flatbuffers.Offset, COV_NEXT_IDOffset:flatbuffers.Offset, COV_BASISOffset:flatbuffers.Offset, COV_BASIS_IDOffset:flatbuffers.Offset, COV_REF_FRAMEOffset:flatbuffers.Offset, COV_FRAME_EPOCHOffset:flatbuffers.Offset, COV_SCALE_MIN:number, COV_SCALE_MAX:number, COV_CONFIDENCE:number, COV_TYPEOffset:flatbuffers.Offset, COV_ORDERING:covarianceOrdering, COV_UNITSOffset:flatbuffers.Offset, LINESOffset:flatbuffers.Offset, COV_REALISMOffset:flatbuffers.Offset, DENSITY_SENSITIVITY_KMOffset:flatbuffers.Offset):flatbuffers.Offset {
   OCMCovarianceBlock.startOCMCovarianceBlock(builder);
   OCMCovarianceBlock.addComment(builder, COMMENTOffset);
   OCMCovarianceBlock.addCovId(builder, COV_IDOffset);
@@ -308,6 +349,7 @@ static createOCMCovarianceBlock(builder:flatbuffers.Builder, COMMENTOffset:flatb
   OCMCovarianceBlock.addCovUnits(builder, COV_UNITSOffset);
   OCMCovarianceBlock.addLines(builder, LINESOffset);
   OCMCovarianceBlock.addCovRealism(builder, COV_REALISMOffset);
+  OCMCovarianceBlock.addDensitySensitivityKm(builder, DENSITY_SENSITIVITY_KMOffset);
   return OCMCovarianceBlock.endOCMCovarianceBlock(builder);
 }
 
@@ -328,7 +370,8 @@ unpack(): OCMCovarianceBlockT {
     this.COV_ORDERING(),
     this.COV_UNITS(),
     this.bb!.createScalarList<string>(this.LINES.bind(this), this.linesLength()),
-    this.bb!.createObjList<CVR, CVRT>(this.COV_REALISM.bind(this), this.covRealismLength())
+    this.bb!.createObjList<CVR, CVRT>(this.COV_REALISM.bind(this), this.covRealismLength()),
+    this.bb!.createScalarList<number>(this.DENSITY_SENSITIVITY_KM.bind(this), this.densitySensitivityKmLength())
   );
 }
 
@@ -350,6 +393,7 @@ unpackTo(_o: OCMCovarianceBlockT): void {
   _o.COV_UNITS = this.COV_UNITS();
   _o.LINES = this.bb!.createScalarList<string>(this.LINES.bind(this), this.linesLength());
   _o.COV_REALISM = this.bb!.createObjList<CVR, CVRT>(this.COV_REALISM.bind(this), this.covRealismLength());
+  _o.DENSITY_SENSITIVITY_KM = this.bb!.createScalarList<number>(this.DENSITY_SENSITIVITY_KM.bind(this), this.densitySensitivityKmLength());
 }
 }
 
@@ -370,7 +414,8 @@ constructor(
   public COV_ORDERING: covarianceOrdering = covarianceOrdering.LTM,
   public COV_UNITS: string|Uint8Array|null = null,
   public LINES: (string)[] = [],
-  public COV_REALISM: (CVRT)[] = []
+  public COV_REALISM: (CVRT)[] = [],
+  public DENSITY_SENSITIVITY_KM: (number)[] = []
 ){}
 
 
@@ -387,6 +432,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const COV_UNITS = (this.COV_UNITS !== null ? builder.createString(this.COV_UNITS!) : 0);
   const LINES = OCMCovarianceBlock.createLinesVector(builder, builder.createObjectOffsetList(this.LINES));
   const COV_REALISM = OCMCovarianceBlock.createCovRealismVector(builder, builder.createObjectOffsetList(this.COV_REALISM));
+  const DENSITY_SENSITIVITY_KM = OCMCovarianceBlock.createDensitySensitivityKmVector(builder, this.DENSITY_SENSITIVITY_KM);
 
   return OCMCovarianceBlock.createOCMCovarianceBlock(builder,
     COMMENT,
@@ -404,7 +450,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.COV_ORDERING,
     COV_UNITS,
     LINES,
-    COV_REALISM
+    COV_REALISM,
+    DENSITY_SENSITIVITY_KM
   );
 }
 }

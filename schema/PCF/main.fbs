@@ -1,5 +1,5 @@
-// Hash: e259db0e1e4887f3ca3d15f7819bd8fbac894d2e251c81328b3c79a61b9e4060
-// Version: 1.0.9
+// Hash: 58396ab63fe33b2405c946f37774d457858d3b791a556e04cec3b67e62fb0cd8
+// Version: 1.0.10
 // -----------------------------------END_HEADER
 include "../FRM/main.fbs";
 include "../TIM/main.fbs";
@@ -327,15 +327,16 @@ enum pcfAtmosphereFamily : ubyte {
   JACCHIA70 = 8
 }
 
-/// Solid Earth tide model for the central body's field. NONE leaves the
-/// tides out. IERS_2010 is IERS Conventions (2010) section 6.2: the degree 2
-/// and 3 tides raised by the Sun and Moon with Table 6.3's anelastic Love
-/// numbers and the degree 4 terms through k+ (step 1, eqs. 6.6-6.7), the
-/// frequency-dependent corrections of Tables 6.5a-c (step 2, eq. 6.8), and
-/// the permanent tide handled for the field's own tide system. Pole tide is
-/// not included.
+/// Solid Earth tide model for the central body's field. UNSPECIFIED uses the
+/// propagator's own default (IERS 2010 when supported). NONE disables solid
+/// Earth tides explicitly. IERS_2010 is IERS Conventions (2010) section 6.2:
+/// degree 2 and 3 tides raised by the Sun and Moon with Table 6.3's anelastic
+/// Love numbers, degree 4 terms through k+ (step 1, eqs. 6.6-6.7),
+/// frequency-dependent corrections of Tables 6.5a-c (step 2, eq. 6.8), and the
+/// permanent tide handled for the field's own tide system. Pole tide is not
+/// included.
 enum pcfSolidTideModel : ubyte {
-  NONE = 0, IERS_2010 = 1
+  UNSPECIFIED = 0, NONE = 1, IERS_2010 = 2
 }
 
 /// Post-Newtonian corrections to the central body's acceleration (IERS
@@ -372,90 +373,62 @@ enum pcfOceanTideModel : ubyte { NONE = 0, FES2004 = 1 }
 /// GNSS spacecraft block, selecting the box-wing surfaces.
 enum pcfGnssSpacecraftBlock : ubyte { UNSPECIFIED = 0, GPS_IIR = 1, GPS_IIR_M = 2, GPS_IIF = 3 }
 
-/// The form of a fitted parameter's prior (PCFFitPolicy DRAG_PRIOR_FORM and
-/// SRP_PRIOR_FORM). Append new values only.
+/// Prior distribution form for an optional parameter constraint.
 enum pcfPriorForm : ubyte {
-  /// Gaussian on the parameter itself, which may take either sign (the
-  /// default): the prior's MEAN and SIGMA are in the parameter's unit.
+  /// Gaussian distribution on the parameter value.
   GAUSSIAN_SIGNED = 0,
-  /// Log-normal: the fit estimates the natural log of the parameter, so the
-  /// parameter is never <= 0. The prior's MEAN is the median, in the
-  /// parameter's unit, and must be > 0; its SIGMA is the standard deviation of
-  /// the natural log of the parameter. The prior is required (HAS_SIGMA true).
+  /// Log-normal distribution on a positive parameter value.
   LOG_NORMAL = 1
 }
 
-/// A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps
-/// the theory's own sigma and moves only the mean.
+/// Optional Gaussian parameter prior.
 table PCFGaussianPrior {
-  /// Prior mean, in the unit of the parameter it is attached to. Default 0.
+  /// Prior mean in the parameter's unit.
   MEAN:double = 0;
-  /// Prior standard deviation, in the same unit; > 0 when HAS_SIGMA.
+  /// Prior standard deviation in the parameter's unit; > 0 when HAS_SIGMA is true.
   SIGMA:double = 0;
-  /// True when SIGMA carries a value; false keeps the theory's own sigma.
+  /// True when SIGMA is explicitly provided.
   HAS_SIGMA:bool = false;
 }
 
-/// Fit policy: how long an arc a fit uses, how that is validated, and what a
-/// fit refuses.
+/// Optional configuration parameters for orbit estimation.
 table PCFFitPolicy {
-  /// Fit span used when the span rule is not run, hours. Default 48.
-  DEFAULT_SPAN_HOURS:double = 48;
-  /// Shortest span a fit may take, hours. Default 24.
-  MINIMUM_SPAN_HOURS:double = 24;
-  /// Longest span a fit may take, hours. Default 120.
-  MAXIMUM_SPAN_HOURS:double = 120;
-  /// Spans the extension rule scores, ascending, hours, each within
-  /// [MINIMUM_SPAN_HOURS, MAXIMUM_SPAN_HOURS]. Empty: 48, 72 and 120; with
-  /// 24 in front when the eccentricity exceeds ECCENTRICITY_THRESHOLD.
+  /// Optional span parameter in hours; 0 means unspecified.
+  DEFAULT_SPAN_HOURS:double = 0;
+  /// Optional minimum span in hours; 0 means unspecified.
+  MINIMUM_SPAN_HOURS:double = 0;
+  /// Optional maximum span in hours; 0 means unspecified.
+  MAXIMUM_SPAN_HOURS:double = 0;
+  /// Optional candidate span list in hours.
   CANDIDATE_SPANS_HOURS:[double];
-  /// Validation tail: each candidate is fitted to the data before the latest
-  /// TAIL_HOURS and scored on that tail, hours. Default 24.
-  TAIL_HOURS:double = 24;
-  /// Extension rule: a longer candidate is taken only when its tail error is
-  /// at most this fraction of the best shorter candidate's. Default 0.9.
-  EXTENSION_MARGIN:double = 0.9;
-  /// Hours held out at the end of the data and reported as error growth; the
-  /// fit then ends HOLDOUT_HOURS before the data does. Absent, the data
-  /// block's own useable stop time decides.
+  /// Optional evaluation tail length in hours; 0 means unspecified.
+  TAIL_HOURS:double = 0;
+  /// Optional relative selection margin; 0 means unspecified.
+  EXTENSION_MARGIN:double = 0;
+  /// Optional holdout window length in hours.
   HOLDOUT_HOURS:double = 0;
-  /// True when HOLDOUT_HOURS carries a value; false means absent.
+  /// True when HOLDOUT_HOURS is explicitly provided.
   HAS_HOLDOUT_HOURS:bool = false;
-  /// Eccentricity above which the eccentric-orbit rule applies. Default 0.5.
-  ECCENTRICITY_THRESHOLD:double = 0.5;
-  /// Eccentric orbits: the default span, hours. Default 24.
-  ECCENTRIC_DEFAULT_SPAN_HOURS:double = 24;
-  /// Eccentric orbits: EXTENSION_MARGIN. Default 0.7.
-  ECCENTRIC_EXTENSION_MARGIN:double = 0.7;
-  /// Eccentric orbits: no candidate longer than this is tried once the orbital
-  /// period passes it, hours. Default 36.
-  ECCENTRIC_MAXIMUM_PERIOD_HOURS:double = 36;
-  /// A fit whose RMS passes this is refused as fit-implausible, km. Default
-  /// 100.
-  IMPLAUSIBLE_RMS_KM:double = 100;
-  /// Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent
-  /// or without sigma: mean 0, sigma 0.05.
+  /// Optional eccentricity threshold; 0 means unspecified.
+  ECCENTRICITY_THRESHOLD:double = 0;
+  /// Optional eccentric-orbit span in hours; 0 means unspecified.
+  ECCENTRIC_DEFAULT_SPAN_HOURS:double = 0;
+  /// Optional eccentric-orbit relative margin; 0 means unspecified.
+  ECCENTRIC_EXTENSION_MARGIN:double = 0;
+  /// Optional eccentric-orbit period bound in hours; 0 means unspecified.
+  ECCENTRIC_MAXIMUM_PERIOD_HOURS:double = 0;
+  /// Optional maximum acceptable RMS in km; 0 means unspecified.
+  IMPLAUSIBLE_RMS_KM:double = 0;
+  /// Optional prior on drag parameter.
   DRAG_PRIOR:PCFGaussianPrior;
-  /// Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.
-  /// Absent or without sigma: mean 0, sigma 0.05.
+  /// Optional prior on solar radiation pressure parameter.
   SRP_PRIOR:PCFGaussianPrior;
-  /// The form of DRAG_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
-  /// estimates ln B_eff, so B_eff is never <= 0; DRAG_PRIOR is required, its
-  /// MEAN the median of B_eff (> 0, m2/kg) and its SIGMA the standard deviation
-  /// of ln B_eff.
+  /// Optional distribution form for DRAG_PRIOR.
   DRAG_PRIOR_FORM:pcfPriorForm = GAUSSIAN_SIGNED;
-  /// The form of SRP_PRIOR. Default GAUSSIAN_SIGNED. LOG_NORMAL: the fit
-  /// estimates ln AGOM, so AGOM is never <= 0; SRP_PRIOR is required, its MEAN
-  /// the median of AGOM (> 0, m2/kg) and its SIGMA the standard deviation of
-  /// ln AGOM.
+  /// Optional distribution form for SRP_PRIOR.
   SRP_PRIOR_FORM:pcfPriorForm = GAUSSIAN_SIGNED;
-  /// Days past the element set's epoch day through which the fit writes the
-  /// daily space weather into the record it emits (OCM
-  /// PERTURBATIONS.SPACE_WEATHER), when the forces it fits under read rows
-  /// (WEATHER_SOURCE RECORDS). The last day written is the later of the fit
-  /// arc's last day and the epoch's day plus this count; rows supplied with
-  /// the request must reach it, or the fit is refused by name. Default 30.
-  WEATHER_HORIZON_DAYS:ushort = 30;
+  /// Optional space-weather horizon in days past epoch; 0 means unspecified.
+  WEATHER_HORIZON_DAYS:ushort = 0;
 }
 
 /// One term of an expression program.
@@ -635,8 +608,8 @@ table PCFForceModel {
   EPHEMERIS_SOURCE:string (required);
   /// Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth
   /// orientation (the request's Earth orientation rows) to apply them. Default
-  /// NONE.
-  SOLID_TIDES:pcfSolidTideModel = NONE;
+  /// UNSPECIFIED (the propagator's own default).
+  SOLID_TIDES:pcfSolidTideModel = UNSPECIFIED;
   /// Post-Newtonian terms. Default NONE.
   RELATIVITY:pcfRelativityTerms = NONE;
   /// Constant acceleration along the in-track axis, m/s2: T of RTN,
