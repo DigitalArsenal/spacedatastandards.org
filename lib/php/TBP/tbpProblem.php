@@ -54,6 +54,16 @@ class tbpProblem
     const FrameConversion = 9;
     /// Members of a periodic-orbit family.
     const Family = 10;
+    /// Pseudo-arclength or natural-parameter continuation from a seed orbit.
+    const Continuation = 11;
+    /// Stable and unstable invariant manifolds of an unstable periodic orbit.
+    const Manifolds = 12;
+    /// Diagnostic properties of a periodic orbit (apsides, stability, occultations).
+    const OrbitProperties = 13;
+    /// Time-phased multi-spacecraft constellation along a periodic CR3BP orbit.
+    const Constellation = 14;
+    /// Primary-body surface coverage gaps, elevation, occultations, and DOP.
+    const SurfaceAnalysis = 15;
 
     private static $names = array(
         tbpProblem::Unspecified=>"Unspecified",
@@ -67,6 +77,11 @@ class tbpProblem
         tbpProblem::StationKeeping=>"StationKeeping",
         tbpProblem::FrameConversion=>"FrameConversion",
         tbpProblem::Family=>"Family",
+        tbpProblem::Continuation=>"Continuation",
+        tbpProblem::Manifolds=>"Manifolds",
+        tbpProblem::OrbitProperties=>"OrbitProperties",
+        tbpProblem::Constellation=>"Constellation",
+        tbpProblem::SurfaceAnalysis=>"SurfaceAnalysis",
     );
 
     public static function Name($e)

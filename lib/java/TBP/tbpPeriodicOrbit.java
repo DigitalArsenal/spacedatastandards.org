@@ -115,6 +115,72 @@ public final class tbpPeriodicOrbit extends com.google.flatbuffers.Table {
    */
   public tbpTrajectory TRAJECTORY() { return TRAJECTORY(new tbpTrajectory()); }
   public tbpTrajectory TRAJECTORY(tbpTrajectory obj) { int o = __offset(42); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Tulip/pumpkin petal count Np; 0 = not applicable.
+   */
+  public long PETALS() { int o = __offset(44); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Sidereal resonance denominator p (period = q * 2*pi / p); 0 = not stated.
+   */
+  public long RESONANCE_P() { int o = __offset(46); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Sidereal resonance numerator q; 0 = not stated.
+   */
+  public long RESONANCE_Q() { int o = __offset(48); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * CR3BP pseudo-potential U* at the initial state.
+   */
+  public double PSEUDO_POTENTIAL() { int o = __offset(50); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Minimum distance from the larger primary (P1), km; 0 = not computed.
+   */
+  public double PERIGEE_KM() { int o = __offset(52); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Maximum distance from the larger primary (P1), km; 0 = not computed.
+   */
+  public double APOGEE_KM() { int o = __offset(54); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Instability doubling time, non-dimensional; 0 = stable or not computed.
+   */
+  public double DOUBLING_TIME() { int o = __offset(56); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Floquet/Lyapunov characteristic exponent, non-dimensional; 0 = not computed.
+   */
+  public double CHARACTERISTIC_EXPONENT() { int o = __offset(58); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Longest continuous P2 (lunar) occultation per period, s.
+   */
+  public double MAX_LUNAR_OCCULTATION_S() { int o = __offset(60); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Total P2 (lunar) occultation duration per period, s.
+   */
+  public double TOTAL_LUNAR_OCCULTATION_S() { int o = __offset(62); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Longest continuous P1 (Earth) occultation per period, s.
+   */
+  public double MAX_EARTH_OCCULTATION_S() { int o = __offset(64); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Total P1 (Earth) occultation duration per period, s.
+   */
+  public double TOTAL_EARTH_OCCULTATION_S() { int o = __offset(66); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Unit stable eigenvector of the monodromy matrix (6 values); empty = none.
+   */
+  public double STABLE_EIGENVECTOR(int j) { int o = __offset(68); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int STABLE_EIGENVECTORLength() { int o = __offset(68); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector stableEigenvectorVector() { return stableEigenvectorVector(new DoubleVector()); }
+  public DoubleVector stableEigenvectorVector(DoubleVector obj) { int o = __offset(68); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer STABLE_EIGENVECTORAsByteBuffer() { return __vector_as_bytebuffer(68, 8); }
+  public ByteBuffer STABLE_EIGENVECTORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 68, 8); }
+  /**
+   * Unit unstable eigenvector of the monodromy matrix (6 values); empty = none.
+   */
+  public double UNSTABLE_EIGENVECTOR(int j) { int o = __offset(70); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int UNSTABLE_EIGENVECTORLength() { int o = __offset(70); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector unstableEigenvectorVector() { return unstableEigenvectorVector(new DoubleVector()); }
+  public DoubleVector unstableEigenvectorVector(DoubleVector obj) { int o = __offset(70); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer UNSTABLE_EIGENVECTORAsByteBuffer() { return __vector_as_bytebuffer(70, 8); }
+  public ByteBuffer UNSTABLE_EIGENVECTORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 70, 8); }
 
   public static int createtbpPeriodicOrbit(FlatBufferBuilder builder,
       int FAMILY,
@@ -136,8 +202,31 @@ public final class tbpPeriodicOrbit extends com.google.flatbuffers.Table {
       int FLOQUET_IMAGINARYOffset,
       double STABILITY_INDEX,
       boolean STABLE,
-      int TRAJECTORYOffset) {
-    builder.startTable(20);
+      int TRAJECTORYOffset,
+      long PETALS,
+      long RESONANCE_P,
+      long RESONANCE_Q,
+      double PSEUDO_POTENTIAL,
+      double PERIGEE_KM,
+      double APOGEE_KM,
+      double DOUBLING_TIME,
+      double CHARACTERISTIC_EXPONENT,
+      double MAX_LUNAR_OCCULTATION_S,
+      double TOTAL_LUNAR_OCCULTATION_S,
+      double MAX_EARTH_OCCULTATION_S,
+      double TOTAL_EARTH_OCCULTATION_S,
+      int STABLE_EIGENVECTOROffset,
+      int UNSTABLE_EIGENVECTOROffset) {
+    builder.startTable(34);
+    tbpPeriodicOrbit.addTotalEarthOccultationS(builder, TOTAL_EARTH_OCCULTATION_S);
+    tbpPeriodicOrbit.addMaxEarthOccultationS(builder, MAX_EARTH_OCCULTATION_S);
+    tbpPeriodicOrbit.addTotalLunarOccultationS(builder, TOTAL_LUNAR_OCCULTATION_S);
+    tbpPeriodicOrbit.addMaxLunarOccultationS(builder, MAX_LUNAR_OCCULTATION_S);
+    tbpPeriodicOrbit.addCharacteristicExponent(builder, CHARACTERISTIC_EXPONENT);
+    tbpPeriodicOrbit.addDoublingTime(builder, DOUBLING_TIME);
+    tbpPeriodicOrbit.addApogeeKm(builder, APOGEE_KM);
+    tbpPeriodicOrbit.addPerigeeKm(builder, PERIGEE_KM);
+    tbpPeriodicOrbit.addPseudoPotential(builder, PSEUDO_POTENTIAL);
     tbpPeriodicOrbit.addStabilityIndex(builder, STABILITY_INDEX);
     tbpPeriodicOrbit.addTolerance(builder, TOLERANCE);
     tbpPeriodicOrbit.addJacobi(builder, JACOBI);
@@ -146,6 +235,11 @@ public final class tbpPeriodicOrbit extends com.google.flatbuffers.Table {
     tbpPeriodicOrbit.addApoluneAltitudeKm(builder, APOLUNE_ALTITUDE_KM);
     tbpPeriodicOrbit.addPeriluneAltitudeKm(builder, PERILUNE_ALTITUDE_KM);
     tbpPeriodicOrbit.addAmplitude(builder, AMPLITUDE);
+    tbpPeriodicOrbit.addUnstableEigenvector(builder, UNSTABLE_EIGENVECTOROffset);
+    tbpPeriodicOrbit.addStableEigenvector(builder, STABLE_EIGENVECTOROffset);
+    tbpPeriodicOrbit.addResonanceQ(builder, RESONANCE_Q);
+    tbpPeriodicOrbit.addResonanceP(builder, RESONANCE_P);
+    tbpPeriodicOrbit.addPetals(builder, PETALS);
     tbpPeriodicOrbit.addTrajectory(builder, TRAJECTORYOffset);
     tbpPeriodicOrbit.addFloquetImaginary(builder, FLOQUET_IMAGINARYOffset);
     tbpPeriodicOrbit.addFloquetReal(builder, FLOQUET_REALOffset);
@@ -161,7 +255,7 @@ public final class tbpPeriodicOrbit extends com.google.flatbuffers.Table {
     return tbpPeriodicOrbit.endtbpPeriodicOrbit(builder);
   }
 
-  public static void starttbpPeriodicOrbit(FlatBufferBuilder builder) { builder.startTable(20); }
+  public static void starttbpPeriodicOrbit(FlatBufferBuilder builder) { builder.startTable(34); }
   public static void addFamily(FlatBufferBuilder builder, int FAMILY) { builder.addByte(0, (byte) FAMILY, (byte) 0); }
   public static void addLibrationPoint(FlatBufferBuilder builder, int LIBRATION_POINT) { builder.addByte(1, (byte) LIBRATION_POINT, (byte) 0); }
   public static void addAmplitude(FlatBufferBuilder builder, double AMPLITUDE) { builder.addDouble(2, AMPLITUDE, 0.0); }
@@ -188,6 +282,24 @@ public final class tbpPeriodicOrbit extends com.google.flatbuffers.Table {
   public static void addStabilityIndex(FlatBufferBuilder builder, double STABILITY_INDEX) { builder.addDouble(17, STABILITY_INDEX, 0.0); }
   public static void addStable(FlatBufferBuilder builder, boolean STABLE) { builder.addBoolean(18, STABLE, false); }
   public static void addTrajectory(FlatBufferBuilder builder, int TRAJECTORYOffset) { builder.addOffset(19, TRAJECTORYOffset, 0); }
+  public static void addPetals(FlatBufferBuilder builder, long PETALS) { builder.addInt(20, (int) PETALS, (int) 0L); }
+  public static void addResonanceP(FlatBufferBuilder builder, long RESONANCE_P) { builder.addInt(21, (int) RESONANCE_P, (int) 0L); }
+  public static void addResonanceQ(FlatBufferBuilder builder, long RESONANCE_Q) { builder.addInt(22, (int) RESONANCE_Q, (int) 0L); }
+  public static void addPseudoPotential(FlatBufferBuilder builder, double PSEUDO_POTENTIAL) { builder.addDouble(23, PSEUDO_POTENTIAL, 0.0); }
+  public static void addPerigeeKm(FlatBufferBuilder builder, double PERIGEE_KM) { builder.addDouble(24, PERIGEE_KM, 0.0); }
+  public static void addApogeeKm(FlatBufferBuilder builder, double APOGEE_KM) { builder.addDouble(25, APOGEE_KM, 0.0); }
+  public static void addDoublingTime(FlatBufferBuilder builder, double DOUBLING_TIME) { builder.addDouble(26, DOUBLING_TIME, 0.0); }
+  public static void addCharacteristicExponent(FlatBufferBuilder builder, double CHARACTERISTIC_EXPONENT) { builder.addDouble(27, CHARACTERISTIC_EXPONENT, 0.0); }
+  public static void addMaxLunarOccultationS(FlatBufferBuilder builder, double MAX_LUNAR_OCCULTATION_S) { builder.addDouble(28, MAX_LUNAR_OCCULTATION_S, 0.0); }
+  public static void addTotalLunarOccultationS(FlatBufferBuilder builder, double TOTAL_LUNAR_OCCULTATION_S) { builder.addDouble(29, TOTAL_LUNAR_OCCULTATION_S, 0.0); }
+  public static void addMaxEarthOccultationS(FlatBufferBuilder builder, double MAX_EARTH_OCCULTATION_S) { builder.addDouble(30, MAX_EARTH_OCCULTATION_S, 0.0); }
+  public static void addTotalEarthOccultationS(FlatBufferBuilder builder, double TOTAL_EARTH_OCCULTATION_S) { builder.addDouble(31, TOTAL_EARTH_OCCULTATION_S, 0.0); }
+  public static void addStableEigenvector(FlatBufferBuilder builder, int STABLE_EIGENVECTOROffset) { builder.addOffset(32, STABLE_EIGENVECTOROffset, 0); }
+  public static int createStableEigenvectorVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startStableEigenvectorVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addUnstableEigenvector(FlatBufferBuilder builder, int UNSTABLE_EIGENVECTOROffset) { builder.addOffset(33, UNSTABLE_EIGENVECTOROffset, 0); }
+  public static int createUnstableEigenvectorVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startUnstableEigenvectorVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
   public static int endtbpPeriodicOrbit(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

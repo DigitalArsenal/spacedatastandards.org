@@ -155,10 +155,10 @@ class TBP extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// PeriodicOrbit, HaloFirstGuess, NearRectilinearHalo: the request fields
-    /// (FAMILY, LIBRATION_POINT, AMPLITUDE or perilune/apolune, TOLERANCE,
-    /// MAX_ITERATIONS) and the result. Family: the members, ordered along the
-    /// family's continuation parameter (AMPLITUDE).
+    /// PeriodicOrbit, HaloFirstGuess, NearRectilinearHalo, OrbitProperties: the
+    /// request fields (FAMILY, LIBRATION_POINT, AMPLITUDE, PETALS, or
+    /// perilune/apolune, TOLERANCE, MAX_ITERATIONS) and the result. Family and
+    /// Continuation: the members ordered along the continuation parameter.
     /**
      * @returnVectorOffset
      */
@@ -199,22 +199,54 @@ class TBP extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// Continuation: pseudo-arclength or natural-parameter continuation request.
+    public function getCONTINUATION()
+    {
+        $obj = new TbpContinuationRequest();
+        $o = $this->__offset(38);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Manifolds: invariant stable/unstable manifold request and branches.
+    public function getMANIFOLDS()
+    {
+        $obj = new TbpManifolds();
+        $o = $this->__offset(40);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Constellation: time-phased multi-spacecraft CR3BP constellation.
+    public function getCONSTELLATION()
+    {
+        $obj = new TbpConstellation();
+        $o = $this->__offset(42);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// SurfaceAnalysis: surface coverage gaps, elevation, occultations, and DOP.
+    public function getSURFACE_ANALYSIS()
+    {
+        $obj = new TbpSurfaceAnalysis();
+        $o = $this->__offset(44);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startTBP(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(17);
+        $builder->StartObject(21);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return TBP
      */
-    public static function createTBP(FlatBufferBuilder $builder, $ID, $CREATED_AT_MS, $PRODUCER, $PROBLEM, $SYSTEM, $STATUS, $ERROR_CODE, $ERROR_MESSAGE, $PROPAGATION, $TRAJECTORY, $LIBRATION_POINTS, $STATE, $JACOBI, $ORBITS, $TRANSFER, $STATION_KEEPING, $FRAME_CONVERSION)
+    public static function createTBP(FlatBufferBuilder $builder, $ID, $CREATED_AT_MS, $PRODUCER, $PROBLEM, $SYSTEM, $STATUS, $ERROR_CODE, $ERROR_MESSAGE, $PROPAGATION, $TRAJECTORY, $LIBRATION_POINTS, $STATE, $JACOBI, $ORBITS, $TRANSFER, $STATION_KEEPING, $FRAME_CONVERSION, $CONTINUATION, $MANIFOLDS, $CONSTELLATION, $SURFACE_ANALYSIS)
     {
-        $builder->startObject(17);
+        $builder->startObject(21);
         self::addID($builder, $ID);
         self::addCREATED_AT_MS($builder, $CREATED_AT_MS);
         self::addPRODUCER($builder, $PRODUCER);
@@ -232,6 +264,10 @@ class TBP extends Table
         self::addTRANSFER($builder, $TRANSFER);
         self::addSTATION_KEEPING($builder, $STATION_KEEPING);
         self::addFRAME_CONVERSION($builder, $FRAME_CONVERSION);
+        self::addCONTINUATION($builder, $CONTINUATION);
+        self::addMANIFOLDS($builder, $MANIFOLDS);
+        self::addCONSTELLATION($builder, $CONSTELLATION);
+        self::addSURFACE_ANALYSIS($builder, $SURFACE_ANALYSIS);
         $o = $builder->endObject();
         return $o;
     }
@@ -452,6 +488,46 @@ class TBP extends Table
     public static function addFRAME_CONVERSION(FlatBufferBuilder $builder, $FRAME_CONVERSION)
     {
         $builder->addOffsetX(16, $FRAME_CONVERSION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addCONTINUATION(FlatBufferBuilder $builder, $CONTINUATION)
+    {
+        $builder->addOffsetX(17, $CONTINUATION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addMANIFOLDS(FlatBufferBuilder $builder, $MANIFOLDS)
+    {
+        $builder->addOffsetX(18, $MANIFOLDS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addCONSTELLATION(FlatBufferBuilder $builder, $CONSTELLATION)
+    {
+        $builder->addOffsetX(19, $CONSTELLATION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addSURFACE_ANALYSIS(FlatBufferBuilder $builder, $SURFACE_ANALYSIS)
+    {
+        $builder->addOffsetX(20, $SURFACE_ANALYSIS, 0);
     }
 
     /**

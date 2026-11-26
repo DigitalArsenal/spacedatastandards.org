@@ -161,10 +161,10 @@ class TBP(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # PeriodicOrbit, HaloFirstGuess, NearRectilinearHalo: the request fields
-    # (FAMILY, LIBRATION_POINT, AMPLITUDE or perilune/apolune, TOLERANCE,
-    # MAX_ITERATIONS) and the result. Family: the members, ordered along the
-    # family's continuation parameter (AMPLITUDE).
+    # PeriodicOrbit, HaloFirstGuess, NearRectilinearHalo, OrbitProperties: the
+    # request fields (FAMILY, LIBRATION_POINT, AMPLITUDE, PETALS, or
+    # perilune/apolune, TOLERANCE, MAX_ITERATIONS) and the result. Family and
+    # Continuation: the members ordered along the continuation parameter.
     # TBP
     def ORBITS(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
@@ -223,8 +223,56 @@ class TBP(object):
             return obj
         return None
 
+    # Continuation: pseudo-arclength or natural-parameter continuation request.
+    # TBP
+    def CONTINUATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from tbpContinuationRequest import tbpContinuationRequest
+            obj = tbpContinuationRequest()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Manifolds: invariant stable/unstable manifold request and branches.
+    # TBP
+    def MANIFOLDS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from tbpManifolds import tbpManifolds
+            obj = tbpManifolds()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Constellation: time-phased multi-spacecraft CR3BP constellation.
+    # TBP
+    def CONSTELLATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from tbpConstellation import tbpConstellation
+            obj = tbpConstellation()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # SurfaceAnalysis: surface coverage gaps, elevation, occultations, and DOP.
+    # TBP
+    def SURFACE_ANALYSIS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from tbpSurfaceAnalysis import tbpSurfaceAnalysis
+            obj = tbpSurfaceAnalysis()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def TBPStart(builder):
-    builder.StartObject(17)
+    builder.StartObject(21)
 
 def Start(builder):
     TBPStart(builder)
@@ -355,18 +403,46 @@ def TBPAddFRAME_CONVERSION(builder, FRAME_CONVERSION):
 def AddFRAME_CONVERSION(builder, FRAME_CONVERSION):
     TBPAddFRAME_CONVERSION(builder, FRAME_CONVERSION)
 
+def TBPAddCONTINUATION(builder, CONTINUATION):
+    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(CONTINUATION), 0)
+
+def AddCONTINUATION(builder, CONTINUATION):
+    TBPAddCONTINUATION(builder, CONTINUATION)
+
+def TBPAddMANIFOLDS(builder, MANIFOLDS):
+    builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(MANIFOLDS), 0)
+
+def AddMANIFOLDS(builder, MANIFOLDS):
+    TBPAddMANIFOLDS(builder, MANIFOLDS)
+
+def TBPAddCONSTELLATION(builder, CONSTELLATION):
+    builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(CONSTELLATION), 0)
+
+def AddCONSTELLATION(builder, CONSTELLATION):
+    TBPAddCONSTELLATION(builder, CONSTELLATION)
+
+def TBPAddSURFACE_ANALYSIS(builder, SURFACE_ANALYSIS):
+    builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(SURFACE_ANALYSIS), 0)
+
+def AddSURFACE_ANALYSIS(builder, SURFACE_ANALYSIS):
+    TBPAddSURFACE_ANALYSIS(builder, SURFACE_ANALYSIS)
+
 def TBPEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return TBPEnd(builder)
 
+import tbpConstellation
+import tbpContinuationRequest
 import tbpFrameConversion
 import tbpLibrationPoint
+import tbpManifolds
 import tbpPeriodicOrbit
 import tbpPropagationRequest
 import tbpState
 import tbpStationKeeping
+import tbpSurfaceAnalysis
 import tbpSystem
 import tbpTrajectory
 import tbpTransfer
@@ -397,6 +473,10 @@ class TBPT(object):
         TRANSFER = None,
         STATION_KEEPING = None,
         FRAME_CONVERSION = None,
+        CONTINUATION = None,
+        MANIFOLDS = None,
+        CONSTELLATION = None,
+        SURFACE_ANALYSIS = None,
     ):
         self.ID = ID  # type: Optional[str]
         self.CREATED_AT_MS = CREATED_AT_MS  # type: int
@@ -415,6 +495,10 @@ class TBPT(object):
         self.TRANSFER = TRANSFER  # type: Optional[tbpTransfer.tbpTransferT]
         self.STATION_KEEPING = STATION_KEEPING  # type: Optional[tbpStationKeeping.tbpStationKeepingT]
         self.FRAME_CONVERSION = FRAME_CONVERSION  # type: Optional[tbpFrameConversion.tbpFrameConversionT]
+        self.CONTINUATION = CONTINUATION  # type: Optional[tbpContinuationRequest.tbpContinuationRequestT]
+        self.MANIFOLDS = MANIFOLDS  # type: Optional[tbpManifolds.tbpManifoldsT]
+        self.CONSTELLATION = CONSTELLATION  # type: Optional[tbpConstellation.tbpConstellationT]
+        self.SURFACE_ANALYSIS = SURFACE_ANALYSIS  # type: Optional[tbpSurfaceAnalysis.tbpSurfaceAnalysisT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -475,6 +559,14 @@ class TBPT(object):
             self.STATION_KEEPING = tbpStationKeeping.tbpStationKeepingT.InitFromObj(TBP.STATION_KEEPING())
         if TBP.FRAME_CONVERSION() is not None:
             self.FRAME_CONVERSION = tbpFrameConversion.tbpFrameConversionT.InitFromObj(TBP.FRAME_CONVERSION())
+        if TBP.CONTINUATION() is not None:
+            self.CONTINUATION = tbpContinuationRequest.tbpContinuationRequestT.InitFromObj(TBP.CONTINUATION())
+        if TBP.MANIFOLDS() is not None:
+            self.MANIFOLDS = tbpManifolds.tbpManifoldsT.InitFromObj(TBP.MANIFOLDS())
+        if TBP.CONSTELLATION() is not None:
+            self.CONSTELLATION = tbpConstellation.tbpConstellationT.InitFromObj(TBP.CONSTELLATION())
+        if TBP.SURFACE_ANALYSIS() is not None:
+            self.SURFACE_ANALYSIS = tbpSurfaceAnalysis.tbpSurfaceAnalysisT.InitFromObj(TBP.SURFACE_ANALYSIS())
 
     # TBPT
     def Pack(self, builder):
@@ -516,6 +608,14 @@ class TBPT(object):
             STATION_KEEPING = self.STATION_KEEPING.Pack(builder)
         if self.FRAME_CONVERSION is not None:
             FRAME_CONVERSION = self.FRAME_CONVERSION.Pack(builder)
+        if self.CONTINUATION is not None:
+            CONTINUATION = self.CONTINUATION.Pack(builder)
+        if self.MANIFOLDS is not None:
+            MANIFOLDS = self.MANIFOLDS.Pack(builder)
+        if self.CONSTELLATION is not None:
+            CONSTELLATION = self.CONSTELLATION.Pack(builder)
+        if self.SURFACE_ANALYSIS is not None:
+            SURFACE_ANALYSIS = self.SURFACE_ANALYSIS.Pack(builder)
         TBPStart(builder)
         if self.ID is not None:
             TBPAddID(builder, ID)
@@ -547,5 +647,13 @@ class TBPT(object):
             TBPAddSTATION_KEEPING(builder, STATION_KEEPING)
         if self.FRAME_CONVERSION is not None:
             TBPAddFRAME_CONVERSION(builder, FRAME_CONVERSION)
+        if self.CONTINUATION is not None:
+            TBPAddCONTINUATION(builder, CONTINUATION)
+        if self.MANIFOLDS is not None:
+            TBPAddMANIFOLDS(builder, MANIFOLDS)
+        if self.CONSTELLATION is not None:
+            TBPAddCONSTELLATION(builder, CONSTELLATION)
+        if self.SURFACE_ANALYSIS is not None:
+            TBPAddSURFACE_ANALYSIS(builder, SURFACE_ANALYSIS)
         TBP = TBPEnd(builder)
         return TBP

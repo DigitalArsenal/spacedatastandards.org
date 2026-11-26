@@ -39,6 +39,22 @@ export declare enum tbpOrbitFamily {
     /**
      * Short- or long-period orbit about L4 or L5.
      */
-    LongShortPeriod = 9
+    LongShortPeriod = 9,
+    /**
+     * Northern-hemisphere sidereal-resonant tulip-shaped CR3BP orbit.
+     */
+    TulipNorthern = 10,
+    /**
+     * Southern-hemisphere sidereal-resonant tulip-shaped CR3BP orbit.
+     */
+    TulipSouthern = 11,
+    /**
+     * Northern-hemisphere multi-petal pumpkin-shaped CR3BP orbit.
+     */
+    PumpkinNorthern = 12,
+    /**
+     * Southern-hemisphere multi-petal pumpkin-shaped CR3BP orbit.
+     */
+    PumpkinSouthern = 13
 }
 //# sourceMappingURL=tbpOrbitFamily.d.ts.map

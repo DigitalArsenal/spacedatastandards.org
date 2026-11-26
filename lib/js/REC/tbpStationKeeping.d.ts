@@ -46,6 +46,22 @@ export declare class tbpStationKeeping implements flatbuffers.IUnpackableObject<
      * Result: true when the orbit stays bounded over the simulation.
      */
     BOUNDED(): boolean;
+    /**
+     * Time between correction maneuvers, s (LinearStabilityBounds).
+     */
+    CORRECTION_INTERVAL_S(): number;
+    /**
+     * 3-axis velocity execution error magnitude, km/s (LinearStabilityBounds).
+     */
+    DELTA_V_EXECUTION_ERROR_KM_S(): number;
+    /**
+     * Result: linear-stability lower bound annual delta-v, km/s/yr.
+     */
+    LOWER_BOUND_ANNUAL_DELTA_V_KM_S(): number;
+    /**
+     * Result: linear-stability upper bound annual delta-v, km/s/yr.
+     */
+    UPPER_BOUND_ANNUAL_DELTA_V_KM_S(): number;
     static starttbpStationKeeping(builder: flatbuffers.Builder): void;
     static addOrbit(builder: flatbuffers.Builder, ORBITOffset: flatbuffers.Offset): void;
     static addStrategy(builder: flatbuffers.Builder, STRATEGY: tbpStationKeepingStrategy): void;
@@ -63,8 +79,12 @@ export declare class tbpStationKeeping implements flatbuffers.IUnpackableObject<
     static createCycleDeltaVKmSVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
     static startCycleDeltaVKmSVector(builder: flatbuffers.Builder, numElems: number): void;
     static addBounded(builder: flatbuffers.Builder, BOUNDED: boolean): void;
+    static addCorrectionIntervalS(builder: flatbuffers.Builder, CORRECTION_INTERVAL_S: number): void;
+    static addDeltaVExecutionErrorKmS(builder: flatbuffers.Builder, DELTA_V_EXECUTION_ERROR_KM_S: number): void;
+    static addLowerBoundAnnualDeltaVKmS(builder: flatbuffers.Builder, LOWER_BOUND_ANNUAL_DELTA_V_KM_S: number): void;
+    static addUpperBoundAnnualDeltaVKmS(builder: flatbuffers.Builder, UPPER_BOUND_ANNUAL_DELTA_V_KM_S: number): void;
     static endtbpStationKeeping(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createtbpStationKeeping(builder: flatbuffers.Builder, ORBITOffset: flatbuffers.Offset, STRATEGY: tbpStationKeepingStrategy, NAVIGATION_ERROR_KM: number, EXECUTION_ERROR_FRACTION: number, CYCLES: number, ANNUAL_DELTA_V_KM_S: number, MEAN_CYCLE_DELTA_V_KM_S: number, MAX_CYCLE_DELTA_V_KM_S: number, CYCLE_DELTA_V_KM_SOffset: flatbuffers.Offset, BOUNDED: boolean): flatbuffers.Offset;
+    static createtbpStationKeeping(builder: flatbuffers.Builder, ORBITOffset: flatbuffers.Offset, STRATEGY: tbpStationKeepingStrategy, NAVIGATION_ERROR_KM: number, EXECUTION_ERROR_FRACTION: number, CYCLES: number, ANNUAL_DELTA_V_KM_S: number, MEAN_CYCLE_DELTA_V_KM_S: number, MAX_CYCLE_DELTA_V_KM_S: number, CYCLE_DELTA_V_KM_SOffset: flatbuffers.Offset, BOUNDED: boolean, CORRECTION_INTERVAL_S: number, DELTA_V_EXECUTION_ERROR_KM_S: number, LOWER_BOUND_ANNUAL_DELTA_V_KM_S: number, UPPER_BOUND_ANNUAL_DELTA_V_KM_S: number): flatbuffers.Offset;
     unpack(): tbpStationKeepingT;
     unpackTo(_o: tbpStationKeepingT): void;
 }
@@ -79,7 +99,11 @@ export declare class tbpStationKeepingT implements flatbuffers.IGeneratedObject 
     MAX_CYCLE_DELTA_V_KM_S: number;
     CYCLE_DELTA_V_KM_S: (number)[];
     BOUNDED: boolean;
-    constructor(ORBIT?: tbpPeriodicOrbitT | null, STRATEGY?: tbpStationKeepingStrategy, NAVIGATION_ERROR_KM?: number, EXECUTION_ERROR_FRACTION?: number, CYCLES?: number, ANNUAL_DELTA_V_KM_S?: number, MEAN_CYCLE_DELTA_V_KM_S?: number, MAX_CYCLE_DELTA_V_KM_S?: number, CYCLE_DELTA_V_KM_S?: (number)[], BOUNDED?: boolean);
+    CORRECTION_INTERVAL_S: number;
+    DELTA_V_EXECUTION_ERROR_KM_S: number;
+    LOWER_BOUND_ANNUAL_DELTA_V_KM_S: number;
+    UPPER_BOUND_ANNUAL_DELTA_V_KM_S: number;
+    constructor(ORBIT?: tbpPeriodicOrbitT | null, STRATEGY?: tbpStationKeepingStrategy, NAVIGATION_ERROR_KM?: number, EXECUTION_ERROR_FRACTION?: number, CYCLES?: number, ANNUAL_DELTA_V_KM_S?: number, MEAN_CYCLE_DELTA_V_KM_S?: number, MAX_CYCLE_DELTA_V_KM_S?: number, CYCLE_DELTA_V_KM_S?: (number)[], BOUNDED?: boolean, CORRECTION_INTERVAL_S?: number, DELTA_V_EXECUTION_ERROR_KM_S?: number, LOWER_BOUND_ANNUAL_DELTA_V_KM_S?: number, UPPER_BOUND_ANNUAL_DELTA_V_KM_S?: number);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=tbpStationKeeping.d.ts.map

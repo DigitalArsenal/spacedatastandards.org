@@ -215,6 +215,136 @@ class tbpPeriodicOrbit : Table() {
             null
         }
     }
+    /**
+     * Tulip/pumpkin petal count Np; 0 = not applicable.
+     */
+    val petals : UInt
+        get() {
+            val o = __offset(44)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * Sidereal resonance denominator p (period = q * 2*pi / p); 0 = not stated.
+     */
+    val resonanceP : UInt
+        get() {
+            val o = __offset(46)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * Sidereal resonance numerator q; 0 = not stated.
+     */
+    val resonanceQ : UInt
+        get() {
+            val o = __offset(48)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * CR3BP pseudo-potential U* at the initial state.
+     */
+    val pseudoPotential : Double
+        get() {
+            val o = __offset(50)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Minimum distance from the larger primary (P1), km; 0 = not computed.
+     */
+    val perigeeKm : Double
+        get() {
+            val o = __offset(52)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Maximum distance from the larger primary (P1), km; 0 = not computed.
+     */
+    val apogeeKm : Double
+        get() {
+            val o = __offset(54)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Instability doubling time, non-dimensional; 0 = stable or not computed.
+     */
+    val doublingTime : Double
+        get() {
+            val o = __offset(56)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Floquet/Lyapunov characteristic exponent, non-dimensional; 0 = not computed.
+     */
+    val characteristicExponent : Double
+        get() {
+            val o = __offset(58)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Longest continuous P2 (lunar) occultation per period, s.
+     */
+    val maxLunarOccultationS : Double
+        get() {
+            val o = __offset(60)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Total P2 (lunar) occultation duration per period, s.
+     */
+    val totalLunarOccultationS : Double
+        get() {
+            val o = __offset(62)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Longest continuous P1 (Earth) occultation per period, s.
+     */
+    val maxEarthOccultationS : Double
+        get() {
+            val o = __offset(64)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Total P1 (Earth) occultation duration per period, s.
+     */
+    val totalEarthOccultationS : Double
+        get() {
+            val o = __offset(66)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Unit stable eigenvector of the monodromy matrix (6 values); empty = none.
+     */
+    fun stableEigenvector(j: Int) : Double {
+        val o = __offset(68)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val stableEigenvectorLength : Int
+        get() {
+            val o = __offset(68); return if (o != 0) __vector_len(o) else 0
+        }
+    val stableEigenvectorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(68, 8)
+    fun stableEigenvectorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 68, 8)
+    /**
+     * Unit unstable eigenvector of the monodromy matrix (6 values); empty = none.
+     */
+    fun unstableEigenvector(j: Int) : Double {
+        val o = __offset(70)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val unstableEigenvectorLength : Int
+        get() {
+            val o = __offset(70); return if (o != 0) __vector_len(o) else 0
+        }
+    val unstableEigenvectorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(70, 8)
+    fun unstableEigenvectorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 70, 8)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAstbpPeriodicOrbit(_bb: ByteBuffer): tbpPeriodicOrbit = getRootAstbpPeriodicOrbit(_bb, tbpPeriodicOrbit())
@@ -222,8 +352,17 @@ class tbpPeriodicOrbit : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createtbpPeriodicOrbit(builder: FlatBufferBuilder, family: UByte, librationPoint: UByte, amplitude: Double, periluneAltitudeKm: Double, apoluneAltitudeKm: Double, initialStateOffset: Int, period: Double, periodS: Double, jacobi: Double, corrected: Boolean, converged: Boolean, iterations: UInt, tolerance: Double, maxIterations: UInt, monodromyOffset: Int, floquetRealOffset: Int, floquetImaginaryOffset: Int, stabilityIndex: Double, stable: Boolean, trajectoryOffset: Int) : Int {
-            builder.startTable(20)
+        fun createtbpPeriodicOrbit(builder: FlatBufferBuilder, family: UByte, librationPoint: UByte, amplitude: Double, periluneAltitudeKm: Double, apoluneAltitudeKm: Double, initialStateOffset: Int, period: Double, periodS: Double, jacobi: Double, corrected: Boolean, converged: Boolean, iterations: UInt, tolerance: Double, maxIterations: UInt, monodromyOffset: Int, floquetRealOffset: Int, floquetImaginaryOffset: Int, stabilityIndex: Double, stable: Boolean, trajectoryOffset: Int, petals: UInt, resonanceP: UInt, resonanceQ: UInt, pseudoPotential: Double, perigeeKm: Double, apogeeKm: Double, doublingTime: Double, characteristicExponent: Double, maxLunarOccultationS: Double, totalLunarOccultationS: Double, maxEarthOccultationS: Double, totalEarthOccultationS: Double, stableEigenvectorOffset: Int, unstableEigenvectorOffset: Int) : Int {
+            builder.startTable(34)
+            addTOTALEARTHOCCULTATIONS(builder, totalEarthOccultationS)
+            addMAXEARTHOCCULTATIONS(builder, maxEarthOccultationS)
+            addTOTALLUNAROCCULTATIONS(builder, totalLunarOccultationS)
+            addMAXLUNAROCCULTATIONS(builder, maxLunarOccultationS)
+            addCHARACTERISTICEXPONENT(builder, characteristicExponent)
+            addDOUBLINGTIME(builder, doublingTime)
+            addAPOGEEKM(builder, apogeeKm)
+            addPERIGEEKM(builder, perigeeKm)
+            addPSEUDOPOTENTIAL(builder, pseudoPotential)
             addSTABILITYINDEX(builder, stabilityIndex)
             addTOLERANCE(builder, tolerance)
             addJACOBI(builder, jacobi)
@@ -232,6 +371,11 @@ class tbpPeriodicOrbit : Table() {
             addAPOLUNEALTITUDEKM(builder, apoluneAltitudeKm)
             addPERILUNEALTITUDEKM(builder, periluneAltitudeKm)
             addAMPLITUDE(builder, amplitude)
+            addUNSTABLEEIGENVECTOR(builder, unstableEigenvectorOffset)
+            addSTABLEEIGENVECTOR(builder, stableEigenvectorOffset)
+            addRESONANCEQ(builder, resonanceQ)
+            addRESONANCEP(builder, resonanceP)
+            addPETALS(builder, petals)
             addTRAJECTORY(builder, trajectoryOffset)
             addFLOQUETIMAGINARY(builder, floquetImaginaryOffset)
             addFLOQUETREAL(builder, floquetRealOffset)
@@ -246,7 +390,7 @@ class tbpPeriodicOrbit : Table() {
             addFAMILY(builder, family)
             return endtbpPeriodicOrbit(builder)
         }
-        fun starttbpPeriodicOrbit(builder: FlatBufferBuilder) = builder.startTable(20)
+        fun starttbpPeriodicOrbit(builder: FlatBufferBuilder) = builder.startTable(34)
         fun addFAMILY(builder: FlatBufferBuilder, family: UByte) = builder.addByte(0, family.toByte(), 0)
         fun addLIBRATIONPOINT(builder: FlatBufferBuilder, librationPoint: UByte) = builder.addByte(1, librationPoint.toByte(), 0)
         fun addAMPLITUDE(builder: FlatBufferBuilder, amplitude: Double) = builder.addDouble(2, amplitude, 0.0)
@@ -291,6 +435,36 @@ class tbpPeriodicOrbit : Table() {
         fun addSTABILITYINDEX(builder: FlatBufferBuilder, stabilityIndex: Double) = builder.addDouble(17, stabilityIndex, 0.0)
         fun addSTABLE(builder: FlatBufferBuilder, stable: Boolean) = builder.addBoolean(18, stable, false)
         fun addTRAJECTORY(builder: FlatBufferBuilder, trajectory: Int) = builder.addOffset(19, trajectory, 0)
+        fun addPETALS(builder: FlatBufferBuilder, petals: UInt) = builder.addInt(20, petals.toInt(), 0)
+        fun addRESONANCEP(builder: FlatBufferBuilder, resonanceP: UInt) = builder.addInt(21, resonanceP.toInt(), 0)
+        fun addRESONANCEQ(builder: FlatBufferBuilder, resonanceQ: UInt) = builder.addInt(22, resonanceQ.toInt(), 0)
+        fun addPSEUDOPOTENTIAL(builder: FlatBufferBuilder, pseudoPotential: Double) = builder.addDouble(23, pseudoPotential, 0.0)
+        fun addPERIGEEKM(builder: FlatBufferBuilder, perigeeKm: Double) = builder.addDouble(24, perigeeKm, 0.0)
+        fun addAPOGEEKM(builder: FlatBufferBuilder, apogeeKm: Double) = builder.addDouble(25, apogeeKm, 0.0)
+        fun addDOUBLINGTIME(builder: FlatBufferBuilder, doublingTime: Double) = builder.addDouble(26, doublingTime, 0.0)
+        fun addCHARACTERISTICEXPONENT(builder: FlatBufferBuilder, characteristicExponent: Double) = builder.addDouble(27, characteristicExponent, 0.0)
+        fun addMAXLUNAROCCULTATIONS(builder: FlatBufferBuilder, maxLunarOccultationS: Double) = builder.addDouble(28, maxLunarOccultationS, 0.0)
+        fun addTOTALLUNAROCCULTATIONS(builder: FlatBufferBuilder, totalLunarOccultationS: Double) = builder.addDouble(29, totalLunarOccultationS, 0.0)
+        fun addMAXEARTHOCCULTATIONS(builder: FlatBufferBuilder, maxEarthOccultationS: Double) = builder.addDouble(30, maxEarthOccultationS, 0.0)
+        fun addTOTALEARTHOCCULTATIONS(builder: FlatBufferBuilder, totalEarthOccultationS: Double) = builder.addDouble(31, totalEarthOccultationS, 0.0)
+        fun addSTABLEEIGENVECTOR(builder: FlatBufferBuilder, stableEigenvector: Int) = builder.addOffset(32, stableEigenvector, 0)
+        fun createStableEigenvectorVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startStableEigenvectorVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addUNSTABLEEIGENVECTOR(builder: FlatBufferBuilder, unstableEigenvector: Int) = builder.addOffset(33, unstableEigenvector, 0)
+        fun createUnstableEigenvectorVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startUnstableEigenvectorVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
         fun endtbpPeriodicOrbit(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

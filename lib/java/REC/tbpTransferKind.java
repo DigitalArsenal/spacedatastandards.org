@@ -36,8 +36,24 @@ public final class tbpTransferKind {
    * Insertion into a periodic orbit (TARGET_ORBIT).
    */
   public static final int PeriodicOrbitInsertion = 7;
+  /**
+   * Theoretical minimum Jacobi-energy delta-v between states or to surface.
+   */
+  public static final int MinEnergy = 8;
+  /**
+   * Single-revolution STM-targeted direct CR3BP Lambert transfer.
+   */
+  public static final int DirectLambert = 9;
+  /**
+   * Minimum-delta-v CR3BP Lambert across prograde/retrograde and primaries.
+   */
+  public static final int MinLambert = 10;
+  /**
+   * Minimum-time low-thrust optimal control (Pontryagin Minimum Principle).
+   */
+  public static final int LowThrustMinTime = 11;
 
-  public static final String[] names = { "Unspecified", "HohmannLike", "LowEnergy", "FreeReturn", "PoweredFlyby", "WeakStabilityBoundary", "DirectInsertion", "PeriodicOrbitInsertion", };
+  public static final String[] names = { "Unspecified", "HohmannLike", "LowEnergy", "FreeReturn", "PoweredFlyby", "WeakStabilityBoundary", "DirectInsertion", "PeriodicOrbitInsertion", "MinEnergy", "DirectLambert", "MinLambert", "LowThrustMinTime", };
 
   public static String name(int e) { return names[e]; }
 }

@@ -4,14 +4,18 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { tbpConstellation, tbpConstellationT } from './tbpConstellation.js';
+import { tbpContinuationRequest, tbpContinuationRequestT } from './tbpContinuationRequest.js';
 import { tbpFrameConversion, tbpFrameConversionT } from './tbpFrameConversion.js';
 import { tbpLibrationPoint, tbpLibrationPointT } from './tbpLibrationPoint.js';
+import { tbpManifolds, tbpManifoldsT } from './tbpManifolds.js';
 import { tbpPeriodicOrbit, tbpPeriodicOrbitT } from './tbpPeriodicOrbit.js';
 import { tbpProblem } from './tbpProblem.js';
 import { tbpPropagationRequest, tbpPropagationRequestT } from './tbpPropagationRequest.js';
 import { tbpState, tbpStateT } from './tbpState.js';
 import { tbpStationKeeping, tbpStationKeepingT } from './tbpStationKeeping.js';
 import { tbpStatus } from './tbpStatus.js';
+import { tbpSurfaceAnalysis, tbpSurfaceAnalysisT } from './tbpSurfaceAnalysis.js';
 import { tbpSystem, tbpSystemT } from './tbpSystem.js';
 import { tbpTrajectory, tbpTrajectoryT } from './tbpTrajectory.js';
 import { tbpTransfer, tbpTransferT } from './tbpTransfer.js';
@@ -142,10 +146,10 @@ JACOBI():number {
 }
 
 /**
- * PeriodicOrbit, HaloFirstGuess, NearRectilinearHalo: the request fields
- * (FAMILY, LIBRATION_POINT, AMPLITUDE or perilune/apolune, TOLERANCE,
- * MAX_ITERATIONS) and the result. Family: the members, ordered along the
- * family's continuation parameter (AMPLITUDE).
+ * PeriodicOrbit, HaloFirstGuess, NearRectilinearHalo, OrbitProperties: the
+ * request fields (FAMILY, LIBRATION_POINT, AMPLITUDE, PETALS, or
+ * perilune/apolune, TOLERANCE, MAX_ITERATIONS) and the result. Family and
+ * Continuation: the members ordered along the continuation parameter.
  */
 ORBITS(index: number, obj?:tbpPeriodicOrbit):tbpPeriodicOrbit|null {
   const offset = this.bb!.__offset(this.bb_pos, 30);
@@ -172,8 +176,40 @@ FRAME_CONVERSION(obj?:tbpFrameConversion):tbpFrameConversion|null {
   return offset ? (obj || new tbpFrameConversion()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * Continuation: pseudo-arclength or natural-parameter continuation request.
+ */
+CONTINUATION(obj?:tbpContinuationRequest):tbpContinuationRequest|null {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? (obj || new tbpContinuationRequest()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Manifolds: invariant stable/unstable manifold request and branches.
+ */
+MANIFOLDS(obj?:tbpManifolds):tbpManifolds|null {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? (obj || new tbpManifolds()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Constellation: time-phased multi-spacecraft CR3BP constellation.
+ */
+CONSTELLATION(obj?:tbpConstellation):tbpConstellation|null {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? (obj || new tbpConstellation()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * SurfaceAnalysis: surface coverage gaps, elevation, occultations, and DOP.
+ */
+SURFACE_ANALYSIS(obj?:tbpSurfaceAnalysis):tbpSurfaceAnalysis|null {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? (obj || new tbpSurfaceAnalysis()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startTBP(builder:flatbuffers.Builder) {
-  builder.startObject(17);
+  builder.startObject(21);
 }
 
 static addId(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset) {
@@ -268,6 +304,22 @@ static addFrameConversion(builder:flatbuffers.Builder, FRAME_CONVERSIONOffset:fl
   builder.addFieldOffset(16, FRAME_CONVERSIONOffset, 0);
 }
 
+static addContinuation(builder:flatbuffers.Builder, CONTINUATIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(17, CONTINUATIONOffset, 0);
+}
+
+static addManifolds(builder:flatbuffers.Builder, MANIFOLDSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(18, MANIFOLDSOffset, 0);
+}
+
+static addConstellation(builder:flatbuffers.Builder, CONSTELLATIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(19, CONSTELLATIONOffset, 0);
+}
+
+static addSurfaceAnalysis(builder:flatbuffers.Builder, SURFACE_ANALYSISOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(20, SURFACE_ANALYSISOffset, 0);
+}
+
 static endTBP(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -300,7 +352,11 @@ unpack(): TBPT {
     this.bb!.createObjList<tbpPeriodicOrbit, tbpPeriodicOrbitT>(this.ORBITS.bind(this), this.orbitsLength()),
     (this.TRANSFER() !== null ? this.TRANSFER()!.unpack() : null),
     (this.STATION_KEEPING() !== null ? this.STATION_KEEPING()!.unpack() : null),
-    (this.FRAME_CONVERSION() !== null ? this.FRAME_CONVERSION()!.unpack() : null)
+    (this.FRAME_CONVERSION() !== null ? this.FRAME_CONVERSION()!.unpack() : null),
+    (this.CONTINUATION() !== null ? this.CONTINUATION()!.unpack() : null),
+    (this.MANIFOLDS() !== null ? this.MANIFOLDS()!.unpack() : null),
+    (this.CONSTELLATION() !== null ? this.CONSTELLATION()!.unpack() : null),
+    (this.SURFACE_ANALYSIS() !== null ? this.SURFACE_ANALYSIS()!.unpack() : null)
   );
 }
 
@@ -323,6 +379,10 @@ unpackTo(_o: TBPT): void {
   _o.TRANSFER = (this.TRANSFER() !== null ? this.TRANSFER()!.unpack() : null);
   _o.STATION_KEEPING = (this.STATION_KEEPING() !== null ? this.STATION_KEEPING()!.unpack() : null);
   _o.FRAME_CONVERSION = (this.FRAME_CONVERSION() !== null ? this.FRAME_CONVERSION()!.unpack() : null);
+  _o.CONTINUATION = (this.CONTINUATION() !== null ? this.CONTINUATION()!.unpack() : null);
+  _o.MANIFOLDS = (this.MANIFOLDS() !== null ? this.MANIFOLDS()!.unpack() : null);
+  _o.CONSTELLATION = (this.CONSTELLATION() !== null ? this.CONSTELLATION()!.unpack() : null);
+  _o.SURFACE_ANALYSIS = (this.SURFACE_ANALYSIS() !== null ? this.SURFACE_ANALYSIS()!.unpack() : null);
 }
 }
 
@@ -344,7 +404,11 @@ constructor(
   public ORBITS: (tbpPeriodicOrbitT)[] = [],
   public TRANSFER: tbpTransferT|null = null,
   public STATION_KEEPING: tbpStationKeepingT|null = null,
-  public FRAME_CONVERSION: tbpFrameConversionT|null = null
+  public FRAME_CONVERSION: tbpFrameConversionT|null = null,
+  public CONTINUATION: tbpContinuationRequestT|null = null,
+  public MANIFOLDS: tbpManifoldsT|null = null,
+  public CONSTELLATION: tbpConstellationT|null = null,
+  public SURFACE_ANALYSIS: tbpSurfaceAnalysisT|null = null
 ){}
 
 
@@ -362,6 +426,10 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const TRANSFER = (this.TRANSFER !== null ? this.TRANSFER!.pack(builder) : 0);
   const STATION_KEEPING = (this.STATION_KEEPING !== null ? this.STATION_KEEPING!.pack(builder) : 0);
   const FRAME_CONVERSION = (this.FRAME_CONVERSION !== null ? this.FRAME_CONVERSION!.pack(builder) : 0);
+  const CONTINUATION = (this.CONTINUATION !== null ? this.CONTINUATION!.pack(builder) : 0);
+  const MANIFOLDS = (this.MANIFOLDS !== null ? this.MANIFOLDS!.pack(builder) : 0);
+  const CONSTELLATION = (this.CONSTELLATION !== null ? this.CONSTELLATION!.pack(builder) : 0);
+  const SURFACE_ANALYSIS = (this.SURFACE_ANALYSIS !== null ? this.SURFACE_ANALYSIS!.pack(builder) : 0);
 
   TBP.startTBP(builder);
   TBP.addId(builder, ID);
@@ -381,6 +449,10 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   TBP.addTransfer(builder, TRANSFER);
   TBP.addStationKeeping(builder, STATION_KEEPING);
   TBP.addFrameConversion(builder, FRAME_CONVERSION);
+  TBP.addContinuation(builder, CONTINUATION);
+  TBP.addManifolds(builder, MANIFOLDS);
+  TBP.addConstellation(builder, CONSTELLATION);
+  TBP.addSurfaceAnalysis(builder, SURFACE_ANALYSIS);
 
   return TBP.endTBP(builder);
 }

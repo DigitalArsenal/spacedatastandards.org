@@ -149,8 +149,152 @@ class tbpTransfer(object):
             return obj
         return None
 
+    # Departure state in synodic frame (MinEnergy, DirectLambert, MinLambert, LowThrustMinTime).
+    # tbpTransfer
+    def INITIAL_STATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from tbpState import tbpState
+            obj = tbpState()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Arrival state in synodic frame.
+    # tbpTransfer
+    def FINAL_STATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from tbpState import tbpState
+            obj = tbpState()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # False = prograde (default), true = retrograde (DirectLambert).
+    # tbpTransfer
+    def RETROGRADE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Reference primary body for Lambert seeding: 0 = auto, 1 = P1, 2 = P2.
+    # tbpTransfer
+    def REFERENCE_PRIMARY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Low-thrust maximum thrust, N (LowThrustMinTime).
+    # tbpTransfer
+    def MAX_THRUST_N(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Engine specific impulse Isp, s (LowThrustMinTime).
+    # tbpTransfer
+    def SPECIFIC_IMPULSE_S(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Initial wet spacecraft mass, kg.
+    # tbpTransfer
+    def INITIAL_MASS_KG(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Result: final spacecraft mass at arrival, kg.
+    # tbpTransfer
+    def FINAL_MASS_KG(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Result: propellant consumed, kg.
+    # tbpTransfer
+    def PROPELLANT_MASS_KG(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Initial costates [lambda_rx, ry, rz, vx, vy, vz, m] guess or solved.
+    # tbpTransfer
+    def INITIAL_COSTATES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # tbpTransfer
+    def INITIAL_COSTATESAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # tbpTransfer
+    def INITIAL_COSTATESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # tbpTransfer
+    def INITIAL_COSTATESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        return o == 0
+
+    # Result: normalized throttle [0..1] per trajectory sample.
+    # tbpTransfer
+    def THROTTLE_HISTORY(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # tbpTransfer
+    def THROTTLE_HISTORYAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # tbpTransfer
+    def THROTTLE_HISTORYLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # tbpTransfer
+    def THROTTLE_HISTORYIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        return o == 0
+
+    # Result: theoretical minimum Jacobi-energy delta-v, km/s (MinEnergy).
+    # tbpTransfer
+    def MIN_ENERGY_DELTA_V_KM_S(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
 def tbpTransferStart(builder):
-    builder.StartObject(12)
+    builder.StartObject(24)
 
 def Start(builder):
     tbpTransferStart(builder)
@@ -239,6 +383,110 @@ def tbpTransferAddTRAJECTORY(builder, TRAJECTORY):
 def AddTRAJECTORY(builder, TRAJECTORY):
     tbpTransferAddTRAJECTORY(builder, TRAJECTORY)
 
+def tbpTransferAddINITIAL_STATE(builder, INITIAL_STATE):
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(INITIAL_STATE), 0)
+
+def AddINITIAL_STATE(builder, INITIAL_STATE):
+    tbpTransferAddINITIAL_STATE(builder, INITIAL_STATE)
+
+def tbpTransferAddFINAL_STATE(builder, FINAL_STATE):
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(FINAL_STATE), 0)
+
+def AddFINAL_STATE(builder, FINAL_STATE):
+    tbpTransferAddFINAL_STATE(builder, FINAL_STATE)
+
+def tbpTransferAddRETROGRADE(builder, RETROGRADE):
+    builder.PrependBoolSlot(14, RETROGRADE, 0)
+
+def AddRETROGRADE(builder, RETROGRADE):
+    tbpTransferAddRETROGRADE(builder, RETROGRADE)
+
+def tbpTransferAddREFERENCE_PRIMARY(builder, REFERENCE_PRIMARY):
+    builder.PrependUint8Slot(15, REFERENCE_PRIMARY, 0)
+
+def AddREFERENCE_PRIMARY(builder, REFERENCE_PRIMARY):
+    tbpTransferAddREFERENCE_PRIMARY(builder, REFERENCE_PRIMARY)
+
+def tbpTransferAddMAX_THRUST_N(builder, MAX_THRUST_N):
+    builder.PrependFloat64Slot(16, MAX_THRUST_N, 0.0)
+
+def AddMAX_THRUST_N(builder, MAX_THRUST_N):
+    tbpTransferAddMAX_THRUST_N(builder, MAX_THRUST_N)
+
+def tbpTransferAddSPECIFIC_IMPULSE_S(builder, SPECIFIC_IMPULSE_S):
+    builder.PrependFloat64Slot(17, SPECIFIC_IMPULSE_S, 0.0)
+
+def AddSPECIFIC_IMPULSE_S(builder, SPECIFIC_IMPULSE_S):
+    tbpTransferAddSPECIFIC_IMPULSE_S(builder, SPECIFIC_IMPULSE_S)
+
+def tbpTransferAddINITIAL_MASS_KG(builder, INITIAL_MASS_KG):
+    builder.PrependFloat64Slot(18, INITIAL_MASS_KG, 0.0)
+
+def AddINITIAL_MASS_KG(builder, INITIAL_MASS_KG):
+    tbpTransferAddINITIAL_MASS_KG(builder, INITIAL_MASS_KG)
+
+def tbpTransferAddFINAL_MASS_KG(builder, FINAL_MASS_KG):
+    builder.PrependFloat64Slot(19, FINAL_MASS_KG, 0.0)
+
+def AddFINAL_MASS_KG(builder, FINAL_MASS_KG):
+    tbpTransferAddFINAL_MASS_KG(builder, FINAL_MASS_KG)
+
+def tbpTransferAddPROPELLANT_MASS_KG(builder, PROPELLANT_MASS_KG):
+    builder.PrependFloat64Slot(20, PROPELLANT_MASS_KG, 0.0)
+
+def AddPROPELLANT_MASS_KG(builder, PROPELLANT_MASS_KG):
+    tbpTransferAddPROPELLANT_MASS_KG(builder, PROPELLANT_MASS_KG)
+
+def tbpTransferAddINITIAL_COSTATES(builder, INITIAL_COSTATES):
+    builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(INITIAL_COSTATES), 0)
+
+def AddINITIAL_COSTATES(builder, INITIAL_COSTATES):
+    tbpTransferAddINITIAL_COSTATES(builder, INITIAL_COSTATES)
+
+def tbpTransferStartINITIAL_COSTATESVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartINITIAL_COSTATESVector(builder, numElems):
+    return tbpTransferStartINITIAL_COSTATESVector(builder, numElems)
+
+def tbpTransferCreateINITIAL_COSTATESVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateINITIAL_COSTATESVector(builder, data):
+    return tbpTransferCreateINITIAL_COSTATESVector(builder, data)
+
+def tbpTransferAddTHROTTLE_HISTORY(builder, THROTTLE_HISTORY):
+    builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(THROTTLE_HISTORY), 0)
+
+def AddTHROTTLE_HISTORY(builder, THROTTLE_HISTORY):
+    tbpTransferAddTHROTTLE_HISTORY(builder, THROTTLE_HISTORY)
+
+def tbpTransferStartTHROTTLE_HISTORYVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartTHROTTLE_HISTORYVector(builder, numElems):
+    return tbpTransferStartTHROTTLE_HISTORYVector(builder, numElems)
+
+def tbpTransferCreateTHROTTLE_HISTORYVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateTHROTTLE_HISTORYVector(builder, data):
+    return tbpTransferCreateTHROTTLE_HISTORYVector(builder, data)
+
+def tbpTransferAddMIN_ENERGY_DELTA_V_KM_S(builder, MIN_ENERGY_DELTA_V_KM_S):
+    builder.PrependFloat64Slot(23, MIN_ENERGY_DELTA_V_KM_S, 0.0)
+
+def AddMIN_ENERGY_DELTA_V_KM_S(builder, MIN_ENERGY_DELTA_V_KM_S):
+    tbpTransferAddMIN_ENERGY_DELTA_V_KM_S(builder, MIN_ENERGY_DELTA_V_KM_S)
+
 def tbpTransferEnd(builder):
     return builder.EndObject()
 
@@ -247,6 +495,7 @@ def End(builder):
 
 import mplBurn
 import tbpPeriodicOrbit
+import tbpState
 import tbpTrajectory
 try:
     from typing import List, Optional
@@ -270,6 +519,18 @@ class tbpTransferT(object):
         TOTAL_DELTA_V_KM_S = 0.0,
         TIME_OF_FLIGHT_S = 0.0,
         TRAJECTORY = None,
+        INITIAL_STATE = None,
+        FINAL_STATE = None,
+        RETROGRADE = False,
+        REFERENCE_PRIMARY = 0,
+        MAX_THRUST_N = 0.0,
+        SPECIFIC_IMPULSE_S = 0.0,
+        INITIAL_MASS_KG = 0.0,
+        FINAL_MASS_KG = 0.0,
+        PROPELLANT_MASS_KG = 0.0,
+        INITIAL_COSTATES = None,
+        THROTTLE_HISTORY = None,
+        MIN_ENERGY_DELTA_V_KM_S = 0.0,
     ):
         self.KIND = KIND  # type: int
         self.PARKING_ALTITUDE_KM = PARKING_ALTITUDE_KM  # type: float
@@ -283,6 +544,18 @@ class tbpTransferT(object):
         self.TOTAL_DELTA_V_KM_S = TOTAL_DELTA_V_KM_S  # type: float
         self.TIME_OF_FLIGHT_S = TIME_OF_FLIGHT_S  # type: float
         self.TRAJECTORY = TRAJECTORY  # type: Optional[tbpTrajectory.tbpTrajectoryT]
+        self.INITIAL_STATE = INITIAL_STATE  # type: Optional[tbpState.tbpStateT]
+        self.FINAL_STATE = FINAL_STATE  # type: Optional[tbpState.tbpStateT]
+        self.RETROGRADE = RETROGRADE  # type: bool
+        self.REFERENCE_PRIMARY = REFERENCE_PRIMARY  # type: int
+        self.MAX_THRUST_N = MAX_THRUST_N  # type: float
+        self.SPECIFIC_IMPULSE_S = SPECIFIC_IMPULSE_S  # type: float
+        self.INITIAL_MASS_KG = INITIAL_MASS_KG  # type: float
+        self.FINAL_MASS_KG = FINAL_MASS_KG  # type: float
+        self.PROPELLANT_MASS_KG = PROPELLANT_MASS_KG  # type: float
+        self.INITIAL_COSTATES = INITIAL_COSTATES  # type: Optional[List[float]]
+        self.THROTTLE_HISTORY = THROTTLE_HISTORY  # type: Optional[List[float]]
+        self.MIN_ENERGY_DELTA_V_KM_S = MIN_ENERGY_DELTA_V_KM_S  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -326,6 +599,32 @@ class tbpTransferT(object):
         self.TIME_OF_FLIGHT_S = tbpTransfer.TIME_OF_FLIGHT_S()
         if tbpTransfer.TRAJECTORY() is not None:
             self.TRAJECTORY = tbpTrajectory.tbpTrajectoryT.InitFromObj(tbpTransfer.TRAJECTORY())
+        if tbpTransfer.INITIAL_STATE() is not None:
+            self.INITIAL_STATE = tbpState.tbpStateT.InitFromObj(tbpTransfer.INITIAL_STATE())
+        if tbpTransfer.FINAL_STATE() is not None:
+            self.FINAL_STATE = tbpState.tbpStateT.InitFromObj(tbpTransfer.FINAL_STATE())
+        self.RETROGRADE = tbpTransfer.RETROGRADE()
+        self.REFERENCE_PRIMARY = tbpTransfer.REFERENCE_PRIMARY()
+        self.MAX_THRUST_N = tbpTransfer.MAX_THRUST_N()
+        self.SPECIFIC_IMPULSE_S = tbpTransfer.SPECIFIC_IMPULSE_S()
+        self.INITIAL_MASS_KG = tbpTransfer.INITIAL_MASS_KG()
+        self.FINAL_MASS_KG = tbpTransfer.FINAL_MASS_KG()
+        self.PROPELLANT_MASS_KG = tbpTransfer.PROPELLANT_MASS_KG()
+        if not tbpTransfer.INITIAL_COSTATESIsNone():
+            if np is None:
+                self.INITIAL_COSTATES = []
+                for i in range(tbpTransfer.INITIAL_COSTATESLength()):
+                    self.INITIAL_COSTATES.append(tbpTransfer.INITIAL_COSTATES(i))
+            else:
+                self.INITIAL_COSTATES = tbpTransfer.INITIAL_COSTATESAsNumpy()
+        if not tbpTransfer.THROTTLE_HISTORYIsNone():
+            if np is None:
+                self.THROTTLE_HISTORY = []
+                for i in range(tbpTransfer.THROTTLE_HISTORYLength()):
+                    self.THROTTLE_HISTORY.append(tbpTransfer.THROTTLE_HISTORY(i))
+            else:
+                self.THROTTLE_HISTORY = tbpTransfer.THROTTLE_HISTORYAsNumpy()
+        self.MIN_ENERGY_DELTA_V_KM_S = tbpTransfer.MIN_ENERGY_DELTA_V_KM_S()
 
     # tbpTransferT
     def Pack(self, builder):
@@ -341,6 +640,26 @@ class tbpTransferT(object):
             BURNS = builder.EndVector()
         if self.TRAJECTORY is not None:
             TRAJECTORY = self.TRAJECTORY.Pack(builder)
+        if self.INITIAL_STATE is not None:
+            INITIAL_STATE = self.INITIAL_STATE.Pack(builder)
+        if self.FINAL_STATE is not None:
+            FINAL_STATE = self.FINAL_STATE.Pack(builder)
+        if self.INITIAL_COSTATES is not None:
+            if np is not None and type(self.INITIAL_COSTATES) is np.ndarray:
+                INITIAL_COSTATES = builder.CreateNumpyVector(self.INITIAL_COSTATES)
+            else:
+                tbpTransferStartINITIAL_COSTATESVector(builder, len(self.INITIAL_COSTATES))
+                for i in reversed(range(len(self.INITIAL_COSTATES))):
+                    builder.PrependFloat64(self.INITIAL_COSTATES[i])
+                INITIAL_COSTATES = builder.EndVector()
+        if self.THROTTLE_HISTORY is not None:
+            if np is not None and type(self.THROTTLE_HISTORY) is np.ndarray:
+                THROTTLE_HISTORY = builder.CreateNumpyVector(self.THROTTLE_HISTORY)
+            else:
+                tbpTransferStartTHROTTLE_HISTORYVector(builder, len(self.THROTTLE_HISTORY))
+                for i in reversed(range(len(self.THROTTLE_HISTORY))):
+                    builder.PrependFloat64(self.THROTTLE_HISTORY[i])
+                THROTTLE_HISTORY = builder.EndVector()
         tbpTransferStart(builder)
         tbpTransferAddKIND(builder, self.KIND)
         tbpTransferAddPARKING_ALTITUDE_KM(builder, self.PARKING_ALTITUDE_KM)
@@ -357,5 +676,21 @@ class tbpTransferT(object):
         tbpTransferAddTIME_OF_FLIGHT_S(builder, self.TIME_OF_FLIGHT_S)
         if self.TRAJECTORY is not None:
             tbpTransferAddTRAJECTORY(builder, TRAJECTORY)
+        if self.INITIAL_STATE is not None:
+            tbpTransferAddINITIAL_STATE(builder, INITIAL_STATE)
+        if self.FINAL_STATE is not None:
+            tbpTransferAddFINAL_STATE(builder, FINAL_STATE)
+        tbpTransferAddRETROGRADE(builder, self.RETROGRADE)
+        tbpTransferAddREFERENCE_PRIMARY(builder, self.REFERENCE_PRIMARY)
+        tbpTransferAddMAX_THRUST_N(builder, self.MAX_THRUST_N)
+        tbpTransferAddSPECIFIC_IMPULSE_S(builder, self.SPECIFIC_IMPULSE_S)
+        tbpTransferAddINITIAL_MASS_KG(builder, self.INITIAL_MASS_KG)
+        tbpTransferAddFINAL_MASS_KG(builder, self.FINAL_MASS_KG)
+        tbpTransferAddPROPELLANT_MASS_KG(builder, self.PROPELLANT_MASS_KG)
+        if self.INITIAL_COSTATES is not None:
+            tbpTransferAddINITIAL_COSTATES(builder, INITIAL_COSTATES)
+        if self.THROTTLE_HISTORY is not None:
+            tbpTransferAddTHROTTLE_HISTORY(builder, THROTTLE_HISTORY)
+        tbpTransferAddMIN_ENERGY_DELTA_V_KM_S(builder, self.MIN_ENERGY_DELTA_V_KM_S)
         tbpTransfer = tbpTransferEnd(builder)
         return tbpTransfer

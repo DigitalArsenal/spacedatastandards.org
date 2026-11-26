@@ -78,5 +78,25 @@ class tbpProblem private constructor() {
          * Members of a periodic-orbit family.
          */
         const val Family: UByte = 10u
+        /**
+         * Pseudo-arclength or natural-parameter continuation from a seed orbit.
+         */
+        const val Continuation: UByte = 11u
+        /**
+         * Stable and unstable invariant manifolds of an unstable periodic orbit.
+         */
+        const val Manifolds: UByte = 12u
+        /**
+         * Diagnostic properties of a periodic orbit (apsides, stability, occultations).
+         */
+        const val OrbitProperties: UByte = 13u
+        /**
+         * Time-phased multi-spacecraft constellation along a periodic CR3BP orbit.
+         */
+        const val Constellation: UByte = 14u
+        /**
+         * Primary-body surface coverage gaps, elevation, occultations, and DOP.
+         */
+        const val SurfaceAnalysis: UByte = 15u
     }
 }

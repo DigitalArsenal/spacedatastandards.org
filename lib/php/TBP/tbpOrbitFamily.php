@@ -24,6 +24,14 @@ class tbpOrbitFamily
     const Axial = 8;
     /// Short- or long-period orbit about L4 or L5.
     const LongShortPeriod = 9;
+    /// Northern-hemisphere sidereal-resonant tulip-shaped CR3BP orbit.
+    const TulipNorthern = 10;
+    /// Southern-hemisphere sidereal-resonant tulip-shaped CR3BP orbit.
+    const TulipSouthern = 11;
+    /// Northern-hemisphere multi-petal pumpkin-shaped CR3BP orbit.
+    const PumpkinNorthern = 12;
+    /// Southern-hemisphere multi-petal pumpkin-shaped CR3BP orbit.
+    const PumpkinSouthern = 13;
 
     private static $names = array(
         tbpOrbitFamily::Unspecified=>"Unspecified",
@@ -36,6 +44,10 @@ class tbpOrbitFamily
         tbpOrbitFamily::Butterfly=>"Butterfly",
         tbpOrbitFamily::Axial=>"Axial",
         tbpOrbitFamily::LongShortPeriod=>"LongShortPeriod",
+        tbpOrbitFamily::TulipNorthern=>"TulipNorthern",
+        tbpOrbitFamily::TulipSouthern=>"TulipSouthern",
+        tbpOrbitFamily::PumpkinNorthern=>"PumpkinNorthern",
+        tbpOrbitFamily::PumpkinSouthern=>"PumpkinSouthern",
     );
 
     public static function Name($e)

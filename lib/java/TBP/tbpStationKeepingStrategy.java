@@ -19,8 +19,12 @@ public final class tbpStationKeepingStrategy {
    * Suppress the unstable Floquet mode.
    */
   public static final int FloquetMode = 2;
+  /**
+   * Linear stability lower/upper annual delta-v bounds across intervals.
+   */
+  public static final int LinearStabilityBounds = 3;
 
-  public static final String[] names = { "PlaneCrossing", "TargetPoint", "FloquetMode", };
+  public static final String[] names = { "PlaneCrossing", "TargetPoint", "FloquetMode", "LinearStabilityBounds", };
 
   public static String name(int e) { return names[e]; }
 }

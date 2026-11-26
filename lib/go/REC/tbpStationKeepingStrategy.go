@@ -10,23 +10,27 @@ type tbpStationKeepingStrategy byte
 
 const (
 	/// Correct at each crossing of the synodic XZ plane.
-	tbpStationKeepingStrategyPlaneCrossing tbpStationKeepingStrategy = 0
+	tbpStationKeepingStrategyPlaneCrossing         tbpStationKeepingStrategy = 0
 	/// Target a reference point on the periodic orbit.
-	tbpStationKeepingStrategyTargetPoint   tbpStationKeepingStrategy = 1
+	tbpStationKeepingStrategyTargetPoint           tbpStationKeepingStrategy = 1
 	/// Suppress the unstable Floquet mode.
-	tbpStationKeepingStrategyFloquetMode   tbpStationKeepingStrategy = 2
+	tbpStationKeepingStrategyFloquetMode           tbpStationKeepingStrategy = 2
+	/// Linear stability lower/upper annual delta-v bounds across intervals.
+	tbpStationKeepingStrategyLinearStabilityBounds tbpStationKeepingStrategy = 3
 )
 
 var EnumNamestbpStationKeepingStrategy = map[tbpStationKeepingStrategy]string{
-	tbpStationKeepingStrategyPlaneCrossing: "PlaneCrossing",
-	tbpStationKeepingStrategyTargetPoint:   "TargetPoint",
-	tbpStationKeepingStrategyFloquetMode:   "FloquetMode",
+	tbpStationKeepingStrategyPlaneCrossing:         "PlaneCrossing",
+	tbpStationKeepingStrategyTargetPoint:           "TargetPoint",
+	tbpStationKeepingStrategyFloquetMode:           "FloquetMode",
+	tbpStationKeepingStrategyLinearStabilityBounds: "LinearStabilityBounds",
 }
 
 var EnumValuestbpStationKeepingStrategy = map[string]tbpStationKeepingStrategy{
-	"PlaneCrossing": tbpStationKeepingStrategyPlaneCrossing,
-	"TargetPoint":   tbpStationKeepingStrategyTargetPoint,
-	"FloquetMode":   tbpStationKeepingStrategyFloquetMode,
+	"PlaneCrossing":         tbpStationKeepingStrategyPlaneCrossing,
+	"TargetPoint":           tbpStationKeepingStrategyTargetPoint,
+	"FloquetMode":           tbpStationKeepingStrategyFloquetMode,
+	"LinearStabilityBounds": tbpStationKeepingStrategyLinearStabilityBounds,
 }
 
 func (v tbpStationKeepingStrategy) String() string {

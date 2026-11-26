@@ -63,8 +63,18 @@ public enum tbpProblem: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable 
   case frameconversion = 9
   ///  Members of a periodic-orbit family.
   case family = 10
+  ///  Pseudo-arclength or natural-parameter continuation from a seed orbit.
+  case continuation = 11
+  ///  Stable and unstable invariant manifolds of an unstable periodic orbit.
+  case manifolds = 12
+  ///  Diagnostic properties of a periodic orbit (apsides, stability, occultations).
+  case orbitproperties = 13
+  ///  Time-phased multi-spacecraft constellation along a periodic CR3BP orbit.
+  case constellation = 14
+  ///  Primary-body surface coverage gaps, elevation, occultations, and DOP.
+  case surfaceanalysis = 15
 
-  public static var max: tbpProblem { return .family }
+  public static var max: tbpProblem { return .surfaceanalysis }
   public static var min: tbpProblem { return .unspecified }
 }
 
@@ -94,8 +104,16 @@ public enum tbpOrbitFamily: UInt8, FlatbuffersVectorInitializable, Enum, Verifia
   case axial = 8
   ///  Short- or long-period orbit about L4 or L5.
   case longshortperiod = 9
+  ///  Northern-hemisphere sidereal-resonant tulip-shaped CR3BP orbit.
+  case tulipnorthern = 10
+  ///  Southern-hemisphere sidereal-resonant tulip-shaped CR3BP orbit.
+  case tulipsouthern = 11
+  ///  Northern-hemisphere multi-petal pumpkin-shaped CR3BP orbit.
+  case pumpkinnorthern = 12
+  ///  Southern-hemisphere multi-petal pumpkin-shaped CR3BP orbit.
+  case pumpkinsouthern = 13
 
-  public static var max: tbpOrbitFamily { return .longshortperiod }
+  public static var max: tbpOrbitFamily { return .pumpkinsouthern }
   public static var min: tbpOrbitFamily { return .unspecified }
 }
 
@@ -121,8 +139,16 @@ public enum tbpTransferKind: UInt8, FlatbuffersVectorInitializable, Enum, Verifi
   case directinsertion = 6
   ///  Insertion into a periodic orbit (TARGET_ORBIT).
   case periodicorbitinsertion = 7
+  ///  Theoretical minimum Jacobi-energy delta-v between states or to surface.
+  case minenergy = 8
+  ///  Single-revolution STM-targeted direct CR3BP Lambert transfer.
+  case directlambert = 9
+  ///  Minimum-delta-v CR3BP Lambert across prograde/retrograde and primaries.
+  case minlambert = 10
+  ///  Minimum-time low-thrust optimal control (Pontryagin Minimum Principle).
+  case lowthrustmintime = 11
 
-  public static var max: tbpTransferKind { return .periodicorbitinsertion }
+  public static var max: tbpTransferKind { return .lowthrustmintime }
   public static var min: tbpTransferKind { return .unspecified }
 }
 
@@ -139,8 +165,10 @@ public enum tbpStationKeepingStrategy: UInt8, FlatbuffersVectorInitializable, En
   case targetpoint = 1
   ///  Suppress the unstable Floquet mode.
   case floquetmode = 2
+  ///  Linear stability lower/upper annual delta-v bounds across intervals.
+  case linearstabilitybounds = 3
 
-  public static var max: tbpStationKeepingStrategy { return .floquetmode }
+  public static var max: tbpStationKeepingStrategy { return .linearstabilitybounds }
   public static var min: tbpStationKeepingStrategy { return .planecrossing }
 }
 
@@ -153,9 +181,35 @@ public enum tbpConversionDirection: UInt8, FlatbuffersVectorInitializable, Enum,
   public var value: UInt8 { return self.rawValue }
   case synodictoinertial = 0
   case inertialtosynodic = 1
+  case synodictoj2000 = 2
+  case j2000tosynodic = 3
+  case synodictoprimaryinertial = 4
+  case primaryinertialtosynodic = 5
+  case synodictolla = 6
+  case llatosynodic = 7
+  case synodictoorbitalelements = 8
+  case orbitalelementstosynodic = 9
 
-  public static var max: tbpConversionDirection { return .inertialtosynodic }
+  public static var max: tbpConversionDirection { return .orbitalelementstosynodic }
   public static var min: tbpConversionDirection { return .synodictoinertial }
+}
+
+
+///  Which invariant manifold branches to compute. Append new values only;
+///  never reorder or reuse existing values.
+public enum tbpManifoldBranchKind: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  ///  Both stable and unstable branches (interior and exterior).
+  case both = 0
+  ///  Stable invariant manifold branches only (backward propagation).
+  case stableonly = 1
+  ///  Unstable invariant manifold branches only (forward propagation).
+  case unstableonly = 2
+
+  public static var max: tbpManifoldBranchKind { return .unstableonly }
+  public static var min: tbpManifoldBranchKind { return .both }
 }
 
 
@@ -550,6 +604,20 @@ public struct tbpPeriodicOrbit: FlatBufferVerifiableTable, FlatbuffersVectorInit
     static let STABILITY_INDEX: VOffset = 38
     static let STABLE: VOffset = 40
     static let TRAJECTORY: VOffset = 42
+    static let PETALS: VOffset = 44
+    static let RESONANCE_P: VOffset = 46
+    static let RESONANCE_Q: VOffset = 48
+    static let PSEUDO_POTENTIAL: VOffset = 50
+    static let PERIGEE_KM: VOffset = 52
+    static let APOGEE_KM: VOffset = 54
+    static let DOUBLING_TIME: VOffset = 56
+    static let CHARACTERISTIC_EXPONENT: VOffset = 58
+    static let MAX_LUNAR_OCCULTATION_S: VOffset = 60
+    static let TOTAL_LUNAR_OCCULTATION_S: VOffset = 62
+    static let MAX_EARTH_OCCULTATION_S: VOffset = 64
+    static let TOTAL_EARTH_OCCULTATION_S: VOffset = 66
+    static let STABLE_EIGENVECTOR: VOffset = 68
+    static let UNSTABLE_EIGENVECTOR: VOffset = 70
   }
 
   public var FAMILY: tbpOrbitFamily { let o = _accessor.offset(VT.FAMILY); return o == 0 ? .unspecified : tbpOrbitFamily(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
@@ -598,7 +666,37 @@ public struct tbpPeriodicOrbit: FlatBufferVerifiableTable, FlatbuffersVectorInit
   public var STABLE: Bool { let o = _accessor.offset(VT.STABLE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  One period of the orbit; empty = not sampled.
   public var TRAJECTORY: tbpTrajectory? { let o = _accessor.offset(VT.TRAJECTORY); return o == 0 ? nil : tbpTrajectory(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public static func starttbpPeriodicOrbit(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 20) }
+  ///  Tulip/pumpkin petal count Np; 0 = not applicable.
+  public var PETALS: UInt32 { let o = _accessor.offset(VT.PETALS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Sidereal resonance denominator p (period = q * 2*pi / p); 0 = not stated.
+  public var RESONANCE_P: UInt32 { let o = _accessor.offset(VT.RESONANCE_P); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Sidereal resonance numerator q; 0 = not stated.
+  public var RESONANCE_Q: UInt32 { let o = _accessor.offset(VT.RESONANCE_Q); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  CR3BP pseudo-potential U* at the initial state.
+  public var PSEUDO_POTENTIAL: Double { let o = _accessor.offset(VT.PSEUDO_POTENTIAL); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Minimum distance from the larger primary (P1), km; 0 = not computed.
+  public var PERIGEE_KM: Double { let o = _accessor.offset(VT.PERIGEE_KM); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Maximum distance from the larger primary (P1), km; 0 = not computed.
+  public var APOGEE_KM: Double { let o = _accessor.offset(VT.APOGEE_KM); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Instability doubling time, non-dimensional; 0 = stable or not computed.
+  public var DOUBLING_TIME: Double { let o = _accessor.offset(VT.DOUBLING_TIME); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Floquet/Lyapunov characteristic exponent, non-dimensional; 0 = not computed.
+  public var CHARACTERISTIC_EXPONENT: Double { let o = _accessor.offset(VT.CHARACTERISTIC_EXPONENT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Longest continuous P2 (lunar) occultation per period, s.
+  public var MAX_LUNAR_OCCULTATION_S: Double { let o = _accessor.offset(VT.MAX_LUNAR_OCCULTATION_S); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Total P2 (lunar) occultation duration per period, s.
+  public var TOTAL_LUNAR_OCCULTATION_S: Double { let o = _accessor.offset(VT.TOTAL_LUNAR_OCCULTATION_S); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Longest continuous P1 (Earth) occultation per period, s.
+  public var MAX_EARTH_OCCULTATION_S: Double { let o = _accessor.offset(VT.MAX_EARTH_OCCULTATION_S); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Total P1 (Earth) occultation duration per period, s.
+  public var TOTAL_EARTH_OCCULTATION_S: Double { let o = _accessor.offset(VT.TOTAL_EARTH_OCCULTATION_S); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Unit stable eigenvector of the monodromy matrix (6 values); empty = none.
+  public var STABLE_EIGENVECTOR: FlatbufferVector<Double> { return _accessor.vector(at: VT.STABLE_EIGENVECTOR, byteSize: 8) }
+  public func withUnsafePointerToStableEigenvector<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.STABLE_EIGENVECTOR, body: body) }
+  ///  Unit unstable eigenvector of the monodromy matrix (6 values); empty = none.
+  public var UNSTABLE_EIGENVECTOR: FlatbufferVector<Double> { return _accessor.vector(at: VT.UNSTABLE_EIGENVECTOR, byteSize: 8) }
+  public func withUnsafePointerToUnstableEigenvector<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.UNSTABLE_EIGENVECTOR, body: body) }
+  public static func starttbpPeriodicOrbit(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 34) }
   public static func add(FAMILY: tbpOrbitFamily, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FAMILY.rawValue, def: 0, at: VT.FAMILY) }
   public static func add(LIBRATION_POINT: rfmLibrationPoint, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LIBRATION_POINT.rawValue, def: 0, at: VT.LIBRATION_POINT) }
   public static func add(AMPLITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AMPLITUDE, def: 0.0, at: VT.AMPLITUDE) }
@@ -622,6 +720,20 @@ public struct tbpPeriodicOrbit: FlatBufferVerifiableTable, FlatbuffersVectorInit
   public static func add(STABLE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STABLE, def: false,
    at: VT.STABLE) }
   public static func add(TRAJECTORY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRAJECTORY, at: VT.TRAJECTORY) }
+  public static func add(PETALS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PETALS, def: 0, at: VT.PETALS) }
+  public static func add(RESONANCE_P: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RESONANCE_P, def: 0, at: VT.RESONANCE_P) }
+  public static func add(RESONANCE_Q: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RESONANCE_Q, def: 0, at: VT.RESONANCE_Q) }
+  public static func add(PSEUDO_POTENTIAL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PSEUDO_POTENTIAL, def: 0.0, at: VT.PSEUDO_POTENTIAL) }
+  public static func add(PERIGEE_KM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PERIGEE_KM, def: 0.0, at: VT.PERIGEE_KM) }
+  public static func add(APOGEE_KM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: APOGEE_KM, def: 0.0, at: VT.APOGEE_KM) }
+  public static func add(DOUBLING_TIME: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DOUBLING_TIME, def: 0.0, at: VT.DOUBLING_TIME) }
+  public static func add(CHARACTERISTIC_EXPONENT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CHARACTERISTIC_EXPONENT, def: 0.0, at: VT.CHARACTERISTIC_EXPONENT) }
+  public static func add(MAX_LUNAR_OCCULTATION_S: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_LUNAR_OCCULTATION_S, def: 0.0, at: VT.MAX_LUNAR_OCCULTATION_S) }
+  public static func add(TOTAL_LUNAR_OCCULTATION_S: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOTAL_LUNAR_OCCULTATION_S, def: 0.0, at: VT.TOTAL_LUNAR_OCCULTATION_S) }
+  public static func add(MAX_EARTH_OCCULTATION_S: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_EARTH_OCCULTATION_S, def: 0.0, at: VT.MAX_EARTH_OCCULTATION_S) }
+  public static func add(TOTAL_EARTH_OCCULTATION_S: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOTAL_EARTH_OCCULTATION_S, def: 0.0, at: VT.TOTAL_EARTH_OCCULTATION_S) }
+  public static func addVectorOf(STABLE_EIGENVECTOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STABLE_EIGENVECTOR, at: VT.STABLE_EIGENVECTOR) }
+  public static func addVectorOf(UNSTABLE_EIGENVECTOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UNSTABLE_EIGENVECTOR, at: VT.UNSTABLE_EIGENVECTOR) }
   public static func endtbpPeriodicOrbit(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createtbpPeriodicOrbit(
     _ fbb: inout FlatBufferBuilder,
@@ -644,7 +756,21 @@ public struct tbpPeriodicOrbit: FlatBufferVerifiableTable, FlatbuffersVectorInit
     FLOQUET_IMAGINARYVectorOffset FLOQUET_IMAGINARY: Offset = Offset(),
     STABILITY_INDEX: Double = 0.0,
     STABLE: Bool = false,
-    TRAJECTORYOffset TRAJECTORY: Offset = Offset()
+    TRAJECTORYOffset TRAJECTORY: Offset = Offset(),
+    PETALS: UInt32 = 0,
+    RESONANCE_P: UInt32 = 0,
+    RESONANCE_Q: UInt32 = 0,
+    PSEUDO_POTENTIAL: Double = 0.0,
+    PERIGEE_KM: Double = 0.0,
+    APOGEE_KM: Double = 0.0,
+    DOUBLING_TIME: Double = 0.0,
+    CHARACTERISTIC_EXPONENT: Double = 0.0,
+    MAX_LUNAR_OCCULTATION_S: Double = 0.0,
+    TOTAL_LUNAR_OCCULTATION_S: Double = 0.0,
+    MAX_EARTH_OCCULTATION_S: Double = 0.0,
+    TOTAL_EARTH_OCCULTATION_S: Double = 0.0,
+    STABLE_EIGENVECTORVectorOffset STABLE_EIGENVECTOR: Offset = Offset(),
+    UNSTABLE_EIGENVECTORVectorOffset UNSTABLE_EIGENVECTOR: Offset = Offset()
   ) -> Offset {
     let __start = tbpPeriodicOrbit.starttbpPeriodicOrbit(&fbb)
     tbpPeriodicOrbit.add(FAMILY: FAMILY, &fbb)
@@ -667,6 +793,20 @@ public struct tbpPeriodicOrbit: FlatBufferVerifiableTable, FlatbuffersVectorInit
     tbpPeriodicOrbit.add(STABILITY_INDEX: STABILITY_INDEX, &fbb)
     tbpPeriodicOrbit.add(STABLE: STABLE, &fbb)
     tbpPeriodicOrbit.add(TRAJECTORY: TRAJECTORY, &fbb)
+    tbpPeriodicOrbit.add(PETALS: PETALS, &fbb)
+    tbpPeriodicOrbit.add(RESONANCE_P: RESONANCE_P, &fbb)
+    tbpPeriodicOrbit.add(RESONANCE_Q: RESONANCE_Q, &fbb)
+    tbpPeriodicOrbit.add(PSEUDO_POTENTIAL: PSEUDO_POTENTIAL, &fbb)
+    tbpPeriodicOrbit.add(PERIGEE_KM: PERIGEE_KM, &fbb)
+    tbpPeriodicOrbit.add(APOGEE_KM: APOGEE_KM, &fbb)
+    tbpPeriodicOrbit.add(DOUBLING_TIME: DOUBLING_TIME, &fbb)
+    tbpPeriodicOrbit.add(CHARACTERISTIC_EXPONENT: CHARACTERISTIC_EXPONENT, &fbb)
+    tbpPeriodicOrbit.add(MAX_LUNAR_OCCULTATION_S: MAX_LUNAR_OCCULTATION_S, &fbb)
+    tbpPeriodicOrbit.add(TOTAL_LUNAR_OCCULTATION_S: TOTAL_LUNAR_OCCULTATION_S, &fbb)
+    tbpPeriodicOrbit.add(MAX_EARTH_OCCULTATION_S: MAX_EARTH_OCCULTATION_S, &fbb)
+    tbpPeriodicOrbit.add(TOTAL_EARTH_OCCULTATION_S: TOTAL_EARTH_OCCULTATION_S, &fbb)
+    tbpPeriodicOrbit.addVectorOf(STABLE_EIGENVECTOR: STABLE_EIGENVECTOR, &fbb)
+    tbpPeriodicOrbit.addVectorOf(UNSTABLE_EIGENVECTOR: UNSTABLE_EIGENVECTOR, &fbb)
     return tbpPeriodicOrbit.endtbpPeriodicOrbit(&fbb, start: __start)
   }
 
@@ -692,6 +832,20 @@ public struct tbpPeriodicOrbit: FlatBufferVerifiableTable, FlatbuffersVectorInit
     try _v.visit(field: VT.STABILITY_INDEX, fieldName: "STABILITY_INDEX", required: false, type: Double.self)
     try _v.visit(field: VT.STABLE, fieldName: "STABLE", required: false, type: Bool.self)
     try _v.visit(field: VT.TRAJECTORY, fieldName: "TRAJECTORY", required: false, type: ForwardOffset<tbpTrajectory>.self)
+    try _v.visit(field: VT.PETALS, fieldName: "PETALS", required: false, type: UInt32.self)
+    try _v.visit(field: VT.RESONANCE_P, fieldName: "RESONANCE_P", required: false, type: UInt32.self)
+    try _v.visit(field: VT.RESONANCE_Q, fieldName: "RESONANCE_Q", required: false, type: UInt32.self)
+    try _v.visit(field: VT.PSEUDO_POTENTIAL, fieldName: "PSEUDO_POTENTIAL", required: false, type: Double.self)
+    try _v.visit(field: VT.PERIGEE_KM, fieldName: "PERIGEE_KM", required: false, type: Double.self)
+    try _v.visit(field: VT.APOGEE_KM, fieldName: "APOGEE_KM", required: false, type: Double.self)
+    try _v.visit(field: VT.DOUBLING_TIME, fieldName: "DOUBLING_TIME", required: false, type: Double.self)
+    try _v.visit(field: VT.CHARACTERISTIC_EXPONENT, fieldName: "CHARACTERISTIC_EXPONENT", required: false, type: Double.self)
+    try _v.visit(field: VT.MAX_LUNAR_OCCULTATION_S, fieldName: "MAX_LUNAR_OCCULTATION_S", required: false, type: Double.self)
+    try _v.visit(field: VT.TOTAL_LUNAR_OCCULTATION_S, fieldName: "TOTAL_LUNAR_OCCULTATION_S", required: false, type: Double.self)
+    try _v.visit(field: VT.MAX_EARTH_OCCULTATION_S, fieldName: "MAX_EARTH_OCCULTATION_S", required: false, type: Double.self)
+    try _v.visit(field: VT.TOTAL_EARTH_OCCULTATION_S, fieldName: "TOTAL_EARTH_OCCULTATION_S", required: false, type: Double.self)
+    try _v.visit(field: VT.STABLE_EIGENVECTOR, fieldName: "STABLE_EIGENVECTOR", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.UNSTABLE_EIGENVECTOR, fieldName: "UNSTABLE_EIGENVECTOR", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
     _v.finish()
   }
 }
@@ -786,6 +940,18 @@ public struct tbpTransfer: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
     static let TOTAL_DELTA_V_KM_S: VOffset = 22
     static let TIME_OF_FLIGHT_S: VOffset = 24
     static let TRAJECTORY: VOffset = 26
+    static let INITIAL_STATE: VOffset = 28
+    static let FINAL_STATE: VOffset = 30
+    static let RETROGRADE: VOffset = 32
+    static let REFERENCE_PRIMARY: VOffset = 34
+    static let MAX_THRUST_N: VOffset = 36
+    static let SPECIFIC_IMPULSE_S: VOffset = 38
+    static let INITIAL_MASS_KG: VOffset = 40
+    static let FINAL_MASS_KG: VOffset = 42
+    static let PROPELLANT_MASS_KG: VOffset = 44
+    static let INITIAL_COSTATES: VOffset = 46
+    static let THROTTLE_HISTORY: VOffset = 48
+    static let MIN_ENERGY_DELTA_V_KM_S: VOffset = 50
   }
 
   public var KIND: tbpTransferKind { let o = _accessor.offset(VT.KIND); return o == 0 ? .unspecified : tbpTransferKind(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
@@ -810,7 +976,33 @@ public struct tbpTransfer: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
   public var TIME_OF_FLIGHT_S: Double { let o = _accessor.offset(VT.TIME_OF_FLIGHT_S); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Result: the transfer trajectory; empty = not sampled.
   public var TRAJECTORY: tbpTrajectory? { let o = _accessor.offset(VT.TRAJECTORY); return o == 0 ? nil : tbpTrajectory(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public static func starttbpTransfer(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 12) }
+  ///  Departure state in synodic frame (MinEnergy, DirectLambert, MinLambert, LowThrustMinTime).
+  public var INITIAL_STATE: tbpState? { let o = _accessor.offset(VT.INITIAL_STATE); return o == 0 ? nil : tbpState(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Arrival state in synodic frame.
+  public var FINAL_STATE: tbpState? { let o = _accessor.offset(VT.FINAL_STATE); return o == 0 ? nil : tbpState(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  False = prograde (default), true = retrograde (DirectLambert).
+  public var RETROGRADE: Bool { let o = _accessor.offset(VT.RETROGRADE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Reference primary body for Lambert seeding: 0 = auto, 1 = P1, 2 = P2.
+  public var REFERENCE_PRIMARY: UInt8 { let o = _accessor.offset(VT.REFERENCE_PRIMARY); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  Low-thrust maximum thrust, N (LowThrustMinTime).
+  public var MAX_THRUST_N: Double { let o = _accessor.offset(VT.MAX_THRUST_N); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Engine specific impulse Isp, s (LowThrustMinTime).
+  public var SPECIFIC_IMPULSE_S: Double { let o = _accessor.offset(VT.SPECIFIC_IMPULSE_S); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Initial wet spacecraft mass, kg.
+  public var INITIAL_MASS_KG: Double { let o = _accessor.offset(VT.INITIAL_MASS_KG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Result: final spacecraft mass at arrival, kg.
+  public var FINAL_MASS_KG: Double { let o = _accessor.offset(VT.FINAL_MASS_KG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Result: propellant consumed, kg.
+  public var PROPELLANT_MASS_KG: Double { let o = _accessor.offset(VT.PROPELLANT_MASS_KG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Initial costates [lambda_rx, ry, rz, vx, vy, vz, m] guess or solved.
+  public var INITIAL_COSTATES: FlatbufferVector<Double> { return _accessor.vector(at: VT.INITIAL_COSTATES, byteSize: 8) }
+  public func withUnsafePointerToInitialCostates<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.INITIAL_COSTATES, body: body) }
+  ///  Result: normalized throttle [0..1] per trajectory sample.
+  public var THROTTLE_HISTORY: FlatbufferVector<Double> { return _accessor.vector(at: VT.THROTTLE_HISTORY, byteSize: 8) }
+  public func withUnsafePointerToThrottleHistory<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.THROTTLE_HISTORY, body: body) }
+  ///  Result: theoretical minimum Jacobi-energy delta-v, km/s (MinEnergy).
+  public var MIN_ENERGY_DELTA_V_KM_S: Double { let o = _accessor.offset(VT.MIN_ENERGY_DELTA_V_KM_S); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func starttbpTransfer(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 24) }
   public static func add(KIND: tbpTransferKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KIND.rawValue, def: 0, at: VT.KIND) }
   public static func add(PARKING_ALTITUDE_KM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PARKING_ALTITUDE_KM, def: 0.0, at: VT.PARKING_ALTITUDE_KM) }
   public static func add(TARGET_ALTITUDE_KM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_ALTITUDE_KM, def: 0.0, at: VT.TARGET_ALTITUDE_KM) }
@@ -824,6 +1016,19 @@ public struct tbpTransfer: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
   public static func add(TOTAL_DELTA_V_KM_S: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOTAL_DELTA_V_KM_S, def: 0.0, at: VT.TOTAL_DELTA_V_KM_S) }
   public static func add(TIME_OF_FLIGHT_S: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_OF_FLIGHT_S, def: 0.0, at: VT.TIME_OF_FLIGHT_S) }
   public static func add(TRAJECTORY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRAJECTORY, at: VT.TRAJECTORY) }
+  public static func add(INITIAL_STATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INITIAL_STATE, at: VT.INITIAL_STATE) }
+  public static func add(FINAL_STATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FINAL_STATE, at: VT.FINAL_STATE) }
+  public static func add(RETROGRADE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RETROGRADE, def: false,
+   at: VT.RETROGRADE) }
+  public static func add(REFERENCE_PRIMARY: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFERENCE_PRIMARY, def: 0, at: VT.REFERENCE_PRIMARY) }
+  public static func add(MAX_THRUST_N: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_THRUST_N, def: 0.0, at: VT.MAX_THRUST_N) }
+  public static func add(SPECIFIC_IMPULSE_S: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SPECIFIC_IMPULSE_S, def: 0.0, at: VT.SPECIFIC_IMPULSE_S) }
+  public static func add(INITIAL_MASS_KG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INITIAL_MASS_KG, def: 0.0, at: VT.INITIAL_MASS_KG) }
+  public static func add(FINAL_MASS_KG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FINAL_MASS_KG, def: 0.0, at: VT.FINAL_MASS_KG) }
+  public static func add(PROPELLANT_MASS_KG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PROPELLANT_MASS_KG, def: 0.0, at: VT.PROPELLANT_MASS_KG) }
+  public static func addVectorOf(INITIAL_COSTATES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INITIAL_COSTATES, at: VT.INITIAL_COSTATES) }
+  public static func addVectorOf(THROTTLE_HISTORY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: THROTTLE_HISTORY, at: VT.THROTTLE_HISTORY) }
+  public static func add(MIN_ENERGY_DELTA_V_KM_S: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_ENERGY_DELTA_V_KM_S, def: 0.0, at: VT.MIN_ENERGY_DELTA_V_KM_S) }
   public static func endtbpTransfer(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createtbpTransfer(
     _ fbb: inout FlatBufferBuilder,
@@ -838,7 +1043,19 @@ public struct tbpTransfer: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
     BURNSVectorOffset BURNS: Offset = Offset(),
     TOTAL_DELTA_V_KM_S: Double = 0.0,
     TIME_OF_FLIGHT_S: Double = 0.0,
-    TRAJECTORYOffset TRAJECTORY: Offset = Offset()
+    TRAJECTORYOffset TRAJECTORY: Offset = Offset(),
+    INITIAL_STATEOffset INITIAL_STATE: Offset = Offset(),
+    FINAL_STATEOffset FINAL_STATE: Offset = Offset(),
+    RETROGRADE: Bool = false,
+    REFERENCE_PRIMARY: UInt8 = 0,
+    MAX_THRUST_N: Double = 0.0,
+    SPECIFIC_IMPULSE_S: Double = 0.0,
+    INITIAL_MASS_KG: Double = 0.0,
+    FINAL_MASS_KG: Double = 0.0,
+    PROPELLANT_MASS_KG: Double = 0.0,
+    INITIAL_COSTATESVectorOffset INITIAL_COSTATES: Offset = Offset(),
+    THROTTLE_HISTORYVectorOffset THROTTLE_HISTORY: Offset = Offset(),
+    MIN_ENERGY_DELTA_V_KM_S: Double = 0.0
   ) -> Offset {
     let __start = tbpTransfer.starttbpTransfer(&fbb)
     tbpTransfer.add(KIND: KIND, &fbb)
@@ -853,6 +1070,18 @@ public struct tbpTransfer: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
     tbpTransfer.add(TOTAL_DELTA_V_KM_S: TOTAL_DELTA_V_KM_S, &fbb)
     tbpTransfer.add(TIME_OF_FLIGHT_S: TIME_OF_FLIGHT_S, &fbb)
     tbpTransfer.add(TRAJECTORY: TRAJECTORY, &fbb)
+    tbpTransfer.add(INITIAL_STATE: INITIAL_STATE, &fbb)
+    tbpTransfer.add(FINAL_STATE: FINAL_STATE, &fbb)
+    tbpTransfer.add(RETROGRADE: RETROGRADE, &fbb)
+    tbpTransfer.add(REFERENCE_PRIMARY: REFERENCE_PRIMARY, &fbb)
+    tbpTransfer.add(MAX_THRUST_N: MAX_THRUST_N, &fbb)
+    tbpTransfer.add(SPECIFIC_IMPULSE_S: SPECIFIC_IMPULSE_S, &fbb)
+    tbpTransfer.add(INITIAL_MASS_KG: INITIAL_MASS_KG, &fbb)
+    tbpTransfer.add(FINAL_MASS_KG: FINAL_MASS_KG, &fbb)
+    tbpTransfer.add(PROPELLANT_MASS_KG: PROPELLANT_MASS_KG, &fbb)
+    tbpTransfer.addVectorOf(INITIAL_COSTATES: INITIAL_COSTATES, &fbb)
+    tbpTransfer.addVectorOf(THROTTLE_HISTORY: THROTTLE_HISTORY, &fbb)
+    tbpTransfer.add(MIN_ENERGY_DELTA_V_KM_S: MIN_ENERGY_DELTA_V_KM_S, &fbb)
     return tbpTransfer.endtbpTransfer(&fbb, start: __start)
   }
 
@@ -870,6 +1099,18 @@ public struct tbpTransfer: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
     try _v.visit(field: VT.TOTAL_DELTA_V_KM_S, fieldName: "TOTAL_DELTA_V_KM_S", required: false, type: Double.self)
     try _v.visit(field: VT.TIME_OF_FLIGHT_S, fieldName: "TIME_OF_FLIGHT_S", required: false, type: Double.self)
     try _v.visit(field: VT.TRAJECTORY, fieldName: "TRAJECTORY", required: false, type: ForwardOffset<tbpTrajectory>.self)
+    try _v.visit(field: VT.INITIAL_STATE, fieldName: "INITIAL_STATE", required: false, type: ForwardOffset<tbpState>.self)
+    try _v.visit(field: VT.FINAL_STATE, fieldName: "FINAL_STATE", required: false, type: ForwardOffset<tbpState>.self)
+    try _v.visit(field: VT.RETROGRADE, fieldName: "RETROGRADE", required: false, type: Bool.self)
+    try _v.visit(field: VT.REFERENCE_PRIMARY, fieldName: "REFERENCE_PRIMARY", required: false, type: UInt8.self)
+    try _v.visit(field: VT.MAX_THRUST_N, fieldName: "MAX_THRUST_N", required: false, type: Double.self)
+    try _v.visit(field: VT.SPECIFIC_IMPULSE_S, fieldName: "SPECIFIC_IMPULSE_S", required: false, type: Double.self)
+    try _v.visit(field: VT.INITIAL_MASS_KG, fieldName: "INITIAL_MASS_KG", required: false, type: Double.self)
+    try _v.visit(field: VT.FINAL_MASS_KG, fieldName: "FINAL_MASS_KG", required: false, type: Double.self)
+    try _v.visit(field: VT.PROPELLANT_MASS_KG, fieldName: "PROPELLANT_MASS_KG", required: false, type: Double.self)
+    try _v.visit(field: VT.INITIAL_COSTATES, fieldName: "INITIAL_COSTATES", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.THROTTLE_HISTORY, fieldName: "THROTTLE_HISTORY", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.MIN_ENERGY_DELTA_V_KM_S, fieldName: "MIN_ENERGY_DELTA_V_KM_S", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -897,6 +1138,10 @@ public struct tbpStationKeeping: FlatBufferVerifiableTable, FlatbuffersVectorIni
     static let MAX_CYCLE_DELTA_V_KM_S: VOffset = 18
     static let CYCLE_DELTA_V_KM_S: VOffset = 20
     static let BOUNDED: VOffset = 22
+    static let CORRECTION_INTERVAL_S: VOffset = 24
+    static let DELTA_V_EXECUTION_ERROR_KM_S: VOffset = 26
+    static let LOWER_BOUND_ANNUAL_DELTA_V_KM_S: VOffset = 28
+    static let UPPER_BOUND_ANNUAL_DELTA_V_KM_S: VOffset = 30
   }
 
   ///  The orbit kept (its INITIAL_STATE, PERIOD and JACOBI at least).
@@ -918,7 +1163,15 @@ public struct tbpStationKeeping: FlatBufferVerifiableTable, FlatbuffersVectorIni
   public func withUnsafePointerToCycleDeltaVKmS<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.CYCLE_DELTA_V_KM_S, body: body) }
   ///  Result: true when the orbit stays bounded over the simulation.
   public var BOUNDED: Bool { let o = _accessor.offset(VT.BOUNDED); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  public static func starttbpStationKeeping(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
+  ///  Time between correction maneuvers, s (LinearStabilityBounds).
+  public var CORRECTION_INTERVAL_S: Double { let o = _accessor.offset(VT.CORRECTION_INTERVAL_S); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  3-axis velocity execution error magnitude, km/s (LinearStabilityBounds).
+  public var DELTA_V_EXECUTION_ERROR_KM_S: Double { let o = _accessor.offset(VT.DELTA_V_EXECUTION_ERROR_KM_S); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Result: linear-stability lower bound annual delta-v, km/s/yr.
+  public var LOWER_BOUND_ANNUAL_DELTA_V_KM_S: Double { let o = _accessor.offset(VT.LOWER_BOUND_ANNUAL_DELTA_V_KM_S); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Result: linear-stability upper bound annual delta-v, km/s/yr.
+  public var UPPER_BOUND_ANNUAL_DELTA_V_KM_S: Double { let o = _accessor.offset(VT.UPPER_BOUND_ANNUAL_DELTA_V_KM_S); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func starttbpStationKeeping(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 14) }
   public static func add(ORBIT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORBIT, at: VT.ORBIT) }
   public static func add(STRATEGY: tbpStationKeepingStrategy, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STRATEGY.rawValue, def: 0, at: VT.STRATEGY) }
   public static func add(NAVIGATION_ERROR_KM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NAVIGATION_ERROR_KM, def: 0.0, at: VT.NAVIGATION_ERROR_KM) }
@@ -930,6 +1183,10 @@ public struct tbpStationKeeping: FlatBufferVerifiableTable, FlatbuffersVectorIni
   public static func addVectorOf(CYCLE_DELTA_V_KM_S: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CYCLE_DELTA_V_KM_S, at: VT.CYCLE_DELTA_V_KM_S) }
   public static func add(BOUNDED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BOUNDED, def: false,
    at: VT.BOUNDED) }
+  public static func add(CORRECTION_INTERVAL_S: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CORRECTION_INTERVAL_S, def: 0.0, at: VT.CORRECTION_INTERVAL_S) }
+  public static func add(DELTA_V_EXECUTION_ERROR_KM_S: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_V_EXECUTION_ERROR_KM_S, def: 0.0, at: VT.DELTA_V_EXECUTION_ERROR_KM_S) }
+  public static func add(LOWER_BOUND_ANNUAL_DELTA_V_KM_S: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOWER_BOUND_ANNUAL_DELTA_V_KM_S, def: 0.0, at: VT.LOWER_BOUND_ANNUAL_DELTA_V_KM_S) }
+  public static func add(UPPER_BOUND_ANNUAL_DELTA_V_KM_S: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UPPER_BOUND_ANNUAL_DELTA_V_KM_S, def: 0.0, at: VT.UPPER_BOUND_ANNUAL_DELTA_V_KM_S) }
   public static func endtbpStationKeeping(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createtbpStationKeeping(
     _ fbb: inout FlatBufferBuilder,
@@ -942,7 +1199,11 @@ public struct tbpStationKeeping: FlatBufferVerifiableTable, FlatbuffersVectorIni
     MEAN_CYCLE_DELTA_V_KM_S: Double = 0.0,
     MAX_CYCLE_DELTA_V_KM_S: Double = 0.0,
     CYCLE_DELTA_V_KM_SVectorOffset CYCLE_DELTA_V_KM_S: Offset = Offset(),
-    BOUNDED: Bool = false
+    BOUNDED: Bool = false,
+    CORRECTION_INTERVAL_S: Double = 0.0,
+    DELTA_V_EXECUTION_ERROR_KM_S: Double = 0.0,
+    LOWER_BOUND_ANNUAL_DELTA_V_KM_S: Double = 0.0,
+    UPPER_BOUND_ANNUAL_DELTA_V_KM_S: Double = 0.0
   ) -> Offset {
     let __start = tbpStationKeeping.starttbpStationKeeping(&fbb)
     tbpStationKeeping.add(ORBIT: ORBIT, &fbb)
@@ -955,6 +1216,10 @@ public struct tbpStationKeeping: FlatBufferVerifiableTable, FlatbuffersVectorIni
     tbpStationKeeping.add(MAX_CYCLE_DELTA_V_KM_S: MAX_CYCLE_DELTA_V_KM_S, &fbb)
     tbpStationKeeping.addVectorOf(CYCLE_DELTA_V_KM_S: CYCLE_DELTA_V_KM_S, &fbb)
     tbpStationKeeping.add(BOUNDED: BOUNDED, &fbb)
+    tbpStationKeeping.add(CORRECTION_INTERVAL_S: CORRECTION_INTERVAL_S, &fbb)
+    tbpStationKeeping.add(DELTA_V_EXECUTION_ERROR_KM_S: DELTA_V_EXECUTION_ERROR_KM_S, &fbb)
+    tbpStationKeeping.add(LOWER_BOUND_ANNUAL_DELTA_V_KM_S: LOWER_BOUND_ANNUAL_DELTA_V_KM_S, &fbb)
+    tbpStationKeeping.add(UPPER_BOUND_ANNUAL_DELTA_V_KM_S: UPPER_BOUND_ANNUAL_DELTA_V_KM_S, &fbb)
     return tbpStationKeeping.endtbpStationKeeping(&fbb, start: __start)
   }
 
@@ -970,6 +1235,10 @@ public struct tbpStationKeeping: FlatBufferVerifiableTable, FlatbuffersVectorIni
     try _v.visit(field: VT.MAX_CYCLE_DELTA_V_KM_S, fieldName: "MAX_CYCLE_DELTA_V_KM_S", required: false, type: Double.self)
     try _v.visit(field: VT.CYCLE_DELTA_V_KM_S, fieldName: "CYCLE_DELTA_V_KM_S", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
     try _v.visit(field: VT.BOUNDED, fieldName: "BOUNDED", required: false, type: Bool.self)
+    try _v.visit(field: VT.CORRECTION_INTERVAL_S, fieldName: "CORRECTION_INTERVAL_S", required: false, type: Double.self)
+    try _v.visit(field: VT.DELTA_V_EXECUTION_ERROR_KM_S, fieldName: "DELTA_V_EXECUTION_ERROR_KM_S", required: false, type: Double.self)
+    try _v.visit(field: VT.LOWER_BOUND_ANNUAL_DELTA_V_KM_S, fieldName: "LOWER_BOUND_ANNUAL_DELTA_V_KM_S", required: false, type: Double.self)
+    try _v.visit(field: VT.UPPER_BOUND_ANNUAL_DELTA_V_KM_S, fieldName: "UPPER_BOUND_ANNUAL_DELTA_V_KM_S", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -995,6 +1264,12 @@ public struct tbpFrameConversion: FlatBufferVerifiableTable, FlatbuffersVectorIn
     static let ELAPSED_S: VOffset = 8
     static let SYNODIC: VOffset = 10
     static let INERTIAL: VOffset = 12
+    static let REFERENCE_PRIMARY: VOffset = 14
+    static let JULIAN_DATE: VOffset = 16
+    static let LLA_DEG_KM: VOffset = 18
+    static let ORBITAL_ELEMENTS: VOffset = 20
+    static let BATCH_SYNODIC_STATES: VOffset = 22
+    static let BATCH_INERTIAL_STATES: VOffset = 24
   }
 
   public var DIRECTION: tbpConversionDirection { let o = _accessor.offset(VT.DIRECTION); return o == 0 ? .synodictoinertial : tbpConversionDirection(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .synodictoinertial }
@@ -1008,12 +1283,34 @@ public struct tbpFrameConversion: FlatBufferVerifiableTable, FlatbuffersVectorIn
   ///  The inertial state (input or result): km and km/s, 6 values.
   public var INERTIAL: FlatbufferVector<Double> { return _accessor.vector(at: VT.INERTIAL, byteSize: 8) }
   public func withUnsafePointerToInertial<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.INERTIAL, body: body) }
-  public static func starttbpFrameConversion(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
+  ///  Reference primary body: 0 = barycenter, 1 = P1 (Earth), 2 = P2 (Moon).
+  public var REFERENCE_PRIMARY: UInt8 { let o = _accessor.offset(VT.REFERENCE_PRIMARY); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  Epoch Julian date (days) for J2000/ephemeris conversions; 0 = from REFERENCE_EPOCH_MS.
+  public var JULIAN_DATE: Double { let o = _accessor.offset(VT.JULIAN_DATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Geodetic/selenodetic coordinates [lat_deg, lon_deg, alt_km] (3 values).
+  public var LLA_DEG_KM: FlatbufferVector<Double> { return _accessor.vector(at: VT.LLA_DEG_KM, byteSize: 8) }
+  public func withUnsafePointerToLlaDegKm<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.LLA_DEG_KM, body: body) }
+  ///  Classical Keplerian elements [a_km, e, inc_deg, raan_deg, argp_deg, nu_deg] (6 values).
+  public var ORBITAL_ELEMENTS: FlatbufferVector<Double> { return _accessor.vector(at: VT.ORBITAL_ELEMENTS, byteSize: 8) }
+  public func withUnsafePointerToOrbitalElements<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.ORBITAL_ELEMENTS, body: body) }
+  ///  Batch synodic states (N * 6 values, non-dimensional) for vectorized conversion.
+  public var BATCH_SYNODIC_STATES: FlatbufferVector<Double> { return _accessor.vector(at: VT.BATCH_SYNODIC_STATES, byteSize: 8) }
+  public func withUnsafePointerToBatchSynodicStates<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.BATCH_SYNODIC_STATES, body: body) }
+  ///  Batch inertial/target states (N * 6 values, km and km/s) for vectorized conversion.
+  public var BATCH_INERTIAL_STATES: FlatbufferVector<Double> { return _accessor.vector(at: VT.BATCH_INERTIAL_STATES, byteSize: 8) }
+  public func withUnsafePointerToBatchInertialStates<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.BATCH_INERTIAL_STATES, body: body) }
+  public static func starttbpFrameConversion(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
   public static func add(DIRECTION: tbpConversionDirection, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DIRECTION.rawValue, def: 0, at: VT.DIRECTION) }
   public static func add(REFERENCE_EPOCH_MS: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFERENCE_EPOCH_MS, def: 0, at: VT.REFERENCE_EPOCH_MS) }
   public static func add(ELAPSED_S: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ELAPSED_S, def: 0.0, at: VT.ELAPSED_S) }
   public static func add(SYNODIC: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SYNODIC, at: VT.SYNODIC) }
   public static func addVectorOf(INERTIAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INERTIAL, at: VT.INERTIAL) }
+  public static func add(REFERENCE_PRIMARY: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFERENCE_PRIMARY, def: 0, at: VT.REFERENCE_PRIMARY) }
+  public static func add(JULIAN_DATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: JULIAN_DATE, def: 0.0, at: VT.JULIAN_DATE) }
+  public static func addVectorOf(LLA_DEG_KM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LLA_DEG_KM, at: VT.LLA_DEG_KM) }
+  public static func addVectorOf(ORBITAL_ELEMENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORBITAL_ELEMENTS, at: VT.ORBITAL_ELEMENTS) }
+  public static func addVectorOf(BATCH_SYNODIC_STATES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BATCH_SYNODIC_STATES, at: VT.BATCH_SYNODIC_STATES) }
+  public static func addVectorOf(BATCH_INERTIAL_STATES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BATCH_INERTIAL_STATES, at: VT.BATCH_INERTIAL_STATES) }
   public static func endtbpFrameConversion(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createtbpFrameConversion(
     _ fbb: inout FlatBufferBuilder,
@@ -1021,7 +1318,13 @@ public struct tbpFrameConversion: FlatBufferVerifiableTable, FlatbuffersVectorIn
     REFERENCE_EPOCH_MS: Int64 = 0,
     ELAPSED_S: Double = 0.0,
     SYNODICOffset SYNODIC: Offset = Offset(),
-    INERTIALVectorOffset INERTIAL: Offset = Offset()
+    INERTIALVectorOffset INERTIAL: Offset = Offset(),
+    REFERENCE_PRIMARY: UInt8 = 0,
+    JULIAN_DATE: Double = 0.0,
+    LLA_DEG_KMVectorOffset LLA_DEG_KM: Offset = Offset(),
+    ORBITAL_ELEMENTSVectorOffset ORBITAL_ELEMENTS: Offset = Offset(),
+    BATCH_SYNODIC_STATESVectorOffset BATCH_SYNODIC_STATES: Offset = Offset(),
+    BATCH_INERTIAL_STATESVectorOffset BATCH_INERTIAL_STATES: Offset = Offset()
   ) -> Offset {
     let __start = tbpFrameConversion.starttbpFrameConversion(&fbb)
     tbpFrameConversion.add(DIRECTION: DIRECTION, &fbb)
@@ -1029,6 +1332,12 @@ public struct tbpFrameConversion: FlatBufferVerifiableTable, FlatbuffersVectorIn
     tbpFrameConversion.add(ELAPSED_S: ELAPSED_S, &fbb)
     tbpFrameConversion.add(SYNODIC: SYNODIC, &fbb)
     tbpFrameConversion.addVectorOf(INERTIAL: INERTIAL, &fbb)
+    tbpFrameConversion.add(REFERENCE_PRIMARY: REFERENCE_PRIMARY, &fbb)
+    tbpFrameConversion.add(JULIAN_DATE: JULIAN_DATE, &fbb)
+    tbpFrameConversion.addVectorOf(LLA_DEG_KM: LLA_DEG_KM, &fbb)
+    tbpFrameConversion.addVectorOf(ORBITAL_ELEMENTS: ORBITAL_ELEMENTS, &fbb)
+    tbpFrameConversion.addVectorOf(BATCH_SYNODIC_STATES: BATCH_SYNODIC_STATES, &fbb)
+    tbpFrameConversion.addVectorOf(BATCH_INERTIAL_STATES: BATCH_INERTIAL_STATES, &fbb)
     return tbpFrameConversion.endtbpFrameConversion(&fbb, start: __start)
   }
 
@@ -1039,6 +1348,458 @@ public struct tbpFrameConversion: FlatBufferVerifiableTable, FlatbuffersVectorIn
     try _v.visit(field: VT.ELAPSED_S, fieldName: "ELAPSED_S", required: false, type: Double.self)
     try _v.visit(field: VT.SYNODIC, fieldName: "SYNODIC", required: false, type: ForwardOffset<tbpState>.self)
     try _v.visit(field: VT.INERTIAL, fieldName: "INERTIAL", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.REFERENCE_PRIMARY, fieldName: "REFERENCE_PRIMARY", required: false, type: UInt8.self)
+    try _v.visit(field: VT.JULIAN_DATE, fieldName: "JULIAN_DATE", required: false, type: Double.self)
+    try _v.visit(field: VT.LLA_DEG_KM, fieldName: "LLA_DEG_KM", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.ORBITAL_ELEMENTS, fieldName: "ORBITAL_ELEMENTS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.BATCH_SYNODIC_STATES, fieldName: "BATCH_SYNODIC_STATES", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.BATCH_INERTIAL_STATES, fieldName: "BATCH_INERTIAL_STATES", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    _v.finish()
+  }
+}
+
+///  Request parameters for pseudo-arclength or natural-parameter continuation.
+public struct tbpContinuationRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$TBP" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: tbpContinuationRequest.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let SEED_ORBIT: VOffset = 4
+    static let STEP_SIZE: VOffset = 6
+    static let STEPS: VOffset = 8
+    static let FIXED_PERIOD: VOffset = 10
+    static let NULL_VECTOR: VOffset = 12
+    static let TOLERANCE: VOffset = 14
+    static let MAX_ITERATIONS: VOffset = 16
+  }
+
+  ///  Seed periodic orbit (INITIAL_STATE and PERIOD required).
+  public var SEED_ORBIT: tbpPeriodicOrbit? { let o = _accessor.offset(VT.SEED_ORBIT); return o == 0 ? nil : tbpPeriodicOrbit(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Arclength step size ds (signed); 0 = natural-parameter fixed-period refinement.
+  public var STEP_SIZE: Double { let o = _accessor.offset(VT.STEP_SIZE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Number of continuation steps to generate; 0 = 1.
+  public var STEPS: UInt32 { let o = _accessor.offset(VT.STEPS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  True = fixed-period natural parameter continuation (cont_np); false = pseudo-arclength (cont).
+  public var FIXED_PERIOD: Bool { let o = _accessor.offset(VT.FIXED_PERIOD); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Optional 7-element previous null-vector tangent for directional continuation.
+  public var NULL_VECTOR: FlatbufferVector<Double> { return _accessor.vector(at: VT.NULL_VECTOR, byteSize: 8) }
+  public func withUnsafePointerToNullVector<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.NULL_VECTOR, body: body) }
+  ///  Convergence tolerance on periodicity residual; 0 = default (1e-10).
+  public var TOLERANCE: Double { let o = _accessor.offset(VT.TOLERANCE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Maximum corrector iterations per step; 0 = default.
+  public var MAX_ITERATIONS: UInt32 { let o = _accessor.offset(VT.MAX_ITERATIONS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public static func starttbpContinuationRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
+  public static func add(SEED_ORBIT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEED_ORBIT, at: VT.SEED_ORBIT) }
+  public static func add(STEP_SIZE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STEP_SIZE, def: 0.0, at: VT.STEP_SIZE) }
+  public static func add(STEPS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STEPS, def: 0, at: VT.STEPS) }
+  public static func add(FIXED_PERIOD: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FIXED_PERIOD, def: false,
+   at: VT.FIXED_PERIOD) }
+  public static func addVectorOf(NULL_VECTOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NULL_VECTOR, at: VT.NULL_VECTOR) }
+  public static func add(TOLERANCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOLERANCE, def: 0.0, at: VT.TOLERANCE) }
+  public static func add(MAX_ITERATIONS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_ITERATIONS, def: 0, at: VT.MAX_ITERATIONS) }
+  public static func endtbpContinuationRequest(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createtbpContinuationRequest(
+    _ fbb: inout FlatBufferBuilder,
+    SEED_ORBITOffset SEED_ORBIT: Offset = Offset(),
+    STEP_SIZE: Double = 0.0,
+    STEPS: UInt32 = 0,
+    FIXED_PERIOD: Bool = false,
+    NULL_VECTORVectorOffset NULL_VECTOR: Offset = Offset(),
+    TOLERANCE: Double = 0.0,
+    MAX_ITERATIONS: UInt32 = 0
+  ) -> Offset {
+    let __start = tbpContinuationRequest.starttbpContinuationRequest(&fbb)
+    tbpContinuationRequest.add(SEED_ORBIT: SEED_ORBIT, &fbb)
+    tbpContinuationRequest.add(STEP_SIZE: STEP_SIZE, &fbb)
+    tbpContinuationRequest.add(STEPS: STEPS, &fbb)
+    tbpContinuationRequest.add(FIXED_PERIOD: FIXED_PERIOD, &fbb)
+    tbpContinuationRequest.addVectorOf(NULL_VECTOR: NULL_VECTOR, &fbb)
+    tbpContinuationRequest.add(TOLERANCE: TOLERANCE, &fbb)
+    tbpContinuationRequest.add(MAX_ITERATIONS: MAX_ITERATIONS, &fbb)
+    return tbpContinuationRequest.endtbpContinuationRequest(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.SEED_ORBIT, fieldName: "SEED_ORBIT", required: false, type: ForwardOffset<tbpPeriodicOrbit>.self)
+    try _v.visit(field: VT.STEP_SIZE, fieldName: "STEP_SIZE", required: false, type: Double.self)
+    try _v.visit(field: VT.STEPS, fieldName: "STEPS", required: false, type: UInt32.self)
+    try _v.visit(field: VT.FIXED_PERIOD, fieldName: "FIXED_PERIOD", required: false, type: Bool.self)
+    try _v.visit(field: VT.NULL_VECTOR, fieldName: "NULL_VECTOR", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.TOLERANCE, fieldName: "TOLERANCE", required: false, type: Double.self)
+    try _v.visit(field: VT.MAX_ITERATIONS, fieldName: "MAX_ITERATIONS", required: false, type: UInt32.self)
+    _v.finish()
+  }
+}
+
+///  One stable or unstable invariant manifold branch emanating from a periodic orbit.
+public struct tbpManifoldBranch: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$TBP" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: tbpManifoldBranch.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let STABLE: VOffset = 4
+    static let EXTERIOR: VOffset = 6
+    static let SEED_INDEX: VOffset = 8
+    static let INITIAL_STATE: VOffset = 10
+    static let TRAJECTORY: VOffset = 12
+  }
+
+  ///  True = stable branch (integrated backward), false = unstable branch (forward).
+  public var STABLE: Bool { let o = _accessor.offset(VT.STABLE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  True = exterior (+eigenvector), false = interior (-eigenvector).
+  public var EXTERIOR: Bool { let o = _accessor.offset(VT.EXTERIOR); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Index of the seed point along the periodic orbit.
+  public var SEED_INDEX: UInt32 { let o = _accessor.offset(VT.SEED_INDEX); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Perturbed initial state on the manifold, non-dimensional.
+  public var INITIAL_STATE: tbpState? { let o = _accessor.offset(VT.INITIAL_STATE); return o == 0 ? nil : tbpState(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Propagated manifold trajectory.
+  public var TRAJECTORY: tbpTrajectory? { let o = _accessor.offset(VT.TRAJECTORY); return o == 0 ? nil : tbpTrajectory(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func starttbpManifoldBranch(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
+  public static func add(STABLE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STABLE, def: false,
+   at: VT.STABLE) }
+  public static func add(EXTERIOR: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXTERIOR, def: false,
+   at: VT.EXTERIOR) }
+  public static func add(SEED_INDEX: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEED_INDEX, def: 0, at: VT.SEED_INDEX) }
+  public static func add(INITIAL_STATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INITIAL_STATE, at: VT.INITIAL_STATE) }
+  public static func add(TRAJECTORY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRAJECTORY, at: VT.TRAJECTORY) }
+  public static func endtbpManifoldBranch(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createtbpManifoldBranch(
+    _ fbb: inout FlatBufferBuilder,
+    STABLE: Bool = false,
+    EXTERIOR: Bool = false,
+    SEED_INDEX: UInt32 = 0,
+    INITIAL_STATEOffset INITIAL_STATE: Offset = Offset(),
+    TRAJECTORYOffset TRAJECTORY: Offset = Offset()
+  ) -> Offset {
+    let __start = tbpManifoldBranch.starttbpManifoldBranch(&fbb)
+    tbpManifoldBranch.add(STABLE: STABLE, &fbb)
+    tbpManifoldBranch.add(EXTERIOR: EXTERIOR, &fbb)
+    tbpManifoldBranch.add(SEED_INDEX: SEED_INDEX, &fbb)
+    tbpManifoldBranch.add(INITIAL_STATE: INITIAL_STATE, &fbb)
+    tbpManifoldBranch.add(TRAJECTORY: TRAJECTORY, &fbb)
+    return tbpManifoldBranch.endtbpManifoldBranch(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.STABLE, fieldName: "STABLE", required: false, type: Bool.self)
+    try _v.visit(field: VT.EXTERIOR, fieldName: "EXTERIOR", required: false, type: Bool.self)
+    try _v.visit(field: VT.SEED_INDEX, fieldName: "SEED_INDEX", required: false, type: UInt32.self)
+    try _v.visit(field: VT.INITIAL_STATE, fieldName: "INITIAL_STATE", required: false, type: ForwardOffset<tbpState>.self)
+    try _v.visit(field: VT.TRAJECTORY, fieldName: "TRAJECTORY", required: false, type: ForwardOffset<tbpTrajectory>.self)
+    _v.finish()
+  }
+}
+
+///  Invariant manifold request and computed branches for an unstable periodic orbit.
+public struct tbpManifolds: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$TBP" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: tbpManifolds.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let ORBIT: VOffset = 4
+    static let PERTURBATION: VOffset = 6
+    static let DURATION: VOffset = 8
+    static let SAMPLE_POINTS: VOffset = 10
+    static let BRANCH_KIND: VOffset = 12
+    static let BRANCHES: VOffset = 14
+  }
+
+  ///  Periodic orbit to perturb (INITIAL_STATE and PERIOD required).
+  public var ORBIT: tbpPeriodicOrbit? { let o = _accessor.offset(VT.ORBIT); return o == 0 ? nil : tbpPeriodicOrbit(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Perturbation distance epsilon (non-dimensional); 0 = default (1e-5).
+  public var PERTURBATION: Double { let o = _accessor.offset(VT.PERTURBATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Propagation duration per branch, non-dimensional; 0 = one orbit period.
+  public var DURATION: Double { let o = _accessor.offset(VT.DURATION); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Number of seed points along the periodic orbit; 0 = default (12).
+  public var SAMPLE_POINTS: UInt32 { let o = _accessor.offset(VT.SAMPLE_POINTS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Which manifold branches to generate.
+  public var BRANCH_KIND: tbpManifoldBranchKind { let o = _accessor.offset(VT.BRANCH_KIND); return o == 0 ? .both : tbpManifoldBranchKind(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .both }
+  ///  Computed manifold branches.
+  public var BRANCHES: FlatbufferVector<tbpManifoldBranch> { return _accessor.vector(at: VT.BRANCHES, byteSize: 4) }
+  public static func starttbpManifolds(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
+  public static func add(ORBIT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORBIT, at: VT.ORBIT) }
+  public static func add(PERTURBATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PERTURBATION, def: 0.0, at: VT.PERTURBATION) }
+  public static func add(DURATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DURATION, def: 0.0, at: VT.DURATION) }
+  public static func add(SAMPLE_POINTS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAMPLE_POINTS, def: 0, at: VT.SAMPLE_POINTS) }
+  public static func add(BRANCH_KIND: tbpManifoldBranchKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BRANCH_KIND.rawValue, def: 0, at: VT.BRANCH_KIND) }
+  public static func addVectorOf(BRANCHES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BRANCHES, at: VT.BRANCHES) }
+  public static func endtbpManifolds(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createtbpManifolds(
+    _ fbb: inout FlatBufferBuilder,
+    ORBITOffset ORBIT: Offset = Offset(),
+    PERTURBATION: Double = 0.0,
+    DURATION: Double = 0.0,
+    SAMPLE_POINTS: UInt32 = 0,
+    BRANCH_KIND: tbpManifoldBranchKind = .both,
+    BRANCHESVectorOffset BRANCHES: Offset = Offset()
+  ) -> Offset {
+    let __start = tbpManifolds.starttbpManifolds(&fbb)
+    tbpManifolds.add(ORBIT: ORBIT, &fbb)
+    tbpManifolds.add(PERTURBATION: PERTURBATION, &fbb)
+    tbpManifolds.add(DURATION: DURATION, &fbb)
+    tbpManifolds.add(SAMPLE_POINTS: SAMPLE_POINTS, &fbb)
+    tbpManifolds.add(BRANCH_KIND: BRANCH_KIND, &fbb)
+    tbpManifolds.addVectorOf(BRANCHES: BRANCHES, &fbb)
+    return tbpManifolds.endtbpManifolds(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.ORBIT, fieldName: "ORBIT", required: false, type: ForwardOffset<tbpPeriodicOrbit>.self)
+    try _v.visit(field: VT.PERTURBATION, fieldName: "PERTURBATION", required: false, type: Double.self)
+    try _v.visit(field: VT.DURATION, fieldName: "DURATION", required: false, type: Double.self)
+    try _v.visit(field: VT.SAMPLE_POINTS, fieldName: "SAMPLE_POINTS", required: false, type: UInt32.self)
+    try _v.visit(field: VT.BRANCH_KIND, fieldName: "BRANCH_KIND", required: false, type: tbpManifoldBranchKind.self)
+    try _v.visit(field: VT.BRANCHES, fieldName: "BRANCHES", required: false, type: ForwardOffset<Vector<ForwardOffset<tbpManifoldBranch>, tbpManifoldBranch>>.self)
+    _v.finish()
+  }
+}
+
+///  Multi-spacecraft time-phased CR3BP constellation along a periodic orbit.
+public struct tbpConstellation: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$TBP" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: tbpConstellation.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let ORBIT: VOffset = 4
+    static let SATELLITE_COUNT: VOffset = 6
+    static let REVOLUTIONS: VOffset = 8
+    static let PHASE_OFFSETS: VOffset = 10
+    static let OUTPUT_POINTS: VOffset = 12
+    static let TRAJECTORIES: VOffset = 14
+  }
+
+  ///  Generating periodic orbit (FAMILY + PETALS + PERIOD or explicit INITIAL_STATE).
+  public var ORBIT: tbpPeriodicOrbit? { let o = _accessor.offset(VT.ORBIT); return o == 0 ? nil : tbpPeriodicOrbit(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Number of spacecraft in the constellation.
+  public var SATELLITE_COUNT: UInt32 { let o = _accessor.offset(VT.SATELLITE_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Number of orbit revolutions to propagate; 0 = 1.
+  public var REVOLUTIONS: UInt32 { let o = _accessor.offset(VT.REVOLUTIONS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Non-dimensional phase offsets (length SATELLITE_COUNT); empty = evenly spaced.
+  public var PHASE_OFFSETS: FlatbufferVector<Double> { return _accessor.vector(at: VT.PHASE_OFFSETS, byteSize: 8) }
+  public func withUnsafePointerToPhaseOffsets<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.PHASE_OFFSETS, body: body) }
+  ///  Uniform time samples per spacecraft trajectory; 0 = default.
+  public var OUTPUT_POINTS: UInt32 { let o = _accessor.offset(VT.OUTPUT_POINTS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Result: propagated trajectory for each spacecraft in the constellation.
+  public var TRAJECTORIES: FlatbufferVector<tbpTrajectory> { return _accessor.vector(at: VT.TRAJECTORIES, byteSize: 4) }
+  public static func starttbpConstellation(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
+  public static func add(ORBIT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORBIT, at: VT.ORBIT) }
+  public static func add(SATELLITE_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SATELLITE_COUNT, def: 0, at: VT.SATELLITE_COUNT) }
+  public static func add(REVOLUTIONS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REVOLUTIONS, def: 0, at: VT.REVOLUTIONS) }
+  public static func addVectorOf(PHASE_OFFSETS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PHASE_OFFSETS, at: VT.PHASE_OFFSETS) }
+  public static func add(OUTPUT_POINTS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTPUT_POINTS, def: 0, at: VT.OUTPUT_POINTS) }
+  public static func addVectorOf(TRAJECTORIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRAJECTORIES, at: VT.TRAJECTORIES) }
+  public static func endtbpConstellation(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createtbpConstellation(
+    _ fbb: inout FlatBufferBuilder,
+    ORBITOffset ORBIT: Offset = Offset(),
+    SATELLITE_COUNT: UInt32 = 0,
+    REVOLUTIONS: UInt32 = 0,
+    PHASE_OFFSETSVectorOffset PHASE_OFFSETS: Offset = Offset(),
+    OUTPUT_POINTS: UInt32 = 0,
+    TRAJECTORIESVectorOffset TRAJECTORIES: Offset = Offset()
+  ) -> Offset {
+    let __start = tbpConstellation.starttbpConstellation(&fbb)
+    tbpConstellation.add(ORBIT: ORBIT, &fbb)
+    tbpConstellation.add(SATELLITE_COUNT: SATELLITE_COUNT, &fbb)
+    tbpConstellation.add(REVOLUTIONS: REVOLUTIONS, &fbb)
+    tbpConstellation.addVectorOf(PHASE_OFFSETS: PHASE_OFFSETS, &fbb)
+    tbpConstellation.add(OUTPUT_POINTS: OUTPUT_POINTS, &fbb)
+    tbpConstellation.addVectorOf(TRAJECTORIES: TRAJECTORIES, &fbb)
+    return tbpConstellation.endtbpConstellation(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.ORBIT, fieldName: "ORBIT", required: false, type: ForwardOffset<tbpPeriodicOrbit>.self)
+    try _v.visit(field: VT.SATELLITE_COUNT, fieldName: "SATELLITE_COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.REVOLUTIONS, fieldName: "REVOLUTIONS", required: false, type: UInt32.self)
+    try _v.visit(field: VT.PHASE_OFFSETS, fieldName: "PHASE_OFFSETS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.OUTPUT_POINTS, fieldName: "OUTPUT_POINTS", required: false, type: UInt32.self)
+    try _v.visit(field: VT.TRAJECTORIES, fieldName: "TRAJECTORIES", required: false, type: ForwardOffset<Vector<ForwardOffset<tbpTrajectory>, tbpTrajectory>>.self)
+    _v.finish()
+  }
+}
+
+///  Surface coverage gap, elevation angle, occultation, and DOP analysis on a primary body.
+public struct tbpSurfaceAnalysis: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$TBP" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: tbpSurfaceAnalysis.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let REFERENCE_PRIMARY: VOffset = 4
+    static let PRIMARY_RADIUS_KM: VOffset = 6
+    static let MIN_ELEVATION_DEG: VOffset = 8
+    static let MIN_SATELLITES: VOffset = 10
+    static let SURFACE_POINTS_SYNODIC: VOffset = 12
+    static let SURFACE_LAT_LON_DEG: VOffset = 14
+    static let GRID_POINT_COUNT: VOffset = 16
+    static let SAMPLE_TIMES: VOffset = 18
+    static let MAX_GAP_S: VOffset = 20
+    static let GDOP: VOffset = 22
+    static let PDOP: VOffset = 24
+    static let TDOP: VOffset = 26
+    static let ELEVATION_DEG: VOffset = 28
+    static let OCCULTATION_START_S: VOffset = 30
+    static let OCCULTATION_END_S: VOffset = 32
+    static let OCCULTING_PRIMARY: VOffset = 34
+  }
+
+  ///  Target primary body: 0 or 2 = smaller primary (Moon), 1 = larger primary (Earth).
+  public var REFERENCE_PRIMARY: UInt8 { let o = _accessor.offset(VT.REFERENCE_PRIMARY); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  Radius of target primary body, km; 0 = default body radius.
+  public var PRIMARY_RADIUS_KM: Double { let o = _accessor.offset(VT.PRIMARY_RADIUS_KM); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Minimum elevation mask angle above local horizon, deg; 0 = horizon (0 deg).
+  public var MIN_ELEVATION_DEG: Double { let o = _accessor.offset(VT.MIN_ELEVATION_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Minimum simultaneous satellites in view for coverage; 0 = 1.
+  public var MIN_SATELLITES: UInt32 { let o = _accessor.offset(VT.MIN_SATELLITES); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Surface observer positions in synodic frame (P * 3 non-dimensional values); empty = auto Fibonacci sphere.
+  public var SURFACE_POINTS_SYNODIC: FlatbufferVector<Double> { return _accessor.vector(at: VT.SURFACE_POINTS_SYNODIC, byteSize: 8) }
+  public func withUnsafePointerToSurfacePointsSynodic<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SURFACE_POINTS_SYNODIC, body: body) }
+  ///  Surface observer lat/lon pairs [lat0, lon0, ...] in deg (P * 2 values).
+  public var SURFACE_LAT_LON_DEG: FlatbufferVector<Double> { return _accessor.vector(at: VT.SURFACE_LAT_LON_DEG, byteSize: 8) }
+  public func withUnsafePointerToSurfaceLatLonDeg<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SURFACE_LAT_LON_DEG, body: body) }
+  ///  Number of Fibonacci surface grid points when SURFACE_POINTS_SYNODIC is empty; 0 = default.
+  public var GRID_POINT_COUNT: UInt32 { let o = _accessor.offset(VT.GRID_POINT_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Result: non-dimensional sample times (T values).
+  public var SAMPLE_TIMES: FlatbufferVector<Double> { return _accessor.vector(at: VT.SAMPLE_TIMES, byteSize: 8) }
+  public func withUnsafePointerToSampleTimes<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SAMPLE_TIMES, body: body) }
+  ///  Result: maximum uncovered gap duration per surface point, s (P values).
+  public var MAX_GAP_S: FlatbufferVector<Double> { return _accessor.vector(at: VT.MAX_GAP_S, byteSize: 8) }
+  public func withUnsafePointerToMaxGapS<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.MAX_GAP_S, body: body) }
+  ///  Result: geometric dilution of precision (T * P values, NaN/0 when <4 sats visible).
+  public var GDOP: FlatbufferVector<Double> { return _accessor.vector(at: VT.GDOP, byteSize: 8) }
+  public func withUnsafePointerToGdop<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.GDOP, body: body) }
+  ///  Result: position dilution of precision (T * P values).
+  public var PDOP: FlatbufferVector<Double> { return _accessor.vector(at: VT.PDOP, byteSize: 8) }
+  public func withUnsafePointerToPdop<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.PDOP, body: body) }
+  ///  Result: time dilution of precision (T * P values).
+  public var TDOP: FlatbufferVector<Double> { return _accessor.vector(at: VT.TDOP, byteSize: 8) }
+  public func withUnsafePointerToTdop<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.TDOP, body: body) }
+  ///  Result: maximum elevation angle per sample and surface point, deg (T * P values).
+  public var ELEVATION_DEG: FlatbufferVector<Double> { return _accessor.vector(at: VT.ELEVATION_DEG, byteSize: 8) }
+  public func withUnsafePointerToElevationDeg<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.ELEVATION_DEG, body: body) }
+  ///  Result: occultation interval start times, s (M values).
+  public var OCCULTATION_START_S: FlatbufferVector<Double> { return _accessor.vector(at: VT.OCCULTATION_START_S, byteSize: 8) }
+  public func withUnsafePointerToOccultationStartS<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.OCCULTATION_START_S, body: body) }
+  ///  Result: occultation interval end times, s (M values).
+  public var OCCULTATION_END_S: FlatbufferVector<Double> { return _accessor.vector(at: VT.OCCULTATION_END_S, byteSize: 8) }
+  public func withUnsafePointerToOccultationEndS<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.OCCULTATION_END_S, body: body) }
+  ///  Result: occulting body index per interval (1 = P1, 2 = P2; M values).
+  public var OCCULTING_PRIMARY: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.OCCULTING_PRIMARY, byteSize: 1) }
+  public func withUnsafePointerToOccultingPrimary<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.OCCULTING_PRIMARY, body: body) }
+  public static func starttbpSurfaceAnalysis(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 16) }
+  public static func add(REFERENCE_PRIMARY: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFERENCE_PRIMARY, def: 0, at: VT.REFERENCE_PRIMARY) }
+  public static func add(PRIMARY_RADIUS_KM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PRIMARY_RADIUS_KM, def: 0.0, at: VT.PRIMARY_RADIUS_KM) }
+  public static func add(MIN_ELEVATION_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_ELEVATION_DEG, def: 0.0, at: VT.MIN_ELEVATION_DEG) }
+  public static func add(MIN_SATELLITES: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_SATELLITES, def: 0, at: VT.MIN_SATELLITES) }
+  public static func addVectorOf(SURFACE_POINTS_SYNODIC: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SURFACE_POINTS_SYNODIC, at: VT.SURFACE_POINTS_SYNODIC) }
+  public static func addVectorOf(SURFACE_LAT_LON_DEG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SURFACE_LAT_LON_DEG, at: VT.SURFACE_LAT_LON_DEG) }
+  public static func add(GRID_POINT_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GRID_POINT_COUNT, def: 0, at: VT.GRID_POINT_COUNT) }
+  public static func addVectorOf(SAMPLE_TIMES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SAMPLE_TIMES, at: VT.SAMPLE_TIMES) }
+  public static func addVectorOf(MAX_GAP_S: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MAX_GAP_S, at: VT.MAX_GAP_S) }
+  public static func addVectorOf(GDOP: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GDOP, at: VT.GDOP) }
+  public static func addVectorOf(PDOP: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PDOP, at: VT.PDOP) }
+  public static func addVectorOf(TDOP: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TDOP, at: VT.TDOP) }
+  public static func addVectorOf(ELEVATION_DEG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ELEVATION_DEG, at: VT.ELEVATION_DEG) }
+  public static func addVectorOf(OCCULTATION_START_S: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OCCULTATION_START_S, at: VT.OCCULTATION_START_S) }
+  public static func addVectorOf(OCCULTATION_END_S: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OCCULTATION_END_S, at: VT.OCCULTATION_END_S) }
+  public static func addVectorOf(OCCULTING_PRIMARY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OCCULTING_PRIMARY, at: VT.OCCULTING_PRIMARY) }
+  public static func endtbpSurfaceAnalysis(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createtbpSurfaceAnalysis(
+    _ fbb: inout FlatBufferBuilder,
+    REFERENCE_PRIMARY: UInt8 = 0,
+    PRIMARY_RADIUS_KM: Double = 0.0,
+    MIN_ELEVATION_DEG: Double = 0.0,
+    MIN_SATELLITES: UInt32 = 0,
+    SURFACE_POINTS_SYNODICVectorOffset SURFACE_POINTS_SYNODIC: Offset = Offset(),
+    SURFACE_LAT_LON_DEGVectorOffset SURFACE_LAT_LON_DEG: Offset = Offset(),
+    GRID_POINT_COUNT: UInt32 = 0,
+    SAMPLE_TIMESVectorOffset SAMPLE_TIMES: Offset = Offset(),
+    MAX_GAP_SVectorOffset MAX_GAP_S: Offset = Offset(),
+    GDOPVectorOffset GDOP: Offset = Offset(),
+    PDOPVectorOffset PDOP: Offset = Offset(),
+    TDOPVectorOffset TDOP: Offset = Offset(),
+    ELEVATION_DEGVectorOffset ELEVATION_DEG: Offset = Offset(),
+    OCCULTATION_START_SVectorOffset OCCULTATION_START_S: Offset = Offset(),
+    OCCULTATION_END_SVectorOffset OCCULTATION_END_S: Offset = Offset(),
+    OCCULTING_PRIMARYVectorOffset OCCULTING_PRIMARY: Offset = Offset()
+  ) -> Offset {
+    let __start = tbpSurfaceAnalysis.starttbpSurfaceAnalysis(&fbb)
+    tbpSurfaceAnalysis.add(REFERENCE_PRIMARY: REFERENCE_PRIMARY, &fbb)
+    tbpSurfaceAnalysis.add(PRIMARY_RADIUS_KM: PRIMARY_RADIUS_KM, &fbb)
+    tbpSurfaceAnalysis.add(MIN_ELEVATION_DEG: MIN_ELEVATION_DEG, &fbb)
+    tbpSurfaceAnalysis.add(MIN_SATELLITES: MIN_SATELLITES, &fbb)
+    tbpSurfaceAnalysis.addVectorOf(SURFACE_POINTS_SYNODIC: SURFACE_POINTS_SYNODIC, &fbb)
+    tbpSurfaceAnalysis.addVectorOf(SURFACE_LAT_LON_DEG: SURFACE_LAT_LON_DEG, &fbb)
+    tbpSurfaceAnalysis.add(GRID_POINT_COUNT: GRID_POINT_COUNT, &fbb)
+    tbpSurfaceAnalysis.addVectorOf(SAMPLE_TIMES: SAMPLE_TIMES, &fbb)
+    tbpSurfaceAnalysis.addVectorOf(MAX_GAP_S: MAX_GAP_S, &fbb)
+    tbpSurfaceAnalysis.addVectorOf(GDOP: GDOP, &fbb)
+    tbpSurfaceAnalysis.addVectorOf(PDOP: PDOP, &fbb)
+    tbpSurfaceAnalysis.addVectorOf(TDOP: TDOP, &fbb)
+    tbpSurfaceAnalysis.addVectorOf(ELEVATION_DEG: ELEVATION_DEG, &fbb)
+    tbpSurfaceAnalysis.addVectorOf(OCCULTATION_START_S: OCCULTATION_START_S, &fbb)
+    tbpSurfaceAnalysis.addVectorOf(OCCULTATION_END_S: OCCULTATION_END_S, &fbb)
+    tbpSurfaceAnalysis.addVectorOf(OCCULTING_PRIMARY: OCCULTING_PRIMARY, &fbb)
+    return tbpSurfaceAnalysis.endtbpSurfaceAnalysis(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.REFERENCE_PRIMARY, fieldName: "REFERENCE_PRIMARY", required: false, type: UInt8.self)
+    try _v.visit(field: VT.PRIMARY_RADIUS_KM, fieldName: "PRIMARY_RADIUS_KM", required: false, type: Double.self)
+    try _v.visit(field: VT.MIN_ELEVATION_DEG, fieldName: "MIN_ELEVATION_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.MIN_SATELLITES, fieldName: "MIN_SATELLITES", required: false, type: UInt32.self)
+    try _v.visit(field: VT.SURFACE_POINTS_SYNODIC, fieldName: "SURFACE_POINTS_SYNODIC", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.SURFACE_LAT_LON_DEG, fieldName: "SURFACE_LAT_LON_DEG", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.GRID_POINT_COUNT, fieldName: "GRID_POINT_COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.SAMPLE_TIMES, fieldName: "SAMPLE_TIMES", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.MAX_GAP_S, fieldName: "MAX_GAP_S", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.GDOP, fieldName: "GDOP", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.PDOP, fieldName: "PDOP", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.TDOP, fieldName: "TDOP", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.ELEVATION_DEG, fieldName: "ELEVATION_DEG", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.OCCULTATION_START_S, fieldName: "OCCULTATION_START_S", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.OCCULTATION_END_S, fieldName: "OCCULTATION_END_S", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.OCCULTING_PRIMARY, fieldName: "OCCULTING_PRIMARY", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     _v.finish()
   }
 }
@@ -1073,6 +1834,10 @@ public struct TBP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let TRANSFER: VOffset = 32
     static let STATION_KEEPING: VOffset = 34
     static let FRAME_CONVERSION: VOffset = 36
+    static let CONTINUATION: VOffset = 38
+    static let MANIFOLDS: VOffset = 40
+    static let CONSTELLATION: VOffset = 42
+    static let SURFACE_ANALYSIS: VOffset = 44
   }
 
   ///  Identifier of the record; empty = not assigned.
@@ -1099,15 +1864,23 @@ public struct TBP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  JacobiConstant: the state, and its Jacobi constant.
   public var STATE: tbpState? { let o = _accessor.offset(VT.STATE); return o == 0 ? nil : tbpState(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public var JACOBI: Double { let o = _accessor.offset(VT.JACOBI); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  PeriodicOrbit, HaloFirstGuess, NearRectilinearHalo: the request fields
-  ///  (FAMILY, LIBRATION_POINT, AMPLITUDE or perilune/apolune, TOLERANCE,
-  ///  MAX_ITERATIONS) and the result. Family: the members, ordered along the
-  ///  family's continuation parameter (AMPLITUDE).
+  ///  PeriodicOrbit, HaloFirstGuess, NearRectilinearHalo, OrbitProperties: the
+  ///  request fields (FAMILY, LIBRATION_POINT, AMPLITUDE, PETALS, or
+  ///  perilune/apolune, TOLERANCE, MAX_ITERATIONS) and the result. Family and
+  ///  Continuation: the members ordered along the continuation parameter.
   public var ORBITS: FlatbufferVector<tbpPeriodicOrbit> { return _accessor.vector(at: VT.ORBITS, byteSize: 4) }
   public var TRANSFER: tbpTransfer? { let o = _accessor.offset(VT.TRANSFER); return o == 0 ? nil : tbpTransfer(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public var STATION_KEEPING: tbpStationKeeping? { let o = _accessor.offset(VT.STATION_KEEPING); return o == 0 ? nil : tbpStationKeeping(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public var FRAME_CONVERSION: tbpFrameConversion? { let o = _accessor.offset(VT.FRAME_CONVERSION); return o == 0 ? nil : tbpFrameConversion(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public static func startTBP(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 17) }
+  ///  Continuation: pseudo-arclength or natural-parameter continuation request.
+  public var CONTINUATION: tbpContinuationRequest? { let o = _accessor.offset(VT.CONTINUATION); return o == 0 ? nil : tbpContinuationRequest(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Manifolds: invariant stable/unstable manifold request and branches.
+  public var MANIFOLDS: tbpManifolds? { let o = _accessor.offset(VT.MANIFOLDS); return o == 0 ? nil : tbpManifolds(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Constellation: time-phased multi-spacecraft CR3BP constellation.
+  public var CONSTELLATION: tbpConstellation? { let o = _accessor.offset(VT.CONSTELLATION); return o == 0 ? nil : tbpConstellation(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  SurfaceAnalysis: surface coverage gaps, elevation, occultations, and DOP.
+  public var SURFACE_ANALYSIS: tbpSurfaceAnalysis? { let o = _accessor.offset(VT.SURFACE_ANALYSIS); return o == 0 ? nil : tbpSurfaceAnalysis(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startTBP(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 21) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
   public static func add(CREATED_AT_MS: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CREATED_AT_MS, def: 0, at: VT.CREATED_AT_MS) }
   public static func add(PRODUCER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRODUCER, at: VT.PRODUCER) }
@@ -1125,6 +1898,10 @@ public struct TBP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func add(TRANSFER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRANSFER, at: VT.TRANSFER) }
   public static func add(STATION_KEEPING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATION_KEEPING, at: VT.STATION_KEEPING) }
   public static func add(FRAME_CONVERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FRAME_CONVERSION, at: VT.FRAME_CONVERSION) }
+  public static func add(CONTINUATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTINUATION, at: VT.CONTINUATION) }
+  public static func add(MANIFOLDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MANIFOLDS, at: VT.MANIFOLDS) }
+  public static func add(CONSTELLATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONSTELLATION, at: VT.CONSTELLATION) }
+  public static func add(SURFACE_ANALYSIS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SURFACE_ANALYSIS, at: VT.SURFACE_ANALYSIS) }
   public static func endTBP(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createTBP(
     _ fbb: inout FlatBufferBuilder,
@@ -1144,7 +1921,11 @@ public struct TBP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     ORBITSVectorOffset ORBITS: Offset = Offset(),
     TRANSFEROffset TRANSFER: Offset = Offset(),
     STATION_KEEPINGOffset STATION_KEEPING: Offset = Offset(),
-    FRAME_CONVERSIONOffset FRAME_CONVERSION: Offset = Offset()
+    FRAME_CONVERSIONOffset FRAME_CONVERSION: Offset = Offset(),
+    CONTINUATIONOffset CONTINUATION: Offset = Offset(),
+    MANIFOLDSOffset MANIFOLDS: Offset = Offset(),
+    CONSTELLATIONOffset CONSTELLATION: Offset = Offset(),
+    SURFACE_ANALYSISOffset SURFACE_ANALYSIS: Offset = Offset()
   ) -> Offset {
     let __start = TBP.startTBP(&fbb)
     TBP.add(ID: ID, &fbb)
@@ -1164,6 +1945,10 @@ public struct TBP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     TBP.add(TRANSFER: TRANSFER, &fbb)
     TBP.add(STATION_KEEPING: STATION_KEEPING, &fbb)
     TBP.add(FRAME_CONVERSION: FRAME_CONVERSION, &fbb)
+    TBP.add(CONTINUATION: CONTINUATION, &fbb)
+    TBP.add(MANIFOLDS: MANIFOLDS, &fbb)
+    TBP.add(CONSTELLATION: CONSTELLATION, &fbb)
+    TBP.add(SURFACE_ANALYSIS: SURFACE_ANALYSIS, &fbb)
     return TBP.endTBP(&fbb, start: __start)
   }
 
@@ -1186,6 +1971,10 @@ public struct TBP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.TRANSFER, fieldName: "TRANSFER", required: false, type: ForwardOffset<tbpTransfer>.self)
     try _v.visit(field: VT.STATION_KEEPING, fieldName: "STATION_KEEPING", required: false, type: ForwardOffset<tbpStationKeeping>.self)
     try _v.visit(field: VT.FRAME_CONVERSION, fieldName: "FRAME_CONVERSION", required: false, type: ForwardOffset<tbpFrameConversion>.self)
+    try _v.visit(field: VT.CONTINUATION, fieldName: "CONTINUATION", required: false, type: ForwardOffset<tbpContinuationRequest>.self)
+    try _v.visit(field: VT.MANIFOLDS, fieldName: "MANIFOLDS", required: false, type: ForwardOffset<tbpManifolds>.self)
+    try _v.visit(field: VT.CONSTELLATION, fieldName: "CONSTELLATION", required: false, type: ForwardOffset<tbpConstellation>.self)
+    try _v.visit(field: VT.SURFACE_ANALYSIS, fieldName: "SURFACE_ANALYSIS", required: false, type: ForwardOffset<tbpSurfaceAnalysis>.self)
     _v.finish()
   }
 }

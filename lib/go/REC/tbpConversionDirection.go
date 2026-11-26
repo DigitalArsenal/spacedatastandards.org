@@ -9,18 +9,42 @@ import "strconv"
 type tbpConversionDirection byte
 
 const (
-	tbpConversionDirectionSynodicToInertial tbpConversionDirection = 0
-	tbpConversionDirectionInertialToSynodic tbpConversionDirection = 1
+	tbpConversionDirectionSynodicToInertial        tbpConversionDirection = 0
+	tbpConversionDirectionInertialToSynodic        tbpConversionDirection = 1
+	tbpConversionDirectionSynodicToJ2000           tbpConversionDirection = 2
+	tbpConversionDirectionJ2000ToSynodic           tbpConversionDirection = 3
+	tbpConversionDirectionSynodicToPrimaryInertial tbpConversionDirection = 4
+	tbpConversionDirectionPrimaryInertialToSynodic tbpConversionDirection = 5
+	tbpConversionDirectionSynodicToLla             tbpConversionDirection = 6
+	tbpConversionDirectionLlaToSynodic             tbpConversionDirection = 7
+	tbpConversionDirectionSynodicToOrbitalElements tbpConversionDirection = 8
+	tbpConversionDirectionOrbitalElementsToSynodic tbpConversionDirection = 9
 )
 
 var EnumNamestbpConversionDirection = map[tbpConversionDirection]string{
-	tbpConversionDirectionSynodicToInertial: "SynodicToInertial",
-	tbpConversionDirectionInertialToSynodic: "InertialToSynodic",
+	tbpConversionDirectionSynodicToInertial:        "SynodicToInertial",
+	tbpConversionDirectionInertialToSynodic:        "InertialToSynodic",
+	tbpConversionDirectionSynodicToJ2000:           "SynodicToJ2000",
+	tbpConversionDirectionJ2000ToSynodic:           "J2000ToSynodic",
+	tbpConversionDirectionSynodicToPrimaryInertial: "SynodicToPrimaryInertial",
+	tbpConversionDirectionPrimaryInertialToSynodic: "PrimaryInertialToSynodic",
+	tbpConversionDirectionSynodicToLla:             "SynodicToLla",
+	tbpConversionDirectionLlaToSynodic:             "LlaToSynodic",
+	tbpConversionDirectionSynodicToOrbitalElements: "SynodicToOrbitalElements",
+	tbpConversionDirectionOrbitalElementsToSynodic: "OrbitalElementsToSynodic",
 }
 
 var EnumValuestbpConversionDirection = map[string]tbpConversionDirection{
-	"SynodicToInertial": tbpConversionDirectionSynodicToInertial,
-	"InertialToSynodic": tbpConversionDirectionInertialToSynodic,
+	"SynodicToInertial":        tbpConversionDirectionSynodicToInertial,
+	"InertialToSynodic":        tbpConversionDirectionInertialToSynodic,
+	"SynodicToJ2000":           tbpConversionDirectionSynodicToJ2000,
+	"J2000ToSynodic":           tbpConversionDirectionJ2000ToSynodic,
+	"SynodicToPrimaryInertial": tbpConversionDirectionSynodicToPrimaryInertial,
+	"PrimaryInertialToSynodic": tbpConversionDirectionPrimaryInertialToSynodic,
+	"SynodicToLla":             tbpConversionDirectionSynodicToLla,
+	"LlaToSynodic":             tbpConversionDirectionLlaToSynodic,
+	"SynodicToOrbitalElements": tbpConversionDirectionSynodicToOrbitalElements,
+	"OrbitalElementsToSynodic": tbpConversionDirectionOrbitalElementsToSynodic,
 }
 
 func (v tbpConversionDirection) String() string {

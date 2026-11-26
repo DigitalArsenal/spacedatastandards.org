@@ -113,8 +113,40 @@ BOUNDED():boolean {
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
+/**
+ * Time between correction maneuvers, s (LinearStabilityBounds).
+ */
+CORRECTION_INTERVAL_S():number {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * 3-axis velocity execution error magnitude, km/s (LinearStabilityBounds).
+ */
+DELTA_V_EXECUTION_ERROR_KM_S():number {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Result: linear-stability lower bound annual delta-v, km/s/yr.
+ */
+LOWER_BOUND_ANNUAL_DELTA_V_KM_S():number {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Result: linear-stability upper bound annual delta-v, km/s/yr.
+ */
+UPPER_BOUND_ANNUAL_DELTA_V_KM_S():number {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
 static starttbpStationKeeping(builder:flatbuffers.Builder) {
-  builder.startObject(10);
+  builder.startObject(14);
 }
 
 static addOrbit(builder:flatbuffers.Builder, ORBITOffset:flatbuffers.Offset) {
@@ -174,12 +206,28 @@ static addBounded(builder:flatbuffers.Builder, BOUNDED:boolean) {
   builder.addFieldInt8(9, +BOUNDED, +false);
 }
 
+static addCorrectionIntervalS(builder:flatbuffers.Builder, CORRECTION_INTERVAL_S:number) {
+  builder.addFieldFloat64(10, CORRECTION_INTERVAL_S, 0.0);
+}
+
+static addDeltaVExecutionErrorKmS(builder:flatbuffers.Builder, DELTA_V_EXECUTION_ERROR_KM_S:number) {
+  builder.addFieldFloat64(11, DELTA_V_EXECUTION_ERROR_KM_S, 0.0);
+}
+
+static addLowerBoundAnnualDeltaVKmS(builder:flatbuffers.Builder, LOWER_BOUND_ANNUAL_DELTA_V_KM_S:number) {
+  builder.addFieldFloat64(12, LOWER_BOUND_ANNUAL_DELTA_V_KM_S, 0.0);
+}
+
+static addUpperBoundAnnualDeltaVKmS(builder:flatbuffers.Builder, UPPER_BOUND_ANNUAL_DELTA_V_KM_S:number) {
+  builder.addFieldFloat64(13, UPPER_BOUND_ANNUAL_DELTA_V_KM_S, 0.0);
+}
+
 static endtbpStationKeeping(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createtbpStationKeeping(builder:flatbuffers.Builder, ORBITOffset:flatbuffers.Offset, STRATEGY:tbpStationKeepingStrategy, NAVIGATION_ERROR_KM:number, EXECUTION_ERROR_FRACTION:number, CYCLES:number, ANNUAL_DELTA_V_KM_S:number, MEAN_CYCLE_DELTA_V_KM_S:number, MAX_CYCLE_DELTA_V_KM_S:number, CYCLE_DELTA_V_KM_SOffset:flatbuffers.Offset, BOUNDED:boolean):flatbuffers.Offset {
+static createtbpStationKeeping(builder:flatbuffers.Builder, ORBITOffset:flatbuffers.Offset, STRATEGY:tbpStationKeepingStrategy, NAVIGATION_ERROR_KM:number, EXECUTION_ERROR_FRACTION:number, CYCLES:number, ANNUAL_DELTA_V_KM_S:number, MEAN_CYCLE_DELTA_V_KM_S:number, MAX_CYCLE_DELTA_V_KM_S:number, CYCLE_DELTA_V_KM_SOffset:flatbuffers.Offset, BOUNDED:boolean, CORRECTION_INTERVAL_S:number, DELTA_V_EXECUTION_ERROR_KM_S:number, LOWER_BOUND_ANNUAL_DELTA_V_KM_S:number, UPPER_BOUND_ANNUAL_DELTA_V_KM_S:number):flatbuffers.Offset {
   tbpStationKeeping.starttbpStationKeeping(builder);
   tbpStationKeeping.addOrbit(builder, ORBITOffset);
   tbpStationKeeping.addStrategy(builder, STRATEGY);
@@ -191,6 +239,10 @@ static createtbpStationKeeping(builder:flatbuffers.Builder, ORBITOffset:flatbuff
   tbpStationKeeping.addMaxCycleDeltaVKmS(builder, MAX_CYCLE_DELTA_V_KM_S);
   tbpStationKeeping.addCycleDeltaVKmS(builder, CYCLE_DELTA_V_KM_SOffset);
   tbpStationKeeping.addBounded(builder, BOUNDED);
+  tbpStationKeeping.addCorrectionIntervalS(builder, CORRECTION_INTERVAL_S);
+  tbpStationKeeping.addDeltaVExecutionErrorKmS(builder, DELTA_V_EXECUTION_ERROR_KM_S);
+  tbpStationKeeping.addLowerBoundAnnualDeltaVKmS(builder, LOWER_BOUND_ANNUAL_DELTA_V_KM_S);
+  tbpStationKeeping.addUpperBoundAnnualDeltaVKmS(builder, UPPER_BOUND_ANNUAL_DELTA_V_KM_S);
   return tbpStationKeeping.endtbpStationKeeping(builder);
 }
 
@@ -205,7 +257,11 @@ unpack(): tbpStationKeepingT {
     this.MEAN_CYCLE_DELTA_V_KM_S(),
     this.MAX_CYCLE_DELTA_V_KM_S(),
     this.bb!.createScalarList<number>(this.CYCLE_DELTA_V_KM_S.bind(this), this.cycleDeltaVKmSLength()),
-    this.BOUNDED()
+    this.BOUNDED(),
+    this.CORRECTION_INTERVAL_S(),
+    this.DELTA_V_EXECUTION_ERROR_KM_S(),
+    this.LOWER_BOUND_ANNUAL_DELTA_V_KM_S(),
+    this.UPPER_BOUND_ANNUAL_DELTA_V_KM_S()
   );
 }
 
@@ -221,6 +277,10 @@ unpackTo(_o: tbpStationKeepingT): void {
   _o.MAX_CYCLE_DELTA_V_KM_S = this.MAX_CYCLE_DELTA_V_KM_S();
   _o.CYCLE_DELTA_V_KM_S = this.bb!.createScalarList<number>(this.CYCLE_DELTA_V_KM_S.bind(this), this.cycleDeltaVKmSLength());
   _o.BOUNDED = this.BOUNDED();
+  _o.CORRECTION_INTERVAL_S = this.CORRECTION_INTERVAL_S();
+  _o.DELTA_V_EXECUTION_ERROR_KM_S = this.DELTA_V_EXECUTION_ERROR_KM_S();
+  _o.LOWER_BOUND_ANNUAL_DELTA_V_KM_S = this.LOWER_BOUND_ANNUAL_DELTA_V_KM_S();
+  _o.UPPER_BOUND_ANNUAL_DELTA_V_KM_S = this.UPPER_BOUND_ANNUAL_DELTA_V_KM_S();
 }
 }
 
@@ -235,7 +295,11 @@ constructor(
   public MEAN_CYCLE_DELTA_V_KM_S: number = 0.0,
   public MAX_CYCLE_DELTA_V_KM_S: number = 0.0,
   public CYCLE_DELTA_V_KM_S: (number)[] = [],
-  public BOUNDED: boolean = false
+  public BOUNDED: boolean = false,
+  public CORRECTION_INTERVAL_S: number = 0.0,
+  public DELTA_V_EXECUTION_ERROR_KM_S: number = 0.0,
+  public LOWER_BOUND_ANNUAL_DELTA_V_KM_S: number = 0.0,
+  public UPPER_BOUND_ANNUAL_DELTA_V_KM_S: number = 0.0
 ){}
 
 
@@ -253,7 +317,11 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.MEAN_CYCLE_DELTA_V_KM_S,
     this.MAX_CYCLE_DELTA_V_KM_S,
     CYCLE_DELTA_V_KM_S,
-    this.BOUNDED
+    this.BOUNDED,
+    this.CORRECTION_INTERVAL_S,
+    this.DELTA_V_EXECUTION_ERROR_KM_S,
+    this.LOWER_BOUND_ANNUAL_DELTA_V_KM_S,
+    this.UPPER_BOUND_ANNUAL_DELTA_V_KM_S
   );
 }
 }

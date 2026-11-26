@@ -6,6 +6,7 @@ import * as flatbuffers from 'flatbuffers';
 
 import { mplBurn, mplBurnT } from './mplBurn.js';
 import { tbpPeriodicOrbit, tbpPeriodicOrbitT } from './tbpPeriodicOrbit.js';
+import { tbpState, tbpStateT } from './tbpState.js';
 import { tbpTrajectory, tbpTrajectoryT } from './tbpTrajectory.js';
 import { tbpTransferKind } from './tbpTransferKind.js';
 
@@ -124,8 +125,124 @@ TRAJECTORY(obj?:tbpTrajectory):tbpTrajectory|null {
   return offset ? (obj || new tbpTrajectory()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * Departure state in synodic frame (MinEnergy, DirectLambert, MinLambert, LowThrustMinTime).
+ */
+INITIAL_STATE(obj?:tbpState):tbpState|null {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? (obj || new tbpState()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Arrival state in synodic frame.
+ */
+FINAL_STATE(obj?:tbpState):tbpState|null {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? (obj || new tbpState()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * False = prograde (default), true = retrograde (DirectLambert).
+ */
+RETROGRADE():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * Reference primary body for Lambert seeding: 0 = auto, 1 = P1, 2 = P2.
+ */
+REFERENCE_PRIMARY():number {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Low-thrust maximum thrust, N (LowThrustMinTime).
+ */
+MAX_THRUST_N():number {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Engine specific impulse Isp, s (LowThrustMinTime).
+ */
+SPECIFIC_IMPULSE_S():number {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Initial wet spacecraft mass, kg.
+ */
+INITIAL_MASS_KG():number {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Result: final spacecraft mass at arrival, kg.
+ */
+FINAL_MASS_KG():number {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Result: propellant consumed, kg.
+ */
+PROPELLANT_MASS_KG():number {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Initial costates [lambda_rx, ry, rz, vx, vy, vz, m] guess or solved.
+ */
+INITIAL_COSTATES(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+initialCostatesLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+initialCostatesArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Result: normalized throttle [0..1] per trajectory sample.
+ */
+THROTTLE_HISTORY(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 48);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+throttleHistoryLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 48);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+throttleHistoryArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 48);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Result: theoretical minimum Jacobi-energy delta-v, km/s (MinEnergy).
+ */
+MIN_ENERGY_DELTA_V_KM_S():number {
+  const offset = this.bb!.__offset(this.bb_pos, 50);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
 static starttbpTransfer(builder:flatbuffers.Builder) {
-  builder.startObject(12);
+  builder.startObject(24);
 }
 
 static addKind(builder:flatbuffers.Builder, KIND:tbpTransferKind) {
@@ -188,6 +305,88 @@ static addTrajectory(builder:flatbuffers.Builder, TRAJECTORYOffset:flatbuffers.O
   builder.addFieldOffset(11, TRAJECTORYOffset, 0);
 }
 
+static addInitialState(builder:flatbuffers.Builder, INITIAL_STATEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(12, INITIAL_STATEOffset, 0);
+}
+
+static addFinalState(builder:flatbuffers.Builder, FINAL_STATEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(13, FINAL_STATEOffset, 0);
+}
+
+static addRetrograde(builder:flatbuffers.Builder, RETROGRADE:boolean) {
+  builder.addFieldInt8(14, +RETROGRADE, +false);
+}
+
+static addReferencePrimary(builder:flatbuffers.Builder, REFERENCE_PRIMARY:number) {
+  builder.addFieldInt8(15, REFERENCE_PRIMARY, 0);
+}
+
+static addMaxThrustN(builder:flatbuffers.Builder, MAX_THRUST_N:number) {
+  builder.addFieldFloat64(16, MAX_THRUST_N, 0.0);
+}
+
+static addSpecificImpulseS(builder:flatbuffers.Builder, SPECIFIC_IMPULSE_S:number) {
+  builder.addFieldFloat64(17, SPECIFIC_IMPULSE_S, 0.0);
+}
+
+static addInitialMassKg(builder:flatbuffers.Builder, INITIAL_MASS_KG:number) {
+  builder.addFieldFloat64(18, INITIAL_MASS_KG, 0.0);
+}
+
+static addFinalMassKg(builder:flatbuffers.Builder, FINAL_MASS_KG:number) {
+  builder.addFieldFloat64(19, FINAL_MASS_KG, 0.0);
+}
+
+static addPropellantMassKg(builder:flatbuffers.Builder, PROPELLANT_MASS_KG:number) {
+  builder.addFieldFloat64(20, PROPELLANT_MASS_KG, 0.0);
+}
+
+static addInitialCostates(builder:flatbuffers.Builder, INITIAL_COSTATESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(21, INITIAL_COSTATESOffset, 0);
+}
+
+static createInitialCostatesVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createInitialCostatesVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createInitialCostatesVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startInitialCostatesVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
+static addThrottleHistory(builder:flatbuffers.Builder, THROTTLE_HISTORYOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(22, THROTTLE_HISTORYOffset, 0);
+}
+
+static createThrottleHistoryVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createThrottleHistoryVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createThrottleHistoryVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startThrottleHistoryVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
+static addMinEnergyDeltaVKmS(builder:flatbuffers.Builder, MIN_ENERGY_DELTA_V_KM_S:number) {
+  builder.addFieldFloat64(23, MIN_ENERGY_DELTA_V_KM_S, 0.0);
+}
+
 static endtbpTransfer(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -207,7 +406,19 @@ unpack(): tbpTransferT {
     this.bb!.createObjList<mplBurn, mplBurnT>(this.BURNS.bind(this), this.burnsLength()),
     this.TOTAL_DELTA_V_KM_S(),
     this.TIME_OF_FLIGHT_S(),
-    (this.TRAJECTORY() !== null ? this.TRAJECTORY()!.unpack() : null)
+    (this.TRAJECTORY() !== null ? this.TRAJECTORY()!.unpack() : null),
+    (this.INITIAL_STATE() !== null ? this.INITIAL_STATE()!.unpack() : null),
+    (this.FINAL_STATE() !== null ? this.FINAL_STATE()!.unpack() : null),
+    this.RETROGRADE(),
+    this.REFERENCE_PRIMARY(),
+    this.MAX_THRUST_N(),
+    this.SPECIFIC_IMPULSE_S(),
+    this.INITIAL_MASS_KG(),
+    this.FINAL_MASS_KG(),
+    this.PROPELLANT_MASS_KG(),
+    this.bb!.createScalarList<number>(this.INITIAL_COSTATES.bind(this), this.initialCostatesLength()),
+    this.bb!.createScalarList<number>(this.THROTTLE_HISTORY.bind(this), this.throttleHistoryLength()),
+    this.MIN_ENERGY_DELTA_V_KM_S()
   );
 }
 
@@ -225,6 +436,18 @@ unpackTo(_o: tbpTransferT): void {
   _o.TOTAL_DELTA_V_KM_S = this.TOTAL_DELTA_V_KM_S();
   _o.TIME_OF_FLIGHT_S = this.TIME_OF_FLIGHT_S();
   _o.TRAJECTORY = (this.TRAJECTORY() !== null ? this.TRAJECTORY()!.unpack() : null);
+  _o.INITIAL_STATE = (this.INITIAL_STATE() !== null ? this.INITIAL_STATE()!.unpack() : null);
+  _o.FINAL_STATE = (this.FINAL_STATE() !== null ? this.FINAL_STATE()!.unpack() : null);
+  _o.RETROGRADE = this.RETROGRADE();
+  _o.REFERENCE_PRIMARY = this.REFERENCE_PRIMARY();
+  _o.MAX_THRUST_N = this.MAX_THRUST_N();
+  _o.SPECIFIC_IMPULSE_S = this.SPECIFIC_IMPULSE_S();
+  _o.INITIAL_MASS_KG = this.INITIAL_MASS_KG();
+  _o.FINAL_MASS_KG = this.FINAL_MASS_KG();
+  _o.PROPELLANT_MASS_KG = this.PROPELLANT_MASS_KG();
+  _o.INITIAL_COSTATES = this.bb!.createScalarList<number>(this.INITIAL_COSTATES.bind(this), this.initialCostatesLength());
+  _o.THROTTLE_HISTORY = this.bb!.createScalarList<number>(this.THROTTLE_HISTORY.bind(this), this.throttleHistoryLength());
+  _o.MIN_ENERGY_DELTA_V_KM_S = this.MIN_ENERGY_DELTA_V_KM_S();
 }
 }
 
@@ -241,7 +464,19 @@ constructor(
   public BURNS: (mplBurnT)[] = [],
   public TOTAL_DELTA_V_KM_S: number = 0.0,
   public TIME_OF_FLIGHT_S: number = 0.0,
-  public TRAJECTORY: tbpTrajectoryT|null = null
+  public TRAJECTORY: tbpTrajectoryT|null = null,
+  public INITIAL_STATE: tbpStateT|null = null,
+  public FINAL_STATE: tbpStateT|null = null,
+  public RETROGRADE: boolean = false,
+  public REFERENCE_PRIMARY: number = 0,
+  public MAX_THRUST_N: number = 0.0,
+  public SPECIFIC_IMPULSE_S: number = 0.0,
+  public INITIAL_MASS_KG: number = 0.0,
+  public FINAL_MASS_KG: number = 0.0,
+  public PROPELLANT_MASS_KG: number = 0.0,
+  public INITIAL_COSTATES: (number)[] = [],
+  public THROTTLE_HISTORY: (number)[] = [],
+  public MIN_ENERGY_DELTA_V_KM_S: number = 0.0
 ){}
 
 
@@ -249,6 +484,10 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const TARGET_ORBIT = (this.TARGET_ORBIT !== null ? this.TARGET_ORBIT!.pack(builder) : 0);
   const BURNS = tbpTransfer.createBurnsVector(builder, builder.createObjectOffsetList(this.BURNS));
   const TRAJECTORY = (this.TRAJECTORY !== null ? this.TRAJECTORY!.pack(builder) : 0);
+  const INITIAL_STATE = (this.INITIAL_STATE !== null ? this.INITIAL_STATE!.pack(builder) : 0);
+  const FINAL_STATE = (this.FINAL_STATE !== null ? this.FINAL_STATE!.pack(builder) : 0);
+  const INITIAL_COSTATES = tbpTransfer.createInitialCostatesVector(builder, this.INITIAL_COSTATES);
+  const THROTTLE_HISTORY = tbpTransfer.createThrottleHistoryVector(builder, this.THROTTLE_HISTORY);
 
   tbpTransfer.starttbpTransfer(builder);
   tbpTransfer.addKind(builder, this.KIND);
@@ -263,6 +502,18 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   tbpTransfer.addTotalDeltaVKmS(builder, this.TOTAL_DELTA_V_KM_S);
   tbpTransfer.addTimeOfFlightS(builder, this.TIME_OF_FLIGHT_S);
   tbpTransfer.addTrajectory(builder, TRAJECTORY);
+  tbpTransfer.addInitialState(builder, INITIAL_STATE);
+  tbpTransfer.addFinalState(builder, FINAL_STATE);
+  tbpTransfer.addRetrograde(builder, this.RETROGRADE);
+  tbpTransfer.addReferencePrimary(builder, this.REFERENCE_PRIMARY);
+  tbpTransfer.addMaxThrustN(builder, this.MAX_THRUST_N);
+  tbpTransfer.addSpecificImpulseS(builder, this.SPECIFIC_IMPULSE_S);
+  tbpTransfer.addInitialMassKg(builder, this.INITIAL_MASS_KG);
+  tbpTransfer.addFinalMassKg(builder, this.FINAL_MASS_KG);
+  tbpTransfer.addPropellantMassKg(builder, this.PROPELLANT_MASS_KG);
+  tbpTransfer.addInitialCostates(builder, INITIAL_COSTATES);
+  tbpTransfer.addThrottleHistory(builder, THROTTLE_HISTORY);
+  tbpTransfer.addMinEnergyDeltaVKmS(builder, this.MIN_ENERGY_DELTA_V_KM_S);
 
   return tbpTransfer.endtbpTransfer(builder);
 }

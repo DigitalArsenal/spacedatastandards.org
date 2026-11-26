@@ -64,15 +64,23 @@ public struct TBP : IFlatbufferObject
   /// JacobiConstant: the state, and its Jacobi constant.
   public tbpState? STATE { get { int o = __p.__offset(26); return o != 0 ? (tbpState?)(new tbpState()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   public double JACOBI { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// PeriodicOrbit, HaloFirstGuess, NearRectilinearHalo: the request fields
-  /// (FAMILY, LIBRATION_POINT, AMPLITUDE or perilune/apolune, TOLERANCE,
-  /// MAX_ITERATIONS) and the result. Family: the members, ordered along the
-  /// family's continuation parameter (AMPLITUDE).
+  /// PeriodicOrbit, HaloFirstGuess, NearRectilinearHalo, OrbitProperties: the
+  /// request fields (FAMILY, LIBRATION_POINT, AMPLITUDE, PETALS, or
+  /// perilune/apolune, TOLERANCE, MAX_ITERATIONS) and the result. Family and
+  /// Continuation: the members ordered along the continuation parameter.
   public tbpPeriodicOrbit? ORBITS(int j) { int o = __p.__offset(30); return o != 0 ? (tbpPeriodicOrbit?)(new tbpPeriodicOrbit()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int ORBITSLength { get { int o = __p.__offset(30); return o != 0 ? __p.__vector_len(o) : 0; } }
   public tbpTransfer? TRANSFER { get { int o = __p.__offset(32); return o != 0 ? (tbpTransfer?)(new tbpTransfer()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   public tbpStationKeeping? STATION_KEEPING { get { int o = __p.__offset(34); return o != 0 ? (tbpStationKeeping?)(new tbpStationKeeping()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   public tbpFrameConversion? FRAME_CONVERSION { get { int o = __p.__offset(36); return o != 0 ? (tbpFrameConversion?)(new tbpFrameConversion()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Continuation: pseudo-arclength or natural-parameter continuation request.
+  public tbpContinuationRequest? CONTINUATION { get { int o = __p.__offset(38); return o != 0 ? (tbpContinuationRequest?)(new tbpContinuationRequest()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Manifolds: invariant stable/unstable manifold request and branches.
+  public tbpManifolds? MANIFOLDS { get { int o = __p.__offset(40); return o != 0 ? (tbpManifolds?)(new tbpManifolds()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Constellation: time-phased multi-spacecraft CR3BP constellation.
+  public tbpConstellation? CONSTELLATION { get { int o = __p.__offset(42); return o != 0 ? (tbpConstellation?)(new tbpConstellation()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// SurfaceAnalysis: surface coverage gaps, elevation, occultations, and DOP.
+  public tbpSurfaceAnalysis? SURFACE_ANALYSIS { get { int o = __p.__offset(44); return o != 0 ? (tbpSurfaceAnalysis?)(new tbpSurfaceAnalysis()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<TBP> CreateTBP(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
@@ -91,10 +99,18 @@ public struct TBP : IFlatbufferObject
       VectorOffset ORBITSOffset = default(VectorOffset),
       Offset<tbpTransfer> TRANSFEROffset = default(Offset<tbpTransfer>),
       Offset<tbpStationKeeping> STATION_KEEPINGOffset = default(Offset<tbpStationKeeping>),
-      Offset<tbpFrameConversion> FRAME_CONVERSIONOffset = default(Offset<tbpFrameConversion>)) {
-    builder.StartTable(17);
+      Offset<tbpFrameConversion> FRAME_CONVERSIONOffset = default(Offset<tbpFrameConversion>),
+      Offset<tbpContinuationRequest> CONTINUATIONOffset = default(Offset<tbpContinuationRequest>),
+      Offset<tbpManifolds> MANIFOLDSOffset = default(Offset<tbpManifolds>),
+      Offset<tbpConstellation> CONSTELLATIONOffset = default(Offset<tbpConstellation>),
+      Offset<tbpSurfaceAnalysis> SURFACE_ANALYSISOffset = default(Offset<tbpSurfaceAnalysis>)) {
+    builder.StartTable(21);
     TBP.AddJACOBI(builder, JACOBI);
     TBP.AddCREATED_AT_MS(builder, CREATED_AT_MS);
+    TBP.AddSURFACE_ANALYSIS(builder, SURFACE_ANALYSISOffset);
+    TBP.AddCONSTELLATION(builder, CONSTELLATIONOffset);
+    TBP.AddMANIFOLDS(builder, MANIFOLDSOffset);
+    TBP.AddCONTINUATION(builder, CONTINUATIONOffset);
     TBP.AddFRAME_CONVERSION(builder, FRAME_CONVERSIONOffset);
     TBP.AddSTATION_KEEPING(builder, STATION_KEEPINGOffset);
     TBP.AddTRANSFER(builder, TRANSFEROffset);
@@ -113,7 +129,7 @@ public struct TBP : IFlatbufferObject
     return TBP.EndTBP(builder);
   }
 
-  public static void StartTBP(FlatBufferBuilder builder) { builder.StartTable(17); }
+  public static void StartTBP(FlatBufferBuilder builder) { builder.StartTable(21); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
   public static void AddCREATED_AT_MS(FlatBufferBuilder builder, long CREATED_AT_MS) { builder.AddLong(1, CREATED_AT_MS, 0); }
   public static void AddPRODUCER(FlatBufferBuilder builder, StringOffset PRODUCEROffset) { builder.AddOffset(2, PRODUCEROffset.Value, 0); }
@@ -141,6 +157,10 @@ public struct TBP : IFlatbufferObject
   public static void AddTRANSFER(FlatBufferBuilder builder, Offset<tbpTransfer> TRANSFEROffset) { builder.AddOffset(14, TRANSFEROffset.Value, 0); }
   public static void AddSTATION_KEEPING(FlatBufferBuilder builder, Offset<tbpStationKeeping> STATION_KEEPINGOffset) { builder.AddOffset(15, STATION_KEEPINGOffset.Value, 0); }
   public static void AddFRAME_CONVERSION(FlatBufferBuilder builder, Offset<tbpFrameConversion> FRAME_CONVERSIONOffset) { builder.AddOffset(16, FRAME_CONVERSIONOffset.Value, 0); }
+  public static void AddCONTINUATION(FlatBufferBuilder builder, Offset<tbpContinuationRequest> CONTINUATIONOffset) { builder.AddOffset(17, CONTINUATIONOffset.Value, 0); }
+  public static void AddMANIFOLDS(FlatBufferBuilder builder, Offset<tbpManifolds> MANIFOLDSOffset) { builder.AddOffset(18, MANIFOLDSOffset.Value, 0); }
+  public static void AddCONSTELLATION(FlatBufferBuilder builder, Offset<tbpConstellation> CONSTELLATIONOffset) { builder.AddOffset(19, CONSTELLATIONOffset.Value, 0); }
+  public static void AddSURFACE_ANALYSIS(FlatBufferBuilder builder, Offset<tbpSurfaceAnalysis> SURFACE_ANALYSISOffset) { builder.AddOffset(20, SURFACE_ANALYSISOffset.Value, 0); }
   public static Offset<TBP> EndTBP(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<TBP>(o);
@@ -172,6 +192,10 @@ public struct TBP : IFlatbufferObject
     _o.TRANSFER = this.TRANSFER.HasValue ? this.TRANSFER.Value.UnPack() : null;
     _o.STATION_KEEPING = this.STATION_KEEPING.HasValue ? this.STATION_KEEPING.Value.UnPack() : null;
     _o.FRAME_CONVERSION = this.FRAME_CONVERSION.HasValue ? this.FRAME_CONVERSION.Value.UnPack() : null;
+    _o.CONTINUATION = this.CONTINUATION.HasValue ? this.CONTINUATION.Value.UnPack() : null;
+    _o.MANIFOLDS = this.MANIFOLDS.HasValue ? this.MANIFOLDS.Value.UnPack() : null;
+    _o.CONSTELLATION = this.CONSTELLATION.HasValue ? this.CONSTELLATION.Value.UnPack() : null;
+    _o.SURFACE_ANALYSIS = this.SURFACE_ANALYSIS.HasValue ? this.SURFACE_ANALYSIS.Value.UnPack() : null;
   }
   public static Offset<TBP> Pack(FlatBufferBuilder builder, TBPT _o) {
     if (_o == null) return default(Offset<TBP>);
@@ -198,6 +222,10 @@ public struct TBP : IFlatbufferObject
     var _TRANSFER = _o.TRANSFER == null ? default(Offset<tbpTransfer>) : tbpTransfer.Pack(builder, _o.TRANSFER);
     var _STATION_KEEPING = _o.STATION_KEEPING == null ? default(Offset<tbpStationKeeping>) : tbpStationKeeping.Pack(builder, _o.STATION_KEEPING);
     var _FRAME_CONVERSION = _o.FRAME_CONVERSION == null ? default(Offset<tbpFrameConversion>) : tbpFrameConversion.Pack(builder, _o.FRAME_CONVERSION);
+    var _CONTINUATION = _o.CONTINUATION == null ? default(Offset<tbpContinuationRequest>) : tbpContinuationRequest.Pack(builder, _o.CONTINUATION);
+    var _MANIFOLDS = _o.MANIFOLDS == null ? default(Offset<tbpManifolds>) : tbpManifolds.Pack(builder, _o.MANIFOLDS);
+    var _CONSTELLATION = _o.CONSTELLATION == null ? default(Offset<tbpConstellation>) : tbpConstellation.Pack(builder, _o.CONSTELLATION);
+    var _SURFACE_ANALYSIS = _o.SURFACE_ANALYSIS == null ? default(Offset<tbpSurfaceAnalysis>) : tbpSurfaceAnalysis.Pack(builder, _o.SURFACE_ANALYSIS);
     return CreateTBP(
       builder,
       _ID,
@@ -216,7 +244,11 @@ public struct TBP : IFlatbufferObject
       _ORBITS,
       _TRANSFER,
       _STATION_KEEPING,
-      _FRAME_CONVERSION);
+      _FRAME_CONVERSION,
+      _CONTINUATION,
+      _MANIFOLDS,
+      _CONSTELLATION,
+      _SURFACE_ANALYSIS);
   }
 }
 
@@ -239,6 +271,10 @@ public class TBPT
   public tbpTransferT TRANSFER { get; set; }
   public tbpStationKeepingT STATION_KEEPING { get; set; }
   public tbpFrameConversionT FRAME_CONVERSION { get; set; }
+  public tbpContinuationRequestT CONTINUATION { get; set; }
+  public tbpManifoldsT MANIFOLDS { get; set; }
+  public tbpConstellationT CONSTELLATION { get; set; }
+  public tbpSurfaceAnalysisT SURFACE_ANALYSIS { get; set; }
 
   public TBPT() {
     this.ID = null;
@@ -258,6 +294,10 @@ public class TBPT
     this.TRANSFER = null;
     this.STATION_KEEPING = null;
     this.FRAME_CONVERSION = null;
+    this.CONTINUATION = null;
+    this.MANIFOLDS = null;
+    this.CONSTELLATION = null;
+    this.SURFACE_ANALYSIS = null;
   }
   public static TBPT DeserializeFromBinary(byte[] fbBuffer) {
     return TBP.GetRootAsTBP(new ByteBuffer(fbBuffer)).UnPack();
@@ -292,6 +332,10 @@ static public class TBPVerify
       && verifier.VerifyTable(tablePos, 32 /*TRANSFER*/, tbpTransferVerify.Verify, false)
       && verifier.VerifyTable(tablePos, 34 /*STATION_KEEPING*/, tbpStationKeepingVerify.Verify, false)
       && verifier.VerifyTable(tablePos, 36 /*FRAME_CONVERSION*/, tbpFrameConversionVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 38 /*CONTINUATION*/, tbpContinuationRequestVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 40 /*MANIFOLDS*/, tbpManifoldsVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 42 /*CONSTELLATION*/, tbpConstellationVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 44 /*SURFACE_ANALYSIS*/, tbpSurfaceAnalysisVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

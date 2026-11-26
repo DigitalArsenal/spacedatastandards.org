@@ -102,27 +102,133 @@ class tbpFrameConversion extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Reference primary body: 0 = barycenter, 1 = P1 (Earth), 2 = P2 (Moon).
+    /**
+     * @return byte
+     */
+    public function getREFERENCE_PRIMARY()
+    {
+        $o = $this->__offset(14);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : 0;
+    }
+
+    /// Epoch Julian date (days) for J2000/ephemeris conversions; 0 = from REFERENCE_EPOCH_MS.
+    /**
+     * @return double
+     */
+    public function getJULIAN_DATE()
+    {
+        $o = $this->__offset(16);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Geodetic/selenodetic coordinates [lat_deg, lon_deg, alt_km] (3 values).
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getLLA_DEG_KM($j)
+    {
+        $o = $this->__offset(18);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLLA_DEG_KMLength()
+    {
+        $o = $this->__offset(18);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Classical Keplerian elements [a_km, e, inc_deg, raan_deg, argp_deg, nu_deg] (6 values).
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getORBITAL_ELEMENTS($j)
+    {
+        $o = $this->__offset(20);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getORBITAL_ELEMENTSLength()
+    {
+        $o = $this->__offset(20);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Batch synodic states (N * 6 values, non-dimensional) for vectorized conversion.
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getBATCH_SYNODIC_STATES($j)
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getBATCH_SYNODIC_STATESLength()
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Batch inertial/target states (N * 6 values, km and km/s) for vectorized conversion.
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getBATCH_INERTIAL_STATES($j)
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getBATCH_INERTIAL_STATESLength()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function starttbpFrameConversion(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(5);
+        $builder->StartObject(11);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return tbpFrameConversion
      */
-    public static function createtbpFrameConversion(FlatBufferBuilder $builder, $DIRECTION, $REFERENCE_EPOCH_MS, $ELAPSED_S, $SYNODIC, $INERTIAL)
+    public static function createtbpFrameConversion(FlatBufferBuilder $builder, $DIRECTION, $REFERENCE_EPOCH_MS, $ELAPSED_S, $SYNODIC, $INERTIAL, $REFERENCE_PRIMARY, $JULIAN_DATE, $LLA_DEG_KM, $ORBITAL_ELEMENTS, $BATCH_SYNODIC_STATES, $BATCH_INERTIAL_STATES)
     {
-        $builder->startObject(5);
+        $builder->startObject(11);
         self::addDIRECTION($builder, $DIRECTION);
         self::addREFERENCE_EPOCH_MS($builder, $REFERENCE_EPOCH_MS);
         self::addELAPSED_S($builder, $ELAPSED_S);
         self::addSYNODIC($builder, $SYNODIC);
         self::addINERTIAL($builder, $INERTIAL);
+        self::addREFERENCE_PRIMARY($builder, $REFERENCE_PRIMARY);
+        self::addJULIAN_DATE($builder, $JULIAN_DATE);
+        self::addLLA_DEG_KM($builder, $LLA_DEG_KM);
+        self::addORBITAL_ELEMENTS($builder, $ORBITAL_ELEMENTS);
+        self::addBATCH_SYNODIC_STATES($builder, $BATCH_SYNODIC_STATES);
+        self::addBATCH_INERTIAL_STATES($builder, $BATCH_INERTIAL_STATES);
         $o = $builder->endObject();
         return $o;
     }
@@ -197,6 +303,162 @@ class tbpFrameConversion extends Table
      * @return void
      */
     public static function startINERTIALVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addREFERENCE_PRIMARY(FlatBufferBuilder $builder, $REFERENCE_PRIMARY)
+    {
+        $builder->addByteX(5, $REFERENCE_PRIMARY, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addJULIAN_DATE(FlatBufferBuilder $builder, $JULIAN_DATE)
+    {
+        $builder->addDoubleX(6, $JULIAN_DATE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addLLA_DEG_KM(FlatBufferBuilder $builder, $LLA_DEG_KM)
+    {
+        $builder->addOffsetX(7, $LLA_DEG_KM, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createLLA_DEG_KMVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startLLA_DEG_KMVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addORBITAL_ELEMENTS(FlatBufferBuilder $builder, $ORBITAL_ELEMENTS)
+    {
+        $builder->addOffsetX(8, $ORBITAL_ELEMENTS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createORBITAL_ELEMENTSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startORBITAL_ELEMENTSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addBATCH_SYNODIC_STATES(FlatBufferBuilder $builder, $BATCH_SYNODIC_STATES)
+    {
+        $builder->addOffsetX(9, $BATCH_SYNODIC_STATES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createBATCH_SYNODIC_STATESVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startBATCH_SYNODIC_STATESVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addBATCH_INERTIAL_STATES(FlatBufferBuilder $builder, $BATCH_INERTIAL_STATES)
+    {
+        $builder->addOffsetX(10, $BATCH_INERTIAL_STATES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createBATCH_INERTIAL_STATESVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startBATCH_INERTIAL_STATESVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(8, $numElems, 8);
     }

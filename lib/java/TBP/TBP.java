@@ -79,10 +79,10 @@ public final class TBP extends com.google.flatbuffers.Table {
   public tbpState STATE(tbpState obj) { int o = __offset(26); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   public double JACOBI() { int o = __offset(28); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * PeriodicOrbit, HaloFirstGuess, NearRectilinearHalo: the request fields
-   * (FAMILY, LIBRATION_POINT, AMPLITUDE or perilune/apolune, TOLERANCE,
-   * MAX_ITERATIONS) and the result. Family: the members, ordered along the
-   * family's continuation parameter (AMPLITUDE).
+   * PeriodicOrbit, HaloFirstGuess, NearRectilinearHalo, OrbitProperties: the
+   * request fields (FAMILY, LIBRATION_POINT, AMPLITUDE, PETALS, or
+   * perilune/apolune, TOLERANCE, MAX_ITERATIONS) and the result. Family and
+   * Continuation: the members ordered along the continuation parameter.
    */
   public tbpPeriodicOrbit ORBITS(int j) { return ORBITS(new tbpPeriodicOrbit(), j); }
   public tbpPeriodicOrbit ORBITS(tbpPeriodicOrbit obj, int j) { int o = __offset(30); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
@@ -95,6 +95,26 @@ public final class TBP extends com.google.flatbuffers.Table {
   public tbpStationKeeping STATION_KEEPING(tbpStationKeeping obj) { int o = __offset(34); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   public tbpFrameConversion FRAME_CONVERSION() { return FRAME_CONVERSION(new tbpFrameConversion()); }
   public tbpFrameConversion FRAME_CONVERSION(tbpFrameConversion obj) { int o = __offset(36); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Continuation: pseudo-arclength or natural-parameter continuation request.
+   */
+  public tbpContinuationRequest CONTINUATION() { return CONTINUATION(new tbpContinuationRequest()); }
+  public tbpContinuationRequest CONTINUATION(tbpContinuationRequest obj) { int o = __offset(38); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Manifolds: invariant stable/unstable manifold request and branches.
+   */
+  public tbpManifolds MANIFOLDS() { return MANIFOLDS(new tbpManifolds()); }
+  public tbpManifolds MANIFOLDS(tbpManifolds obj) { int o = __offset(40); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Constellation: time-phased multi-spacecraft CR3BP constellation.
+   */
+  public tbpConstellation CONSTELLATION() { return CONSTELLATION(new tbpConstellation()); }
+  public tbpConstellation CONSTELLATION(tbpConstellation obj) { int o = __offset(42); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * SurfaceAnalysis: surface coverage gaps, elevation, occultations, and DOP.
+   */
+  public tbpSurfaceAnalysis SURFACE_ANALYSIS() { return SURFACE_ANALYSIS(new tbpSurfaceAnalysis()); }
+  public tbpSurfaceAnalysis SURFACE_ANALYSIS(tbpSurfaceAnalysis obj) { int o = __offset(44); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createTBP(FlatBufferBuilder builder,
       int IDOffset,
@@ -113,10 +133,18 @@ public final class TBP extends com.google.flatbuffers.Table {
       int ORBITSOffset,
       int TRANSFEROffset,
       int STATION_KEEPINGOffset,
-      int FRAME_CONVERSIONOffset) {
-    builder.startTable(17);
+      int FRAME_CONVERSIONOffset,
+      int CONTINUATIONOffset,
+      int MANIFOLDSOffset,
+      int CONSTELLATIONOffset,
+      int SURFACE_ANALYSISOffset) {
+    builder.startTable(21);
     TBP.addJacobi(builder, JACOBI);
     TBP.addCreatedAtMs(builder, CREATED_AT_MS);
+    TBP.addSurfaceAnalysis(builder, SURFACE_ANALYSISOffset);
+    TBP.addConstellation(builder, CONSTELLATIONOffset);
+    TBP.addManifolds(builder, MANIFOLDSOffset);
+    TBP.addContinuation(builder, CONTINUATIONOffset);
     TBP.addFrameConversion(builder, FRAME_CONVERSIONOffset);
     TBP.addStationKeeping(builder, STATION_KEEPINGOffset);
     TBP.addTransfer(builder, TRANSFEROffset);
@@ -135,7 +163,7 @@ public final class TBP extends com.google.flatbuffers.Table {
     return TBP.endTBP(builder);
   }
 
-  public static void startTBP(FlatBufferBuilder builder) { builder.startTable(17); }
+  public static void startTBP(FlatBufferBuilder builder) { builder.startTable(21); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
   public static void addCreatedAtMs(FlatBufferBuilder builder, long CREATED_AT_MS) { builder.addLong(1, CREATED_AT_MS, 0L); }
   public static void addProducer(FlatBufferBuilder builder, int PRODUCEROffset) { builder.addOffset(2, PRODUCEROffset, 0); }
@@ -157,6 +185,10 @@ public final class TBP extends com.google.flatbuffers.Table {
   public static void addTransfer(FlatBufferBuilder builder, int TRANSFEROffset) { builder.addOffset(14, TRANSFEROffset, 0); }
   public static void addStationKeeping(FlatBufferBuilder builder, int STATION_KEEPINGOffset) { builder.addOffset(15, STATION_KEEPINGOffset, 0); }
   public static void addFrameConversion(FlatBufferBuilder builder, int FRAME_CONVERSIONOffset) { builder.addOffset(16, FRAME_CONVERSIONOffset, 0); }
+  public static void addContinuation(FlatBufferBuilder builder, int CONTINUATIONOffset) { builder.addOffset(17, CONTINUATIONOffset, 0); }
+  public static void addManifolds(FlatBufferBuilder builder, int MANIFOLDSOffset) { builder.addOffset(18, MANIFOLDSOffset, 0); }
+  public static void addConstellation(FlatBufferBuilder builder, int CONSTELLATIONOffset) { builder.addOffset(19, CONSTELLATIONOffset, 0); }
+  public static void addSurfaceAnalysis(FlatBufferBuilder builder, int SURFACE_ANALYSISOffset) { builder.addOffset(20, SURFACE_ANALYSISOffset, 0); }
   public static int endTBP(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

@@ -14,6 +14,10 @@ export declare enum tbpStationKeepingStrategy {
     /**
      * Suppress the unstable Floquet mode.
      */
-    FloquetMode = 2
+    FloquetMode = 2,
+    /**
+     * Linear stability lower/upper annual delta-v bounds across intervals.
+     */
+    LinearStabilityBounds = 3
 }
 //# sourceMappingURL=tbpStationKeepingStrategy.d.ts.map

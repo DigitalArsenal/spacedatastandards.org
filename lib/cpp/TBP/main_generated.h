@@ -43,6 +43,21 @@ struct tbpStationKeepingBuilder;
 struct tbpFrameConversion;
 struct tbpFrameConversionBuilder;
 
+struct tbpContinuationRequest;
+struct tbpContinuationRequestBuilder;
+
+struct tbpManifoldBranch;
+struct tbpManifoldBranchBuilder;
+
+struct tbpManifolds;
+struct tbpManifoldsBuilder;
+
+struct tbpConstellation;
+struct tbpConstellationBuilder;
+
+struct tbpSurfaceAnalysis;
+struct tbpSurfaceAnalysisBuilder;
+
 struct TBP;
 struct TBPBuilder;
 
@@ -98,11 +113,21 @@ enum tbpProblem : uint8_t {
   tbpProblem_FrameConversion = 9,
   /// Members of a periodic-orbit family.
   tbpProblem_Family = 10,
+  /// Pseudo-arclength or natural-parameter continuation from a seed orbit.
+  tbpProblem_Continuation = 11,
+  /// Stable and unstable invariant manifolds of an unstable periodic orbit.
+  tbpProblem_Manifolds = 12,
+  /// Diagnostic properties of a periodic orbit (apsides, stability, occultations).
+  tbpProblem_OrbitProperties = 13,
+  /// Time-phased multi-spacecraft constellation along a periodic CR3BP orbit.
+  tbpProblem_Constellation = 14,
+  /// Primary-body surface coverage gaps, elevation, occultations, and DOP.
+  tbpProblem_SurfaceAnalysis = 15,
   tbpProblem_MIN = tbpProblem_Unspecified,
-  tbpProblem_MAX = tbpProblem_Family
+  tbpProblem_MAX = tbpProblem_SurfaceAnalysis
 };
 
-inline const tbpProblem (&EnumValuestbpProblem())[11] {
+inline const tbpProblem (&EnumValuestbpProblem())[16] {
   static const tbpProblem values[] = {
     tbpProblem_Unspecified,
     tbpProblem_Propagation,
@@ -114,13 +139,18 @@ inline const tbpProblem (&EnumValuestbpProblem())[11] {
     tbpProblem_Transfer,
     tbpProblem_StationKeeping,
     tbpProblem_FrameConversion,
-    tbpProblem_Family
+    tbpProblem_Family,
+    tbpProblem_Continuation,
+    tbpProblem_Manifolds,
+    tbpProblem_OrbitProperties,
+    tbpProblem_Constellation,
+    tbpProblem_SurfaceAnalysis
   };
   return values;
 }
 
 inline const char * const *EnumNamestbpProblem() {
-  static const char * const names[12] = {
+  static const char * const names[17] = {
     "Unspecified",
     "Propagation",
     "LibrationPoints",
@@ -132,13 +162,18 @@ inline const char * const *EnumNamestbpProblem() {
     "StationKeeping",
     "FrameConversion",
     "Family",
+    "Continuation",
+    "Manifolds",
+    "OrbitProperties",
+    "Constellation",
+    "SurfaceAnalysis",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNametbpProblem(tbpProblem e) {
-  if (::flatbuffers::IsOutRange(e, tbpProblem_Unspecified, tbpProblem_Family)) return "";
+  if (::flatbuffers::IsOutRange(e, tbpProblem_Unspecified, tbpProblem_SurfaceAnalysis)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamestbpProblem()[index];
 }
@@ -165,11 +200,19 @@ enum tbpOrbitFamily : uint8_t {
   tbpOrbitFamily_Axial = 8,
   /// Short- or long-period orbit about L4 or L5.
   tbpOrbitFamily_LongShortPeriod = 9,
+  /// Northern-hemisphere sidereal-resonant tulip-shaped CR3BP orbit.
+  tbpOrbitFamily_TulipNorthern = 10,
+  /// Southern-hemisphere sidereal-resonant tulip-shaped CR3BP orbit.
+  tbpOrbitFamily_TulipSouthern = 11,
+  /// Northern-hemisphere multi-petal pumpkin-shaped CR3BP orbit.
+  tbpOrbitFamily_PumpkinNorthern = 12,
+  /// Southern-hemisphere multi-petal pumpkin-shaped CR3BP orbit.
+  tbpOrbitFamily_PumpkinSouthern = 13,
   tbpOrbitFamily_MIN = tbpOrbitFamily_Unspecified,
-  tbpOrbitFamily_MAX = tbpOrbitFamily_LongShortPeriod
+  tbpOrbitFamily_MAX = tbpOrbitFamily_PumpkinSouthern
 };
 
-inline const tbpOrbitFamily (&EnumValuestbpOrbitFamily())[10] {
+inline const tbpOrbitFamily (&EnumValuestbpOrbitFamily())[14] {
   static const tbpOrbitFamily values[] = {
     tbpOrbitFamily_Unspecified,
     tbpOrbitFamily_HaloNorthern,
@@ -180,13 +223,17 @@ inline const tbpOrbitFamily (&EnumValuestbpOrbitFamily())[10] {
     tbpOrbitFamily_DistantRetrograde,
     tbpOrbitFamily_Butterfly,
     tbpOrbitFamily_Axial,
-    tbpOrbitFamily_LongShortPeriod
+    tbpOrbitFamily_LongShortPeriod,
+    tbpOrbitFamily_TulipNorthern,
+    tbpOrbitFamily_TulipSouthern,
+    tbpOrbitFamily_PumpkinNorthern,
+    tbpOrbitFamily_PumpkinSouthern
   };
   return values;
 }
 
 inline const char * const *EnumNamestbpOrbitFamily() {
-  static const char * const names[11] = {
+  static const char * const names[15] = {
     "Unspecified",
     "HaloNorthern",
     "HaloSouthern",
@@ -197,13 +244,17 @@ inline const char * const *EnumNamestbpOrbitFamily() {
     "Butterfly",
     "Axial",
     "LongShortPeriod",
+    "TulipNorthern",
+    "TulipSouthern",
+    "PumpkinNorthern",
+    "PumpkinSouthern",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNametbpOrbitFamily(tbpOrbitFamily e) {
-  if (::flatbuffers::IsOutRange(e, tbpOrbitFamily_Unspecified, tbpOrbitFamily_LongShortPeriod)) return "";
+  if (::flatbuffers::IsOutRange(e, tbpOrbitFamily_Unspecified, tbpOrbitFamily_PumpkinSouthern)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamestbpOrbitFamily()[index];
 }
@@ -226,11 +277,19 @@ enum tbpTransferKind : uint8_t {
   tbpTransferKind_DirectInsertion = 6,
   /// Insertion into a periodic orbit (TARGET_ORBIT).
   tbpTransferKind_PeriodicOrbitInsertion = 7,
+  /// Theoretical minimum Jacobi-energy delta-v between states or to surface.
+  tbpTransferKind_MinEnergy = 8,
+  /// Single-revolution STM-targeted direct CR3BP Lambert transfer.
+  tbpTransferKind_DirectLambert = 9,
+  /// Minimum-delta-v CR3BP Lambert across prograde/retrograde and primaries.
+  tbpTransferKind_MinLambert = 10,
+  /// Minimum-time low-thrust optimal control (Pontryagin Minimum Principle).
+  tbpTransferKind_LowThrustMinTime = 11,
   tbpTransferKind_MIN = tbpTransferKind_Unspecified,
-  tbpTransferKind_MAX = tbpTransferKind_PeriodicOrbitInsertion
+  tbpTransferKind_MAX = tbpTransferKind_LowThrustMinTime
 };
 
-inline const tbpTransferKind (&EnumValuestbpTransferKind())[8] {
+inline const tbpTransferKind (&EnumValuestbpTransferKind())[12] {
   static const tbpTransferKind values[] = {
     tbpTransferKind_Unspecified,
     tbpTransferKind_HohmannLike,
@@ -239,13 +298,17 @@ inline const tbpTransferKind (&EnumValuestbpTransferKind())[8] {
     tbpTransferKind_PoweredFlyby,
     tbpTransferKind_WeakStabilityBoundary,
     tbpTransferKind_DirectInsertion,
-    tbpTransferKind_PeriodicOrbitInsertion
+    tbpTransferKind_PeriodicOrbitInsertion,
+    tbpTransferKind_MinEnergy,
+    tbpTransferKind_DirectLambert,
+    tbpTransferKind_MinLambert,
+    tbpTransferKind_LowThrustMinTime
   };
   return values;
 }
 
 inline const char * const *EnumNamestbpTransferKind() {
-  static const char * const names[9] = {
+  static const char * const names[13] = {
     "Unspecified",
     "HohmannLike",
     "LowEnergy",
@@ -254,13 +317,17 @@ inline const char * const *EnumNamestbpTransferKind() {
     "WeakStabilityBoundary",
     "DirectInsertion",
     "PeriodicOrbitInsertion",
+    "MinEnergy",
+    "DirectLambert",
+    "MinLambert",
+    "LowThrustMinTime",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNametbpTransferKind(tbpTransferKind e) {
-  if (::flatbuffers::IsOutRange(e, tbpTransferKind_Unspecified, tbpTransferKind_PeriodicOrbitInsertion)) return "";
+  if (::flatbuffers::IsOutRange(e, tbpTransferKind_Unspecified, tbpTransferKind_LowThrustMinTime)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamestbpTransferKind()[index];
 }
@@ -274,31 +341,35 @@ enum tbpStationKeepingStrategy : uint8_t {
   tbpStationKeepingStrategy_TargetPoint = 1,
   /// Suppress the unstable Floquet mode.
   tbpStationKeepingStrategy_FloquetMode = 2,
+  /// Linear stability lower/upper annual delta-v bounds across intervals.
+  tbpStationKeepingStrategy_LinearStabilityBounds = 3,
   tbpStationKeepingStrategy_MIN = tbpStationKeepingStrategy_PlaneCrossing,
-  tbpStationKeepingStrategy_MAX = tbpStationKeepingStrategy_FloquetMode
+  tbpStationKeepingStrategy_MAX = tbpStationKeepingStrategy_LinearStabilityBounds
 };
 
-inline const tbpStationKeepingStrategy (&EnumValuestbpStationKeepingStrategy())[3] {
+inline const tbpStationKeepingStrategy (&EnumValuestbpStationKeepingStrategy())[4] {
   static const tbpStationKeepingStrategy values[] = {
     tbpStationKeepingStrategy_PlaneCrossing,
     tbpStationKeepingStrategy_TargetPoint,
-    tbpStationKeepingStrategy_FloquetMode
+    tbpStationKeepingStrategy_FloquetMode,
+    tbpStationKeepingStrategy_LinearStabilityBounds
   };
   return values;
 }
 
 inline const char * const *EnumNamestbpStationKeepingStrategy() {
-  static const char * const names[4] = {
+  static const char * const names[5] = {
     "PlaneCrossing",
     "TargetPoint",
     "FloquetMode",
+    "LinearStabilityBounds",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNametbpStationKeepingStrategy(tbpStationKeepingStrategy e) {
-  if (::flatbuffers::IsOutRange(e, tbpStationKeepingStrategy_PlaneCrossing, tbpStationKeepingStrategy_FloquetMode)) return "";
+  if (::flatbuffers::IsOutRange(e, tbpStationKeepingStrategy_PlaneCrossing, tbpStationKeepingStrategy_LinearStabilityBounds)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamestbpStationKeepingStrategy()[index];
 }
@@ -308,31 +379,93 @@ inline const char *EnumNametbpStationKeepingStrategy(tbpStationKeepingStrategy e
 enum tbpConversionDirection : uint8_t {
   tbpConversionDirection_SynodicToInertial = 0,
   tbpConversionDirection_InertialToSynodic = 1,
+  tbpConversionDirection_SynodicToJ2000 = 2,
+  tbpConversionDirection_J2000ToSynodic = 3,
+  tbpConversionDirection_SynodicToPrimaryInertial = 4,
+  tbpConversionDirection_PrimaryInertialToSynodic = 5,
+  tbpConversionDirection_SynodicToLla = 6,
+  tbpConversionDirection_LlaToSynodic = 7,
+  tbpConversionDirection_SynodicToOrbitalElements = 8,
+  tbpConversionDirection_OrbitalElementsToSynodic = 9,
   tbpConversionDirection_MIN = tbpConversionDirection_SynodicToInertial,
-  tbpConversionDirection_MAX = tbpConversionDirection_InertialToSynodic
+  tbpConversionDirection_MAX = tbpConversionDirection_OrbitalElementsToSynodic
 };
 
-inline const tbpConversionDirection (&EnumValuestbpConversionDirection())[2] {
+inline const tbpConversionDirection (&EnumValuestbpConversionDirection())[10] {
   static const tbpConversionDirection values[] = {
     tbpConversionDirection_SynodicToInertial,
-    tbpConversionDirection_InertialToSynodic
+    tbpConversionDirection_InertialToSynodic,
+    tbpConversionDirection_SynodicToJ2000,
+    tbpConversionDirection_J2000ToSynodic,
+    tbpConversionDirection_SynodicToPrimaryInertial,
+    tbpConversionDirection_PrimaryInertialToSynodic,
+    tbpConversionDirection_SynodicToLla,
+    tbpConversionDirection_LlaToSynodic,
+    tbpConversionDirection_SynodicToOrbitalElements,
+    tbpConversionDirection_OrbitalElementsToSynodic
   };
   return values;
 }
 
 inline const char * const *EnumNamestbpConversionDirection() {
-  static const char * const names[3] = {
+  static const char * const names[11] = {
     "SynodicToInertial",
     "InertialToSynodic",
+    "SynodicToJ2000",
+    "J2000ToSynodic",
+    "SynodicToPrimaryInertial",
+    "PrimaryInertialToSynodic",
+    "SynodicToLla",
+    "LlaToSynodic",
+    "SynodicToOrbitalElements",
+    "OrbitalElementsToSynodic",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNametbpConversionDirection(tbpConversionDirection e) {
-  if (::flatbuffers::IsOutRange(e, tbpConversionDirection_SynodicToInertial, tbpConversionDirection_InertialToSynodic)) return "";
+  if (::flatbuffers::IsOutRange(e, tbpConversionDirection_SynodicToInertial, tbpConversionDirection_OrbitalElementsToSynodic)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamestbpConversionDirection()[index];
+}
+
+/// Which invariant manifold branches to compute. Append new values only;
+/// never reorder or reuse existing values.
+enum tbpManifoldBranchKind : uint8_t {
+  /// Both stable and unstable branches (interior and exterior).
+  tbpManifoldBranchKind_Both = 0,
+  /// Stable invariant manifold branches only (backward propagation).
+  tbpManifoldBranchKind_StableOnly = 1,
+  /// Unstable invariant manifold branches only (forward propagation).
+  tbpManifoldBranchKind_UnstableOnly = 2,
+  tbpManifoldBranchKind_MIN = tbpManifoldBranchKind_Both,
+  tbpManifoldBranchKind_MAX = tbpManifoldBranchKind_UnstableOnly
+};
+
+inline const tbpManifoldBranchKind (&EnumValuestbpManifoldBranchKind())[3] {
+  static const tbpManifoldBranchKind values[] = {
+    tbpManifoldBranchKind_Both,
+    tbpManifoldBranchKind_StableOnly,
+    tbpManifoldBranchKind_UnstableOnly
+  };
+  return values;
+}
+
+inline const char * const *EnumNamestbpManifoldBranchKind() {
+  static const char * const names[4] = {
+    "Both",
+    "StableOnly",
+    "UnstableOnly",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNametbpManifoldBranchKind(tbpManifoldBranchKind e) {
+  if (::flatbuffers::IsOutRange(e, tbpManifoldBranchKind_Both, tbpManifoldBranchKind_UnstableOnly)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamestbpManifoldBranchKind()[index];
 }
 
 /// Outcome. Append new values only; never reorder or reuse existing values.
@@ -948,7 +1081,21 @@ struct tbpPeriodicOrbit FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_FLOQUET_IMAGINARY = 36,
     VT_STABILITY_INDEX = 38,
     VT_STABLE = 40,
-    VT_TRAJECTORY = 42
+    VT_TRAJECTORY = 42,
+    VT_PETALS = 44,
+    VT_RESONANCE_P = 46,
+    VT_RESONANCE_Q = 48,
+    VT_PSEUDO_POTENTIAL = 50,
+    VT_PERIGEE_KM = 52,
+    VT_APOGEE_KM = 54,
+    VT_DOUBLING_TIME = 56,
+    VT_CHARACTERISTIC_EXPONENT = 58,
+    VT_MAX_LUNAR_OCCULTATION_S = 60,
+    VT_TOTAL_LUNAR_OCCULTATION_S = 62,
+    VT_MAX_EARTH_OCCULTATION_S = 64,
+    VT_TOTAL_EARTH_OCCULTATION_S = 66,
+    VT_STABLE_EIGENVECTOR = 68,
+    VT_UNSTABLE_EIGENVECTOR = 70
   };
   tbpOrbitFamily FAMILY() const {
     return static_cast<tbpOrbitFamily>(GetField<uint8_t>(VT_FAMILY, 0));
@@ -1033,6 +1180,62 @@ struct tbpPeriodicOrbit FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const tbpTrajectory *TRAJECTORY() const {
     return GetPointer<const tbpTrajectory *>(VT_TRAJECTORY);
   }
+  /// Tulip/pumpkin petal count Np; 0 = not applicable.
+  uint32_t PETALS() const {
+    return GetField<uint32_t>(VT_PETALS, 0);
+  }
+  /// Sidereal resonance denominator p (period = q * 2*pi / p); 0 = not stated.
+  uint32_t RESONANCE_P() const {
+    return GetField<uint32_t>(VT_RESONANCE_P, 0);
+  }
+  /// Sidereal resonance numerator q; 0 = not stated.
+  uint32_t RESONANCE_Q() const {
+    return GetField<uint32_t>(VT_RESONANCE_Q, 0);
+  }
+  /// CR3BP pseudo-potential U* at the initial state.
+  double PSEUDO_POTENTIAL() const {
+    return GetField<double>(VT_PSEUDO_POTENTIAL, 0.0);
+  }
+  /// Minimum distance from the larger primary (P1), km; 0 = not computed.
+  double PERIGEE_KM() const {
+    return GetField<double>(VT_PERIGEE_KM, 0.0);
+  }
+  /// Maximum distance from the larger primary (P1), km; 0 = not computed.
+  double APOGEE_KM() const {
+    return GetField<double>(VT_APOGEE_KM, 0.0);
+  }
+  /// Instability doubling time, non-dimensional; 0 = stable or not computed.
+  double DOUBLING_TIME() const {
+    return GetField<double>(VT_DOUBLING_TIME, 0.0);
+  }
+  /// Floquet/Lyapunov characteristic exponent, non-dimensional; 0 = not computed.
+  double CHARACTERISTIC_EXPONENT() const {
+    return GetField<double>(VT_CHARACTERISTIC_EXPONENT, 0.0);
+  }
+  /// Longest continuous P2 (lunar) occultation per period, s.
+  double MAX_LUNAR_OCCULTATION_S() const {
+    return GetField<double>(VT_MAX_LUNAR_OCCULTATION_S, 0.0);
+  }
+  /// Total P2 (lunar) occultation duration per period, s.
+  double TOTAL_LUNAR_OCCULTATION_S() const {
+    return GetField<double>(VT_TOTAL_LUNAR_OCCULTATION_S, 0.0);
+  }
+  /// Longest continuous P1 (Earth) occultation per period, s.
+  double MAX_EARTH_OCCULTATION_S() const {
+    return GetField<double>(VT_MAX_EARTH_OCCULTATION_S, 0.0);
+  }
+  /// Total P1 (Earth) occultation duration per period, s.
+  double TOTAL_EARTH_OCCULTATION_S() const {
+    return GetField<double>(VT_TOTAL_EARTH_OCCULTATION_S, 0.0);
+  }
+  /// Unit stable eigenvector of the monodromy matrix (6 values); empty = none.
+  const ::flatbuffers::Vector<double> *STABLE_EIGENVECTOR() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_STABLE_EIGENVECTOR);
+  }
+  /// Unit unstable eigenvector of the monodromy matrix (6 values); empty = none.
+  const ::flatbuffers::Vector<double> *UNSTABLE_EIGENVECTOR() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_UNSTABLE_EIGENVECTOR);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -1061,6 +1264,22 @@ struct tbpPeriodicOrbit FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<uint8_t>(verifier, VT_STABLE, 1) &&
            VerifyOffset(verifier, VT_TRAJECTORY) &&
            verifier.VerifyTable(TRAJECTORY()) &&
+           VerifyField<uint32_t>(verifier, VT_PETALS, 4) &&
+           VerifyField<uint32_t>(verifier, VT_RESONANCE_P, 4) &&
+           VerifyField<uint32_t>(verifier, VT_RESONANCE_Q, 4) &&
+           VerifyField<double>(verifier, VT_PSEUDO_POTENTIAL, 8) &&
+           VerifyField<double>(verifier, VT_PERIGEE_KM, 8) &&
+           VerifyField<double>(verifier, VT_APOGEE_KM, 8) &&
+           VerifyField<double>(verifier, VT_DOUBLING_TIME, 8) &&
+           VerifyField<double>(verifier, VT_CHARACTERISTIC_EXPONENT, 8) &&
+           VerifyField<double>(verifier, VT_MAX_LUNAR_OCCULTATION_S, 8) &&
+           VerifyField<double>(verifier, VT_TOTAL_LUNAR_OCCULTATION_S, 8) &&
+           VerifyField<double>(verifier, VT_MAX_EARTH_OCCULTATION_S, 8) &&
+           VerifyField<double>(verifier, VT_TOTAL_EARTH_OCCULTATION_S, 8) &&
+           VerifyOffset(verifier, VT_STABLE_EIGENVECTOR) &&
+           verifier.VerifyVector(STABLE_EIGENVECTOR()) &&
+           VerifyOffset(verifier, VT_UNSTABLE_EIGENVECTOR) &&
+           verifier.VerifyVector(UNSTABLE_EIGENVECTOR()) &&
            verifier.EndTable();
   }
 };
@@ -1129,6 +1348,48 @@ struct tbpPeriodicOrbitBuilder {
   void add_TRAJECTORY(::flatbuffers::Offset<tbpTrajectory> TRAJECTORY) {
     fbb_.AddOffset(tbpPeriodicOrbit::VT_TRAJECTORY, TRAJECTORY);
   }
+  void add_PETALS(uint32_t PETALS) {
+    fbb_.AddElement<uint32_t>(tbpPeriodicOrbit::VT_PETALS, PETALS, 0);
+  }
+  void add_RESONANCE_P(uint32_t RESONANCE_P) {
+    fbb_.AddElement<uint32_t>(tbpPeriodicOrbit::VT_RESONANCE_P, RESONANCE_P, 0);
+  }
+  void add_RESONANCE_Q(uint32_t RESONANCE_Q) {
+    fbb_.AddElement<uint32_t>(tbpPeriodicOrbit::VT_RESONANCE_Q, RESONANCE_Q, 0);
+  }
+  void add_PSEUDO_POTENTIAL(double PSEUDO_POTENTIAL) {
+    fbb_.AddElement<double>(tbpPeriodicOrbit::VT_PSEUDO_POTENTIAL, PSEUDO_POTENTIAL, 0.0);
+  }
+  void add_PERIGEE_KM(double PERIGEE_KM) {
+    fbb_.AddElement<double>(tbpPeriodicOrbit::VT_PERIGEE_KM, PERIGEE_KM, 0.0);
+  }
+  void add_APOGEE_KM(double APOGEE_KM) {
+    fbb_.AddElement<double>(tbpPeriodicOrbit::VT_APOGEE_KM, APOGEE_KM, 0.0);
+  }
+  void add_DOUBLING_TIME(double DOUBLING_TIME) {
+    fbb_.AddElement<double>(tbpPeriodicOrbit::VT_DOUBLING_TIME, DOUBLING_TIME, 0.0);
+  }
+  void add_CHARACTERISTIC_EXPONENT(double CHARACTERISTIC_EXPONENT) {
+    fbb_.AddElement<double>(tbpPeriodicOrbit::VT_CHARACTERISTIC_EXPONENT, CHARACTERISTIC_EXPONENT, 0.0);
+  }
+  void add_MAX_LUNAR_OCCULTATION_S(double MAX_LUNAR_OCCULTATION_S) {
+    fbb_.AddElement<double>(tbpPeriodicOrbit::VT_MAX_LUNAR_OCCULTATION_S, MAX_LUNAR_OCCULTATION_S, 0.0);
+  }
+  void add_TOTAL_LUNAR_OCCULTATION_S(double TOTAL_LUNAR_OCCULTATION_S) {
+    fbb_.AddElement<double>(tbpPeriodicOrbit::VT_TOTAL_LUNAR_OCCULTATION_S, TOTAL_LUNAR_OCCULTATION_S, 0.0);
+  }
+  void add_MAX_EARTH_OCCULTATION_S(double MAX_EARTH_OCCULTATION_S) {
+    fbb_.AddElement<double>(tbpPeriodicOrbit::VT_MAX_EARTH_OCCULTATION_S, MAX_EARTH_OCCULTATION_S, 0.0);
+  }
+  void add_TOTAL_EARTH_OCCULTATION_S(double TOTAL_EARTH_OCCULTATION_S) {
+    fbb_.AddElement<double>(tbpPeriodicOrbit::VT_TOTAL_EARTH_OCCULTATION_S, TOTAL_EARTH_OCCULTATION_S, 0.0);
+  }
+  void add_STABLE_EIGENVECTOR(::flatbuffers::Offset<::flatbuffers::Vector<double>> STABLE_EIGENVECTOR) {
+    fbb_.AddOffset(tbpPeriodicOrbit::VT_STABLE_EIGENVECTOR, STABLE_EIGENVECTOR);
+  }
+  void add_UNSTABLE_EIGENVECTOR(::flatbuffers::Offset<::flatbuffers::Vector<double>> UNSTABLE_EIGENVECTOR) {
+    fbb_.AddOffset(tbpPeriodicOrbit::VT_UNSTABLE_EIGENVECTOR, UNSTABLE_EIGENVECTOR);
+  }
   explicit tbpPeriodicOrbitBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1161,8 +1422,31 @@ inline ::flatbuffers::Offset<tbpPeriodicOrbit> CreatetbpPeriodicOrbit(
     ::flatbuffers::Offset<::flatbuffers::Vector<double>> FLOQUET_IMAGINARY = 0,
     double STABILITY_INDEX = 0.0,
     bool STABLE = false,
-    ::flatbuffers::Offset<tbpTrajectory> TRAJECTORY = 0) {
+    ::flatbuffers::Offset<tbpTrajectory> TRAJECTORY = 0,
+    uint32_t PETALS = 0,
+    uint32_t RESONANCE_P = 0,
+    uint32_t RESONANCE_Q = 0,
+    double PSEUDO_POTENTIAL = 0.0,
+    double PERIGEE_KM = 0.0,
+    double APOGEE_KM = 0.0,
+    double DOUBLING_TIME = 0.0,
+    double CHARACTERISTIC_EXPONENT = 0.0,
+    double MAX_LUNAR_OCCULTATION_S = 0.0,
+    double TOTAL_LUNAR_OCCULTATION_S = 0.0,
+    double MAX_EARTH_OCCULTATION_S = 0.0,
+    double TOTAL_EARTH_OCCULTATION_S = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> STABLE_EIGENVECTOR = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> UNSTABLE_EIGENVECTOR = 0) {
   tbpPeriodicOrbitBuilder builder_(_fbb);
+  builder_.add_TOTAL_EARTH_OCCULTATION_S(TOTAL_EARTH_OCCULTATION_S);
+  builder_.add_MAX_EARTH_OCCULTATION_S(MAX_EARTH_OCCULTATION_S);
+  builder_.add_TOTAL_LUNAR_OCCULTATION_S(TOTAL_LUNAR_OCCULTATION_S);
+  builder_.add_MAX_LUNAR_OCCULTATION_S(MAX_LUNAR_OCCULTATION_S);
+  builder_.add_CHARACTERISTIC_EXPONENT(CHARACTERISTIC_EXPONENT);
+  builder_.add_DOUBLING_TIME(DOUBLING_TIME);
+  builder_.add_APOGEE_KM(APOGEE_KM);
+  builder_.add_PERIGEE_KM(PERIGEE_KM);
+  builder_.add_PSEUDO_POTENTIAL(PSEUDO_POTENTIAL);
   builder_.add_STABILITY_INDEX(STABILITY_INDEX);
   builder_.add_TOLERANCE(TOLERANCE);
   builder_.add_JACOBI(JACOBI);
@@ -1171,6 +1455,11 @@ inline ::flatbuffers::Offset<tbpPeriodicOrbit> CreatetbpPeriodicOrbit(
   builder_.add_APOLUNE_ALTITUDE_KM(APOLUNE_ALTITUDE_KM);
   builder_.add_PERILUNE_ALTITUDE_KM(PERILUNE_ALTITUDE_KM);
   builder_.add_AMPLITUDE(AMPLITUDE);
+  builder_.add_UNSTABLE_EIGENVECTOR(UNSTABLE_EIGENVECTOR);
+  builder_.add_STABLE_EIGENVECTOR(STABLE_EIGENVECTOR);
+  builder_.add_RESONANCE_Q(RESONANCE_Q);
+  builder_.add_RESONANCE_P(RESONANCE_P);
+  builder_.add_PETALS(PETALS);
   builder_.add_TRAJECTORY(TRAJECTORY);
   builder_.add_FLOQUET_IMAGINARY(FLOQUET_IMAGINARY);
   builder_.add_FLOQUET_REAL(FLOQUET_REAL);
@@ -1207,10 +1496,26 @@ inline ::flatbuffers::Offset<tbpPeriodicOrbit> CreatetbpPeriodicOrbitDirect(
     const std::vector<double> *FLOQUET_IMAGINARY = nullptr,
     double STABILITY_INDEX = 0.0,
     bool STABLE = false,
-    ::flatbuffers::Offset<tbpTrajectory> TRAJECTORY = 0) {
+    ::flatbuffers::Offset<tbpTrajectory> TRAJECTORY = 0,
+    uint32_t PETALS = 0,
+    uint32_t RESONANCE_P = 0,
+    uint32_t RESONANCE_Q = 0,
+    double PSEUDO_POTENTIAL = 0.0,
+    double PERIGEE_KM = 0.0,
+    double APOGEE_KM = 0.0,
+    double DOUBLING_TIME = 0.0,
+    double CHARACTERISTIC_EXPONENT = 0.0,
+    double MAX_LUNAR_OCCULTATION_S = 0.0,
+    double TOTAL_LUNAR_OCCULTATION_S = 0.0,
+    double MAX_EARTH_OCCULTATION_S = 0.0,
+    double TOTAL_EARTH_OCCULTATION_S = 0.0,
+    const std::vector<double> *STABLE_EIGENVECTOR = nullptr,
+    const std::vector<double> *UNSTABLE_EIGENVECTOR = nullptr) {
   auto MONODROMY__ = MONODROMY ? _fbb.CreateVector<double>(*MONODROMY) : 0;
   auto FLOQUET_REAL__ = FLOQUET_REAL ? _fbb.CreateVector<double>(*FLOQUET_REAL) : 0;
   auto FLOQUET_IMAGINARY__ = FLOQUET_IMAGINARY ? _fbb.CreateVector<double>(*FLOQUET_IMAGINARY) : 0;
+  auto STABLE_EIGENVECTOR__ = STABLE_EIGENVECTOR ? _fbb.CreateVector<double>(*STABLE_EIGENVECTOR) : 0;
+  auto UNSTABLE_EIGENVECTOR__ = UNSTABLE_EIGENVECTOR ? _fbb.CreateVector<double>(*UNSTABLE_EIGENVECTOR) : 0;
   return CreatetbpPeriodicOrbit(
       _fbb,
       FAMILY,
@@ -1232,7 +1537,21 @@ inline ::flatbuffers::Offset<tbpPeriodicOrbit> CreatetbpPeriodicOrbitDirect(
       FLOQUET_IMAGINARY__,
       STABILITY_INDEX,
       STABLE,
-      TRAJECTORY);
+      TRAJECTORY,
+      PETALS,
+      RESONANCE_P,
+      RESONANCE_Q,
+      PSEUDO_POTENTIAL,
+      PERIGEE_KM,
+      APOGEE_KM,
+      DOUBLING_TIME,
+      CHARACTERISTIC_EXPONENT,
+      MAX_LUNAR_OCCULTATION_S,
+      TOTAL_LUNAR_OCCULTATION_S,
+      MAX_EARTH_OCCULTATION_S,
+      TOTAL_EARTH_OCCULTATION_S,
+      STABLE_EIGENVECTOR__,
+      UNSTABLE_EIGENVECTOR__);
 }
 
 /// Options for a propagation.
@@ -1338,7 +1657,19 @@ struct tbpTransfer FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_BURNS = 20,
     VT_TOTAL_DELTA_V_KM_S = 22,
     VT_TIME_OF_FLIGHT_S = 24,
-    VT_TRAJECTORY = 26
+    VT_TRAJECTORY = 26,
+    VT_INITIAL_STATE = 28,
+    VT_FINAL_STATE = 30,
+    VT_RETROGRADE = 32,
+    VT_REFERENCE_PRIMARY = 34,
+    VT_MAX_THRUST_N = 36,
+    VT_SPECIFIC_IMPULSE_S = 38,
+    VT_INITIAL_MASS_KG = 40,
+    VT_FINAL_MASS_KG = 42,
+    VT_PROPELLANT_MASS_KG = 44,
+    VT_INITIAL_COSTATES = 46,
+    VT_THROTTLE_HISTORY = 48,
+    VT_MIN_ENERGY_DELTA_V_KM_S = 50
   };
   tbpTransferKind KIND() const {
     return static_cast<tbpTransferKind>(GetField<uint8_t>(VT_KIND, 0));
@@ -1386,6 +1717,54 @@ struct tbpTransfer FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const tbpTrajectory *TRAJECTORY() const {
     return GetPointer<const tbpTrajectory *>(VT_TRAJECTORY);
   }
+  /// Departure state in synodic frame (MinEnergy, DirectLambert, MinLambert, LowThrustMinTime).
+  const tbpState *INITIAL_STATE() const {
+    return GetPointer<const tbpState *>(VT_INITIAL_STATE);
+  }
+  /// Arrival state in synodic frame.
+  const tbpState *FINAL_STATE() const {
+    return GetPointer<const tbpState *>(VT_FINAL_STATE);
+  }
+  /// False = prograde (default), true = retrograde (DirectLambert).
+  bool RETROGRADE() const {
+    return GetField<uint8_t>(VT_RETROGRADE, 0) != 0;
+  }
+  /// Reference primary body for Lambert seeding: 0 = auto, 1 = P1, 2 = P2.
+  uint8_t REFERENCE_PRIMARY() const {
+    return GetField<uint8_t>(VT_REFERENCE_PRIMARY, 0);
+  }
+  /// Low-thrust maximum thrust, N (LowThrustMinTime).
+  double MAX_THRUST_N() const {
+    return GetField<double>(VT_MAX_THRUST_N, 0.0);
+  }
+  /// Engine specific impulse Isp, s (LowThrustMinTime).
+  double SPECIFIC_IMPULSE_S() const {
+    return GetField<double>(VT_SPECIFIC_IMPULSE_S, 0.0);
+  }
+  /// Initial wet spacecraft mass, kg.
+  double INITIAL_MASS_KG() const {
+    return GetField<double>(VT_INITIAL_MASS_KG, 0.0);
+  }
+  /// Result: final spacecraft mass at arrival, kg.
+  double FINAL_MASS_KG() const {
+    return GetField<double>(VT_FINAL_MASS_KG, 0.0);
+  }
+  /// Result: propellant consumed, kg.
+  double PROPELLANT_MASS_KG() const {
+    return GetField<double>(VT_PROPELLANT_MASS_KG, 0.0);
+  }
+  /// Initial costates [lambda_rx, ry, rz, vx, vy, vz, m] guess or solved.
+  const ::flatbuffers::Vector<double> *INITIAL_COSTATES() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_INITIAL_COSTATES);
+  }
+  /// Result: normalized throttle [0..1] per trajectory sample.
+  const ::flatbuffers::Vector<double> *THROTTLE_HISTORY() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_THROTTLE_HISTORY);
+  }
+  /// Result: theoretical minimum Jacobi-energy delta-v, km/s (MinEnergy).
+  double MIN_ENERGY_DELTA_V_KM_S() const {
+    return GetField<double>(VT_MIN_ENERGY_DELTA_V_KM_S, 0.0);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -1405,6 +1784,22 @@ struct tbpTransfer FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<double>(verifier, VT_TIME_OF_FLIGHT_S, 8) &&
            VerifyOffset(verifier, VT_TRAJECTORY) &&
            verifier.VerifyTable(TRAJECTORY()) &&
+           VerifyOffset(verifier, VT_INITIAL_STATE) &&
+           verifier.VerifyTable(INITIAL_STATE()) &&
+           VerifyOffset(verifier, VT_FINAL_STATE) &&
+           verifier.VerifyTable(FINAL_STATE()) &&
+           VerifyField<uint8_t>(verifier, VT_RETROGRADE, 1) &&
+           VerifyField<uint8_t>(verifier, VT_REFERENCE_PRIMARY, 1) &&
+           VerifyField<double>(verifier, VT_MAX_THRUST_N, 8) &&
+           VerifyField<double>(verifier, VT_SPECIFIC_IMPULSE_S, 8) &&
+           VerifyField<double>(verifier, VT_INITIAL_MASS_KG, 8) &&
+           VerifyField<double>(verifier, VT_FINAL_MASS_KG, 8) &&
+           VerifyField<double>(verifier, VT_PROPELLANT_MASS_KG, 8) &&
+           VerifyOffset(verifier, VT_INITIAL_COSTATES) &&
+           verifier.VerifyVector(INITIAL_COSTATES()) &&
+           VerifyOffset(verifier, VT_THROTTLE_HISTORY) &&
+           verifier.VerifyVector(THROTTLE_HISTORY()) &&
+           VerifyField<double>(verifier, VT_MIN_ENERGY_DELTA_V_KM_S, 8) &&
            verifier.EndTable();
   }
 };
@@ -1449,6 +1844,42 @@ struct tbpTransferBuilder {
   void add_TRAJECTORY(::flatbuffers::Offset<tbpTrajectory> TRAJECTORY) {
     fbb_.AddOffset(tbpTransfer::VT_TRAJECTORY, TRAJECTORY);
   }
+  void add_INITIAL_STATE(::flatbuffers::Offset<tbpState> INITIAL_STATE) {
+    fbb_.AddOffset(tbpTransfer::VT_INITIAL_STATE, INITIAL_STATE);
+  }
+  void add_FINAL_STATE(::flatbuffers::Offset<tbpState> FINAL_STATE) {
+    fbb_.AddOffset(tbpTransfer::VT_FINAL_STATE, FINAL_STATE);
+  }
+  void add_RETROGRADE(bool RETROGRADE) {
+    fbb_.AddElement<uint8_t>(tbpTransfer::VT_RETROGRADE, static_cast<uint8_t>(RETROGRADE), 0);
+  }
+  void add_REFERENCE_PRIMARY(uint8_t REFERENCE_PRIMARY) {
+    fbb_.AddElement<uint8_t>(tbpTransfer::VT_REFERENCE_PRIMARY, REFERENCE_PRIMARY, 0);
+  }
+  void add_MAX_THRUST_N(double MAX_THRUST_N) {
+    fbb_.AddElement<double>(tbpTransfer::VT_MAX_THRUST_N, MAX_THRUST_N, 0.0);
+  }
+  void add_SPECIFIC_IMPULSE_S(double SPECIFIC_IMPULSE_S) {
+    fbb_.AddElement<double>(tbpTransfer::VT_SPECIFIC_IMPULSE_S, SPECIFIC_IMPULSE_S, 0.0);
+  }
+  void add_INITIAL_MASS_KG(double INITIAL_MASS_KG) {
+    fbb_.AddElement<double>(tbpTransfer::VT_INITIAL_MASS_KG, INITIAL_MASS_KG, 0.0);
+  }
+  void add_FINAL_MASS_KG(double FINAL_MASS_KG) {
+    fbb_.AddElement<double>(tbpTransfer::VT_FINAL_MASS_KG, FINAL_MASS_KG, 0.0);
+  }
+  void add_PROPELLANT_MASS_KG(double PROPELLANT_MASS_KG) {
+    fbb_.AddElement<double>(tbpTransfer::VT_PROPELLANT_MASS_KG, PROPELLANT_MASS_KG, 0.0);
+  }
+  void add_INITIAL_COSTATES(::flatbuffers::Offset<::flatbuffers::Vector<double>> INITIAL_COSTATES) {
+    fbb_.AddOffset(tbpTransfer::VT_INITIAL_COSTATES, INITIAL_COSTATES);
+  }
+  void add_THROTTLE_HISTORY(::flatbuffers::Offset<::flatbuffers::Vector<double>> THROTTLE_HISTORY) {
+    fbb_.AddOffset(tbpTransfer::VT_THROTTLE_HISTORY, THROTTLE_HISTORY);
+  }
+  void add_MIN_ENERGY_DELTA_V_KM_S(double MIN_ENERGY_DELTA_V_KM_S) {
+    fbb_.AddElement<double>(tbpTransfer::VT_MIN_ENERGY_DELTA_V_KM_S, MIN_ENERGY_DELTA_V_KM_S, 0.0);
+  }
   explicit tbpTransferBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1473,18 +1904,42 @@ inline ::flatbuffers::Offset<tbpTransfer> CreatetbpTransfer(
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<mplBurn>>> BURNS = 0,
     double TOTAL_DELTA_V_KM_S = 0.0,
     double TIME_OF_FLIGHT_S = 0.0,
-    ::flatbuffers::Offset<tbpTrajectory> TRAJECTORY = 0) {
+    ::flatbuffers::Offset<tbpTrajectory> TRAJECTORY = 0,
+    ::flatbuffers::Offset<tbpState> INITIAL_STATE = 0,
+    ::flatbuffers::Offset<tbpState> FINAL_STATE = 0,
+    bool RETROGRADE = false,
+    uint8_t REFERENCE_PRIMARY = 0,
+    double MAX_THRUST_N = 0.0,
+    double SPECIFIC_IMPULSE_S = 0.0,
+    double INITIAL_MASS_KG = 0.0,
+    double FINAL_MASS_KG = 0.0,
+    double PROPELLANT_MASS_KG = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> INITIAL_COSTATES = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> THROTTLE_HISTORY = 0,
+    double MIN_ENERGY_DELTA_V_KM_S = 0.0) {
   tbpTransferBuilder builder_(_fbb);
+  builder_.add_MIN_ENERGY_DELTA_V_KM_S(MIN_ENERGY_DELTA_V_KM_S);
+  builder_.add_PROPELLANT_MASS_KG(PROPELLANT_MASS_KG);
+  builder_.add_FINAL_MASS_KG(FINAL_MASS_KG);
+  builder_.add_INITIAL_MASS_KG(INITIAL_MASS_KG);
+  builder_.add_SPECIFIC_IMPULSE_S(SPECIFIC_IMPULSE_S);
+  builder_.add_MAX_THRUST_N(MAX_THRUST_N);
   builder_.add_TIME_OF_FLIGHT_S(TIME_OF_FLIGHT_S);
   builder_.add_TOTAL_DELTA_V_KM_S(TOTAL_DELTA_V_KM_S);
   builder_.add_TOLERANCE(TOLERANCE);
   builder_.add_INCLINATION_DEG(INCLINATION_DEG);
   builder_.add_TARGET_ALTITUDE_KM(TARGET_ALTITUDE_KM);
   builder_.add_PARKING_ALTITUDE_KM(PARKING_ALTITUDE_KM);
+  builder_.add_THROTTLE_HISTORY(THROTTLE_HISTORY);
+  builder_.add_INITIAL_COSTATES(INITIAL_COSTATES);
+  builder_.add_FINAL_STATE(FINAL_STATE);
+  builder_.add_INITIAL_STATE(INITIAL_STATE);
   builder_.add_TRAJECTORY(TRAJECTORY);
   builder_.add_BURNS(BURNS);
   builder_.add_MAX_ITERATIONS(MAX_ITERATIONS);
   builder_.add_TARGET_ORBIT(TARGET_ORBIT);
+  builder_.add_REFERENCE_PRIMARY(REFERENCE_PRIMARY);
+  builder_.add_RETROGRADE(RETROGRADE);
   builder_.add_CONVERGED(CONVERGED);
   builder_.add_KIND(KIND);
   return builder_.Finish();
@@ -1503,8 +1958,22 @@ inline ::flatbuffers::Offset<tbpTransfer> CreatetbpTransferDirect(
     const std::vector<::flatbuffers::Offset<mplBurn>> *BURNS = nullptr,
     double TOTAL_DELTA_V_KM_S = 0.0,
     double TIME_OF_FLIGHT_S = 0.0,
-    ::flatbuffers::Offset<tbpTrajectory> TRAJECTORY = 0) {
+    ::flatbuffers::Offset<tbpTrajectory> TRAJECTORY = 0,
+    ::flatbuffers::Offset<tbpState> INITIAL_STATE = 0,
+    ::flatbuffers::Offset<tbpState> FINAL_STATE = 0,
+    bool RETROGRADE = false,
+    uint8_t REFERENCE_PRIMARY = 0,
+    double MAX_THRUST_N = 0.0,
+    double SPECIFIC_IMPULSE_S = 0.0,
+    double INITIAL_MASS_KG = 0.0,
+    double FINAL_MASS_KG = 0.0,
+    double PROPELLANT_MASS_KG = 0.0,
+    const std::vector<double> *INITIAL_COSTATES = nullptr,
+    const std::vector<double> *THROTTLE_HISTORY = nullptr,
+    double MIN_ENERGY_DELTA_V_KM_S = 0.0) {
   auto BURNS__ = BURNS ? _fbb.CreateVector<::flatbuffers::Offset<mplBurn>>(*BURNS) : 0;
+  auto INITIAL_COSTATES__ = INITIAL_COSTATES ? _fbb.CreateVector<double>(*INITIAL_COSTATES) : 0;
+  auto THROTTLE_HISTORY__ = THROTTLE_HISTORY ? _fbb.CreateVector<double>(*THROTTLE_HISTORY) : 0;
   return CreatetbpTransfer(
       _fbb,
       KIND,
@@ -1518,7 +1987,19 @@ inline ::flatbuffers::Offset<tbpTransfer> CreatetbpTransferDirect(
       BURNS__,
       TOTAL_DELTA_V_KM_S,
       TIME_OF_FLIGHT_S,
-      TRAJECTORY);
+      TRAJECTORY,
+      INITIAL_STATE,
+      FINAL_STATE,
+      RETROGRADE,
+      REFERENCE_PRIMARY,
+      MAX_THRUST_N,
+      SPECIFIC_IMPULSE_S,
+      INITIAL_MASS_KG,
+      FINAL_MASS_KG,
+      PROPELLANT_MASS_KG,
+      INITIAL_COSTATES__,
+      THROTTLE_HISTORY__,
+      MIN_ENERGY_DELTA_V_KM_S);
 }
 
 /// Station-keeping budget for a periodic orbit.
@@ -1534,7 +2015,11 @@ struct tbpStationKeeping FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table 
     VT_MEAN_CYCLE_DELTA_V_KM_S = 16,
     VT_MAX_CYCLE_DELTA_V_KM_S = 18,
     VT_CYCLE_DELTA_V_KM_S = 20,
-    VT_BOUNDED = 22
+    VT_BOUNDED = 22,
+    VT_CORRECTION_INTERVAL_S = 24,
+    VT_DELTA_V_EXECUTION_ERROR_KM_S = 26,
+    VT_LOWER_BOUND_ANNUAL_DELTA_V_KM_S = 28,
+    VT_UPPER_BOUND_ANNUAL_DELTA_V_KM_S = 30
   };
   /// The orbit kept (its INITIAL_STATE, PERIOD and JACOBI at least).
   const tbpPeriodicOrbit *ORBIT() const {
@@ -1574,6 +2059,22 @@ struct tbpStationKeeping FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table 
   bool BOUNDED() const {
     return GetField<uint8_t>(VT_BOUNDED, 0) != 0;
   }
+  /// Time between correction maneuvers, s (LinearStabilityBounds).
+  double CORRECTION_INTERVAL_S() const {
+    return GetField<double>(VT_CORRECTION_INTERVAL_S, 0.0);
+  }
+  /// 3-axis velocity execution error magnitude, km/s (LinearStabilityBounds).
+  double DELTA_V_EXECUTION_ERROR_KM_S() const {
+    return GetField<double>(VT_DELTA_V_EXECUTION_ERROR_KM_S, 0.0);
+  }
+  /// Result: linear-stability lower bound annual delta-v, km/s/yr.
+  double LOWER_BOUND_ANNUAL_DELTA_V_KM_S() const {
+    return GetField<double>(VT_LOWER_BOUND_ANNUAL_DELTA_V_KM_S, 0.0);
+  }
+  /// Result: linear-stability upper bound annual delta-v, km/s/yr.
+  double UPPER_BOUND_ANNUAL_DELTA_V_KM_S() const {
+    return GetField<double>(VT_UPPER_BOUND_ANNUAL_DELTA_V_KM_S, 0.0);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -1589,6 +2090,10 @@ struct tbpStationKeeping FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table 
            VerifyOffset(verifier, VT_CYCLE_DELTA_V_KM_S) &&
            verifier.VerifyVector(CYCLE_DELTA_V_KM_S()) &&
            VerifyField<uint8_t>(verifier, VT_BOUNDED, 1) &&
+           VerifyField<double>(verifier, VT_CORRECTION_INTERVAL_S, 8) &&
+           VerifyField<double>(verifier, VT_DELTA_V_EXECUTION_ERROR_KM_S, 8) &&
+           VerifyField<double>(verifier, VT_LOWER_BOUND_ANNUAL_DELTA_V_KM_S, 8) &&
+           VerifyField<double>(verifier, VT_UPPER_BOUND_ANNUAL_DELTA_V_KM_S, 8) &&
            verifier.EndTable();
   }
 };
@@ -1627,6 +2132,18 @@ struct tbpStationKeepingBuilder {
   void add_BOUNDED(bool BOUNDED) {
     fbb_.AddElement<uint8_t>(tbpStationKeeping::VT_BOUNDED, static_cast<uint8_t>(BOUNDED), 0);
   }
+  void add_CORRECTION_INTERVAL_S(double CORRECTION_INTERVAL_S) {
+    fbb_.AddElement<double>(tbpStationKeeping::VT_CORRECTION_INTERVAL_S, CORRECTION_INTERVAL_S, 0.0);
+  }
+  void add_DELTA_V_EXECUTION_ERROR_KM_S(double DELTA_V_EXECUTION_ERROR_KM_S) {
+    fbb_.AddElement<double>(tbpStationKeeping::VT_DELTA_V_EXECUTION_ERROR_KM_S, DELTA_V_EXECUTION_ERROR_KM_S, 0.0);
+  }
+  void add_LOWER_BOUND_ANNUAL_DELTA_V_KM_S(double LOWER_BOUND_ANNUAL_DELTA_V_KM_S) {
+    fbb_.AddElement<double>(tbpStationKeeping::VT_LOWER_BOUND_ANNUAL_DELTA_V_KM_S, LOWER_BOUND_ANNUAL_DELTA_V_KM_S, 0.0);
+  }
+  void add_UPPER_BOUND_ANNUAL_DELTA_V_KM_S(double UPPER_BOUND_ANNUAL_DELTA_V_KM_S) {
+    fbb_.AddElement<double>(tbpStationKeeping::VT_UPPER_BOUND_ANNUAL_DELTA_V_KM_S, UPPER_BOUND_ANNUAL_DELTA_V_KM_S, 0.0);
+  }
   explicit tbpStationKeepingBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1649,8 +2166,16 @@ inline ::flatbuffers::Offset<tbpStationKeeping> CreatetbpStationKeeping(
     double MEAN_CYCLE_DELTA_V_KM_S = 0.0,
     double MAX_CYCLE_DELTA_V_KM_S = 0.0,
     ::flatbuffers::Offset<::flatbuffers::Vector<double>> CYCLE_DELTA_V_KM_S = 0,
-    bool BOUNDED = false) {
+    bool BOUNDED = false,
+    double CORRECTION_INTERVAL_S = 0.0,
+    double DELTA_V_EXECUTION_ERROR_KM_S = 0.0,
+    double LOWER_BOUND_ANNUAL_DELTA_V_KM_S = 0.0,
+    double UPPER_BOUND_ANNUAL_DELTA_V_KM_S = 0.0) {
   tbpStationKeepingBuilder builder_(_fbb);
+  builder_.add_UPPER_BOUND_ANNUAL_DELTA_V_KM_S(UPPER_BOUND_ANNUAL_DELTA_V_KM_S);
+  builder_.add_LOWER_BOUND_ANNUAL_DELTA_V_KM_S(LOWER_BOUND_ANNUAL_DELTA_V_KM_S);
+  builder_.add_DELTA_V_EXECUTION_ERROR_KM_S(DELTA_V_EXECUTION_ERROR_KM_S);
+  builder_.add_CORRECTION_INTERVAL_S(CORRECTION_INTERVAL_S);
   builder_.add_MAX_CYCLE_DELTA_V_KM_S(MAX_CYCLE_DELTA_V_KM_S);
   builder_.add_MEAN_CYCLE_DELTA_V_KM_S(MEAN_CYCLE_DELTA_V_KM_S);
   builder_.add_ANNUAL_DELTA_V_KM_S(ANNUAL_DELTA_V_KM_S);
@@ -1675,7 +2200,11 @@ inline ::flatbuffers::Offset<tbpStationKeeping> CreatetbpStationKeepingDirect(
     double MEAN_CYCLE_DELTA_V_KM_S = 0.0,
     double MAX_CYCLE_DELTA_V_KM_S = 0.0,
     const std::vector<double> *CYCLE_DELTA_V_KM_S = nullptr,
-    bool BOUNDED = false) {
+    bool BOUNDED = false,
+    double CORRECTION_INTERVAL_S = 0.0,
+    double DELTA_V_EXECUTION_ERROR_KM_S = 0.0,
+    double LOWER_BOUND_ANNUAL_DELTA_V_KM_S = 0.0,
+    double UPPER_BOUND_ANNUAL_DELTA_V_KM_S = 0.0) {
   auto CYCLE_DELTA_V_KM_S__ = CYCLE_DELTA_V_KM_S ? _fbb.CreateVector<double>(*CYCLE_DELTA_V_KM_S) : 0;
   return CreatetbpStationKeeping(
       _fbb,
@@ -1688,7 +2217,11 @@ inline ::flatbuffers::Offset<tbpStationKeeping> CreatetbpStationKeepingDirect(
       MEAN_CYCLE_DELTA_V_KM_S,
       MAX_CYCLE_DELTA_V_KM_S,
       CYCLE_DELTA_V_KM_S__,
-      BOUNDED);
+      BOUNDED,
+      CORRECTION_INTERVAL_S,
+      DELTA_V_EXECUTION_ERROR_KM_S,
+      LOWER_BOUND_ANNUAL_DELTA_V_KM_S,
+      UPPER_BOUND_ANNUAL_DELTA_V_KM_S);
 }
 
 /// A state converted between the synodic and inertial frames. The inertial
@@ -1702,7 +2235,13 @@ struct tbpFrameConversion FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
     VT_REFERENCE_EPOCH_MS = 6,
     VT_ELAPSED_S = 8,
     VT_SYNODIC = 10,
-    VT_INERTIAL = 12
+    VT_INERTIAL = 12,
+    VT_REFERENCE_PRIMARY = 14,
+    VT_JULIAN_DATE = 16,
+    VT_LLA_DEG_KM = 18,
+    VT_ORBITAL_ELEMENTS = 20,
+    VT_BATCH_SYNODIC_STATES = 22,
+    VT_BATCH_INERTIAL_STATES = 24
   };
   tbpConversionDirection DIRECTION() const {
     return static_cast<tbpConversionDirection>(GetField<uint8_t>(VT_DIRECTION, 0));
@@ -1724,6 +2263,30 @@ struct tbpFrameConversion FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
   const ::flatbuffers::Vector<double> *INERTIAL() const {
     return GetPointer<const ::flatbuffers::Vector<double> *>(VT_INERTIAL);
   }
+  /// Reference primary body: 0 = barycenter, 1 = P1 (Earth), 2 = P2 (Moon).
+  uint8_t REFERENCE_PRIMARY() const {
+    return GetField<uint8_t>(VT_REFERENCE_PRIMARY, 0);
+  }
+  /// Epoch Julian date (days) for J2000/ephemeris conversions; 0 = from REFERENCE_EPOCH_MS.
+  double JULIAN_DATE() const {
+    return GetField<double>(VT_JULIAN_DATE, 0.0);
+  }
+  /// Geodetic/selenodetic coordinates [lat_deg, lon_deg, alt_km] (3 values).
+  const ::flatbuffers::Vector<double> *LLA_DEG_KM() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_LLA_DEG_KM);
+  }
+  /// Classical Keplerian elements [a_km, e, inc_deg, raan_deg, argp_deg, nu_deg] (6 values).
+  const ::flatbuffers::Vector<double> *ORBITAL_ELEMENTS() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_ORBITAL_ELEMENTS);
+  }
+  /// Batch synodic states (N * 6 values, non-dimensional) for vectorized conversion.
+  const ::flatbuffers::Vector<double> *BATCH_SYNODIC_STATES() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_BATCH_SYNODIC_STATES);
+  }
+  /// Batch inertial/target states (N * 6 values, km and km/s) for vectorized conversion.
+  const ::flatbuffers::Vector<double> *BATCH_INERTIAL_STATES() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_BATCH_INERTIAL_STATES);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -1734,6 +2297,16 @@ struct tbpFrameConversion FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
            verifier.VerifyTable(SYNODIC()) &&
            VerifyOffset(verifier, VT_INERTIAL) &&
            verifier.VerifyVector(INERTIAL()) &&
+           VerifyField<uint8_t>(verifier, VT_REFERENCE_PRIMARY, 1) &&
+           VerifyField<double>(verifier, VT_JULIAN_DATE, 8) &&
+           VerifyOffset(verifier, VT_LLA_DEG_KM) &&
+           verifier.VerifyVector(LLA_DEG_KM()) &&
+           VerifyOffset(verifier, VT_ORBITAL_ELEMENTS) &&
+           verifier.VerifyVector(ORBITAL_ELEMENTS()) &&
+           VerifyOffset(verifier, VT_BATCH_SYNODIC_STATES) &&
+           verifier.VerifyVector(BATCH_SYNODIC_STATES()) &&
+           VerifyOffset(verifier, VT_BATCH_INERTIAL_STATES) &&
+           verifier.VerifyVector(BATCH_INERTIAL_STATES()) &&
            verifier.EndTable();
   }
 };
@@ -1757,6 +2330,24 @@ struct tbpFrameConversionBuilder {
   void add_INERTIAL(::flatbuffers::Offset<::flatbuffers::Vector<double>> INERTIAL) {
     fbb_.AddOffset(tbpFrameConversion::VT_INERTIAL, INERTIAL);
   }
+  void add_REFERENCE_PRIMARY(uint8_t REFERENCE_PRIMARY) {
+    fbb_.AddElement<uint8_t>(tbpFrameConversion::VT_REFERENCE_PRIMARY, REFERENCE_PRIMARY, 0);
+  }
+  void add_JULIAN_DATE(double JULIAN_DATE) {
+    fbb_.AddElement<double>(tbpFrameConversion::VT_JULIAN_DATE, JULIAN_DATE, 0.0);
+  }
+  void add_LLA_DEG_KM(::flatbuffers::Offset<::flatbuffers::Vector<double>> LLA_DEG_KM) {
+    fbb_.AddOffset(tbpFrameConversion::VT_LLA_DEG_KM, LLA_DEG_KM);
+  }
+  void add_ORBITAL_ELEMENTS(::flatbuffers::Offset<::flatbuffers::Vector<double>> ORBITAL_ELEMENTS) {
+    fbb_.AddOffset(tbpFrameConversion::VT_ORBITAL_ELEMENTS, ORBITAL_ELEMENTS);
+  }
+  void add_BATCH_SYNODIC_STATES(::flatbuffers::Offset<::flatbuffers::Vector<double>> BATCH_SYNODIC_STATES) {
+    fbb_.AddOffset(tbpFrameConversion::VT_BATCH_SYNODIC_STATES, BATCH_SYNODIC_STATES);
+  }
+  void add_BATCH_INERTIAL_STATES(::flatbuffers::Offset<::flatbuffers::Vector<double>> BATCH_INERTIAL_STATES) {
+    fbb_.AddOffset(tbpFrameConversion::VT_BATCH_INERTIAL_STATES, BATCH_INERTIAL_STATES);
+  }
   explicit tbpFrameConversionBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1774,12 +2365,24 @@ inline ::flatbuffers::Offset<tbpFrameConversion> CreatetbpFrameConversion(
     int64_t REFERENCE_EPOCH_MS = 0,
     double ELAPSED_S = 0.0,
     ::flatbuffers::Offset<tbpState> SYNODIC = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<double>> INERTIAL = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> INERTIAL = 0,
+    uint8_t REFERENCE_PRIMARY = 0,
+    double JULIAN_DATE = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> LLA_DEG_KM = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> ORBITAL_ELEMENTS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> BATCH_SYNODIC_STATES = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> BATCH_INERTIAL_STATES = 0) {
   tbpFrameConversionBuilder builder_(_fbb);
+  builder_.add_JULIAN_DATE(JULIAN_DATE);
   builder_.add_ELAPSED_S(ELAPSED_S);
   builder_.add_REFERENCE_EPOCH_MS(REFERENCE_EPOCH_MS);
+  builder_.add_BATCH_INERTIAL_STATES(BATCH_INERTIAL_STATES);
+  builder_.add_BATCH_SYNODIC_STATES(BATCH_SYNODIC_STATES);
+  builder_.add_ORBITAL_ELEMENTS(ORBITAL_ELEMENTS);
+  builder_.add_LLA_DEG_KM(LLA_DEG_KM);
   builder_.add_INERTIAL(INERTIAL);
   builder_.add_SYNODIC(SYNODIC);
+  builder_.add_REFERENCE_PRIMARY(REFERENCE_PRIMARY);
   builder_.add_DIRECTION(DIRECTION);
   return builder_.Finish();
 }
@@ -1790,15 +2393,767 @@ inline ::flatbuffers::Offset<tbpFrameConversion> CreatetbpFrameConversionDirect(
     int64_t REFERENCE_EPOCH_MS = 0,
     double ELAPSED_S = 0.0,
     ::flatbuffers::Offset<tbpState> SYNODIC = 0,
-    const std::vector<double> *INERTIAL = nullptr) {
+    const std::vector<double> *INERTIAL = nullptr,
+    uint8_t REFERENCE_PRIMARY = 0,
+    double JULIAN_DATE = 0.0,
+    const std::vector<double> *LLA_DEG_KM = nullptr,
+    const std::vector<double> *ORBITAL_ELEMENTS = nullptr,
+    const std::vector<double> *BATCH_SYNODIC_STATES = nullptr,
+    const std::vector<double> *BATCH_INERTIAL_STATES = nullptr) {
   auto INERTIAL__ = INERTIAL ? _fbb.CreateVector<double>(*INERTIAL) : 0;
+  auto LLA_DEG_KM__ = LLA_DEG_KM ? _fbb.CreateVector<double>(*LLA_DEG_KM) : 0;
+  auto ORBITAL_ELEMENTS__ = ORBITAL_ELEMENTS ? _fbb.CreateVector<double>(*ORBITAL_ELEMENTS) : 0;
+  auto BATCH_SYNODIC_STATES__ = BATCH_SYNODIC_STATES ? _fbb.CreateVector<double>(*BATCH_SYNODIC_STATES) : 0;
+  auto BATCH_INERTIAL_STATES__ = BATCH_INERTIAL_STATES ? _fbb.CreateVector<double>(*BATCH_INERTIAL_STATES) : 0;
   return CreatetbpFrameConversion(
       _fbb,
       DIRECTION,
       REFERENCE_EPOCH_MS,
       ELAPSED_S,
       SYNODIC,
-      INERTIAL__);
+      INERTIAL__,
+      REFERENCE_PRIMARY,
+      JULIAN_DATE,
+      LLA_DEG_KM__,
+      ORBITAL_ELEMENTS__,
+      BATCH_SYNODIC_STATES__,
+      BATCH_INERTIAL_STATES__);
+}
+
+/// Request parameters for pseudo-arclength or natural-parameter continuation.
+struct tbpContinuationRequest FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef tbpContinuationRequestBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_SEED_ORBIT = 4,
+    VT_STEP_SIZE = 6,
+    VT_STEPS = 8,
+    VT_FIXED_PERIOD = 10,
+    VT_NULL_VECTOR = 12,
+    VT_TOLERANCE = 14,
+    VT_MAX_ITERATIONS = 16
+  };
+  /// Seed periodic orbit (INITIAL_STATE and PERIOD required).
+  const tbpPeriodicOrbit *SEED_ORBIT() const {
+    return GetPointer<const tbpPeriodicOrbit *>(VT_SEED_ORBIT);
+  }
+  /// Arclength step size ds (signed); 0 = natural-parameter fixed-period refinement.
+  double STEP_SIZE() const {
+    return GetField<double>(VT_STEP_SIZE, 0.0);
+  }
+  /// Number of continuation steps to generate; 0 = 1.
+  uint32_t STEPS() const {
+    return GetField<uint32_t>(VT_STEPS, 0);
+  }
+  /// True = fixed-period natural parameter continuation (cont_np); false = pseudo-arclength (cont).
+  bool FIXED_PERIOD() const {
+    return GetField<uint8_t>(VT_FIXED_PERIOD, 0) != 0;
+  }
+  /// Optional 7-element previous null-vector tangent for directional continuation.
+  const ::flatbuffers::Vector<double> *NULL_VECTOR() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_NULL_VECTOR);
+  }
+  /// Convergence tolerance on periodicity residual; 0 = default (1e-10).
+  double TOLERANCE() const {
+    return GetField<double>(VT_TOLERANCE, 0.0);
+  }
+  /// Maximum corrector iterations per step; 0 = default.
+  uint32_t MAX_ITERATIONS() const {
+    return GetField<uint32_t>(VT_MAX_ITERATIONS, 0);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_SEED_ORBIT) &&
+           verifier.VerifyTable(SEED_ORBIT()) &&
+           VerifyField<double>(verifier, VT_STEP_SIZE, 8) &&
+           VerifyField<uint32_t>(verifier, VT_STEPS, 4) &&
+           VerifyField<uint8_t>(verifier, VT_FIXED_PERIOD, 1) &&
+           VerifyOffset(verifier, VT_NULL_VECTOR) &&
+           verifier.VerifyVector(NULL_VECTOR()) &&
+           VerifyField<double>(verifier, VT_TOLERANCE, 8) &&
+           VerifyField<uint32_t>(verifier, VT_MAX_ITERATIONS, 4) &&
+           verifier.EndTable();
+  }
+};
+
+struct tbpContinuationRequestBuilder {
+  typedef tbpContinuationRequest Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_SEED_ORBIT(::flatbuffers::Offset<tbpPeriodicOrbit> SEED_ORBIT) {
+    fbb_.AddOffset(tbpContinuationRequest::VT_SEED_ORBIT, SEED_ORBIT);
+  }
+  void add_STEP_SIZE(double STEP_SIZE) {
+    fbb_.AddElement<double>(tbpContinuationRequest::VT_STEP_SIZE, STEP_SIZE, 0.0);
+  }
+  void add_STEPS(uint32_t STEPS) {
+    fbb_.AddElement<uint32_t>(tbpContinuationRequest::VT_STEPS, STEPS, 0);
+  }
+  void add_FIXED_PERIOD(bool FIXED_PERIOD) {
+    fbb_.AddElement<uint8_t>(tbpContinuationRequest::VT_FIXED_PERIOD, static_cast<uint8_t>(FIXED_PERIOD), 0);
+  }
+  void add_NULL_VECTOR(::flatbuffers::Offset<::flatbuffers::Vector<double>> NULL_VECTOR) {
+    fbb_.AddOffset(tbpContinuationRequest::VT_NULL_VECTOR, NULL_VECTOR);
+  }
+  void add_TOLERANCE(double TOLERANCE) {
+    fbb_.AddElement<double>(tbpContinuationRequest::VT_TOLERANCE, TOLERANCE, 0.0);
+  }
+  void add_MAX_ITERATIONS(uint32_t MAX_ITERATIONS) {
+    fbb_.AddElement<uint32_t>(tbpContinuationRequest::VT_MAX_ITERATIONS, MAX_ITERATIONS, 0);
+  }
+  explicit tbpContinuationRequestBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<tbpContinuationRequest> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<tbpContinuationRequest>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<tbpContinuationRequest> CreatetbpContinuationRequest(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<tbpPeriodicOrbit> SEED_ORBIT = 0,
+    double STEP_SIZE = 0.0,
+    uint32_t STEPS = 0,
+    bool FIXED_PERIOD = false,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> NULL_VECTOR = 0,
+    double TOLERANCE = 0.0,
+    uint32_t MAX_ITERATIONS = 0) {
+  tbpContinuationRequestBuilder builder_(_fbb);
+  builder_.add_TOLERANCE(TOLERANCE);
+  builder_.add_STEP_SIZE(STEP_SIZE);
+  builder_.add_MAX_ITERATIONS(MAX_ITERATIONS);
+  builder_.add_NULL_VECTOR(NULL_VECTOR);
+  builder_.add_STEPS(STEPS);
+  builder_.add_SEED_ORBIT(SEED_ORBIT);
+  builder_.add_FIXED_PERIOD(FIXED_PERIOD);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<tbpContinuationRequest> CreatetbpContinuationRequestDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<tbpPeriodicOrbit> SEED_ORBIT = 0,
+    double STEP_SIZE = 0.0,
+    uint32_t STEPS = 0,
+    bool FIXED_PERIOD = false,
+    const std::vector<double> *NULL_VECTOR = nullptr,
+    double TOLERANCE = 0.0,
+    uint32_t MAX_ITERATIONS = 0) {
+  auto NULL_VECTOR__ = NULL_VECTOR ? _fbb.CreateVector<double>(*NULL_VECTOR) : 0;
+  return CreatetbpContinuationRequest(
+      _fbb,
+      SEED_ORBIT,
+      STEP_SIZE,
+      STEPS,
+      FIXED_PERIOD,
+      NULL_VECTOR__,
+      TOLERANCE,
+      MAX_ITERATIONS);
+}
+
+/// One stable or unstable invariant manifold branch emanating from a periodic orbit.
+struct tbpManifoldBranch FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef tbpManifoldBranchBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_STABLE = 4,
+    VT_EXTERIOR = 6,
+    VT_SEED_INDEX = 8,
+    VT_INITIAL_STATE = 10,
+    VT_TRAJECTORY = 12
+  };
+  /// True = stable branch (integrated backward), false = unstable branch (forward).
+  bool STABLE() const {
+    return GetField<uint8_t>(VT_STABLE, 0) != 0;
+  }
+  /// True = exterior (+eigenvector), false = interior (-eigenvector).
+  bool EXTERIOR() const {
+    return GetField<uint8_t>(VT_EXTERIOR, 0) != 0;
+  }
+  /// Index of the seed point along the periodic orbit.
+  uint32_t SEED_INDEX() const {
+    return GetField<uint32_t>(VT_SEED_INDEX, 0);
+  }
+  /// Perturbed initial state on the manifold, non-dimensional.
+  const tbpState *INITIAL_STATE() const {
+    return GetPointer<const tbpState *>(VT_INITIAL_STATE);
+  }
+  /// Propagated manifold trajectory.
+  const tbpTrajectory *TRAJECTORY() const {
+    return GetPointer<const tbpTrajectory *>(VT_TRAJECTORY);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint8_t>(verifier, VT_STABLE, 1) &&
+           VerifyField<uint8_t>(verifier, VT_EXTERIOR, 1) &&
+           VerifyField<uint32_t>(verifier, VT_SEED_INDEX, 4) &&
+           VerifyOffset(verifier, VT_INITIAL_STATE) &&
+           verifier.VerifyTable(INITIAL_STATE()) &&
+           VerifyOffset(verifier, VT_TRAJECTORY) &&
+           verifier.VerifyTable(TRAJECTORY()) &&
+           verifier.EndTable();
+  }
+};
+
+struct tbpManifoldBranchBuilder {
+  typedef tbpManifoldBranch Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_STABLE(bool STABLE) {
+    fbb_.AddElement<uint8_t>(tbpManifoldBranch::VT_STABLE, static_cast<uint8_t>(STABLE), 0);
+  }
+  void add_EXTERIOR(bool EXTERIOR) {
+    fbb_.AddElement<uint8_t>(tbpManifoldBranch::VT_EXTERIOR, static_cast<uint8_t>(EXTERIOR), 0);
+  }
+  void add_SEED_INDEX(uint32_t SEED_INDEX) {
+    fbb_.AddElement<uint32_t>(tbpManifoldBranch::VT_SEED_INDEX, SEED_INDEX, 0);
+  }
+  void add_INITIAL_STATE(::flatbuffers::Offset<tbpState> INITIAL_STATE) {
+    fbb_.AddOffset(tbpManifoldBranch::VT_INITIAL_STATE, INITIAL_STATE);
+  }
+  void add_TRAJECTORY(::flatbuffers::Offset<tbpTrajectory> TRAJECTORY) {
+    fbb_.AddOffset(tbpManifoldBranch::VT_TRAJECTORY, TRAJECTORY);
+  }
+  explicit tbpManifoldBranchBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<tbpManifoldBranch> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<tbpManifoldBranch>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<tbpManifoldBranch> CreatetbpManifoldBranch(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    bool STABLE = false,
+    bool EXTERIOR = false,
+    uint32_t SEED_INDEX = 0,
+    ::flatbuffers::Offset<tbpState> INITIAL_STATE = 0,
+    ::flatbuffers::Offset<tbpTrajectory> TRAJECTORY = 0) {
+  tbpManifoldBranchBuilder builder_(_fbb);
+  builder_.add_TRAJECTORY(TRAJECTORY);
+  builder_.add_INITIAL_STATE(INITIAL_STATE);
+  builder_.add_SEED_INDEX(SEED_INDEX);
+  builder_.add_EXTERIOR(EXTERIOR);
+  builder_.add_STABLE(STABLE);
+  return builder_.Finish();
+}
+
+/// Invariant manifold request and computed branches for an unstable periodic orbit.
+struct tbpManifolds FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef tbpManifoldsBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_ORBIT = 4,
+    VT_PERTURBATION = 6,
+    VT_DURATION = 8,
+    VT_SAMPLE_POINTS = 10,
+    VT_BRANCH_KIND = 12,
+    VT_BRANCHES = 14
+  };
+  /// Periodic orbit to perturb (INITIAL_STATE and PERIOD required).
+  const tbpPeriodicOrbit *ORBIT() const {
+    return GetPointer<const tbpPeriodicOrbit *>(VT_ORBIT);
+  }
+  /// Perturbation distance epsilon (non-dimensional); 0 = default (1e-5).
+  double PERTURBATION() const {
+    return GetField<double>(VT_PERTURBATION, 0.0);
+  }
+  /// Propagation duration per branch, non-dimensional; 0 = one orbit period.
+  double DURATION() const {
+    return GetField<double>(VT_DURATION, 0.0);
+  }
+  /// Number of seed points along the periodic orbit; 0 = default (12).
+  uint32_t SAMPLE_POINTS() const {
+    return GetField<uint32_t>(VT_SAMPLE_POINTS, 0);
+  }
+  /// Which manifold branches to generate.
+  tbpManifoldBranchKind BRANCH_KIND() const {
+    return static_cast<tbpManifoldBranchKind>(GetField<uint8_t>(VT_BRANCH_KIND, 0));
+  }
+  /// Computed manifold branches.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<tbpManifoldBranch>> *BRANCHES() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<tbpManifoldBranch>> *>(VT_BRANCHES);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_ORBIT) &&
+           verifier.VerifyTable(ORBIT()) &&
+           VerifyField<double>(verifier, VT_PERTURBATION, 8) &&
+           VerifyField<double>(verifier, VT_DURATION, 8) &&
+           VerifyField<uint32_t>(verifier, VT_SAMPLE_POINTS, 4) &&
+           VerifyField<uint8_t>(verifier, VT_BRANCH_KIND, 1) &&
+           VerifyOffset(verifier, VT_BRANCHES) &&
+           verifier.VerifyVector(BRANCHES()) &&
+           verifier.VerifyVectorOfTables(BRANCHES()) &&
+           verifier.EndTable();
+  }
+};
+
+struct tbpManifoldsBuilder {
+  typedef tbpManifolds Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_ORBIT(::flatbuffers::Offset<tbpPeriodicOrbit> ORBIT) {
+    fbb_.AddOffset(tbpManifolds::VT_ORBIT, ORBIT);
+  }
+  void add_PERTURBATION(double PERTURBATION) {
+    fbb_.AddElement<double>(tbpManifolds::VT_PERTURBATION, PERTURBATION, 0.0);
+  }
+  void add_DURATION(double DURATION) {
+    fbb_.AddElement<double>(tbpManifolds::VT_DURATION, DURATION, 0.0);
+  }
+  void add_SAMPLE_POINTS(uint32_t SAMPLE_POINTS) {
+    fbb_.AddElement<uint32_t>(tbpManifolds::VT_SAMPLE_POINTS, SAMPLE_POINTS, 0);
+  }
+  void add_BRANCH_KIND(tbpManifoldBranchKind BRANCH_KIND) {
+    fbb_.AddElement<uint8_t>(tbpManifolds::VT_BRANCH_KIND, static_cast<uint8_t>(BRANCH_KIND), 0);
+  }
+  void add_BRANCHES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<tbpManifoldBranch>>> BRANCHES) {
+    fbb_.AddOffset(tbpManifolds::VT_BRANCHES, BRANCHES);
+  }
+  explicit tbpManifoldsBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<tbpManifolds> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<tbpManifolds>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<tbpManifolds> CreatetbpManifolds(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<tbpPeriodicOrbit> ORBIT = 0,
+    double PERTURBATION = 0.0,
+    double DURATION = 0.0,
+    uint32_t SAMPLE_POINTS = 0,
+    tbpManifoldBranchKind BRANCH_KIND = tbpManifoldBranchKind_Both,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<tbpManifoldBranch>>> BRANCHES = 0) {
+  tbpManifoldsBuilder builder_(_fbb);
+  builder_.add_DURATION(DURATION);
+  builder_.add_PERTURBATION(PERTURBATION);
+  builder_.add_BRANCHES(BRANCHES);
+  builder_.add_SAMPLE_POINTS(SAMPLE_POINTS);
+  builder_.add_ORBIT(ORBIT);
+  builder_.add_BRANCH_KIND(BRANCH_KIND);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<tbpManifolds> CreatetbpManifoldsDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<tbpPeriodicOrbit> ORBIT = 0,
+    double PERTURBATION = 0.0,
+    double DURATION = 0.0,
+    uint32_t SAMPLE_POINTS = 0,
+    tbpManifoldBranchKind BRANCH_KIND = tbpManifoldBranchKind_Both,
+    const std::vector<::flatbuffers::Offset<tbpManifoldBranch>> *BRANCHES = nullptr) {
+  auto BRANCHES__ = BRANCHES ? _fbb.CreateVector<::flatbuffers::Offset<tbpManifoldBranch>>(*BRANCHES) : 0;
+  return CreatetbpManifolds(
+      _fbb,
+      ORBIT,
+      PERTURBATION,
+      DURATION,
+      SAMPLE_POINTS,
+      BRANCH_KIND,
+      BRANCHES__);
+}
+
+/// Multi-spacecraft time-phased CR3BP constellation along a periodic orbit.
+struct tbpConstellation FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef tbpConstellationBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_ORBIT = 4,
+    VT_SATELLITE_COUNT = 6,
+    VT_REVOLUTIONS = 8,
+    VT_PHASE_OFFSETS = 10,
+    VT_OUTPUT_POINTS = 12,
+    VT_TRAJECTORIES = 14
+  };
+  /// Generating periodic orbit (FAMILY + PETALS + PERIOD or explicit INITIAL_STATE).
+  const tbpPeriodicOrbit *ORBIT() const {
+    return GetPointer<const tbpPeriodicOrbit *>(VT_ORBIT);
+  }
+  /// Number of spacecraft in the constellation.
+  uint32_t SATELLITE_COUNT() const {
+    return GetField<uint32_t>(VT_SATELLITE_COUNT, 0);
+  }
+  /// Number of orbit revolutions to propagate; 0 = 1.
+  uint32_t REVOLUTIONS() const {
+    return GetField<uint32_t>(VT_REVOLUTIONS, 0);
+  }
+  /// Non-dimensional phase offsets (length SATELLITE_COUNT); empty = evenly spaced.
+  const ::flatbuffers::Vector<double> *PHASE_OFFSETS() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_PHASE_OFFSETS);
+  }
+  /// Uniform time samples per spacecraft trajectory; 0 = default.
+  uint32_t OUTPUT_POINTS() const {
+    return GetField<uint32_t>(VT_OUTPUT_POINTS, 0);
+  }
+  /// Result: propagated trajectory for each spacecraft in the constellation.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<tbpTrajectory>> *TRAJECTORIES() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<tbpTrajectory>> *>(VT_TRAJECTORIES);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_ORBIT) &&
+           verifier.VerifyTable(ORBIT()) &&
+           VerifyField<uint32_t>(verifier, VT_SATELLITE_COUNT, 4) &&
+           VerifyField<uint32_t>(verifier, VT_REVOLUTIONS, 4) &&
+           VerifyOffset(verifier, VT_PHASE_OFFSETS) &&
+           verifier.VerifyVector(PHASE_OFFSETS()) &&
+           VerifyField<uint32_t>(verifier, VT_OUTPUT_POINTS, 4) &&
+           VerifyOffset(verifier, VT_TRAJECTORIES) &&
+           verifier.VerifyVector(TRAJECTORIES()) &&
+           verifier.VerifyVectorOfTables(TRAJECTORIES()) &&
+           verifier.EndTable();
+  }
+};
+
+struct tbpConstellationBuilder {
+  typedef tbpConstellation Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_ORBIT(::flatbuffers::Offset<tbpPeriodicOrbit> ORBIT) {
+    fbb_.AddOffset(tbpConstellation::VT_ORBIT, ORBIT);
+  }
+  void add_SATELLITE_COUNT(uint32_t SATELLITE_COUNT) {
+    fbb_.AddElement<uint32_t>(tbpConstellation::VT_SATELLITE_COUNT, SATELLITE_COUNT, 0);
+  }
+  void add_REVOLUTIONS(uint32_t REVOLUTIONS) {
+    fbb_.AddElement<uint32_t>(tbpConstellation::VT_REVOLUTIONS, REVOLUTIONS, 0);
+  }
+  void add_PHASE_OFFSETS(::flatbuffers::Offset<::flatbuffers::Vector<double>> PHASE_OFFSETS) {
+    fbb_.AddOffset(tbpConstellation::VT_PHASE_OFFSETS, PHASE_OFFSETS);
+  }
+  void add_OUTPUT_POINTS(uint32_t OUTPUT_POINTS) {
+    fbb_.AddElement<uint32_t>(tbpConstellation::VT_OUTPUT_POINTS, OUTPUT_POINTS, 0);
+  }
+  void add_TRAJECTORIES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<tbpTrajectory>>> TRAJECTORIES) {
+    fbb_.AddOffset(tbpConstellation::VT_TRAJECTORIES, TRAJECTORIES);
+  }
+  explicit tbpConstellationBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<tbpConstellation> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<tbpConstellation>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<tbpConstellation> CreatetbpConstellation(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<tbpPeriodicOrbit> ORBIT = 0,
+    uint32_t SATELLITE_COUNT = 0,
+    uint32_t REVOLUTIONS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> PHASE_OFFSETS = 0,
+    uint32_t OUTPUT_POINTS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<tbpTrajectory>>> TRAJECTORIES = 0) {
+  tbpConstellationBuilder builder_(_fbb);
+  builder_.add_TRAJECTORIES(TRAJECTORIES);
+  builder_.add_OUTPUT_POINTS(OUTPUT_POINTS);
+  builder_.add_PHASE_OFFSETS(PHASE_OFFSETS);
+  builder_.add_REVOLUTIONS(REVOLUTIONS);
+  builder_.add_SATELLITE_COUNT(SATELLITE_COUNT);
+  builder_.add_ORBIT(ORBIT);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<tbpConstellation> CreatetbpConstellationDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<tbpPeriodicOrbit> ORBIT = 0,
+    uint32_t SATELLITE_COUNT = 0,
+    uint32_t REVOLUTIONS = 0,
+    const std::vector<double> *PHASE_OFFSETS = nullptr,
+    uint32_t OUTPUT_POINTS = 0,
+    const std::vector<::flatbuffers::Offset<tbpTrajectory>> *TRAJECTORIES = nullptr) {
+  auto PHASE_OFFSETS__ = PHASE_OFFSETS ? _fbb.CreateVector<double>(*PHASE_OFFSETS) : 0;
+  auto TRAJECTORIES__ = TRAJECTORIES ? _fbb.CreateVector<::flatbuffers::Offset<tbpTrajectory>>(*TRAJECTORIES) : 0;
+  return CreatetbpConstellation(
+      _fbb,
+      ORBIT,
+      SATELLITE_COUNT,
+      REVOLUTIONS,
+      PHASE_OFFSETS__,
+      OUTPUT_POINTS,
+      TRAJECTORIES__);
+}
+
+/// Surface coverage gap, elevation angle, occultation, and DOP analysis on a primary body.
+struct tbpSurfaceAnalysis FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef tbpSurfaceAnalysisBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_REFERENCE_PRIMARY = 4,
+    VT_PRIMARY_RADIUS_KM = 6,
+    VT_MIN_ELEVATION_DEG = 8,
+    VT_MIN_SATELLITES = 10,
+    VT_SURFACE_POINTS_SYNODIC = 12,
+    VT_SURFACE_LAT_LON_DEG = 14,
+    VT_GRID_POINT_COUNT = 16,
+    VT_SAMPLE_TIMES = 18,
+    VT_MAX_GAP_S = 20,
+    VT_GDOP = 22,
+    VT_PDOP = 24,
+    VT_TDOP = 26,
+    VT_ELEVATION_DEG = 28,
+    VT_OCCULTATION_START_S = 30,
+    VT_OCCULTATION_END_S = 32,
+    VT_OCCULTING_PRIMARY = 34
+  };
+  /// Target primary body: 0 or 2 = smaller primary (Moon), 1 = larger primary (Earth).
+  uint8_t REFERENCE_PRIMARY() const {
+    return GetField<uint8_t>(VT_REFERENCE_PRIMARY, 0);
+  }
+  /// Radius of target primary body, km; 0 = default body radius.
+  double PRIMARY_RADIUS_KM() const {
+    return GetField<double>(VT_PRIMARY_RADIUS_KM, 0.0);
+  }
+  /// Minimum elevation mask angle above local horizon, deg; 0 = horizon (0 deg).
+  double MIN_ELEVATION_DEG() const {
+    return GetField<double>(VT_MIN_ELEVATION_DEG, 0.0);
+  }
+  /// Minimum simultaneous satellites in view for coverage; 0 = 1.
+  uint32_t MIN_SATELLITES() const {
+    return GetField<uint32_t>(VT_MIN_SATELLITES, 0);
+  }
+  /// Surface observer positions in synodic frame (P * 3 non-dimensional values); empty = auto Fibonacci sphere.
+  const ::flatbuffers::Vector<double> *SURFACE_POINTS_SYNODIC() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_SURFACE_POINTS_SYNODIC);
+  }
+  /// Surface observer lat/lon pairs [lat0, lon0, ...] in deg (P * 2 values).
+  const ::flatbuffers::Vector<double> *SURFACE_LAT_LON_DEG() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_SURFACE_LAT_LON_DEG);
+  }
+  /// Number of Fibonacci surface grid points when SURFACE_POINTS_SYNODIC is empty; 0 = default.
+  uint32_t GRID_POINT_COUNT() const {
+    return GetField<uint32_t>(VT_GRID_POINT_COUNT, 0);
+  }
+  /// Result: non-dimensional sample times (T values).
+  const ::flatbuffers::Vector<double> *SAMPLE_TIMES() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_SAMPLE_TIMES);
+  }
+  /// Result: maximum uncovered gap duration per surface point, s (P values).
+  const ::flatbuffers::Vector<double> *MAX_GAP_S() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_MAX_GAP_S);
+  }
+  /// Result: geometric dilution of precision (T * P values, NaN/0 when <4 sats visible).
+  const ::flatbuffers::Vector<double> *GDOP() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_GDOP);
+  }
+  /// Result: position dilution of precision (T * P values).
+  const ::flatbuffers::Vector<double> *PDOP() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_PDOP);
+  }
+  /// Result: time dilution of precision (T * P values).
+  const ::flatbuffers::Vector<double> *TDOP() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_TDOP);
+  }
+  /// Result: maximum elevation angle per sample and surface point, deg (T * P values).
+  const ::flatbuffers::Vector<double> *ELEVATION_DEG() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_ELEVATION_DEG);
+  }
+  /// Result: occultation interval start times, s (M values).
+  const ::flatbuffers::Vector<double> *OCCULTATION_START_S() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_OCCULTATION_START_S);
+  }
+  /// Result: occultation interval end times, s (M values).
+  const ::flatbuffers::Vector<double> *OCCULTATION_END_S() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_OCCULTATION_END_S);
+  }
+  /// Result: occulting body index per interval (1 = P1, 2 = P2; M values).
+  const ::flatbuffers::Vector<uint8_t> *OCCULTING_PRIMARY() const {
+    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_OCCULTING_PRIMARY);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint8_t>(verifier, VT_REFERENCE_PRIMARY, 1) &&
+           VerifyField<double>(verifier, VT_PRIMARY_RADIUS_KM, 8) &&
+           VerifyField<double>(verifier, VT_MIN_ELEVATION_DEG, 8) &&
+           VerifyField<uint32_t>(verifier, VT_MIN_SATELLITES, 4) &&
+           VerifyOffset(verifier, VT_SURFACE_POINTS_SYNODIC) &&
+           verifier.VerifyVector(SURFACE_POINTS_SYNODIC()) &&
+           VerifyOffset(verifier, VT_SURFACE_LAT_LON_DEG) &&
+           verifier.VerifyVector(SURFACE_LAT_LON_DEG()) &&
+           VerifyField<uint32_t>(verifier, VT_GRID_POINT_COUNT, 4) &&
+           VerifyOffset(verifier, VT_SAMPLE_TIMES) &&
+           verifier.VerifyVector(SAMPLE_TIMES()) &&
+           VerifyOffset(verifier, VT_MAX_GAP_S) &&
+           verifier.VerifyVector(MAX_GAP_S()) &&
+           VerifyOffset(verifier, VT_GDOP) &&
+           verifier.VerifyVector(GDOP()) &&
+           VerifyOffset(verifier, VT_PDOP) &&
+           verifier.VerifyVector(PDOP()) &&
+           VerifyOffset(verifier, VT_TDOP) &&
+           verifier.VerifyVector(TDOP()) &&
+           VerifyOffset(verifier, VT_ELEVATION_DEG) &&
+           verifier.VerifyVector(ELEVATION_DEG()) &&
+           VerifyOffset(verifier, VT_OCCULTATION_START_S) &&
+           verifier.VerifyVector(OCCULTATION_START_S()) &&
+           VerifyOffset(verifier, VT_OCCULTATION_END_S) &&
+           verifier.VerifyVector(OCCULTATION_END_S()) &&
+           VerifyOffset(verifier, VT_OCCULTING_PRIMARY) &&
+           verifier.VerifyVector(OCCULTING_PRIMARY()) &&
+           verifier.EndTable();
+  }
+};
+
+struct tbpSurfaceAnalysisBuilder {
+  typedef tbpSurfaceAnalysis Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_REFERENCE_PRIMARY(uint8_t REFERENCE_PRIMARY) {
+    fbb_.AddElement<uint8_t>(tbpSurfaceAnalysis::VT_REFERENCE_PRIMARY, REFERENCE_PRIMARY, 0);
+  }
+  void add_PRIMARY_RADIUS_KM(double PRIMARY_RADIUS_KM) {
+    fbb_.AddElement<double>(tbpSurfaceAnalysis::VT_PRIMARY_RADIUS_KM, PRIMARY_RADIUS_KM, 0.0);
+  }
+  void add_MIN_ELEVATION_DEG(double MIN_ELEVATION_DEG) {
+    fbb_.AddElement<double>(tbpSurfaceAnalysis::VT_MIN_ELEVATION_DEG, MIN_ELEVATION_DEG, 0.0);
+  }
+  void add_MIN_SATELLITES(uint32_t MIN_SATELLITES) {
+    fbb_.AddElement<uint32_t>(tbpSurfaceAnalysis::VT_MIN_SATELLITES, MIN_SATELLITES, 0);
+  }
+  void add_SURFACE_POINTS_SYNODIC(::flatbuffers::Offset<::flatbuffers::Vector<double>> SURFACE_POINTS_SYNODIC) {
+    fbb_.AddOffset(tbpSurfaceAnalysis::VT_SURFACE_POINTS_SYNODIC, SURFACE_POINTS_SYNODIC);
+  }
+  void add_SURFACE_LAT_LON_DEG(::flatbuffers::Offset<::flatbuffers::Vector<double>> SURFACE_LAT_LON_DEG) {
+    fbb_.AddOffset(tbpSurfaceAnalysis::VT_SURFACE_LAT_LON_DEG, SURFACE_LAT_LON_DEG);
+  }
+  void add_GRID_POINT_COUNT(uint32_t GRID_POINT_COUNT) {
+    fbb_.AddElement<uint32_t>(tbpSurfaceAnalysis::VT_GRID_POINT_COUNT, GRID_POINT_COUNT, 0);
+  }
+  void add_SAMPLE_TIMES(::flatbuffers::Offset<::flatbuffers::Vector<double>> SAMPLE_TIMES) {
+    fbb_.AddOffset(tbpSurfaceAnalysis::VT_SAMPLE_TIMES, SAMPLE_TIMES);
+  }
+  void add_MAX_GAP_S(::flatbuffers::Offset<::flatbuffers::Vector<double>> MAX_GAP_S) {
+    fbb_.AddOffset(tbpSurfaceAnalysis::VT_MAX_GAP_S, MAX_GAP_S);
+  }
+  void add_GDOP(::flatbuffers::Offset<::flatbuffers::Vector<double>> GDOP) {
+    fbb_.AddOffset(tbpSurfaceAnalysis::VT_GDOP, GDOP);
+  }
+  void add_PDOP(::flatbuffers::Offset<::flatbuffers::Vector<double>> PDOP) {
+    fbb_.AddOffset(tbpSurfaceAnalysis::VT_PDOP, PDOP);
+  }
+  void add_TDOP(::flatbuffers::Offset<::flatbuffers::Vector<double>> TDOP) {
+    fbb_.AddOffset(tbpSurfaceAnalysis::VT_TDOP, TDOP);
+  }
+  void add_ELEVATION_DEG(::flatbuffers::Offset<::flatbuffers::Vector<double>> ELEVATION_DEG) {
+    fbb_.AddOffset(tbpSurfaceAnalysis::VT_ELEVATION_DEG, ELEVATION_DEG);
+  }
+  void add_OCCULTATION_START_S(::flatbuffers::Offset<::flatbuffers::Vector<double>> OCCULTATION_START_S) {
+    fbb_.AddOffset(tbpSurfaceAnalysis::VT_OCCULTATION_START_S, OCCULTATION_START_S);
+  }
+  void add_OCCULTATION_END_S(::flatbuffers::Offset<::flatbuffers::Vector<double>> OCCULTATION_END_S) {
+    fbb_.AddOffset(tbpSurfaceAnalysis::VT_OCCULTATION_END_S, OCCULTATION_END_S);
+  }
+  void add_OCCULTING_PRIMARY(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> OCCULTING_PRIMARY) {
+    fbb_.AddOffset(tbpSurfaceAnalysis::VT_OCCULTING_PRIMARY, OCCULTING_PRIMARY);
+  }
+  explicit tbpSurfaceAnalysisBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<tbpSurfaceAnalysis> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<tbpSurfaceAnalysis>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<tbpSurfaceAnalysis> CreatetbpSurfaceAnalysis(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    uint8_t REFERENCE_PRIMARY = 0,
+    double PRIMARY_RADIUS_KM = 0.0,
+    double MIN_ELEVATION_DEG = 0.0,
+    uint32_t MIN_SATELLITES = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> SURFACE_POINTS_SYNODIC = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> SURFACE_LAT_LON_DEG = 0,
+    uint32_t GRID_POINT_COUNT = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> SAMPLE_TIMES = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> MAX_GAP_S = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> GDOP = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> PDOP = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> TDOP = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> ELEVATION_DEG = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> OCCULTATION_START_S = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> OCCULTATION_END_S = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> OCCULTING_PRIMARY = 0) {
+  tbpSurfaceAnalysisBuilder builder_(_fbb);
+  builder_.add_MIN_ELEVATION_DEG(MIN_ELEVATION_DEG);
+  builder_.add_PRIMARY_RADIUS_KM(PRIMARY_RADIUS_KM);
+  builder_.add_OCCULTING_PRIMARY(OCCULTING_PRIMARY);
+  builder_.add_OCCULTATION_END_S(OCCULTATION_END_S);
+  builder_.add_OCCULTATION_START_S(OCCULTATION_START_S);
+  builder_.add_ELEVATION_DEG(ELEVATION_DEG);
+  builder_.add_TDOP(TDOP);
+  builder_.add_PDOP(PDOP);
+  builder_.add_GDOP(GDOP);
+  builder_.add_MAX_GAP_S(MAX_GAP_S);
+  builder_.add_SAMPLE_TIMES(SAMPLE_TIMES);
+  builder_.add_GRID_POINT_COUNT(GRID_POINT_COUNT);
+  builder_.add_SURFACE_LAT_LON_DEG(SURFACE_LAT_LON_DEG);
+  builder_.add_SURFACE_POINTS_SYNODIC(SURFACE_POINTS_SYNODIC);
+  builder_.add_MIN_SATELLITES(MIN_SATELLITES);
+  builder_.add_REFERENCE_PRIMARY(REFERENCE_PRIMARY);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<tbpSurfaceAnalysis> CreatetbpSurfaceAnalysisDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    uint8_t REFERENCE_PRIMARY = 0,
+    double PRIMARY_RADIUS_KM = 0.0,
+    double MIN_ELEVATION_DEG = 0.0,
+    uint32_t MIN_SATELLITES = 0,
+    const std::vector<double> *SURFACE_POINTS_SYNODIC = nullptr,
+    const std::vector<double> *SURFACE_LAT_LON_DEG = nullptr,
+    uint32_t GRID_POINT_COUNT = 0,
+    const std::vector<double> *SAMPLE_TIMES = nullptr,
+    const std::vector<double> *MAX_GAP_S = nullptr,
+    const std::vector<double> *GDOP = nullptr,
+    const std::vector<double> *PDOP = nullptr,
+    const std::vector<double> *TDOP = nullptr,
+    const std::vector<double> *ELEVATION_DEG = nullptr,
+    const std::vector<double> *OCCULTATION_START_S = nullptr,
+    const std::vector<double> *OCCULTATION_END_S = nullptr,
+    const std::vector<uint8_t> *OCCULTING_PRIMARY = nullptr) {
+  auto SURFACE_POINTS_SYNODIC__ = SURFACE_POINTS_SYNODIC ? _fbb.CreateVector<double>(*SURFACE_POINTS_SYNODIC) : 0;
+  auto SURFACE_LAT_LON_DEG__ = SURFACE_LAT_LON_DEG ? _fbb.CreateVector<double>(*SURFACE_LAT_LON_DEG) : 0;
+  auto SAMPLE_TIMES__ = SAMPLE_TIMES ? _fbb.CreateVector<double>(*SAMPLE_TIMES) : 0;
+  auto MAX_GAP_S__ = MAX_GAP_S ? _fbb.CreateVector<double>(*MAX_GAP_S) : 0;
+  auto GDOP__ = GDOP ? _fbb.CreateVector<double>(*GDOP) : 0;
+  auto PDOP__ = PDOP ? _fbb.CreateVector<double>(*PDOP) : 0;
+  auto TDOP__ = TDOP ? _fbb.CreateVector<double>(*TDOP) : 0;
+  auto ELEVATION_DEG__ = ELEVATION_DEG ? _fbb.CreateVector<double>(*ELEVATION_DEG) : 0;
+  auto OCCULTATION_START_S__ = OCCULTATION_START_S ? _fbb.CreateVector<double>(*OCCULTATION_START_S) : 0;
+  auto OCCULTATION_END_S__ = OCCULTATION_END_S ? _fbb.CreateVector<double>(*OCCULTATION_END_S) : 0;
+  auto OCCULTING_PRIMARY__ = OCCULTING_PRIMARY ? _fbb.CreateVector<uint8_t>(*OCCULTING_PRIMARY) : 0;
+  return CreatetbpSurfaceAnalysis(
+      _fbb,
+      REFERENCE_PRIMARY,
+      PRIMARY_RADIUS_KM,
+      MIN_ELEVATION_DEG,
+      MIN_SATELLITES,
+      SURFACE_POINTS_SYNODIC__,
+      SURFACE_LAT_LON_DEG__,
+      GRID_POINT_COUNT,
+      SAMPLE_TIMES__,
+      MAX_GAP_S__,
+      GDOP__,
+      PDOP__,
+      TDOP__,
+      ELEVATION_DEG__,
+      OCCULTATION_START_S__,
+      OCCULTATION_END_S__,
+      OCCULTING_PRIMARY__);
 }
 
 /// Three-Body Problem - a CR3BP system and one answer about it.
@@ -1821,7 +3176,11 @@ struct TBP FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_ORBITS = 30,
     VT_TRANSFER = 32,
     VT_STATION_KEEPING = 34,
-    VT_FRAME_CONVERSION = 36
+    VT_FRAME_CONVERSION = 36,
+    VT_CONTINUATION = 38,
+    VT_MANIFOLDS = 40,
+    VT_CONSTELLATION = 42,
+    VT_SURFACE_ANALYSIS = 44
   };
   /// Identifier of the record; empty = not assigned.
   const ::flatbuffers::String *ID() const {
@@ -1869,10 +3228,10 @@ struct TBP FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double JACOBI() const {
     return GetField<double>(VT_JACOBI, 0.0);
   }
-  /// PeriodicOrbit, HaloFirstGuess, NearRectilinearHalo: the request fields
-  /// (FAMILY, LIBRATION_POINT, AMPLITUDE or perilune/apolune, TOLERANCE,
-  /// MAX_ITERATIONS) and the result. Family: the members, ordered along the
-  /// family's continuation parameter (AMPLITUDE).
+  /// PeriodicOrbit, HaloFirstGuess, NearRectilinearHalo, OrbitProperties: the
+  /// request fields (FAMILY, LIBRATION_POINT, AMPLITUDE, PETALS, or
+  /// perilune/apolune, TOLERANCE, MAX_ITERATIONS) and the result. Family and
+  /// Continuation: the members ordered along the continuation parameter.
   const ::flatbuffers::Vector<::flatbuffers::Offset<tbpPeriodicOrbit>> *ORBITS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<tbpPeriodicOrbit>> *>(VT_ORBITS);
   }
@@ -1884,6 +3243,22 @@ struct TBP FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
   const tbpFrameConversion *FRAME_CONVERSION() const {
     return GetPointer<const tbpFrameConversion *>(VT_FRAME_CONVERSION);
+  }
+  /// Continuation: pseudo-arclength or natural-parameter continuation request.
+  const tbpContinuationRequest *CONTINUATION() const {
+    return GetPointer<const tbpContinuationRequest *>(VT_CONTINUATION);
+  }
+  /// Manifolds: invariant stable/unstable manifold request and branches.
+  const tbpManifolds *MANIFOLDS() const {
+    return GetPointer<const tbpManifolds *>(VT_MANIFOLDS);
+  }
+  /// Constellation: time-phased multi-spacecraft CR3BP constellation.
+  const tbpConstellation *CONSTELLATION() const {
+    return GetPointer<const tbpConstellation *>(VT_CONSTELLATION);
+  }
+  /// SurfaceAnalysis: surface coverage gaps, elevation, occultations, and DOP.
+  const tbpSurfaceAnalysis *SURFACE_ANALYSIS() const {
+    return GetPointer<const tbpSurfaceAnalysis *>(VT_SURFACE_ANALYSIS);
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
@@ -1920,6 +3295,14 @@ struct TBP FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyTable(STATION_KEEPING()) &&
            VerifyOffset(verifier, VT_FRAME_CONVERSION) &&
            verifier.VerifyTable(FRAME_CONVERSION()) &&
+           VerifyOffset(verifier, VT_CONTINUATION) &&
+           verifier.VerifyTable(CONTINUATION()) &&
+           VerifyOffset(verifier, VT_MANIFOLDS) &&
+           verifier.VerifyTable(MANIFOLDS()) &&
+           VerifyOffset(verifier, VT_CONSTELLATION) &&
+           verifier.VerifyTable(CONSTELLATION()) &&
+           VerifyOffset(verifier, VT_SURFACE_ANALYSIS) &&
+           verifier.VerifyTable(SURFACE_ANALYSIS()) &&
            verifier.EndTable();
   }
 };
@@ -1979,6 +3362,18 @@ struct TBPBuilder {
   void add_FRAME_CONVERSION(::flatbuffers::Offset<tbpFrameConversion> FRAME_CONVERSION) {
     fbb_.AddOffset(TBP::VT_FRAME_CONVERSION, FRAME_CONVERSION);
   }
+  void add_CONTINUATION(::flatbuffers::Offset<tbpContinuationRequest> CONTINUATION) {
+    fbb_.AddOffset(TBP::VT_CONTINUATION, CONTINUATION);
+  }
+  void add_MANIFOLDS(::flatbuffers::Offset<tbpManifolds> MANIFOLDS) {
+    fbb_.AddOffset(TBP::VT_MANIFOLDS, MANIFOLDS);
+  }
+  void add_CONSTELLATION(::flatbuffers::Offset<tbpConstellation> CONSTELLATION) {
+    fbb_.AddOffset(TBP::VT_CONSTELLATION, CONSTELLATION);
+  }
+  void add_SURFACE_ANALYSIS(::flatbuffers::Offset<tbpSurfaceAnalysis> SURFACE_ANALYSIS) {
+    fbb_.AddOffset(TBP::VT_SURFACE_ANALYSIS, SURFACE_ANALYSIS);
+  }
   explicit TBPBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -2008,10 +3403,18 @@ inline ::flatbuffers::Offset<TBP> CreateTBP(
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<tbpPeriodicOrbit>>> ORBITS = 0,
     ::flatbuffers::Offset<tbpTransfer> TRANSFER = 0,
     ::flatbuffers::Offset<tbpStationKeeping> STATION_KEEPING = 0,
-    ::flatbuffers::Offset<tbpFrameConversion> FRAME_CONVERSION = 0) {
+    ::flatbuffers::Offset<tbpFrameConversion> FRAME_CONVERSION = 0,
+    ::flatbuffers::Offset<tbpContinuationRequest> CONTINUATION = 0,
+    ::flatbuffers::Offset<tbpManifolds> MANIFOLDS = 0,
+    ::flatbuffers::Offset<tbpConstellation> CONSTELLATION = 0,
+    ::flatbuffers::Offset<tbpSurfaceAnalysis> SURFACE_ANALYSIS = 0) {
   TBPBuilder builder_(_fbb);
   builder_.add_JACOBI(JACOBI);
   builder_.add_CREATED_AT_MS(CREATED_AT_MS);
+  builder_.add_SURFACE_ANALYSIS(SURFACE_ANALYSIS);
+  builder_.add_CONSTELLATION(CONSTELLATION);
+  builder_.add_MANIFOLDS(MANIFOLDS);
+  builder_.add_CONTINUATION(CONTINUATION);
   builder_.add_FRAME_CONVERSION(FRAME_CONVERSION);
   builder_.add_STATION_KEEPING(STATION_KEEPING);
   builder_.add_TRANSFER(TRANSFER);
@@ -2048,7 +3451,11 @@ inline ::flatbuffers::Offset<TBP> CreateTBPDirect(
     const std::vector<::flatbuffers::Offset<tbpPeriodicOrbit>> *ORBITS = nullptr,
     ::flatbuffers::Offset<tbpTransfer> TRANSFER = 0,
     ::flatbuffers::Offset<tbpStationKeeping> STATION_KEEPING = 0,
-    ::flatbuffers::Offset<tbpFrameConversion> FRAME_CONVERSION = 0) {
+    ::flatbuffers::Offset<tbpFrameConversion> FRAME_CONVERSION = 0,
+    ::flatbuffers::Offset<tbpContinuationRequest> CONTINUATION = 0,
+    ::flatbuffers::Offset<tbpManifolds> MANIFOLDS = 0,
+    ::flatbuffers::Offset<tbpConstellation> CONSTELLATION = 0,
+    ::flatbuffers::Offset<tbpSurfaceAnalysis> SURFACE_ANALYSIS = 0) {
   auto ID__ = ID ? _fbb.CreateString(ID) : 0;
   auto PRODUCER__ = PRODUCER ? _fbb.CreateString(PRODUCER) : 0;
   auto ERROR_CODE__ = ERROR_CODE ? _fbb.CreateString(ERROR_CODE) : 0;
@@ -2073,7 +3480,11 @@ inline ::flatbuffers::Offset<TBP> CreateTBPDirect(
       ORBITS__,
       TRANSFER,
       STATION_KEEPING,
-      FRAME_CONVERSION);
+      FRAME_CONVERSION,
+      CONTINUATION,
+      MANIFOLDS,
+      CONSTELLATION,
+      SURFACE_ANALYSIS);
 }
 
 inline const TBP *GetTBP(const void *buf) {

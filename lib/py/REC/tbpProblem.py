@@ -54,3 +54,13 @@ class tbpProblem(object):
     FrameConversion = 9
     # Members of a periodic-orbit family.
     Family = 10
+    # Pseudo-arclength or natural-parameter continuation from a seed orbit.
+    Continuation = 11
+    # Stable and unstable invariant manifolds of an unstable periodic orbit.
+    Manifolds = 12
+    # Diagnostic properties of a periodic orbit (apsides, stability, occultations).
+    OrbitProperties = 13
+    # Time-phased multi-spacecraft constellation along a periodic CR3BP orbit.
+    Constellation = 14
+    # Primary-body surface coverage gaps, elevation, occultations, and DOP.
+    SurfaceAnalysis = 15

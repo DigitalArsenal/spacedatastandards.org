@@ -11,11 +11,14 @@ class tbpStationKeepingStrategy
     const TargetPoint = 1;
     /// Suppress the unstable Floquet mode.
     const FloquetMode = 2;
+    /// Linear stability lower/upper annual delta-v bounds across intervals.
+    const LinearStabilityBounds = 3;
 
     private static $names = array(
         tbpStationKeepingStrategy::PlaneCrossing=>"PlaneCrossing",
         tbpStationKeepingStrategy::TargetPoint=>"TargetPoint",
         tbpStationKeepingStrategy::FloquetMode=>"FloquetMode",
+        tbpStationKeepingStrategy::LinearStabilityBounds=>"LinearStabilityBounds",
     );
 
     public static function Name($e)

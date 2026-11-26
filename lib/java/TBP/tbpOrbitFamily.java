@@ -44,8 +44,24 @@ public final class tbpOrbitFamily {
    * Short- or long-period orbit about L4 or L5.
    */
   public static final int LongShortPeriod = 9;
+  /**
+   * Northern-hemisphere sidereal-resonant tulip-shaped CR3BP orbit.
+   */
+  public static final int TulipNorthern = 10;
+  /**
+   * Southern-hemisphere sidereal-resonant tulip-shaped CR3BP orbit.
+   */
+  public static final int TulipSouthern = 11;
+  /**
+   * Northern-hemisphere multi-petal pumpkin-shaped CR3BP orbit.
+   */
+  public static final int PumpkinNorthern = 12;
+  /**
+   * Southern-hemisphere multi-petal pumpkin-shaped CR3BP orbit.
+   */
+  public static final int PumpkinSouthern = 13;
 
-  public static final String[] names = { "Unspecified", "HaloNorthern", "HaloSouthern", "PlanarLyapunov", "VerticalLyapunov", "NearRectilinearHalo", "DistantRetrograde", "Butterfly", "Axial", "LongShortPeriod", };
+  public static final String[] names = { "Unspecified", "HaloNorthern", "HaloSouthern", "PlanarLyapunov", "VerticalLyapunov", "NearRectilinearHalo", "DistantRetrograde", "Butterfly", "Axial", "LongShortPeriod", "TulipNorthern", "TulipSouthern", "PumpkinNorthern", "PumpkinSouthern", };
 
   public static String name(int e) { return names[e]; }
 }

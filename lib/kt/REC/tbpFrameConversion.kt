@@ -83,6 +83,90 @@ class tbpFrameConversion : Table() {
         }
     val inertialAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 8)
     fun inertialInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 8)
+    /**
+     * Reference primary body: 0 = barycenter, 1 = P1 (Earth), 2 = P2 (Moon).
+     */
+    val referencePrimary : UByte
+        get() {
+            val o = __offset(14)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
+    /**
+     * Epoch Julian date (days) for J2000/ephemeris conversions; 0 = from REFERENCE_EPOCH_MS.
+     */
+    val julianDate : Double
+        get() {
+            val o = __offset(16)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Geodetic/selenodetic coordinates [lat_deg, lon_deg, alt_km] (3 values).
+     */
+    fun llaDegKm(j: Int) : Double {
+        val o = __offset(18)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val llaDegKmLength : Int
+        get() {
+            val o = __offset(18); return if (o != 0) __vector_len(o) else 0
+        }
+    val llaDegKmAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 8)
+    fun llaDegKmInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 8)
+    /**
+     * Classical Keplerian elements [a_km, e, inc_deg, raan_deg, argp_deg, nu_deg] (6 values).
+     */
+    fun orbitalElements(j: Int) : Double {
+        val o = __offset(20)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val orbitalElementsLength : Int
+        get() {
+            val o = __offset(20); return if (o != 0) __vector_len(o) else 0
+        }
+    val orbitalElementsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 8)
+    fun orbitalElementsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 8)
+    /**
+     * Batch synodic states (N * 6 values, non-dimensional) for vectorized conversion.
+     */
+    fun batchSynodicStates(j: Int) : Double {
+        val o = __offset(22)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val batchSynodicStatesLength : Int
+        get() {
+            val o = __offset(22); return if (o != 0) __vector_len(o) else 0
+        }
+    val batchSynodicStatesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(22, 8)
+    fun batchSynodicStatesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 22, 8)
+    /**
+     * Batch inertial/target states (N * 6 values, km and km/s) for vectorized conversion.
+     */
+    fun batchInertialStates(j: Int) : Double {
+        val o = __offset(24)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val batchInertialStatesLength : Int
+        get() {
+            val o = __offset(24); return if (o != 0) __vector_len(o) else 0
+        }
+    val batchInertialStatesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(24, 8)
+    fun batchInertialStatesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 24, 8)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAstbpFrameConversion(_bb: ByteBuffer): tbpFrameConversion = getRootAstbpFrameConversion(_bb, tbpFrameConversion())
@@ -90,16 +174,22 @@ class tbpFrameConversion : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createtbpFrameConversion(builder: FlatBufferBuilder, direction: UByte, referenceEpochMs: Long, elapsedS: Double, synodicOffset: Int, inertialOffset: Int) : Int {
-            builder.startTable(5)
+        fun createtbpFrameConversion(builder: FlatBufferBuilder, direction: UByte, referenceEpochMs: Long, elapsedS: Double, synodicOffset: Int, inertialOffset: Int, referencePrimary: UByte, julianDate: Double, llaDegKmOffset: Int, orbitalElementsOffset: Int, batchSynodicStatesOffset: Int, batchInertialStatesOffset: Int) : Int {
+            builder.startTable(11)
+            addJULIANDATE(builder, julianDate)
             addELAPSEDS(builder, elapsedS)
             addREFERENCEEPOCHMS(builder, referenceEpochMs)
+            addBATCHINERTIALSTATES(builder, batchInertialStatesOffset)
+            addBATCHSYNODICSTATES(builder, batchSynodicStatesOffset)
+            addORBITALELEMENTS(builder, orbitalElementsOffset)
+            addLLADEGKM(builder, llaDegKmOffset)
             addINERTIAL(builder, inertialOffset)
             addSYNODIC(builder, synodicOffset)
+            addREFERENCEPRIMARY(builder, referencePrimary)
             addDIRECTION(builder, direction)
             return endtbpFrameConversion(builder)
         }
-        fun starttbpFrameConversion(builder: FlatBufferBuilder) = builder.startTable(5)
+        fun starttbpFrameConversion(builder: FlatBufferBuilder) = builder.startTable(11)
         fun addDIRECTION(builder: FlatBufferBuilder, direction: UByte) = builder.addByte(0, direction.toByte(), 0)
         fun addREFERENCEEPOCHMS(builder: FlatBufferBuilder, referenceEpochMs: Long) = builder.addLong(1, referenceEpochMs, 0L)
         fun addELAPSEDS(builder: FlatBufferBuilder, elapsedS: Double) = builder.addDouble(2, elapsedS, 0.0)
@@ -113,6 +203,44 @@ class tbpFrameConversion : Table() {
             return builder.endVector()
         }
         fun startInertialVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addREFERENCEPRIMARY(builder: FlatBufferBuilder, referencePrimary: UByte) = builder.addByte(5, referencePrimary.toByte(), 0)
+        fun addJULIANDATE(builder: FlatBufferBuilder, julianDate: Double) = builder.addDouble(6, julianDate, 0.0)
+        fun addLLADEGKM(builder: FlatBufferBuilder, llaDegKm: Int) = builder.addOffset(7, llaDegKm, 0)
+        fun createLlaDegKmVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startLlaDegKmVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addORBITALELEMENTS(builder: FlatBufferBuilder, orbitalElements: Int) = builder.addOffset(8, orbitalElements, 0)
+        fun createOrbitalElementsVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startOrbitalElementsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addBATCHSYNODICSTATES(builder: FlatBufferBuilder, batchSynodicStates: Int) = builder.addOffset(9, batchSynodicStates, 0)
+        fun createBatchSynodicStatesVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startBatchSynodicStatesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addBATCHINERTIALSTATES(builder: FlatBufferBuilder, batchInertialStates: Int) = builder.addOffset(10, batchInertialStates, 0)
+        fun createBatchInertialStatesVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startBatchInertialStatesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
         fun endtbpFrameConversion(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

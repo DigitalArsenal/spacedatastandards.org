@@ -36,5 +36,21 @@ class tbpTransferKind private constructor() {
          * Insertion into a periodic orbit (TARGET_ORBIT).
          */
         const val PeriodicOrbitInsertion: UByte = 7u
+        /**
+         * Theoretical minimum Jacobi-energy delta-v between states or to surface.
+         */
+        const val MinEnergy: UByte = 8u
+        /**
+         * Single-revolution STM-targeted direct CR3BP Lambert transfer.
+         */
+        const val DirectLambert: UByte = 9u
+        /**
+         * Minimum-delta-v CR3BP Lambert across prograde/retrograde and primaries.
+         */
+        const val MinLambert: UByte = 10u
+        /**
+         * Minimum-time low-thrust optimal control (Pontryagin Minimum Principle).
+         */
+        const val LowThrustMinTime: UByte = 11u
     }
 }

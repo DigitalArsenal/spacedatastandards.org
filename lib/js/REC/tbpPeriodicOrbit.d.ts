@@ -89,6 +89,66 @@ export declare class tbpPeriodicOrbit implements flatbuffers.IUnpackableObject<t
      * One period of the orbit; empty = not sampled.
      */
     TRAJECTORY(obj?: tbpTrajectory): tbpTrajectory | null;
+    /**
+     * Tulip/pumpkin petal count Np; 0 = not applicable.
+     */
+    PETALS(): number;
+    /**
+     * Sidereal resonance denominator p (period = q * 2*pi / p); 0 = not stated.
+     */
+    RESONANCE_P(): number;
+    /**
+     * Sidereal resonance numerator q; 0 = not stated.
+     */
+    RESONANCE_Q(): number;
+    /**
+     * CR3BP pseudo-potential U* at the initial state.
+     */
+    PSEUDO_POTENTIAL(): number;
+    /**
+     * Minimum distance from the larger primary (P1), km; 0 = not computed.
+     */
+    PERIGEE_KM(): number;
+    /**
+     * Maximum distance from the larger primary (P1), km; 0 = not computed.
+     */
+    APOGEE_KM(): number;
+    /**
+     * Instability doubling time, non-dimensional; 0 = stable or not computed.
+     */
+    DOUBLING_TIME(): number;
+    /**
+     * Floquet/Lyapunov characteristic exponent, non-dimensional; 0 = not computed.
+     */
+    CHARACTERISTIC_EXPONENT(): number;
+    /**
+     * Longest continuous P2 (lunar) occultation per period, s.
+     */
+    MAX_LUNAR_OCCULTATION_S(): number;
+    /**
+     * Total P2 (lunar) occultation duration per period, s.
+     */
+    TOTAL_LUNAR_OCCULTATION_S(): number;
+    /**
+     * Longest continuous P1 (Earth) occultation per period, s.
+     */
+    MAX_EARTH_OCCULTATION_S(): number;
+    /**
+     * Total P1 (Earth) occultation duration per period, s.
+     */
+    TOTAL_EARTH_OCCULTATION_S(): number;
+    /**
+     * Unit stable eigenvector of the monodromy matrix (6 values); empty = none.
+     */
+    STABLE_EIGENVECTOR(index: number): number | null;
+    stableEigenvectorLength(): number;
+    stableEigenvectorArray(): Float64Array | null;
+    /**
+     * Unit unstable eigenvector of the monodromy matrix (6 values); empty = none.
+     */
+    UNSTABLE_EIGENVECTOR(index: number): number | null;
+    unstableEigenvectorLength(): number;
+    unstableEigenvectorArray(): Float64Array | null;
     static starttbpPeriodicOrbit(builder: flatbuffers.Builder): void;
     static addFamily(builder: flatbuffers.Builder, FAMILY: tbpOrbitFamily): void;
     static addLibrationPoint(builder: flatbuffers.Builder, LIBRATION_POINT: rfmLibrationPoint): void;
@@ -128,6 +188,32 @@ export declare class tbpPeriodicOrbit implements flatbuffers.IUnpackableObject<t
     static addStabilityIndex(builder: flatbuffers.Builder, STABILITY_INDEX: number): void;
     static addStable(builder: flatbuffers.Builder, STABLE: boolean): void;
     static addTrajectory(builder: flatbuffers.Builder, TRAJECTORYOffset: flatbuffers.Offset): void;
+    static addPetals(builder: flatbuffers.Builder, PETALS: number): void;
+    static addResonanceP(builder: flatbuffers.Builder, RESONANCE_P: number): void;
+    static addResonanceQ(builder: flatbuffers.Builder, RESONANCE_Q: number): void;
+    static addPseudoPotential(builder: flatbuffers.Builder, PSEUDO_POTENTIAL: number): void;
+    static addPerigeeKm(builder: flatbuffers.Builder, PERIGEE_KM: number): void;
+    static addApogeeKm(builder: flatbuffers.Builder, APOGEE_KM: number): void;
+    static addDoublingTime(builder: flatbuffers.Builder, DOUBLING_TIME: number): void;
+    static addCharacteristicExponent(builder: flatbuffers.Builder, CHARACTERISTIC_EXPONENT: number): void;
+    static addMaxLunarOccultationS(builder: flatbuffers.Builder, MAX_LUNAR_OCCULTATION_S: number): void;
+    static addTotalLunarOccultationS(builder: flatbuffers.Builder, TOTAL_LUNAR_OCCULTATION_S: number): void;
+    static addMaxEarthOccultationS(builder: flatbuffers.Builder, MAX_EARTH_OCCULTATION_S: number): void;
+    static addTotalEarthOccultationS(builder: flatbuffers.Builder, TOTAL_EARTH_OCCULTATION_S: number): void;
+    static addStableEigenvector(builder: flatbuffers.Builder, STABLE_EIGENVECTOROffset: flatbuffers.Offset): void;
+    static createStableEigenvectorVector(builder: flatbuffers.Builder, data: number[] | Float64Array): flatbuffers.Offset;
+    /**
+     * @deprecated This Uint8Array overload will be removed in the future.
+     */
+    static createStableEigenvectorVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startStableEigenvectorVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addUnstableEigenvector(builder: flatbuffers.Builder, UNSTABLE_EIGENVECTOROffset: flatbuffers.Offset): void;
+    static createUnstableEigenvectorVector(builder: flatbuffers.Builder, data: number[] | Float64Array): flatbuffers.Offset;
+    /**
+     * @deprecated This Uint8Array overload will be removed in the future.
+     */
+    static createUnstableEigenvectorVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startUnstableEigenvectorVector(builder: flatbuffers.Builder, numElems: number): void;
     static endtbpPeriodicOrbit(builder: flatbuffers.Builder): flatbuffers.Offset;
     unpack(): tbpPeriodicOrbitT;
     unpackTo(_o: tbpPeriodicOrbitT): void;
@@ -153,7 +239,21 @@ export declare class tbpPeriodicOrbitT implements flatbuffers.IGeneratedObject {
     STABILITY_INDEX: number;
     STABLE: boolean;
     TRAJECTORY: tbpTrajectoryT | null;
-    constructor(FAMILY?: tbpOrbitFamily, LIBRATION_POINT?: rfmLibrationPoint, AMPLITUDE?: number, PERILUNE_ALTITUDE_KM?: number, APOLUNE_ALTITUDE_KM?: number, INITIAL_STATE?: tbpStateT | null, PERIOD?: number, PERIOD_S?: number, JACOBI?: number, CORRECTED?: boolean, CONVERGED?: boolean, ITERATIONS?: number, TOLERANCE?: number, MAX_ITERATIONS?: number, MONODROMY?: (number)[], FLOQUET_REAL?: (number)[], FLOQUET_IMAGINARY?: (number)[], STABILITY_INDEX?: number, STABLE?: boolean, TRAJECTORY?: tbpTrajectoryT | null);
+    PETALS: number;
+    RESONANCE_P: number;
+    RESONANCE_Q: number;
+    PSEUDO_POTENTIAL: number;
+    PERIGEE_KM: number;
+    APOGEE_KM: number;
+    DOUBLING_TIME: number;
+    CHARACTERISTIC_EXPONENT: number;
+    MAX_LUNAR_OCCULTATION_S: number;
+    TOTAL_LUNAR_OCCULTATION_S: number;
+    MAX_EARTH_OCCULTATION_S: number;
+    TOTAL_EARTH_OCCULTATION_S: number;
+    STABLE_EIGENVECTOR: (number)[];
+    UNSTABLE_EIGENVECTOR: (number)[];
+    constructor(FAMILY?: tbpOrbitFamily, LIBRATION_POINT?: rfmLibrationPoint, AMPLITUDE?: number, PERILUNE_ALTITUDE_KM?: number, APOLUNE_ALTITUDE_KM?: number, INITIAL_STATE?: tbpStateT | null, PERIOD?: number, PERIOD_S?: number, JACOBI?: number, CORRECTED?: boolean, CONVERGED?: boolean, ITERATIONS?: number, TOLERANCE?: number, MAX_ITERATIONS?: number, MONODROMY?: (number)[], FLOQUET_REAL?: (number)[], FLOQUET_IMAGINARY?: (number)[], STABILITY_INDEX?: number, STABLE?: boolean, TRAJECTORY?: tbpTrajectoryT | null, PETALS?: number, RESONANCE_P?: number, RESONANCE_Q?: number, PSEUDO_POTENTIAL?: number, PERIGEE_KM?: number, APOGEE_KM?: number, DOUBLING_TIME?: number, CHARACTERISTIC_EXPONENT?: number, MAX_LUNAR_OCCULTATION_S?: number, TOTAL_LUNAR_OCCULTATION_S?: number, MAX_EARTH_OCCULTATION_S?: number, TOTAL_EARTH_OCCULTATION_S?: number, STABLE_EIGENVECTOR?: (number)[], UNSTABLE_EIGENVECTOR?: (number)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=tbpPeriodicOrbit.d.ts.map

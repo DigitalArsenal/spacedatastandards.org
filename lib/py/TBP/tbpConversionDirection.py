@@ -7,3 +7,11 @@
 class tbpConversionDirection(object):
     SynodicToInertial = 0
     InertialToSynodic = 1
+    SynodicToJ2000 = 2
+    J2000ToSynodic = 3
+    SynodicToPrimaryInertial = 4
+    PrimaryInertialToSynodic = 5
+    SynodicToLla = 6
+    LlaToSynodic = 7
+    SynodicToOrbitalElements = 8
+    OrbitalElementsToSynodic = 9

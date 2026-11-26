@@ -1,12 +1,16 @@
 import * as flatbuffers from 'flatbuffers';
+import { tbpConstellation, tbpConstellationT } from './tbpConstellation.js';
+import { tbpContinuationRequest, tbpContinuationRequestT } from './tbpContinuationRequest.js';
 import { tbpFrameConversion, tbpFrameConversionT } from './tbpFrameConversion.js';
 import { tbpLibrationPoint, tbpLibrationPointT } from './tbpLibrationPoint.js';
+import { tbpManifolds, tbpManifoldsT } from './tbpManifolds.js';
 import { tbpPeriodicOrbit, tbpPeriodicOrbitT } from './tbpPeriodicOrbit.js';
 import { tbpProblem } from './tbpProblem.js';
 import { tbpPropagationRequest, tbpPropagationRequestT } from './tbpPropagationRequest.js';
 import { tbpState, tbpStateT } from './tbpState.js';
 import { tbpStationKeeping, tbpStationKeepingT } from './tbpStationKeeping.js';
 import { tbpStatus } from './tbpStatus.js';
+import { tbpSurfaceAnalysis, tbpSurfaceAnalysisT } from './tbpSurfaceAnalysis.js';
 import { tbpSystem, tbpSystemT } from './tbpSystem.js';
 import { tbpTrajectory, tbpTrajectoryT } from './tbpTrajectory.js';
 import { tbpTransfer, tbpTransferT } from './tbpTransfer.js';
@@ -60,16 +64,32 @@ export declare class TBP implements flatbuffers.IUnpackableObject<TBPT> {
     STATE(obj?: tbpState): tbpState | null;
     JACOBI(): number;
     /**
-     * PeriodicOrbit, HaloFirstGuess, NearRectilinearHalo: the request fields
-     * (FAMILY, LIBRATION_POINT, AMPLITUDE or perilune/apolune, TOLERANCE,
-     * MAX_ITERATIONS) and the result. Family: the members, ordered along the
-     * family's continuation parameter (AMPLITUDE).
+     * PeriodicOrbit, HaloFirstGuess, NearRectilinearHalo, OrbitProperties: the
+     * request fields (FAMILY, LIBRATION_POINT, AMPLITUDE, PETALS, or
+     * perilune/apolune, TOLERANCE, MAX_ITERATIONS) and the result. Family and
+     * Continuation: the members ordered along the continuation parameter.
      */
     ORBITS(index: number, obj?: tbpPeriodicOrbit): tbpPeriodicOrbit | null;
     orbitsLength(): number;
     TRANSFER(obj?: tbpTransfer): tbpTransfer | null;
     STATION_KEEPING(obj?: tbpStationKeeping): tbpStationKeeping | null;
     FRAME_CONVERSION(obj?: tbpFrameConversion): tbpFrameConversion | null;
+    /**
+     * Continuation: pseudo-arclength or natural-parameter continuation request.
+     */
+    CONTINUATION(obj?: tbpContinuationRequest): tbpContinuationRequest | null;
+    /**
+     * Manifolds: invariant stable/unstable manifold request and branches.
+     */
+    MANIFOLDS(obj?: tbpManifolds): tbpManifolds | null;
+    /**
+     * Constellation: time-phased multi-spacecraft CR3BP constellation.
+     */
+    CONSTELLATION(obj?: tbpConstellation): tbpConstellation | null;
+    /**
+     * SurfaceAnalysis: surface coverage gaps, elevation, occultations, and DOP.
+     */
+    SURFACE_ANALYSIS(obj?: tbpSurfaceAnalysis): tbpSurfaceAnalysis | null;
     static startTBP(builder: flatbuffers.Builder): void;
     static addId(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset): void;
     static addCreatedAtMs(builder: flatbuffers.Builder, CREATED_AT_MS: bigint): void;
@@ -92,6 +112,10 @@ export declare class TBP implements flatbuffers.IUnpackableObject<TBPT> {
     static addTransfer(builder: flatbuffers.Builder, TRANSFEROffset: flatbuffers.Offset): void;
     static addStationKeeping(builder: flatbuffers.Builder, STATION_KEEPINGOffset: flatbuffers.Offset): void;
     static addFrameConversion(builder: flatbuffers.Builder, FRAME_CONVERSIONOffset: flatbuffers.Offset): void;
+    static addContinuation(builder: flatbuffers.Builder, CONTINUATIONOffset: flatbuffers.Offset): void;
+    static addManifolds(builder: flatbuffers.Builder, MANIFOLDSOffset: flatbuffers.Offset): void;
+    static addConstellation(builder: flatbuffers.Builder, CONSTELLATIONOffset: flatbuffers.Offset): void;
+    static addSurfaceAnalysis(builder: flatbuffers.Builder, SURFACE_ANALYSISOffset: flatbuffers.Offset): void;
     static endTBP(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishTBPBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedTBPBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
@@ -116,7 +140,11 @@ export declare class TBPT implements flatbuffers.IGeneratedObject {
     TRANSFER: tbpTransferT | null;
     STATION_KEEPING: tbpStationKeepingT | null;
     FRAME_CONVERSION: tbpFrameConversionT | null;
-    constructor(ID?: string | Uint8Array | null, CREATED_AT_MS?: bigint, PRODUCER?: string | Uint8Array | null, PROBLEM?: tbpProblem, SYSTEM?: tbpSystemT | null, STATUS?: tbpStatus, ERROR_CODE?: string | Uint8Array | null, ERROR_MESSAGE?: string | Uint8Array | null, PROPAGATION?: tbpPropagationRequestT | null, TRAJECTORY?: tbpTrajectoryT | null, LIBRATION_POINTS?: (tbpLibrationPointT)[], STATE?: tbpStateT | null, JACOBI?: number, ORBITS?: (tbpPeriodicOrbitT)[], TRANSFER?: tbpTransferT | null, STATION_KEEPING?: tbpStationKeepingT | null, FRAME_CONVERSION?: tbpFrameConversionT | null);
+    CONTINUATION: tbpContinuationRequestT | null;
+    MANIFOLDS: tbpManifoldsT | null;
+    CONSTELLATION: tbpConstellationT | null;
+    SURFACE_ANALYSIS: tbpSurfaceAnalysisT | null;
+    constructor(ID?: string | Uint8Array | null, CREATED_AT_MS?: bigint, PRODUCER?: string | Uint8Array | null, PROBLEM?: tbpProblem, SYSTEM?: tbpSystemT | null, STATUS?: tbpStatus, ERROR_CODE?: string | Uint8Array | null, ERROR_MESSAGE?: string | Uint8Array | null, PROPAGATION?: tbpPropagationRequestT | null, TRAJECTORY?: tbpTrajectoryT | null, LIBRATION_POINTS?: (tbpLibrationPointT)[], STATE?: tbpStateT | null, JACOBI?: number, ORBITS?: (tbpPeriodicOrbitT)[], TRANSFER?: tbpTransferT | null, STATION_KEEPING?: tbpStationKeepingT | null, FRAME_CONVERSION?: tbpFrameConversionT | null, CONTINUATION?: tbpContinuationRequestT | null, MANIFOLDS?: tbpManifoldsT | null, CONSTELLATION?: tbpConstellationT | null, SURFACE_ANALYSIS?: tbpSurfaceAnalysisT | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=TBP.d.ts.map

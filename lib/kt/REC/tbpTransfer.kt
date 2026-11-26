@@ -133,6 +133,128 @@ class tbpTransfer : Table() {
             null
         }
     }
+    /**
+     * Departure state in synodic frame (MinEnergy, DirectLambert, MinLambert, LowThrustMinTime).
+     */
+    val initialState : tbpState? get() = initialState(tbpState())
+    fun initialState(obj: tbpState) : tbpState? {
+        val o = __offset(28)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Arrival state in synodic frame.
+     */
+    val finalState : tbpState? get() = finalState(tbpState())
+    fun finalState(obj: tbpState) : tbpState? {
+        val o = __offset(30)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * False = prograde (default), true = retrograde (DirectLambert).
+     */
+    val retrograde : Boolean
+        get() {
+            val o = __offset(32)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * Reference primary body for Lambert seeding: 0 = auto, 1 = P1, 2 = P2.
+     */
+    val referencePrimary : UByte
+        get() {
+            val o = __offset(34)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
+    /**
+     * Low-thrust maximum thrust, N (LowThrustMinTime).
+     */
+    val maxThrustN : Double
+        get() {
+            val o = __offset(36)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Engine specific impulse Isp, s (LowThrustMinTime).
+     */
+    val specificImpulseS : Double
+        get() {
+            val o = __offset(38)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Initial wet spacecraft mass, kg.
+     */
+    val initialMassKg : Double
+        get() {
+            val o = __offset(40)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Result: final spacecraft mass at arrival, kg.
+     */
+    val finalMassKg : Double
+        get() {
+            val o = __offset(42)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Result: propellant consumed, kg.
+     */
+    val propellantMassKg : Double
+        get() {
+            val o = __offset(44)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Initial costates [lambda_rx, ry, rz, vx, vy, vz, m] guess or solved.
+     */
+    fun initialCostates(j: Int) : Double {
+        val o = __offset(46)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val initialCostatesLength : Int
+        get() {
+            val o = __offset(46); return if (o != 0) __vector_len(o) else 0
+        }
+    val initialCostatesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(46, 8)
+    fun initialCostatesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 46, 8)
+    /**
+     * Result: normalized throttle [0..1] per trajectory sample.
+     */
+    fun throttleHistory(j: Int) : Double {
+        val o = __offset(48)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val throttleHistoryLength : Int
+        get() {
+            val o = __offset(48); return if (o != 0) __vector_len(o) else 0
+        }
+    val throttleHistoryAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(48, 8)
+    fun throttleHistoryInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 48, 8)
+    /**
+     * Result: theoretical minimum Jacobi-energy delta-v, km/s (MinEnergy).
+     */
+    val minEnergyDeltaVKmS : Double
+        get() {
+            val o = __offset(50)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAstbpTransfer(_bb: ByteBuffer): tbpTransfer = getRootAstbpTransfer(_bb, tbpTransfer())
@@ -140,23 +262,35 @@ class tbpTransfer : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createtbpTransfer(builder: FlatBufferBuilder, kind: UByte, parkingAltitudeKm: Double, targetAltitudeKm: Double, inclinationDeg: Double, targetOrbitOffset: Int, maxIterations: UInt, tolerance: Double, converged: Boolean, burnsOffset: Int, totalDeltaVKmS: Double, timeOfFlightS: Double, trajectoryOffset: Int) : Int {
-            builder.startTable(12)
+        fun createtbpTransfer(builder: FlatBufferBuilder, kind: UByte, parkingAltitudeKm: Double, targetAltitudeKm: Double, inclinationDeg: Double, targetOrbitOffset: Int, maxIterations: UInt, tolerance: Double, converged: Boolean, burnsOffset: Int, totalDeltaVKmS: Double, timeOfFlightS: Double, trajectoryOffset: Int, initialStateOffset: Int, finalStateOffset: Int, retrograde: Boolean, referencePrimary: UByte, maxThrustN: Double, specificImpulseS: Double, initialMassKg: Double, finalMassKg: Double, propellantMassKg: Double, initialCostatesOffset: Int, throttleHistoryOffset: Int, minEnergyDeltaVKmS: Double) : Int {
+            builder.startTable(24)
+            addMINENERGYDELTAVKMS(builder, minEnergyDeltaVKmS)
+            addPROPELLANTMASSKG(builder, propellantMassKg)
+            addFINALMASSKG(builder, finalMassKg)
+            addINITIALMASSKG(builder, initialMassKg)
+            addSPECIFICIMPULSES(builder, specificImpulseS)
+            addMAXTHRUSTN(builder, maxThrustN)
             addTIMEOFFLIGHTS(builder, timeOfFlightS)
             addTOTALDELTAVKMS(builder, totalDeltaVKmS)
             addTOLERANCE(builder, tolerance)
             addINCLINATIONDEG(builder, inclinationDeg)
             addTARGETALTITUDEKM(builder, targetAltitudeKm)
             addPARKINGALTITUDEKM(builder, parkingAltitudeKm)
+            addTHROTTLEHISTORY(builder, throttleHistoryOffset)
+            addINITIALCOSTATES(builder, initialCostatesOffset)
+            addFINALSTATE(builder, finalStateOffset)
+            addINITIALSTATE(builder, initialStateOffset)
             addTRAJECTORY(builder, trajectoryOffset)
             addBURNS(builder, burnsOffset)
             addMAXITERATIONS(builder, maxIterations)
             addTARGETORBIT(builder, targetOrbitOffset)
+            addREFERENCEPRIMARY(builder, referencePrimary)
+            addRETROGRADE(builder, retrograde)
             addCONVERGED(builder, converged)
             addKIND(builder, kind)
             return endtbpTransfer(builder)
         }
-        fun starttbpTransfer(builder: FlatBufferBuilder) = builder.startTable(12)
+        fun starttbpTransfer(builder: FlatBufferBuilder) = builder.startTable(24)
         fun addKIND(builder: FlatBufferBuilder, kind: UByte) = builder.addByte(0, kind.toByte(), 0)
         fun addPARKINGALTITUDEKM(builder: FlatBufferBuilder, parkingAltitudeKm: Double) = builder.addDouble(1, parkingAltitudeKm, 0.0)
         fun addTARGETALTITUDEKM(builder: FlatBufferBuilder, targetAltitudeKm: Double) = builder.addDouble(2, targetAltitudeKm, 0.0)
@@ -177,6 +311,34 @@ class tbpTransfer : Table() {
         fun addTOTALDELTAVKMS(builder: FlatBufferBuilder, totalDeltaVKmS: Double) = builder.addDouble(9, totalDeltaVKmS, 0.0)
         fun addTIMEOFFLIGHTS(builder: FlatBufferBuilder, timeOfFlightS: Double) = builder.addDouble(10, timeOfFlightS, 0.0)
         fun addTRAJECTORY(builder: FlatBufferBuilder, trajectory: Int) = builder.addOffset(11, trajectory, 0)
+        fun addINITIALSTATE(builder: FlatBufferBuilder, initialState: Int) = builder.addOffset(12, initialState, 0)
+        fun addFINALSTATE(builder: FlatBufferBuilder, finalState: Int) = builder.addOffset(13, finalState, 0)
+        fun addRETROGRADE(builder: FlatBufferBuilder, retrograde: Boolean) = builder.addBoolean(14, retrograde, false)
+        fun addREFERENCEPRIMARY(builder: FlatBufferBuilder, referencePrimary: UByte) = builder.addByte(15, referencePrimary.toByte(), 0)
+        fun addMAXTHRUSTN(builder: FlatBufferBuilder, maxThrustN: Double) = builder.addDouble(16, maxThrustN, 0.0)
+        fun addSPECIFICIMPULSES(builder: FlatBufferBuilder, specificImpulseS: Double) = builder.addDouble(17, specificImpulseS, 0.0)
+        fun addINITIALMASSKG(builder: FlatBufferBuilder, initialMassKg: Double) = builder.addDouble(18, initialMassKg, 0.0)
+        fun addFINALMASSKG(builder: FlatBufferBuilder, finalMassKg: Double) = builder.addDouble(19, finalMassKg, 0.0)
+        fun addPROPELLANTMASSKG(builder: FlatBufferBuilder, propellantMassKg: Double) = builder.addDouble(20, propellantMassKg, 0.0)
+        fun addINITIALCOSTATES(builder: FlatBufferBuilder, initialCostates: Int) = builder.addOffset(21, initialCostates, 0)
+        fun createInitialCostatesVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startInitialCostatesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addTHROTTLEHISTORY(builder: FlatBufferBuilder, throttleHistory: Int) = builder.addOffset(22, throttleHistory, 0)
+        fun createThrottleHistoryVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startThrottleHistoryVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addMINENERGYDELTAVKMS(builder: FlatBufferBuilder, minEnergyDeltaVKmS: Double) = builder.addDouble(23, minEnergyDeltaVKmS, 0.0)
         fun endtbpTransfer(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

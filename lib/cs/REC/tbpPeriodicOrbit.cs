@@ -81,6 +81,48 @@ public struct tbpPeriodicOrbit : IFlatbufferObject
   public bool STABLE { get { int o = __p.__offset(40); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
   /// One period of the orbit; empty = not sampled.
   public tbpTrajectory? TRAJECTORY { get { int o = __p.__offset(42); return o != 0 ? (tbpTrajectory?)(new tbpTrajectory()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Tulip/pumpkin petal count Np; 0 = not applicable.
+  public uint PETALS { get { int o = __p.__offset(44); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Sidereal resonance denominator p (period = q * 2*pi / p); 0 = not stated.
+  public uint RESONANCE_P { get { int o = __p.__offset(46); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Sidereal resonance numerator q; 0 = not stated.
+  public uint RESONANCE_Q { get { int o = __p.__offset(48); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// CR3BP pseudo-potential U* at the initial state.
+  public double PSEUDO_POTENTIAL { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Minimum distance from the larger primary (P1), km; 0 = not computed.
+  public double PERIGEE_KM { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Maximum distance from the larger primary (P1), km; 0 = not computed.
+  public double APOGEE_KM { get { int o = __p.__offset(54); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Instability doubling time, non-dimensional; 0 = stable or not computed.
+  public double DOUBLING_TIME { get { int o = __p.__offset(56); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Floquet/Lyapunov characteristic exponent, non-dimensional; 0 = not computed.
+  public double CHARACTERISTIC_EXPONENT { get { int o = __p.__offset(58); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Longest continuous P2 (lunar) occultation per period, s.
+  public double MAX_LUNAR_OCCULTATION_S { get { int o = __p.__offset(60); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Total P2 (lunar) occultation duration per period, s.
+  public double TOTAL_LUNAR_OCCULTATION_S { get { int o = __p.__offset(62); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Longest continuous P1 (Earth) occultation per period, s.
+  public double MAX_EARTH_OCCULTATION_S { get { int o = __p.__offset(64); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Total P1 (Earth) occultation duration per period, s.
+  public double TOTAL_EARTH_OCCULTATION_S { get { int o = __p.__offset(66); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Unit stable eigenvector of the monodromy matrix (6 values); empty = none.
+  public double STABLE_EIGENVECTOR(int j) { int o = __p.__offset(68); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int STABLE_EIGENVECTORLength { get { int o = __p.__offset(68); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetSTABLE_EIGENVECTORBytes() { return __p.__vector_as_span<double>(68, 8); }
+#else
+  public ArraySegment<byte>? GetSTABLE_EIGENVECTORBytes() { return __p.__vector_as_arraysegment(68); }
+#endif
+  public double[] GetSTABLE_EIGENVECTORArray() { return __p.__vector_as_array<double>(68); }
+  /// Unit unstable eigenvector of the monodromy matrix (6 values); empty = none.
+  public double UNSTABLE_EIGENVECTOR(int j) { int o = __p.__offset(70); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int UNSTABLE_EIGENVECTORLength { get { int o = __p.__offset(70); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetUNSTABLE_EIGENVECTORBytes() { return __p.__vector_as_span<double>(70, 8); }
+#else
+  public ArraySegment<byte>? GetUNSTABLE_EIGENVECTORBytes() { return __p.__vector_as_arraysegment(70); }
+#endif
+  public double[] GetUNSTABLE_EIGENVECTORArray() { return __p.__vector_as_array<double>(70); }
 
   public static Offset<tbpPeriodicOrbit> CreatetbpPeriodicOrbit(FlatBufferBuilder builder,
       tbpOrbitFamily FAMILY = tbpOrbitFamily.Unspecified,
@@ -102,8 +144,31 @@ public struct tbpPeriodicOrbit : IFlatbufferObject
       VectorOffset FLOQUET_IMAGINARYOffset = default(VectorOffset),
       double STABILITY_INDEX = 0.0,
       bool STABLE = false,
-      Offset<tbpTrajectory> TRAJECTORYOffset = default(Offset<tbpTrajectory>)) {
-    builder.StartTable(20);
+      Offset<tbpTrajectory> TRAJECTORYOffset = default(Offset<tbpTrajectory>),
+      uint PETALS = 0,
+      uint RESONANCE_P = 0,
+      uint RESONANCE_Q = 0,
+      double PSEUDO_POTENTIAL = 0.0,
+      double PERIGEE_KM = 0.0,
+      double APOGEE_KM = 0.0,
+      double DOUBLING_TIME = 0.0,
+      double CHARACTERISTIC_EXPONENT = 0.0,
+      double MAX_LUNAR_OCCULTATION_S = 0.0,
+      double TOTAL_LUNAR_OCCULTATION_S = 0.0,
+      double MAX_EARTH_OCCULTATION_S = 0.0,
+      double TOTAL_EARTH_OCCULTATION_S = 0.0,
+      VectorOffset STABLE_EIGENVECTOROffset = default(VectorOffset),
+      VectorOffset UNSTABLE_EIGENVECTOROffset = default(VectorOffset)) {
+    builder.StartTable(34);
+    tbpPeriodicOrbit.AddTOTAL_EARTH_OCCULTATION_S(builder, TOTAL_EARTH_OCCULTATION_S);
+    tbpPeriodicOrbit.AddMAX_EARTH_OCCULTATION_S(builder, MAX_EARTH_OCCULTATION_S);
+    tbpPeriodicOrbit.AddTOTAL_LUNAR_OCCULTATION_S(builder, TOTAL_LUNAR_OCCULTATION_S);
+    tbpPeriodicOrbit.AddMAX_LUNAR_OCCULTATION_S(builder, MAX_LUNAR_OCCULTATION_S);
+    tbpPeriodicOrbit.AddCHARACTERISTIC_EXPONENT(builder, CHARACTERISTIC_EXPONENT);
+    tbpPeriodicOrbit.AddDOUBLING_TIME(builder, DOUBLING_TIME);
+    tbpPeriodicOrbit.AddAPOGEE_KM(builder, APOGEE_KM);
+    tbpPeriodicOrbit.AddPERIGEE_KM(builder, PERIGEE_KM);
+    tbpPeriodicOrbit.AddPSEUDO_POTENTIAL(builder, PSEUDO_POTENTIAL);
     tbpPeriodicOrbit.AddSTABILITY_INDEX(builder, STABILITY_INDEX);
     tbpPeriodicOrbit.AddTOLERANCE(builder, TOLERANCE);
     tbpPeriodicOrbit.AddJACOBI(builder, JACOBI);
@@ -112,6 +177,11 @@ public struct tbpPeriodicOrbit : IFlatbufferObject
     tbpPeriodicOrbit.AddAPOLUNE_ALTITUDE_KM(builder, APOLUNE_ALTITUDE_KM);
     tbpPeriodicOrbit.AddPERILUNE_ALTITUDE_KM(builder, PERILUNE_ALTITUDE_KM);
     tbpPeriodicOrbit.AddAMPLITUDE(builder, AMPLITUDE);
+    tbpPeriodicOrbit.AddUNSTABLE_EIGENVECTOR(builder, UNSTABLE_EIGENVECTOROffset);
+    tbpPeriodicOrbit.AddSTABLE_EIGENVECTOR(builder, STABLE_EIGENVECTOROffset);
+    tbpPeriodicOrbit.AddRESONANCE_Q(builder, RESONANCE_Q);
+    tbpPeriodicOrbit.AddRESONANCE_P(builder, RESONANCE_P);
+    tbpPeriodicOrbit.AddPETALS(builder, PETALS);
     tbpPeriodicOrbit.AddTRAJECTORY(builder, TRAJECTORYOffset);
     tbpPeriodicOrbit.AddFLOQUET_IMAGINARY(builder, FLOQUET_IMAGINARYOffset);
     tbpPeriodicOrbit.AddFLOQUET_REAL(builder, FLOQUET_REALOffset);
@@ -127,7 +197,7 @@ public struct tbpPeriodicOrbit : IFlatbufferObject
     return tbpPeriodicOrbit.EndtbpPeriodicOrbit(builder);
   }
 
-  public static void StarttbpPeriodicOrbit(FlatBufferBuilder builder) { builder.StartTable(20); }
+  public static void StarttbpPeriodicOrbit(FlatBufferBuilder builder) { builder.StartTable(34); }
   public static void AddFAMILY(FlatBufferBuilder builder, tbpOrbitFamily FAMILY) { builder.AddByte(0, (byte)FAMILY, 0); }
   public static void AddLIBRATION_POINT(FlatBufferBuilder builder, rfmLibrationPoint LIBRATION_POINT) { builder.AddByte(1, (byte)LIBRATION_POINT, 0); }
   public static void AddAMPLITUDE(FlatBufferBuilder builder, double AMPLITUDE) { builder.AddDouble(2, AMPLITUDE, 0.0); }
@@ -163,6 +233,30 @@ public struct tbpPeriodicOrbit : IFlatbufferObject
   public static void AddSTABILITY_INDEX(FlatBufferBuilder builder, double STABILITY_INDEX) { builder.AddDouble(17, STABILITY_INDEX, 0.0); }
   public static void AddSTABLE(FlatBufferBuilder builder, bool STABLE) { builder.AddBool(18, STABLE, false); }
   public static void AddTRAJECTORY(FlatBufferBuilder builder, Offset<tbpTrajectory> TRAJECTORYOffset) { builder.AddOffset(19, TRAJECTORYOffset.Value, 0); }
+  public static void AddPETALS(FlatBufferBuilder builder, uint PETALS) { builder.AddUint(20, PETALS, 0); }
+  public static void AddRESONANCE_P(FlatBufferBuilder builder, uint RESONANCE_P) { builder.AddUint(21, RESONANCE_P, 0); }
+  public static void AddRESONANCE_Q(FlatBufferBuilder builder, uint RESONANCE_Q) { builder.AddUint(22, RESONANCE_Q, 0); }
+  public static void AddPSEUDO_POTENTIAL(FlatBufferBuilder builder, double PSEUDO_POTENTIAL) { builder.AddDouble(23, PSEUDO_POTENTIAL, 0.0); }
+  public static void AddPERIGEE_KM(FlatBufferBuilder builder, double PERIGEE_KM) { builder.AddDouble(24, PERIGEE_KM, 0.0); }
+  public static void AddAPOGEE_KM(FlatBufferBuilder builder, double APOGEE_KM) { builder.AddDouble(25, APOGEE_KM, 0.0); }
+  public static void AddDOUBLING_TIME(FlatBufferBuilder builder, double DOUBLING_TIME) { builder.AddDouble(26, DOUBLING_TIME, 0.0); }
+  public static void AddCHARACTERISTIC_EXPONENT(FlatBufferBuilder builder, double CHARACTERISTIC_EXPONENT) { builder.AddDouble(27, CHARACTERISTIC_EXPONENT, 0.0); }
+  public static void AddMAX_LUNAR_OCCULTATION_S(FlatBufferBuilder builder, double MAX_LUNAR_OCCULTATION_S) { builder.AddDouble(28, MAX_LUNAR_OCCULTATION_S, 0.0); }
+  public static void AddTOTAL_LUNAR_OCCULTATION_S(FlatBufferBuilder builder, double TOTAL_LUNAR_OCCULTATION_S) { builder.AddDouble(29, TOTAL_LUNAR_OCCULTATION_S, 0.0); }
+  public static void AddMAX_EARTH_OCCULTATION_S(FlatBufferBuilder builder, double MAX_EARTH_OCCULTATION_S) { builder.AddDouble(30, MAX_EARTH_OCCULTATION_S, 0.0); }
+  public static void AddTOTAL_EARTH_OCCULTATION_S(FlatBufferBuilder builder, double TOTAL_EARTH_OCCULTATION_S) { builder.AddDouble(31, TOTAL_EARTH_OCCULTATION_S, 0.0); }
+  public static void AddSTABLE_EIGENVECTOR(FlatBufferBuilder builder, VectorOffset STABLE_EIGENVECTOROffset) { builder.AddOffset(32, STABLE_EIGENVECTOROffset.Value, 0); }
+  public static VectorOffset CreateSTABLE_EIGENVECTORVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateSTABLE_EIGENVECTORVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSTABLE_EIGENVECTORVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSTABLE_EIGENVECTORVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartSTABLE_EIGENVECTORVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddUNSTABLE_EIGENVECTOR(FlatBufferBuilder builder, VectorOffset UNSTABLE_EIGENVECTOROffset) { builder.AddOffset(33, UNSTABLE_EIGENVECTOROffset.Value, 0); }
+  public static VectorOffset CreateUNSTABLE_EIGENVECTORVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateUNSTABLE_EIGENVECTORVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateUNSTABLE_EIGENVECTORVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateUNSTABLE_EIGENVECTORVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartUNSTABLE_EIGENVECTORVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
   public static Offset<tbpPeriodicOrbit> EndtbpPeriodicOrbit(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<tbpPeriodicOrbit>(o);
@@ -196,6 +290,22 @@ public struct tbpPeriodicOrbit : IFlatbufferObject
     _o.STABILITY_INDEX = this.STABILITY_INDEX;
     _o.STABLE = this.STABLE;
     _o.TRAJECTORY = this.TRAJECTORY.HasValue ? this.TRAJECTORY.Value.UnPack() : null;
+    _o.PETALS = this.PETALS;
+    _o.RESONANCE_P = this.RESONANCE_P;
+    _o.RESONANCE_Q = this.RESONANCE_Q;
+    _o.PSEUDO_POTENTIAL = this.PSEUDO_POTENTIAL;
+    _o.PERIGEE_KM = this.PERIGEE_KM;
+    _o.APOGEE_KM = this.APOGEE_KM;
+    _o.DOUBLING_TIME = this.DOUBLING_TIME;
+    _o.CHARACTERISTIC_EXPONENT = this.CHARACTERISTIC_EXPONENT;
+    _o.MAX_LUNAR_OCCULTATION_S = this.MAX_LUNAR_OCCULTATION_S;
+    _o.TOTAL_LUNAR_OCCULTATION_S = this.TOTAL_LUNAR_OCCULTATION_S;
+    _o.MAX_EARTH_OCCULTATION_S = this.MAX_EARTH_OCCULTATION_S;
+    _o.TOTAL_EARTH_OCCULTATION_S = this.TOTAL_EARTH_OCCULTATION_S;
+    _o.STABLE_EIGENVECTOR = new List<double>();
+    for (var _j = 0; _j < this.STABLE_EIGENVECTORLength; ++_j) {_o.STABLE_EIGENVECTOR.Add(this.STABLE_EIGENVECTOR(_j));}
+    _o.UNSTABLE_EIGENVECTOR = new List<double>();
+    for (var _j = 0; _j < this.UNSTABLE_EIGENVECTORLength; ++_j) {_o.UNSTABLE_EIGENVECTOR.Add(this.UNSTABLE_EIGENVECTOR(_j));}
   }
   public static Offset<tbpPeriodicOrbit> Pack(FlatBufferBuilder builder, tbpPeriodicOrbitT _o) {
     if (_o == null) return default(Offset<tbpPeriodicOrbit>);
@@ -216,6 +326,16 @@ public struct tbpPeriodicOrbit : IFlatbufferObject
       _FLOQUET_IMAGINARY = CreateFLOQUET_IMAGINARYVector(builder, __FLOQUET_IMAGINARY);
     }
     var _TRAJECTORY = _o.TRAJECTORY == null ? default(Offset<tbpTrajectory>) : tbpTrajectory.Pack(builder, _o.TRAJECTORY);
+    var _STABLE_EIGENVECTOR = default(VectorOffset);
+    if (_o.STABLE_EIGENVECTOR != null) {
+      var __STABLE_EIGENVECTOR = _o.STABLE_EIGENVECTOR.ToArray();
+      _STABLE_EIGENVECTOR = CreateSTABLE_EIGENVECTORVector(builder, __STABLE_EIGENVECTOR);
+    }
+    var _UNSTABLE_EIGENVECTOR = default(VectorOffset);
+    if (_o.UNSTABLE_EIGENVECTOR != null) {
+      var __UNSTABLE_EIGENVECTOR = _o.UNSTABLE_EIGENVECTOR.ToArray();
+      _UNSTABLE_EIGENVECTOR = CreateUNSTABLE_EIGENVECTORVector(builder, __UNSTABLE_EIGENVECTOR);
+    }
     return CreatetbpPeriodicOrbit(
       builder,
       _o.FAMILY,
@@ -237,7 +357,21 @@ public struct tbpPeriodicOrbit : IFlatbufferObject
       _FLOQUET_IMAGINARY,
       _o.STABILITY_INDEX,
       _o.STABLE,
-      _TRAJECTORY);
+      _TRAJECTORY,
+      _o.PETALS,
+      _o.RESONANCE_P,
+      _o.RESONANCE_Q,
+      _o.PSEUDO_POTENTIAL,
+      _o.PERIGEE_KM,
+      _o.APOGEE_KM,
+      _o.DOUBLING_TIME,
+      _o.CHARACTERISTIC_EXPONENT,
+      _o.MAX_LUNAR_OCCULTATION_S,
+      _o.TOTAL_LUNAR_OCCULTATION_S,
+      _o.MAX_EARTH_OCCULTATION_S,
+      _o.TOTAL_EARTH_OCCULTATION_S,
+      _STABLE_EIGENVECTOR,
+      _UNSTABLE_EIGENVECTOR);
   }
 }
 
@@ -263,6 +397,20 @@ public class tbpPeriodicOrbitT
   public double STABILITY_INDEX { get; set; }
   public bool STABLE { get; set; }
   public tbpTrajectoryT TRAJECTORY { get; set; }
+  public uint PETALS { get; set; }
+  public uint RESONANCE_P { get; set; }
+  public uint RESONANCE_Q { get; set; }
+  public double PSEUDO_POTENTIAL { get; set; }
+  public double PERIGEE_KM { get; set; }
+  public double APOGEE_KM { get; set; }
+  public double DOUBLING_TIME { get; set; }
+  public double CHARACTERISTIC_EXPONENT { get; set; }
+  public double MAX_LUNAR_OCCULTATION_S { get; set; }
+  public double TOTAL_LUNAR_OCCULTATION_S { get; set; }
+  public double MAX_EARTH_OCCULTATION_S { get; set; }
+  public double TOTAL_EARTH_OCCULTATION_S { get; set; }
+  public List<double> STABLE_EIGENVECTOR { get; set; }
+  public List<double> UNSTABLE_EIGENVECTOR { get; set; }
 
   public tbpPeriodicOrbitT() {
     this.FAMILY = tbpOrbitFamily.Unspecified;
@@ -285,6 +433,20 @@ public class tbpPeriodicOrbitT
     this.STABILITY_INDEX = 0.0;
     this.STABLE = false;
     this.TRAJECTORY = null;
+    this.PETALS = 0;
+    this.RESONANCE_P = 0;
+    this.RESONANCE_Q = 0;
+    this.PSEUDO_POTENTIAL = 0.0;
+    this.PERIGEE_KM = 0.0;
+    this.APOGEE_KM = 0.0;
+    this.DOUBLING_TIME = 0.0;
+    this.CHARACTERISTIC_EXPONENT = 0.0;
+    this.MAX_LUNAR_OCCULTATION_S = 0.0;
+    this.TOTAL_LUNAR_OCCULTATION_S = 0.0;
+    this.MAX_EARTH_OCCULTATION_S = 0.0;
+    this.TOTAL_EARTH_OCCULTATION_S = 0.0;
+    this.STABLE_EIGENVECTOR = null;
+    this.UNSTABLE_EIGENVECTOR = null;
   }
 }
 
@@ -314,6 +476,20 @@ static public class tbpPeriodicOrbitVerify
       && verifier.VerifyField(tablePos, 38 /*STABILITY_INDEX*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 40 /*STABLE*/, 1 /*bool*/, 1, false)
       && verifier.VerifyTable(tablePos, 42 /*TRAJECTORY*/, tbpTrajectoryVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 44 /*PETALS*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyField(tablePos, 46 /*RESONANCE_P*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyField(tablePos, 48 /*RESONANCE_Q*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyField(tablePos, 50 /*PSEUDO_POTENTIAL*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 52 /*PERIGEE_KM*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 54 /*APOGEE_KM*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 56 /*DOUBLING_TIME*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 58 /*CHARACTERISTIC_EXPONENT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 60 /*MAX_LUNAR_OCCULTATION_S*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 62 /*TOTAL_LUNAR_OCCULTATION_S*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 64 /*MAX_EARTH_OCCULTATION_S*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 66 /*TOTAL_EARTH_OCCULTATION_S*/, 8 /*double*/, 8, false)
+      && verifier.VerifyVectorOfData(tablePos, 68 /*STABLE_EIGENVECTOR*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 70 /*UNSTABLE_EIGENVECTOR*/, 8 /*double*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

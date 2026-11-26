@@ -37,23 +37,75 @@ public struct tbpFrameConversion : IFlatbufferObject
   public ArraySegment<byte>? GetINERTIALBytes() { return __p.__vector_as_arraysegment(12); }
 #endif
   public double[] GetINERTIALArray() { return __p.__vector_as_array<double>(12); }
+  /// Reference primary body: 0 = barycenter, 1 = P1 (Earth), 2 = P2 (Moon).
+  public byte REFERENCE_PRIMARY { get { int o = __p.__offset(14); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
+  /// Epoch Julian date (days) for J2000/ephemeris conversions; 0 = from REFERENCE_EPOCH_MS.
+  public double JULIAN_DATE { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Geodetic/selenodetic coordinates [lat_deg, lon_deg, alt_km] (3 values).
+  public double LLA_DEG_KM(int j) { int o = __p.__offset(18); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int LLA_DEG_KMLength { get { int o = __p.__offset(18); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetLLA_DEG_KMBytes() { return __p.__vector_as_span<double>(18, 8); }
+#else
+  public ArraySegment<byte>? GetLLA_DEG_KMBytes() { return __p.__vector_as_arraysegment(18); }
+#endif
+  public double[] GetLLA_DEG_KMArray() { return __p.__vector_as_array<double>(18); }
+  /// Classical Keplerian elements [a_km, e, inc_deg, raan_deg, argp_deg, nu_deg] (6 values).
+  public double ORBITAL_ELEMENTS(int j) { int o = __p.__offset(20); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int ORBITAL_ELEMENTSLength { get { int o = __p.__offset(20); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetORBITAL_ELEMENTSBytes() { return __p.__vector_as_span<double>(20, 8); }
+#else
+  public ArraySegment<byte>? GetORBITAL_ELEMENTSBytes() { return __p.__vector_as_arraysegment(20); }
+#endif
+  public double[] GetORBITAL_ELEMENTSArray() { return __p.__vector_as_array<double>(20); }
+  /// Batch synodic states (N * 6 values, non-dimensional) for vectorized conversion.
+  public double BATCH_SYNODIC_STATES(int j) { int o = __p.__offset(22); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int BATCH_SYNODIC_STATESLength { get { int o = __p.__offset(22); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetBATCH_SYNODIC_STATESBytes() { return __p.__vector_as_span<double>(22, 8); }
+#else
+  public ArraySegment<byte>? GetBATCH_SYNODIC_STATESBytes() { return __p.__vector_as_arraysegment(22); }
+#endif
+  public double[] GetBATCH_SYNODIC_STATESArray() { return __p.__vector_as_array<double>(22); }
+  /// Batch inertial/target states (N * 6 values, km and km/s) for vectorized conversion.
+  public double BATCH_INERTIAL_STATES(int j) { int o = __p.__offset(24); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int BATCH_INERTIAL_STATESLength { get { int o = __p.__offset(24); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetBATCH_INERTIAL_STATESBytes() { return __p.__vector_as_span<double>(24, 8); }
+#else
+  public ArraySegment<byte>? GetBATCH_INERTIAL_STATESBytes() { return __p.__vector_as_arraysegment(24); }
+#endif
+  public double[] GetBATCH_INERTIAL_STATESArray() { return __p.__vector_as_array<double>(24); }
 
   public static Offset<tbpFrameConversion> CreatetbpFrameConversion(FlatBufferBuilder builder,
       tbpConversionDirection DIRECTION = tbpConversionDirection.SynodicToInertial,
       long REFERENCE_EPOCH_MS = 0,
       double ELAPSED_S = 0.0,
       Offset<tbpState> SYNODICOffset = default(Offset<tbpState>),
-      VectorOffset INERTIALOffset = default(VectorOffset)) {
-    builder.StartTable(5);
+      VectorOffset INERTIALOffset = default(VectorOffset),
+      byte REFERENCE_PRIMARY = 0,
+      double JULIAN_DATE = 0.0,
+      VectorOffset LLA_DEG_KMOffset = default(VectorOffset),
+      VectorOffset ORBITAL_ELEMENTSOffset = default(VectorOffset),
+      VectorOffset BATCH_SYNODIC_STATESOffset = default(VectorOffset),
+      VectorOffset BATCH_INERTIAL_STATESOffset = default(VectorOffset)) {
+    builder.StartTable(11);
+    tbpFrameConversion.AddJULIAN_DATE(builder, JULIAN_DATE);
     tbpFrameConversion.AddELAPSED_S(builder, ELAPSED_S);
     tbpFrameConversion.AddREFERENCE_EPOCH_MS(builder, REFERENCE_EPOCH_MS);
+    tbpFrameConversion.AddBATCH_INERTIAL_STATES(builder, BATCH_INERTIAL_STATESOffset);
+    tbpFrameConversion.AddBATCH_SYNODIC_STATES(builder, BATCH_SYNODIC_STATESOffset);
+    tbpFrameConversion.AddORBITAL_ELEMENTS(builder, ORBITAL_ELEMENTSOffset);
+    tbpFrameConversion.AddLLA_DEG_KM(builder, LLA_DEG_KMOffset);
     tbpFrameConversion.AddINERTIAL(builder, INERTIALOffset);
     tbpFrameConversion.AddSYNODIC(builder, SYNODICOffset);
+    tbpFrameConversion.AddREFERENCE_PRIMARY(builder, REFERENCE_PRIMARY);
     tbpFrameConversion.AddDIRECTION(builder, DIRECTION);
     return tbpFrameConversion.EndtbpFrameConversion(builder);
   }
 
-  public static void StarttbpFrameConversion(FlatBufferBuilder builder) { builder.StartTable(5); }
+  public static void StarttbpFrameConversion(FlatBufferBuilder builder) { builder.StartTable(11); }
   public static void AddDIRECTION(FlatBufferBuilder builder, tbpConversionDirection DIRECTION) { builder.AddByte(0, (byte)DIRECTION, 0); }
   public static void AddREFERENCE_EPOCH_MS(FlatBufferBuilder builder, long REFERENCE_EPOCH_MS) { builder.AddLong(1, REFERENCE_EPOCH_MS, 0); }
   public static void AddELAPSED_S(FlatBufferBuilder builder, double ELAPSED_S) { builder.AddDouble(2, ELAPSED_S, 0.0); }
@@ -64,6 +116,32 @@ public struct tbpFrameConversion : IFlatbufferObject
   public static VectorOffset CreateINERTIALVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateINERTIALVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartINERTIALVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddREFERENCE_PRIMARY(FlatBufferBuilder builder, byte REFERENCE_PRIMARY) { builder.AddByte(5, REFERENCE_PRIMARY, 0); }
+  public static void AddJULIAN_DATE(FlatBufferBuilder builder, double JULIAN_DATE) { builder.AddDouble(6, JULIAN_DATE, 0.0); }
+  public static void AddLLA_DEG_KM(FlatBufferBuilder builder, VectorOffset LLA_DEG_KMOffset) { builder.AddOffset(7, LLA_DEG_KMOffset.Value, 0); }
+  public static VectorOffset CreateLLA_DEG_KMVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateLLA_DEG_KMVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateLLA_DEG_KMVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateLLA_DEG_KMVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartLLA_DEG_KMVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddORBITAL_ELEMENTS(FlatBufferBuilder builder, VectorOffset ORBITAL_ELEMENTSOffset) { builder.AddOffset(8, ORBITAL_ELEMENTSOffset.Value, 0); }
+  public static VectorOffset CreateORBITAL_ELEMENTSVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateORBITAL_ELEMENTSVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateORBITAL_ELEMENTSVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateORBITAL_ELEMENTSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartORBITAL_ELEMENTSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddBATCH_SYNODIC_STATES(FlatBufferBuilder builder, VectorOffset BATCH_SYNODIC_STATESOffset) { builder.AddOffset(9, BATCH_SYNODIC_STATESOffset.Value, 0); }
+  public static VectorOffset CreateBATCH_SYNODIC_STATESVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateBATCH_SYNODIC_STATESVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateBATCH_SYNODIC_STATESVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateBATCH_SYNODIC_STATESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartBATCH_SYNODIC_STATESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddBATCH_INERTIAL_STATES(FlatBufferBuilder builder, VectorOffset BATCH_INERTIAL_STATESOffset) { builder.AddOffset(10, BATCH_INERTIAL_STATESOffset.Value, 0); }
+  public static VectorOffset CreateBATCH_INERTIAL_STATESVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateBATCH_INERTIAL_STATESVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateBATCH_INERTIAL_STATESVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateBATCH_INERTIAL_STATESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartBATCH_INERTIAL_STATESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
   public static Offset<tbpFrameConversion> EndtbpFrameConversion(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<tbpFrameConversion>(o);
@@ -80,6 +158,16 @@ public struct tbpFrameConversion : IFlatbufferObject
     _o.SYNODIC = this.SYNODIC.HasValue ? this.SYNODIC.Value.UnPack() : null;
     _o.INERTIAL = new List<double>();
     for (var _j = 0; _j < this.INERTIALLength; ++_j) {_o.INERTIAL.Add(this.INERTIAL(_j));}
+    _o.REFERENCE_PRIMARY = this.REFERENCE_PRIMARY;
+    _o.JULIAN_DATE = this.JULIAN_DATE;
+    _o.LLA_DEG_KM = new List<double>();
+    for (var _j = 0; _j < this.LLA_DEG_KMLength; ++_j) {_o.LLA_DEG_KM.Add(this.LLA_DEG_KM(_j));}
+    _o.ORBITAL_ELEMENTS = new List<double>();
+    for (var _j = 0; _j < this.ORBITAL_ELEMENTSLength; ++_j) {_o.ORBITAL_ELEMENTS.Add(this.ORBITAL_ELEMENTS(_j));}
+    _o.BATCH_SYNODIC_STATES = new List<double>();
+    for (var _j = 0; _j < this.BATCH_SYNODIC_STATESLength; ++_j) {_o.BATCH_SYNODIC_STATES.Add(this.BATCH_SYNODIC_STATES(_j));}
+    _o.BATCH_INERTIAL_STATES = new List<double>();
+    for (var _j = 0; _j < this.BATCH_INERTIAL_STATESLength; ++_j) {_o.BATCH_INERTIAL_STATES.Add(this.BATCH_INERTIAL_STATES(_j));}
   }
   public static Offset<tbpFrameConversion> Pack(FlatBufferBuilder builder, tbpFrameConversionT _o) {
     if (_o == null) return default(Offset<tbpFrameConversion>);
@@ -89,13 +177,39 @@ public struct tbpFrameConversion : IFlatbufferObject
       var __INERTIAL = _o.INERTIAL.ToArray();
       _INERTIAL = CreateINERTIALVector(builder, __INERTIAL);
     }
+    var _LLA_DEG_KM = default(VectorOffset);
+    if (_o.LLA_DEG_KM != null) {
+      var __LLA_DEG_KM = _o.LLA_DEG_KM.ToArray();
+      _LLA_DEG_KM = CreateLLA_DEG_KMVector(builder, __LLA_DEG_KM);
+    }
+    var _ORBITAL_ELEMENTS = default(VectorOffset);
+    if (_o.ORBITAL_ELEMENTS != null) {
+      var __ORBITAL_ELEMENTS = _o.ORBITAL_ELEMENTS.ToArray();
+      _ORBITAL_ELEMENTS = CreateORBITAL_ELEMENTSVector(builder, __ORBITAL_ELEMENTS);
+    }
+    var _BATCH_SYNODIC_STATES = default(VectorOffset);
+    if (_o.BATCH_SYNODIC_STATES != null) {
+      var __BATCH_SYNODIC_STATES = _o.BATCH_SYNODIC_STATES.ToArray();
+      _BATCH_SYNODIC_STATES = CreateBATCH_SYNODIC_STATESVector(builder, __BATCH_SYNODIC_STATES);
+    }
+    var _BATCH_INERTIAL_STATES = default(VectorOffset);
+    if (_o.BATCH_INERTIAL_STATES != null) {
+      var __BATCH_INERTIAL_STATES = _o.BATCH_INERTIAL_STATES.ToArray();
+      _BATCH_INERTIAL_STATES = CreateBATCH_INERTIAL_STATESVector(builder, __BATCH_INERTIAL_STATES);
+    }
     return CreatetbpFrameConversion(
       builder,
       _o.DIRECTION,
       _o.REFERENCE_EPOCH_MS,
       _o.ELAPSED_S,
       _SYNODIC,
-      _INERTIAL);
+      _INERTIAL,
+      _o.REFERENCE_PRIMARY,
+      _o.JULIAN_DATE,
+      _LLA_DEG_KM,
+      _ORBITAL_ELEMENTS,
+      _BATCH_SYNODIC_STATES,
+      _BATCH_INERTIAL_STATES);
   }
 }
 
@@ -106,6 +220,12 @@ public class tbpFrameConversionT
   public double ELAPSED_S { get; set; }
   public tbpStateT SYNODIC { get; set; }
   public List<double> INERTIAL { get; set; }
+  public byte REFERENCE_PRIMARY { get; set; }
+  public double JULIAN_DATE { get; set; }
+  public List<double> LLA_DEG_KM { get; set; }
+  public List<double> ORBITAL_ELEMENTS { get; set; }
+  public List<double> BATCH_SYNODIC_STATES { get; set; }
+  public List<double> BATCH_INERTIAL_STATES { get; set; }
 
   public tbpFrameConversionT() {
     this.DIRECTION = tbpConversionDirection.SynodicToInertial;
@@ -113,6 +233,12 @@ public class tbpFrameConversionT
     this.ELAPSED_S = 0.0;
     this.SYNODIC = null;
     this.INERTIAL = null;
+    this.REFERENCE_PRIMARY = 0;
+    this.JULIAN_DATE = 0.0;
+    this.LLA_DEG_KM = null;
+    this.ORBITAL_ELEMENTS = null;
+    this.BATCH_SYNODIC_STATES = null;
+    this.BATCH_INERTIAL_STATES = null;
   }
 }
 
@@ -127,6 +253,12 @@ static public class tbpFrameConversionVerify
       && verifier.VerifyField(tablePos, 8 /*ELAPSED_S*/, 8 /*double*/, 8, false)
       && verifier.VerifyTable(tablePos, 10 /*SYNODIC*/, tbpStateVerify.Verify, false)
       && verifier.VerifyVectorOfData(tablePos, 12 /*INERTIAL*/, 8 /*double*/, false)
+      && verifier.VerifyField(tablePos, 14 /*REFERENCE_PRIMARY*/, 1 /*byte*/, 1, false)
+      && verifier.VerifyField(tablePos, 16 /*JULIAN_DATE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyVectorOfData(tablePos, 18 /*LLA_DEG_KM*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 20 /*ORBITAL_ELEMENTS*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 22 /*BATCH_SYNODIC_STATES*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 24 /*BATCH_INERTIAL_STATES*/, 8 /*double*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

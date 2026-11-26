@@ -212,8 +212,140 @@ TRAJECTORY(obj?:tbpTrajectory):tbpTrajectory|null {
   return offset ? (obj || new tbpTrajectory()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * Tulip/pumpkin petal count Np; 0 = not applicable.
+ */
+PETALS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Sidereal resonance denominator p (period = q * 2*pi / p); 0 = not stated.
+ */
+RESONANCE_P():number {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Sidereal resonance numerator q; 0 = not stated.
+ */
+RESONANCE_Q():number {
+  const offset = this.bb!.__offset(this.bb_pos, 48);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * CR3BP pseudo-potential U* at the initial state.
+ */
+PSEUDO_POTENTIAL():number {
+  const offset = this.bb!.__offset(this.bb_pos, 50);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Minimum distance from the larger primary (P1), km; 0 = not computed.
+ */
+PERIGEE_KM():number {
+  const offset = this.bb!.__offset(this.bb_pos, 52);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Maximum distance from the larger primary (P1), km; 0 = not computed.
+ */
+APOGEE_KM():number {
+  const offset = this.bb!.__offset(this.bb_pos, 54);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Instability doubling time, non-dimensional; 0 = stable or not computed.
+ */
+DOUBLING_TIME():number {
+  const offset = this.bb!.__offset(this.bb_pos, 56);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Floquet/Lyapunov characteristic exponent, non-dimensional; 0 = not computed.
+ */
+CHARACTERISTIC_EXPONENT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 58);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Longest continuous P2 (lunar) occultation per period, s.
+ */
+MAX_LUNAR_OCCULTATION_S():number {
+  const offset = this.bb!.__offset(this.bb_pos, 60);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Total P2 (lunar) occultation duration per period, s.
+ */
+TOTAL_LUNAR_OCCULTATION_S():number {
+  const offset = this.bb!.__offset(this.bb_pos, 62);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Longest continuous P1 (Earth) occultation per period, s.
+ */
+MAX_EARTH_OCCULTATION_S():number {
+  const offset = this.bb!.__offset(this.bb_pos, 64);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Total P1 (Earth) occultation duration per period, s.
+ */
+TOTAL_EARTH_OCCULTATION_S():number {
+  const offset = this.bb!.__offset(this.bb_pos, 66);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Unit stable eigenvector of the monodromy matrix (6 values); empty = none.
+ */
+STABLE_EIGENVECTOR(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 68);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+stableEigenvectorLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 68);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+stableEigenvectorArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 68);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Unit unstable eigenvector of the monodromy matrix (6 values); empty = none.
+ */
+UNSTABLE_EIGENVECTOR(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 70);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+unstableEigenvectorLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 70);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+unstableEigenvectorArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 70);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
 static starttbpPeriodicOrbit(builder:flatbuffers.Builder) {
-  builder.startObject(20);
+  builder.startObject(34);
 }
 
 static addFamily(builder:flatbuffers.Builder, FAMILY:tbpOrbitFamily) {
@@ -347,6 +479,96 @@ static addTrajectory(builder:flatbuffers.Builder, TRAJECTORYOffset:flatbuffers.O
   builder.addFieldOffset(19, TRAJECTORYOffset, 0);
 }
 
+static addPetals(builder:flatbuffers.Builder, PETALS:number) {
+  builder.addFieldInt32(20, PETALS, 0);
+}
+
+static addResonanceP(builder:flatbuffers.Builder, RESONANCE_P:number) {
+  builder.addFieldInt32(21, RESONANCE_P, 0);
+}
+
+static addResonanceQ(builder:flatbuffers.Builder, RESONANCE_Q:number) {
+  builder.addFieldInt32(22, RESONANCE_Q, 0);
+}
+
+static addPseudoPotential(builder:flatbuffers.Builder, PSEUDO_POTENTIAL:number) {
+  builder.addFieldFloat64(23, PSEUDO_POTENTIAL, 0.0);
+}
+
+static addPerigeeKm(builder:flatbuffers.Builder, PERIGEE_KM:number) {
+  builder.addFieldFloat64(24, PERIGEE_KM, 0.0);
+}
+
+static addApogeeKm(builder:flatbuffers.Builder, APOGEE_KM:number) {
+  builder.addFieldFloat64(25, APOGEE_KM, 0.0);
+}
+
+static addDoublingTime(builder:flatbuffers.Builder, DOUBLING_TIME:number) {
+  builder.addFieldFloat64(26, DOUBLING_TIME, 0.0);
+}
+
+static addCharacteristicExponent(builder:flatbuffers.Builder, CHARACTERISTIC_EXPONENT:number) {
+  builder.addFieldFloat64(27, CHARACTERISTIC_EXPONENT, 0.0);
+}
+
+static addMaxLunarOccultationS(builder:flatbuffers.Builder, MAX_LUNAR_OCCULTATION_S:number) {
+  builder.addFieldFloat64(28, MAX_LUNAR_OCCULTATION_S, 0.0);
+}
+
+static addTotalLunarOccultationS(builder:flatbuffers.Builder, TOTAL_LUNAR_OCCULTATION_S:number) {
+  builder.addFieldFloat64(29, TOTAL_LUNAR_OCCULTATION_S, 0.0);
+}
+
+static addMaxEarthOccultationS(builder:flatbuffers.Builder, MAX_EARTH_OCCULTATION_S:number) {
+  builder.addFieldFloat64(30, MAX_EARTH_OCCULTATION_S, 0.0);
+}
+
+static addTotalEarthOccultationS(builder:flatbuffers.Builder, TOTAL_EARTH_OCCULTATION_S:number) {
+  builder.addFieldFloat64(31, TOTAL_EARTH_OCCULTATION_S, 0.0);
+}
+
+static addStableEigenvector(builder:flatbuffers.Builder, STABLE_EIGENVECTOROffset:flatbuffers.Offset) {
+  builder.addFieldOffset(32, STABLE_EIGENVECTOROffset, 0);
+}
+
+static createStableEigenvectorVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createStableEigenvectorVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createStableEigenvectorVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startStableEigenvectorVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
+static addUnstableEigenvector(builder:flatbuffers.Builder, UNSTABLE_EIGENVECTOROffset:flatbuffers.Offset) {
+  builder.addFieldOffset(33, UNSTABLE_EIGENVECTOROffset, 0);
+}
+
+static createUnstableEigenvectorVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createUnstableEigenvectorVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createUnstableEigenvectorVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startUnstableEigenvectorVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
 static endtbpPeriodicOrbit(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -374,7 +596,21 @@ unpack(): tbpPeriodicOrbitT {
     this.bb!.createScalarList<number>(this.FLOQUET_IMAGINARY.bind(this), this.floquetImaginaryLength()),
     this.STABILITY_INDEX(),
     this.STABLE(),
-    (this.TRAJECTORY() !== null ? this.TRAJECTORY()!.unpack() : null)
+    (this.TRAJECTORY() !== null ? this.TRAJECTORY()!.unpack() : null),
+    this.PETALS(),
+    this.RESONANCE_P(),
+    this.RESONANCE_Q(),
+    this.PSEUDO_POTENTIAL(),
+    this.PERIGEE_KM(),
+    this.APOGEE_KM(),
+    this.DOUBLING_TIME(),
+    this.CHARACTERISTIC_EXPONENT(),
+    this.MAX_LUNAR_OCCULTATION_S(),
+    this.TOTAL_LUNAR_OCCULTATION_S(),
+    this.MAX_EARTH_OCCULTATION_S(),
+    this.TOTAL_EARTH_OCCULTATION_S(),
+    this.bb!.createScalarList<number>(this.STABLE_EIGENVECTOR.bind(this), this.stableEigenvectorLength()),
+    this.bb!.createScalarList<number>(this.UNSTABLE_EIGENVECTOR.bind(this), this.unstableEigenvectorLength())
   );
 }
 
@@ -400,6 +636,20 @@ unpackTo(_o: tbpPeriodicOrbitT): void {
   _o.STABILITY_INDEX = this.STABILITY_INDEX();
   _o.STABLE = this.STABLE();
   _o.TRAJECTORY = (this.TRAJECTORY() !== null ? this.TRAJECTORY()!.unpack() : null);
+  _o.PETALS = this.PETALS();
+  _o.RESONANCE_P = this.RESONANCE_P();
+  _o.RESONANCE_Q = this.RESONANCE_Q();
+  _o.PSEUDO_POTENTIAL = this.PSEUDO_POTENTIAL();
+  _o.PERIGEE_KM = this.PERIGEE_KM();
+  _o.APOGEE_KM = this.APOGEE_KM();
+  _o.DOUBLING_TIME = this.DOUBLING_TIME();
+  _o.CHARACTERISTIC_EXPONENT = this.CHARACTERISTIC_EXPONENT();
+  _o.MAX_LUNAR_OCCULTATION_S = this.MAX_LUNAR_OCCULTATION_S();
+  _o.TOTAL_LUNAR_OCCULTATION_S = this.TOTAL_LUNAR_OCCULTATION_S();
+  _o.MAX_EARTH_OCCULTATION_S = this.MAX_EARTH_OCCULTATION_S();
+  _o.TOTAL_EARTH_OCCULTATION_S = this.TOTAL_EARTH_OCCULTATION_S();
+  _o.STABLE_EIGENVECTOR = this.bb!.createScalarList<number>(this.STABLE_EIGENVECTOR.bind(this), this.stableEigenvectorLength());
+  _o.UNSTABLE_EIGENVECTOR = this.bb!.createScalarList<number>(this.UNSTABLE_EIGENVECTOR.bind(this), this.unstableEigenvectorLength());
 }
 }
 
@@ -424,7 +674,21 @@ constructor(
   public FLOQUET_IMAGINARY: (number)[] = [],
   public STABILITY_INDEX: number = 0.0,
   public STABLE: boolean = false,
-  public TRAJECTORY: tbpTrajectoryT|null = null
+  public TRAJECTORY: tbpTrajectoryT|null = null,
+  public PETALS: number = 0,
+  public RESONANCE_P: number = 0,
+  public RESONANCE_Q: number = 0,
+  public PSEUDO_POTENTIAL: number = 0.0,
+  public PERIGEE_KM: number = 0.0,
+  public APOGEE_KM: number = 0.0,
+  public DOUBLING_TIME: number = 0.0,
+  public CHARACTERISTIC_EXPONENT: number = 0.0,
+  public MAX_LUNAR_OCCULTATION_S: number = 0.0,
+  public TOTAL_LUNAR_OCCULTATION_S: number = 0.0,
+  public MAX_EARTH_OCCULTATION_S: number = 0.0,
+  public TOTAL_EARTH_OCCULTATION_S: number = 0.0,
+  public STABLE_EIGENVECTOR: (number)[] = [],
+  public UNSTABLE_EIGENVECTOR: (number)[] = []
 ){}
 
 
@@ -434,6 +698,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const FLOQUET_REAL = tbpPeriodicOrbit.createFloquetRealVector(builder, this.FLOQUET_REAL);
   const FLOQUET_IMAGINARY = tbpPeriodicOrbit.createFloquetImaginaryVector(builder, this.FLOQUET_IMAGINARY);
   const TRAJECTORY = (this.TRAJECTORY !== null ? this.TRAJECTORY!.pack(builder) : 0);
+  const STABLE_EIGENVECTOR = tbpPeriodicOrbit.createStableEigenvectorVector(builder, this.STABLE_EIGENVECTOR);
+  const UNSTABLE_EIGENVECTOR = tbpPeriodicOrbit.createUnstableEigenvectorVector(builder, this.UNSTABLE_EIGENVECTOR);
 
   tbpPeriodicOrbit.starttbpPeriodicOrbit(builder);
   tbpPeriodicOrbit.addFamily(builder, this.FAMILY);
@@ -456,6 +722,20 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   tbpPeriodicOrbit.addStabilityIndex(builder, this.STABILITY_INDEX);
   tbpPeriodicOrbit.addStable(builder, this.STABLE);
   tbpPeriodicOrbit.addTrajectory(builder, TRAJECTORY);
+  tbpPeriodicOrbit.addPetals(builder, this.PETALS);
+  tbpPeriodicOrbit.addResonanceP(builder, this.RESONANCE_P);
+  tbpPeriodicOrbit.addResonanceQ(builder, this.RESONANCE_Q);
+  tbpPeriodicOrbit.addPseudoPotential(builder, this.PSEUDO_POTENTIAL);
+  tbpPeriodicOrbit.addPerigeeKm(builder, this.PERIGEE_KM);
+  tbpPeriodicOrbit.addApogeeKm(builder, this.APOGEE_KM);
+  tbpPeriodicOrbit.addDoublingTime(builder, this.DOUBLING_TIME);
+  tbpPeriodicOrbit.addCharacteristicExponent(builder, this.CHARACTERISTIC_EXPONENT);
+  tbpPeriodicOrbit.addMaxLunarOccultationS(builder, this.MAX_LUNAR_OCCULTATION_S);
+  tbpPeriodicOrbit.addTotalLunarOccultationS(builder, this.TOTAL_LUNAR_OCCULTATION_S);
+  tbpPeriodicOrbit.addMaxEarthOccultationS(builder, this.MAX_EARTH_OCCULTATION_S);
+  tbpPeriodicOrbit.addTotalEarthOccultationS(builder, this.TOTAL_EARTH_OCCULTATION_S);
+  tbpPeriodicOrbit.addStableEigenvector(builder, STABLE_EIGENVECTOR);
+  tbpPeriodicOrbit.addUnstableEigenvector(builder, UNSTABLE_EIGENVECTOR);
 
   return tbpPeriodicOrbit.endtbpPeriodicOrbit(builder);
 }

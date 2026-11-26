@@ -9,8 +9,16 @@ public final class tbpConversionDirection {
   private tbpConversionDirection() { }
   public static final int SynodicToInertial = 0;
   public static final int InertialToSynodic = 1;
+  public static final int SynodicToJ2000 = 2;
+  public static final int J2000ToSynodic = 3;
+  public static final int SynodicToPrimaryInertial = 4;
+  public static final int PrimaryInertialToSynodic = 5;
+  public static final int SynodicToLla = 6;
+  public static final int LlaToSynodic = 7;
+  public static final int SynodicToOrbitalElements = 8;
+  public static final int OrbitalElementsToSynodic = 9;
 
-  public static final String[] names = { "SynodicToInertial", "InertialToSynodic", };
+  public static final String[] names = { "SynodicToInertial", "InertialToSynodic", "SynodicToJ2000", "J2000ToSynodic", "SynodicToPrimaryInertial", "PrimaryInertialToSynodic", "SynodicToLla", "LlaToSynodic", "SynodicToOrbitalElements", "OrbitalElementsToSynodic", };
 
   public static String name(int e) { return names[e]; }
 }

@@ -60,7 +60,12 @@ enum tbpProblem {
   Transfer(7),
   StationKeeping(8),
   FrameConversion(9),
-  Family(10);
+  Family(10),
+  Continuation(11),
+  Manifolds(12),
+  OrbitProperties(13),
+  Constellation(14),
+  SurfaceAnalysis(15);
 
   final int value;
   const tbpProblem(this.value);
@@ -78,6 +83,11 @@ enum tbpProblem {
       case 8: return tbpProblem.StationKeeping;
       case 9: return tbpProblem.FrameConversion;
       case 10: return tbpProblem.Family;
+      case 11: return tbpProblem.Continuation;
+      case 12: return tbpProblem.Manifolds;
+      case 13: return tbpProblem.OrbitProperties;
+      case 14: return tbpProblem.Constellation;
+      case 15: return tbpProblem.SurfaceAnalysis;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -86,7 +96,7 @@ enum tbpProblem {
       value == null ? null : tbpProblem.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 10;
+  static const int maxValue = 15;
   static const fb.Reader<tbpProblem> reader = _tbpProblemReader();
 }
 
@@ -113,7 +123,11 @@ enum tbpOrbitFamily {
   DistantRetrograde(6),
   Butterfly(7),
   Axial(8),
-  LongShortPeriod(9);
+  LongShortPeriod(9),
+  TulipNorthern(10),
+  TulipSouthern(11),
+  PumpkinNorthern(12),
+  PumpkinSouthern(13);
 
   final int value;
   const tbpOrbitFamily(this.value);
@@ -130,6 +144,10 @@ enum tbpOrbitFamily {
       case 7: return tbpOrbitFamily.Butterfly;
       case 8: return tbpOrbitFamily.Axial;
       case 9: return tbpOrbitFamily.LongShortPeriod;
+      case 10: return tbpOrbitFamily.TulipNorthern;
+      case 11: return tbpOrbitFamily.TulipSouthern;
+      case 12: return tbpOrbitFamily.PumpkinNorthern;
+      case 13: return tbpOrbitFamily.PumpkinSouthern;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -138,7 +156,7 @@ enum tbpOrbitFamily {
       value == null ? null : tbpOrbitFamily.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 9;
+  static const int maxValue = 13;
   static const fb.Reader<tbpOrbitFamily> reader = _tbpOrbitFamilyReader();
 }
 
@@ -163,7 +181,11 @@ enum tbpTransferKind {
   PoweredFlyby(4),
   WeakStabilityBoundary(5),
   DirectInsertion(6),
-  PeriodicOrbitInsertion(7);
+  PeriodicOrbitInsertion(7),
+  MinEnergy(8),
+  DirectLambert(9),
+  MinLambert(10),
+  LowThrustMinTime(11);
 
   final int value;
   const tbpTransferKind(this.value);
@@ -178,6 +200,10 @@ enum tbpTransferKind {
       case 5: return tbpTransferKind.WeakStabilityBoundary;
       case 6: return tbpTransferKind.DirectInsertion;
       case 7: return tbpTransferKind.PeriodicOrbitInsertion;
+      case 8: return tbpTransferKind.MinEnergy;
+      case 9: return tbpTransferKind.DirectLambert;
+      case 10: return tbpTransferKind.MinLambert;
+      case 11: return tbpTransferKind.LowThrustMinTime;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -186,7 +212,7 @@ enum tbpTransferKind {
       value == null ? null : tbpTransferKind.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 7;
+  static const int maxValue = 11;
   static const fb.Reader<tbpTransferKind> reader = _tbpTransferKindReader();
 }
 
@@ -206,7 +232,8 @@ class _tbpTransferKindReader extends fb.Reader<tbpTransferKind> {
 enum tbpStationKeepingStrategy {
   PlaneCrossing(0),
   TargetPoint(1),
-  FloquetMode(2);
+  FloquetMode(2),
+  LinearStabilityBounds(3);
 
   final int value;
   const tbpStationKeepingStrategy(this.value);
@@ -216,6 +243,7 @@ enum tbpStationKeepingStrategy {
       case 0: return tbpStationKeepingStrategy.PlaneCrossing;
       case 1: return tbpStationKeepingStrategy.TargetPoint;
       case 2: return tbpStationKeepingStrategy.FloquetMode;
+      case 3: return tbpStationKeepingStrategy.LinearStabilityBounds;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -224,7 +252,7 @@ enum tbpStationKeepingStrategy {
       value == null ? null : tbpStationKeepingStrategy.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 2;
+  static const int maxValue = 3;
   static const fb.Reader<tbpStationKeepingStrategy> reader = _tbpStationKeepingStrategyReader();
 }
 
@@ -243,7 +271,15 @@ class _tbpStationKeepingStrategyReader extends fb.Reader<tbpStationKeepingStrate
 ///  reuse existing values.
 enum tbpConversionDirection {
   SynodicToInertial(0),
-  InertialToSynodic(1);
+  InertialToSynodic(1),
+  SynodicToJ2000(2),
+  J2000ToSynodic(3),
+  SynodicToPrimaryInertial(4),
+  PrimaryInertialToSynodic(5),
+  SynodicToLla(6),
+  LlaToSynodic(7),
+  SynodicToOrbitalElements(8),
+  OrbitalElementsToSynodic(9);
 
   final int value;
   const tbpConversionDirection(this.value);
@@ -252,6 +288,14 @@ enum tbpConversionDirection {
     switch (value) {
       case 0: return tbpConversionDirection.SynodicToInertial;
       case 1: return tbpConversionDirection.InertialToSynodic;
+      case 2: return tbpConversionDirection.SynodicToJ2000;
+      case 3: return tbpConversionDirection.J2000ToSynodic;
+      case 4: return tbpConversionDirection.SynodicToPrimaryInertial;
+      case 5: return tbpConversionDirection.PrimaryInertialToSynodic;
+      case 6: return tbpConversionDirection.SynodicToLla;
+      case 7: return tbpConversionDirection.LlaToSynodic;
+      case 8: return tbpConversionDirection.SynodicToOrbitalElements;
+      case 9: return tbpConversionDirection.OrbitalElementsToSynodic;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -260,7 +304,7 @@ enum tbpConversionDirection {
       value == null ? null : tbpConversionDirection.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 1;
+  static const int maxValue = 9;
   static const fb.Reader<tbpConversionDirection> reader = _tbpConversionDirectionReader();
 }
 
@@ -273,6 +317,44 @@ class _tbpConversionDirectionReader extends fb.Reader<tbpConversionDirection> {
   @override
   tbpConversionDirection read(fb.BufferContext bc, int offset) =>
       tbpConversionDirection.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  Which invariant manifold branches to compute. Append new values only;
+///  never reorder or reuse existing values.
+enum tbpManifoldBranchKind {
+  Both(0),
+  StableOnly(1),
+  UnstableOnly(2);
+
+  final int value;
+  const tbpManifoldBranchKind(this.value);
+
+  factory tbpManifoldBranchKind.fromValue(int value) {
+    switch (value) {
+      case 0: return tbpManifoldBranchKind.Both;
+      case 1: return tbpManifoldBranchKind.StableOnly;
+      case 2: return tbpManifoldBranchKind.UnstableOnly;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static tbpManifoldBranchKind? _createOrNull(int? value) =>
+      value == null ? null : tbpManifoldBranchKind.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static const fb.Reader<tbpManifoldBranchKind> reader = _tbpManifoldBranchKindReader();
+}
+
+class _tbpManifoldBranchKindReader extends fb.Reader<tbpManifoldBranchKind> {
+  const _tbpManifoldBranchKindReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  tbpManifoldBranchKind read(fb.BufferContext bc, int offset) =>
+      tbpManifoldBranchKind.fromValue(const fb.Uint8Reader().read(bc, offset));
 }
 
 ///  Outcome. Append new values only; never reorder or reuse existing values.
@@ -975,10 +1057,51 @@ class tbpPeriodicOrbit {
   bool get STABLE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 40, false);
   ///  One period of the orbit; empty = not sampled.
   tbpTrajectory? get TRAJECTORY => tbpTrajectory.reader.vTableGetNullable(_bc, _bcOffset, 42);
+  ///  Tulip/pumpkin petal count Np; 0 = not applicable.
+  int get PETALS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 44, 0);
+  ///  Sidereal resonance denominator p (period = q * 2*pi / p); 0 = not stated.
+  int get RESONANCE_P => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 46, 0);
+  int get resonanceP => RESONANCE_P;
+  ///  Sidereal resonance numerator q; 0 = not stated.
+  int get RESONANCE_Q => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 48, 0);
+  int get resonanceQ => RESONANCE_Q;
+  ///  CR3BP pseudo-potential U* at the initial state.
+  double get PSEUDO_POTENTIAL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 50, 0.0);
+  double get pseudoPotential => PSEUDO_POTENTIAL;
+  ///  Minimum distance from the larger primary (P1), km; 0 = not computed.
+  double get PERIGEE_KM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 52, 0.0);
+  double get perigeeKm => PERIGEE_KM;
+  ///  Maximum distance from the larger primary (P1), km; 0 = not computed.
+  double get APOGEE_KM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 54, 0.0);
+  double get apogeeKm => APOGEE_KM;
+  ///  Instability doubling time, non-dimensional; 0 = stable or not computed.
+  double get DOUBLING_TIME => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 56, 0.0);
+  double get doublingTime => DOUBLING_TIME;
+  ///  Floquet/Lyapunov characteristic exponent, non-dimensional; 0 = not computed.
+  double get CHARACTERISTIC_EXPONENT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 58, 0.0);
+  double get characteristicExponent => CHARACTERISTIC_EXPONENT;
+  ///  Longest continuous P2 (lunar) occultation per period, s.
+  double get MAX_LUNAR_OCCULTATION_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 60, 0.0);
+  double get maxLunarOccultationS => MAX_LUNAR_OCCULTATION_S;
+  ///  Total P2 (lunar) occultation duration per period, s.
+  double get TOTAL_LUNAR_OCCULTATION_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 62, 0.0);
+  double get totalLunarOccultationS => TOTAL_LUNAR_OCCULTATION_S;
+  ///  Longest continuous P1 (Earth) occultation per period, s.
+  double get MAX_EARTH_OCCULTATION_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 64, 0.0);
+  double get maxEarthOccultationS => MAX_EARTH_OCCULTATION_S;
+  ///  Total P1 (Earth) occultation duration per period, s.
+  double get TOTAL_EARTH_OCCULTATION_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 66, 0.0);
+  double get totalEarthOccultationS => TOTAL_EARTH_OCCULTATION_S;
+  ///  Unit stable eigenvector of the monodromy matrix (6 values); empty = none.
+  List<double>? get STABLE_EIGENVECTOR => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 68);
+  List<double>? get stableEigenvector => STABLE_EIGENVECTOR;
+  ///  Unit unstable eigenvector of the monodromy matrix (6 values); empty = none.
+  List<double>? get UNSTABLE_EIGENVECTOR => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 70);
+  List<double>? get unstableEigenvector => UNSTABLE_EIGENVECTOR;
 
   @override
   String toString() {
-    return 'tbpPeriodicOrbit{FAMILY: ${FAMILY}, librationPoint: ${librationPoint}, AMPLITUDE: ${AMPLITUDE}, periluneAltitudeKm: ${periluneAltitudeKm}, apoluneAltitudeKm: ${apoluneAltitudeKm}, initialState: ${initialState}, PERIOD: ${PERIOD}, periodS: ${periodS}, JACOBI: ${JACOBI}, CORRECTED: ${CORRECTED}, CONVERGED: ${CONVERGED}, ITERATIONS: ${ITERATIONS}, TOLERANCE: ${TOLERANCE}, maxIterations: ${maxIterations}, MONODROMY: ${MONODROMY}, floquetReal: ${floquetReal}, floquetImaginary: ${floquetImaginary}, stabilityIndex: ${stabilityIndex}, STABLE: ${STABLE}, TRAJECTORY: ${TRAJECTORY}}';
+    return 'tbpPeriodicOrbit{FAMILY: ${FAMILY}, librationPoint: ${librationPoint}, AMPLITUDE: ${AMPLITUDE}, periluneAltitudeKm: ${periluneAltitudeKm}, apoluneAltitudeKm: ${apoluneAltitudeKm}, initialState: ${initialState}, PERIOD: ${PERIOD}, periodS: ${periodS}, JACOBI: ${JACOBI}, CORRECTED: ${CORRECTED}, CONVERGED: ${CONVERGED}, ITERATIONS: ${ITERATIONS}, TOLERANCE: ${TOLERANCE}, maxIterations: ${maxIterations}, MONODROMY: ${MONODROMY}, floquetReal: ${floquetReal}, floquetImaginary: ${floquetImaginary}, stabilityIndex: ${stabilityIndex}, STABLE: ${STABLE}, TRAJECTORY: ${TRAJECTORY}, PETALS: ${PETALS}, resonanceP: ${resonanceP}, resonanceQ: ${resonanceQ}, pseudoPotential: ${pseudoPotential}, perigeeKm: ${perigeeKm}, apogeeKm: ${apogeeKm}, doublingTime: ${doublingTime}, characteristicExponent: ${characteristicExponent}, maxLunarOccultationS: ${maxLunarOccultationS}, totalLunarOccultationS: ${totalLunarOccultationS}, maxEarthOccultationS: ${maxEarthOccultationS}, totalEarthOccultationS: ${totalEarthOccultationS}, stableEigenvector: ${stableEigenvector}, unstableEigenvector: ${unstableEigenvector}}';
   }
 }
 
@@ -996,7 +1119,7 @@ class tbpPeriodicOrbitBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(20);
+    fbBuilder.startTable(34);
   }
 
   int addFamily(tbpOrbitFamily? FAMILY) {
@@ -1079,6 +1202,62 @@ class tbpPeriodicOrbitBuilder {
     fbBuilder.addOffset(19, offset);
     return fbBuilder.offset;
   }
+  int addPetals(int? PETALS) {
+    fbBuilder.addUint32(20, PETALS);
+    return fbBuilder.offset;
+  }
+  int addResonanceP(int? RESONANCE_P) {
+    fbBuilder.addUint32(21, RESONANCE_P);
+    return fbBuilder.offset;
+  }
+  int addResonanceQ(int? RESONANCE_Q) {
+    fbBuilder.addUint32(22, RESONANCE_Q);
+    return fbBuilder.offset;
+  }
+  int addPseudoPotential(double? PSEUDO_POTENTIAL) {
+    fbBuilder.addFloat64(23, PSEUDO_POTENTIAL);
+    return fbBuilder.offset;
+  }
+  int addPerigeeKm(double? PERIGEE_KM) {
+    fbBuilder.addFloat64(24, PERIGEE_KM);
+    return fbBuilder.offset;
+  }
+  int addApogeeKm(double? APOGEE_KM) {
+    fbBuilder.addFloat64(25, APOGEE_KM);
+    return fbBuilder.offset;
+  }
+  int addDoublingTime(double? DOUBLING_TIME) {
+    fbBuilder.addFloat64(26, DOUBLING_TIME);
+    return fbBuilder.offset;
+  }
+  int addCharacteristicExponent(double? CHARACTERISTIC_EXPONENT) {
+    fbBuilder.addFloat64(27, CHARACTERISTIC_EXPONENT);
+    return fbBuilder.offset;
+  }
+  int addMaxLunarOccultationS(double? MAX_LUNAR_OCCULTATION_S) {
+    fbBuilder.addFloat64(28, MAX_LUNAR_OCCULTATION_S);
+    return fbBuilder.offset;
+  }
+  int addTotalLunarOccultationS(double? TOTAL_LUNAR_OCCULTATION_S) {
+    fbBuilder.addFloat64(29, TOTAL_LUNAR_OCCULTATION_S);
+    return fbBuilder.offset;
+  }
+  int addMaxEarthOccultationS(double? MAX_EARTH_OCCULTATION_S) {
+    fbBuilder.addFloat64(30, MAX_EARTH_OCCULTATION_S);
+    return fbBuilder.offset;
+  }
+  int addTotalEarthOccultationS(double? TOTAL_EARTH_OCCULTATION_S) {
+    fbBuilder.addFloat64(31, TOTAL_EARTH_OCCULTATION_S);
+    return fbBuilder.offset;
+  }
+  int addStableEigenvectorOffset(int? offset) {
+    fbBuilder.addOffset(32, offset);
+    return fbBuilder.offset;
+  }
+  int addUnstableEigenvectorOffset(int? offset) {
+    fbBuilder.addOffset(33, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1106,6 +1285,20 @@ class tbpPeriodicOrbitObjectBuilder extends fb.ObjectBuilder {
   final double? _STABILITY_INDEX;
   final bool? _STABLE;
   final tbpTrajectoryObjectBuilder? _TRAJECTORY;
+  final int? _PETALS;
+  final int? _RESONANCE_P;
+  final int? _RESONANCE_Q;
+  final double? _PSEUDO_POTENTIAL;
+  final double? _PERIGEE_KM;
+  final double? _APOGEE_KM;
+  final double? _DOUBLING_TIME;
+  final double? _CHARACTERISTIC_EXPONENT;
+  final double? _MAX_LUNAR_OCCULTATION_S;
+  final double? _TOTAL_LUNAR_OCCULTATION_S;
+  final double? _MAX_EARTH_OCCULTATION_S;
+  final double? _TOTAL_EARTH_OCCULTATION_S;
+  final List<double>? _STABLE_EIGENVECTOR;
+  final List<double>? _UNSTABLE_EIGENVECTOR;
 
   tbpPeriodicOrbitObjectBuilder({
     tbpOrbitFamily? FAMILY,
@@ -1137,6 +1330,33 @@ class tbpPeriodicOrbitObjectBuilder extends fb.ObjectBuilder {
     double? stabilityIndex,
     bool? STABLE,
     tbpTrajectoryObjectBuilder? TRAJECTORY,
+    int? PETALS,
+    int? RESONANCE_P,
+    int? resonanceP,
+    int? RESONANCE_Q,
+    int? resonanceQ,
+    double? PSEUDO_POTENTIAL,
+    double? pseudoPotential,
+    double? PERIGEE_KM,
+    double? perigeeKm,
+    double? APOGEE_KM,
+    double? apogeeKm,
+    double? DOUBLING_TIME,
+    double? doublingTime,
+    double? CHARACTERISTIC_EXPONENT,
+    double? characteristicExponent,
+    double? MAX_LUNAR_OCCULTATION_S,
+    double? maxLunarOccultationS,
+    double? TOTAL_LUNAR_OCCULTATION_S,
+    double? totalLunarOccultationS,
+    double? MAX_EARTH_OCCULTATION_S,
+    double? maxEarthOccultationS,
+    double? TOTAL_EARTH_OCCULTATION_S,
+    double? totalEarthOccultationS,
+    List<double>? STABLE_EIGENVECTOR,
+    List<double>? stableEigenvector,
+    List<double>? UNSTABLE_EIGENVECTOR,
+    List<double>? unstableEigenvector,
   })
       : _FAMILY = FAMILY,
         _LIBRATION_POINT = librationPoint ?? LIBRATION_POINT,
@@ -1157,7 +1377,21 @@ class tbpPeriodicOrbitObjectBuilder extends fb.ObjectBuilder {
         _FLOQUET_IMAGINARY = floquetImaginary ?? FLOQUET_IMAGINARY,
         _STABILITY_INDEX = stabilityIndex ?? STABILITY_INDEX,
         _STABLE = STABLE,
-        _TRAJECTORY = TRAJECTORY;
+        _TRAJECTORY = TRAJECTORY,
+        _PETALS = PETALS,
+        _RESONANCE_P = resonanceP ?? RESONANCE_P,
+        _RESONANCE_Q = resonanceQ ?? RESONANCE_Q,
+        _PSEUDO_POTENTIAL = pseudoPotential ?? PSEUDO_POTENTIAL,
+        _PERIGEE_KM = perigeeKm ?? PERIGEE_KM,
+        _APOGEE_KM = apogeeKm ?? APOGEE_KM,
+        _DOUBLING_TIME = doublingTime ?? DOUBLING_TIME,
+        _CHARACTERISTIC_EXPONENT = characteristicExponent ?? CHARACTERISTIC_EXPONENT,
+        _MAX_LUNAR_OCCULTATION_S = maxLunarOccultationS ?? MAX_LUNAR_OCCULTATION_S,
+        _TOTAL_LUNAR_OCCULTATION_S = totalLunarOccultationS ?? TOTAL_LUNAR_OCCULTATION_S,
+        _MAX_EARTH_OCCULTATION_S = maxEarthOccultationS ?? MAX_EARTH_OCCULTATION_S,
+        _TOTAL_EARTH_OCCULTATION_S = totalEarthOccultationS ?? TOTAL_EARTH_OCCULTATION_S,
+        _STABLE_EIGENVECTOR = stableEigenvector ?? STABLE_EIGENVECTOR,
+        _UNSTABLE_EIGENVECTOR = unstableEigenvector ?? UNSTABLE_EIGENVECTOR;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1170,7 +1404,11 @@ class tbpPeriodicOrbitObjectBuilder extends fb.ObjectBuilder {
     final int? FLOQUET_IMAGINARYOffset = _FLOQUET_IMAGINARY == null ? null
         : fbBuilder.writeListFloat64(_FLOQUET_IMAGINARY!);
     final int? TRAJECTORYOffset = _TRAJECTORY?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(20);
+    final int? STABLE_EIGENVECTOROffset = _STABLE_EIGENVECTOR == null ? null
+        : fbBuilder.writeListFloat64(_STABLE_EIGENVECTOR!);
+    final int? UNSTABLE_EIGENVECTOROffset = _UNSTABLE_EIGENVECTOR == null ? null
+        : fbBuilder.writeListFloat64(_UNSTABLE_EIGENVECTOR!);
+    fbBuilder.startTable(34);
     fbBuilder.addUint8(0, _FAMILY?.value);
     fbBuilder.addUint8(1, _LIBRATION_POINT?.value);
     fbBuilder.addFloat64(2, _AMPLITUDE);
@@ -1191,6 +1429,20 @@ class tbpPeriodicOrbitObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addFloat64(17, _STABILITY_INDEX);
     fbBuilder.addBool(18, _STABLE);
     fbBuilder.addOffset(19, TRAJECTORYOffset);
+    fbBuilder.addUint32(20, _PETALS);
+    fbBuilder.addUint32(21, _RESONANCE_P);
+    fbBuilder.addUint32(22, _RESONANCE_Q);
+    fbBuilder.addFloat64(23, _PSEUDO_POTENTIAL);
+    fbBuilder.addFloat64(24, _PERIGEE_KM);
+    fbBuilder.addFloat64(25, _APOGEE_KM);
+    fbBuilder.addFloat64(26, _DOUBLING_TIME);
+    fbBuilder.addFloat64(27, _CHARACTERISTIC_EXPONENT);
+    fbBuilder.addFloat64(28, _MAX_LUNAR_OCCULTATION_S);
+    fbBuilder.addFloat64(29, _TOTAL_LUNAR_OCCULTATION_S);
+    fbBuilder.addFloat64(30, _MAX_EARTH_OCCULTATION_S);
+    fbBuilder.addFloat64(31, _TOTAL_EARTH_OCCULTATION_S);
+    fbBuilder.addOffset(32, STABLE_EIGENVECTOROffset);
+    fbBuilder.addOffset(33, UNSTABLE_EIGENVECTOROffset);
     return fbBuilder.endTable();
   }
 
@@ -1363,10 +1615,45 @@ class tbpTransfer {
   double get timeOfFlightS => TIME_OF_FLIGHT_S;
   ///  Result: the transfer trajectory; empty = not sampled.
   tbpTrajectory? get TRAJECTORY => tbpTrajectory.reader.vTableGetNullable(_bc, _bcOffset, 26);
+  ///  Departure state in synodic frame (MinEnergy, DirectLambert, MinLambert, LowThrustMinTime).
+  tbpState? get INITIAL_STATE => tbpState.reader.vTableGetNullable(_bc, _bcOffset, 28);
+  tbpState? get initialState => INITIAL_STATE;
+  ///  Arrival state in synodic frame.
+  tbpState? get FINAL_STATE => tbpState.reader.vTableGetNullable(_bc, _bcOffset, 30);
+  tbpState? get finalState => FINAL_STATE;
+  ///  False = prograde (default), true = retrograde (DirectLambert).
+  bool get RETROGRADE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 32, false);
+  ///  Reference primary body for Lambert seeding: 0 = auto, 1 = P1, 2 = P2.
+  int get REFERENCE_PRIMARY => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 34, 0);
+  int get referencePrimary => REFERENCE_PRIMARY;
+  ///  Low-thrust maximum thrust, N (LowThrustMinTime).
+  double get MAX_THRUST_N => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
+  double get maxThrustN => MAX_THRUST_N;
+  ///  Engine specific impulse Isp, s (LowThrustMinTime).
+  double get SPECIFIC_IMPULSE_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
+  double get specificImpulseS => SPECIFIC_IMPULSE_S;
+  ///  Initial wet spacecraft mass, kg.
+  double get INITIAL_MASS_KG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
+  double get initialMassKg => INITIAL_MASS_KG;
+  ///  Result: final spacecraft mass at arrival, kg.
+  double get FINAL_MASS_KG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
+  double get finalMassKg => FINAL_MASS_KG;
+  ///  Result: propellant consumed, kg.
+  double get PROPELLANT_MASS_KG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
+  double get propellantMassKg => PROPELLANT_MASS_KG;
+  ///  Initial costates [lambda_rx, ry, rz, vx, vy, vz, m] guess or solved.
+  List<double>? get INITIAL_COSTATES => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 46);
+  List<double>? get initialCostates => INITIAL_COSTATES;
+  ///  Result: normalized throttle [0..1] per trajectory sample.
+  List<double>? get THROTTLE_HISTORY => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 48);
+  List<double>? get throttleHistory => THROTTLE_HISTORY;
+  ///  Result: theoretical minimum Jacobi-energy delta-v, km/s (MinEnergy).
+  double get MIN_ENERGY_DELTA_V_KM_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 50, 0.0);
+  double get minEnergyDeltaVKmS => MIN_ENERGY_DELTA_V_KM_S;
 
   @override
   String toString() {
-    return 'tbpTransfer{KIND: ${KIND}, parkingAltitudeKm: ${parkingAltitudeKm}, targetAltitudeKm: ${targetAltitudeKm}, inclinationDeg: ${inclinationDeg}, targetOrbit: ${targetOrbit}, maxIterations: ${maxIterations}, TOLERANCE: ${TOLERANCE}, CONVERGED: ${CONVERGED}, BURNS: ${BURNS}, totalDeltaVKmS: ${totalDeltaVKmS}, timeOfFlightS: ${timeOfFlightS}, TRAJECTORY: ${TRAJECTORY}}';
+    return 'tbpTransfer{KIND: ${KIND}, parkingAltitudeKm: ${parkingAltitudeKm}, targetAltitudeKm: ${targetAltitudeKm}, inclinationDeg: ${inclinationDeg}, targetOrbit: ${targetOrbit}, maxIterations: ${maxIterations}, TOLERANCE: ${TOLERANCE}, CONVERGED: ${CONVERGED}, BURNS: ${BURNS}, totalDeltaVKmS: ${totalDeltaVKmS}, timeOfFlightS: ${timeOfFlightS}, TRAJECTORY: ${TRAJECTORY}, initialState: ${initialState}, finalState: ${finalState}, RETROGRADE: ${RETROGRADE}, referencePrimary: ${referencePrimary}, maxThrustN: ${maxThrustN}, specificImpulseS: ${specificImpulseS}, initialMassKg: ${initialMassKg}, finalMassKg: ${finalMassKg}, propellantMassKg: ${propellantMassKg}, initialCostates: ${initialCostates}, throttleHistory: ${throttleHistory}, minEnergyDeltaVKmS: ${minEnergyDeltaVKmS}}';
   }
 }
 
@@ -1384,7 +1671,7 @@ class tbpTransferBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(12);
+    fbBuilder.startTable(24);
   }
 
   int addKind(tbpTransferKind? KIND) {
@@ -1435,6 +1722,54 @@ class tbpTransferBuilder {
     fbBuilder.addOffset(11, offset);
     return fbBuilder.offset;
   }
+  int addInitialStateOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addFinalStateOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addRetrograde(bool? RETROGRADE) {
+    fbBuilder.addBool(14, RETROGRADE);
+    return fbBuilder.offset;
+  }
+  int addReferencePrimary(int? REFERENCE_PRIMARY) {
+    fbBuilder.addUint8(15, REFERENCE_PRIMARY);
+    return fbBuilder.offset;
+  }
+  int addMaxThrustN(double? MAX_THRUST_N) {
+    fbBuilder.addFloat64(16, MAX_THRUST_N);
+    return fbBuilder.offset;
+  }
+  int addSpecificImpulseS(double? SPECIFIC_IMPULSE_S) {
+    fbBuilder.addFloat64(17, SPECIFIC_IMPULSE_S);
+    return fbBuilder.offset;
+  }
+  int addInitialMassKg(double? INITIAL_MASS_KG) {
+    fbBuilder.addFloat64(18, INITIAL_MASS_KG);
+    return fbBuilder.offset;
+  }
+  int addFinalMassKg(double? FINAL_MASS_KG) {
+    fbBuilder.addFloat64(19, FINAL_MASS_KG);
+    return fbBuilder.offset;
+  }
+  int addPropellantMassKg(double? PROPELLANT_MASS_KG) {
+    fbBuilder.addFloat64(20, PROPELLANT_MASS_KG);
+    return fbBuilder.offset;
+  }
+  int addInitialCostatesOffset(int? offset) {
+    fbBuilder.addOffset(21, offset);
+    return fbBuilder.offset;
+  }
+  int addThrottleHistoryOffset(int? offset) {
+    fbBuilder.addOffset(22, offset);
+    return fbBuilder.offset;
+  }
+  int addMinEnergyDeltaVKmS(double? MIN_ENERGY_DELTA_V_KM_S) {
+    fbBuilder.addFloat64(23, MIN_ENERGY_DELTA_V_KM_S);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1454,6 +1789,18 @@ class tbpTransferObjectBuilder extends fb.ObjectBuilder {
   final double? _TOTAL_DELTA_V_KM_S;
   final double? _TIME_OF_FLIGHT_S;
   final tbpTrajectoryObjectBuilder? _TRAJECTORY;
+  final tbpStateObjectBuilder? _INITIAL_STATE;
+  final tbpStateObjectBuilder? _FINAL_STATE;
+  final bool? _RETROGRADE;
+  final int? _REFERENCE_PRIMARY;
+  final double? _MAX_THRUST_N;
+  final double? _SPECIFIC_IMPULSE_S;
+  final double? _INITIAL_MASS_KG;
+  final double? _FINAL_MASS_KG;
+  final double? _PROPELLANT_MASS_KG;
+  final List<double>? _INITIAL_COSTATES;
+  final List<double>? _THROTTLE_HISTORY;
+  final double? _MIN_ENERGY_DELTA_V_KM_S;
 
   tbpTransferObjectBuilder({
     tbpTransferKind? KIND,
@@ -1475,6 +1822,29 @@ class tbpTransferObjectBuilder extends fb.ObjectBuilder {
     double? TIME_OF_FLIGHT_S,
     double? timeOfFlightS,
     tbpTrajectoryObjectBuilder? TRAJECTORY,
+    tbpStateObjectBuilder? INITIAL_STATE,
+    tbpStateObjectBuilder? initialState,
+    tbpStateObjectBuilder? FINAL_STATE,
+    tbpStateObjectBuilder? finalState,
+    bool? RETROGRADE,
+    int? REFERENCE_PRIMARY,
+    int? referencePrimary,
+    double? MAX_THRUST_N,
+    double? maxThrustN,
+    double? SPECIFIC_IMPULSE_S,
+    double? specificImpulseS,
+    double? INITIAL_MASS_KG,
+    double? initialMassKg,
+    double? FINAL_MASS_KG,
+    double? finalMassKg,
+    double? PROPELLANT_MASS_KG,
+    double? propellantMassKg,
+    List<double>? INITIAL_COSTATES,
+    List<double>? initialCostates,
+    List<double>? THROTTLE_HISTORY,
+    List<double>? throttleHistory,
+    double? MIN_ENERGY_DELTA_V_KM_S,
+    double? minEnergyDeltaVKmS,
   })
       : _KIND = KIND,
         _PARKING_ALTITUDE_KM = parkingAltitudeKm ?? PARKING_ALTITUDE_KM,
@@ -1487,7 +1857,19 @@ class tbpTransferObjectBuilder extends fb.ObjectBuilder {
         _BURNS = BURNS,
         _TOTAL_DELTA_V_KM_S = totalDeltaVKmS ?? TOTAL_DELTA_V_KM_S,
         _TIME_OF_FLIGHT_S = timeOfFlightS ?? TIME_OF_FLIGHT_S,
-        _TRAJECTORY = TRAJECTORY;
+        _TRAJECTORY = TRAJECTORY,
+        _INITIAL_STATE = initialState ?? INITIAL_STATE,
+        _FINAL_STATE = finalState ?? FINAL_STATE,
+        _RETROGRADE = RETROGRADE,
+        _REFERENCE_PRIMARY = referencePrimary ?? REFERENCE_PRIMARY,
+        _MAX_THRUST_N = maxThrustN ?? MAX_THRUST_N,
+        _SPECIFIC_IMPULSE_S = specificImpulseS ?? SPECIFIC_IMPULSE_S,
+        _INITIAL_MASS_KG = initialMassKg ?? INITIAL_MASS_KG,
+        _FINAL_MASS_KG = finalMassKg ?? FINAL_MASS_KG,
+        _PROPELLANT_MASS_KG = propellantMassKg ?? PROPELLANT_MASS_KG,
+        _INITIAL_COSTATES = initialCostates ?? INITIAL_COSTATES,
+        _THROTTLE_HISTORY = throttleHistory ?? THROTTLE_HISTORY,
+        _MIN_ENERGY_DELTA_V_KM_S = minEnergyDeltaVKmS ?? MIN_ENERGY_DELTA_V_KM_S;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1496,7 +1878,13 @@ class tbpTransferObjectBuilder extends fb.ObjectBuilder {
     final int? BURNSOffset = _BURNS == null ? null
         : fbBuilder.writeList(_BURNS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? TRAJECTORYOffset = _TRAJECTORY?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(12);
+    final int? INITIAL_STATEOffset = _INITIAL_STATE?.getOrCreateOffset(fbBuilder);
+    final int? FINAL_STATEOffset = _FINAL_STATE?.getOrCreateOffset(fbBuilder);
+    final int? INITIAL_COSTATESOffset = _INITIAL_COSTATES == null ? null
+        : fbBuilder.writeListFloat64(_INITIAL_COSTATES!);
+    final int? THROTTLE_HISTORYOffset = _THROTTLE_HISTORY == null ? null
+        : fbBuilder.writeListFloat64(_THROTTLE_HISTORY!);
+    fbBuilder.startTable(24);
     fbBuilder.addUint8(0, _KIND?.value);
     fbBuilder.addFloat64(1, _PARKING_ALTITUDE_KM);
     fbBuilder.addFloat64(2, _TARGET_ALTITUDE_KM);
@@ -1509,6 +1897,18 @@ class tbpTransferObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addFloat64(9, _TOTAL_DELTA_V_KM_S);
     fbBuilder.addFloat64(10, _TIME_OF_FLIGHT_S);
     fbBuilder.addOffset(11, TRAJECTORYOffset);
+    fbBuilder.addOffset(12, INITIAL_STATEOffset);
+    fbBuilder.addOffset(13, FINAL_STATEOffset);
+    fbBuilder.addBool(14, _RETROGRADE);
+    fbBuilder.addUint8(15, _REFERENCE_PRIMARY);
+    fbBuilder.addFloat64(16, _MAX_THRUST_N);
+    fbBuilder.addFloat64(17, _SPECIFIC_IMPULSE_S);
+    fbBuilder.addFloat64(18, _INITIAL_MASS_KG);
+    fbBuilder.addFloat64(19, _FINAL_MASS_KG);
+    fbBuilder.addFloat64(20, _PROPELLANT_MASS_KG);
+    fbBuilder.addOffset(21, INITIAL_COSTATESOffset);
+    fbBuilder.addOffset(22, THROTTLE_HISTORYOffset);
+    fbBuilder.addFloat64(23, _MIN_ENERGY_DELTA_V_KM_S);
     return fbBuilder.endTable();
   }
 
@@ -1557,10 +1957,22 @@ class tbpStationKeeping {
   List<double>? get cycleDeltaVKmS => CYCLE_DELTA_V_KM_S;
   ///  Result: true when the orbit stays bounded over the simulation.
   bool get BOUNDED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 22, false);
+  ///  Time between correction maneuvers, s (LinearStabilityBounds).
+  double get CORRECTION_INTERVAL_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  double get correctionIntervalS => CORRECTION_INTERVAL_S;
+  ///  3-axis velocity execution error magnitude, km/s (LinearStabilityBounds).
+  double get DELTA_V_EXECUTION_ERROR_KM_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  double get deltaVExecutionErrorKmS => DELTA_V_EXECUTION_ERROR_KM_S;
+  ///  Result: linear-stability lower bound annual delta-v, km/s/yr.
+  double get LOWER_BOUND_ANNUAL_DELTA_V_KM_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
+  double get lowerBoundAnnualDeltaVKmS => LOWER_BOUND_ANNUAL_DELTA_V_KM_S;
+  ///  Result: linear-stability upper bound annual delta-v, km/s/yr.
+  double get UPPER_BOUND_ANNUAL_DELTA_V_KM_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
+  double get upperBoundAnnualDeltaVKmS => UPPER_BOUND_ANNUAL_DELTA_V_KM_S;
 
   @override
   String toString() {
-    return 'tbpStationKeeping{ORBIT: ${ORBIT}, STRATEGY: ${STRATEGY}, navigationErrorKm: ${navigationErrorKm}, executionErrorFraction: ${executionErrorFraction}, CYCLES: ${CYCLES}, annualDeltaVKmS: ${annualDeltaVKmS}, meanCycleDeltaVKmS: ${meanCycleDeltaVKmS}, maxCycleDeltaVKmS: ${maxCycleDeltaVKmS}, cycleDeltaVKmS: ${cycleDeltaVKmS}, BOUNDED: ${BOUNDED}}';
+    return 'tbpStationKeeping{ORBIT: ${ORBIT}, STRATEGY: ${STRATEGY}, navigationErrorKm: ${navigationErrorKm}, executionErrorFraction: ${executionErrorFraction}, CYCLES: ${CYCLES}, annualDeltaVKmS: ${annualDeltaVKmS}, meanCycleDeltaVKmS: ${meanCycleDeltaVKmS}, maxCycleDeltaVKmS: ${maxCycleDeltaVKmS}, cycleDeltaVKmS: ${cycleDeltaVKmS}, BOUNDED: ${BOUNDED}, correctionIntervalS: ${correctionIntervalS}, deltaVExecutionErrorKmS: ${deltaVExecutionErrorKmS}, lowerBoundAnnualDeltaVKmS: ${lowerBoundAnnualDeltaVKmS}, upperBoundAnnualDeltaVKmS: ${upperBoundAnnualDeltaVKmS}}';
   }
 }
 
@@ -1578,7 +1990,7 @@ class tbpStationKeepingBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(10);
+    fbBuilder.startTable(14);
   }
 
   int addOrbitOffset(int? offset) {
@@ -1621,6 +2033,22 @@ class tbpStationKeepingBuilder {
     fbBuilder.addBool(9, BOUNDED);
     return fbBuilder.offset;
   }
+  int addCorrectionIntervalS(double? CORRECTION_INTERVAL_S) {
+    fbBuilder.addFloat64(10, CORRECTION_INTERVAL_S);
+    return fbBuilder.offset;
+  }
+  int addDeltaVExecutionErrorKmS(double? DELTA_V_EXECUTION_ERROR_KM_S) {
+    fbBuilder.addFloat64(11, DELTA_V_EXECUTION_ERROR_KM_S);
+    return fbBuilder.offset;
+  }
+  int addLowerBoundAnnualDeltaVKmS(double? LOWER_BOUND_ANNUAL_DELTA_V_KM_S) {
+    fbBuilder.addFloat64(12, LOWER_BOUND_ANNUAL_DELTA_V_KM_S);
+    return fbBuilder.offset;
+  }
+  int addUpperBoundAnnualDeltaVKmS(double? UPPER_BOUND_ANNUAL_DELTA_V_KM_S) {
+    fbBuilder.addFloat64(13, UPPER_BOUND_ANNUAL_DELTA_V_KM_S);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1638,6 +2066,10 @@ class tbpStationKeepingObjectBuilder extends fb.ObjectBuilder {
   final double? _MAX_CYCLE_DELTA_V_KM_S;
   final List<double>? _CYCLE_DELTA_V_KM_S;
   final bool? _BOUNDED;
+  final double? _CORRECTION_INTERVAL_S;
+  final double? _DELTA_V_EXECUTION_ERROR_KM_S;
+  final double? _LOWER_BOUND_ANNUAL_DELTA_V_KM_S;
+  final double? _UPPER_BOUND_ANNUAL_DELTA_V_KM_S;
 
   tbpStationKeepingObjectBuilder({
     tbpPeriodicOrbitObjectBuilder? ORBIT,
@@ -1656,6 +2088,14 @@ class tbpStationKeepingObjectBuilder extends fb.ObjectBuilder {
     List<double>? CYCLE_DELTA_V_KM_S,
     List<double>? cycleDeltaVKmS,
     bool? BOUNDED,
+    double? CORRECTION_INTERVAL_S,
+    double? correctionIntervalS,
+    double? DELTA_V_EXECUTION_ERROR_KM_S,
+    double? deltaVExecutionErrorKmS,
+    double? LOWER_BOUND_ANNUAL_DELTA_V_KM_S,
+    double? lowerBoundAnnualDeltaVKmS,
+    double? UPPER_BOUND_ANNUAL_DELTA_V_KM_S,
+    double? upperBoundAnnualDeltaVKmS,
   })
       : _ORBIT = ORBIT,
         _STRATEGY = STRATEGY,
@@ -1666,7 +2106,11 @@ class tbpStationKeepingObjectBuilder extends fb.ObjectBuilder {
         _MEAN_CYCLE_DELTA_V_KM_S = meanCycleDeltaVKmS ?? MEAN_CYCLE_DELTA_V_KM_S,
         _MAX_CYCLE_DELTA_V_KM_S = maxCycleDeltaVKmS ?? MAX_CYCLE_DELTA_V_KM_S,
         _CYCLE_DELTA_V_KM_S = cycleDeltaVKmS ?? CYCLE_DELTA_V_KM_S,
-        _BOUNDED = BOUNDED;
+        _BOUNDED = BOUNDED,
+        _CORRECTION_INTERVAL_S = correctionIntervalS ?? CORRECTION_INTERVAL_S,
+        _DELTA_V_EXECUTION_ERROR_KM_S = deltaVExecutionErrorKmS ?? DELTA_V_EXECUTION_ERROR_KM_S,
+        _LOWER_BOUND_ANNUAL_DELTA_V_KM_S = lowerBoundAnnualDeltaVKmS ?? LOWER_BOUND_ANNUAL_DELTA_V_KM_S,
+        _UPPER_BOUND_ANNUAL_DELTA_V_KM_S = upperBoundAnnualDeltaVKmS ?? UPPER_BOUND_ANNUAL_DELTA_V_KM_S;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1674,7 +2118,7 @@ class tbpStationKeepingObjectBuilder extends fb.ObjectBuilder {
     final int? ORBITOffset = _ORBIT?.getOrCreateOffset(fbBuilder);
     final int? CYCLE_DELTA_V_KM_SOffset = _CYCLE_DELTA_V_KM_S == null ? null
         : fbBuilder.writeListFloat64(_CYCLE_DELTA_V_KM_S!);
-    fbBuilder.startTable(10);
+    fbBuilder.startTable(14);
     fbBuilder.addOffset(0, ORBITOffset);
     fbBuilder.addUint8(1, _STRATEGY?.value);
     fbBuilder.addFloat64(2, _NAVIGATION_ERROR_KM);
@@ -1685,6 +2129,10 @@ class tbpStationKeepingObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addFloat64(7, _MAX_CYCLE_DELTA_V_KM_S);
     fbBuilder.addOffset(8, CYCLE_DELTA_V_KM_SOffset);
     fbBuilder.addBool(9, _BOUNDED);
+    fbBuilder.addFloat64(10, _CORRECTION_INTERVAL_S);
+    fbBuilder.addFloat64(11, _DELTA_V_EXECUTION_ERROR_KM_S);
+    fbBuilder.addFloat64(12, _LOWER_BOUND_ANNUAL_DELTA_V_KM_S);
+    fbBuilder.addFloat64(13, _UPPER_BOUND_ANNUAL_DELTA_V_KM_S);
     return fbBuilder.endTable();
   }
 
@@ -1724,10 +2172,28 @@ class tbpFrameConversion {
   tbpState? get SYNODIC => tbpState.reader.vTableGetNullable(_bc, _bcOffset, 10);
   ///  The inertial state (input or result): km and km/s, 6 values.
   List<double>? get INERTIAL => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Reference primary body: 0 = barycenter, 1 = P1 (Earth), 2 = P2 (Moon).
+  int get REFERENCE_PRIMARY => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 14, 0);
+  int get referencePrimary => REFERENCE_PRIMARY;
+  ///  Epoch Julian date (days) for J2000/ephemeris conversions; 0 = from REFERENCE_EPOCH_MS.
+  double get JULIAN_DATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get julianDate => JULIAN_DATE;
+  ///  Geodetic/selenodetic coordinates [lat_deg, lon_deg, alt_km] (3 values).
+  List<double>? get LLA_DEG_KM => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 18);
+  List<double>? get llaDegKm => LLA_DEG_KM;
+  ///  Classical Keplerian elements [a_km, e, inc_deg, raan_deg, argp_deg, nu_deg] (6 values).
+  List<double>? get ORBITAL_ELEMENTS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 20);
+  List<double>? get orbitalElements => ORBITAL_ELEMENTS;
+  ///  Batch synodic states (N * 6 values, non-dimensional) for vectorized conversion.
+  List<double>? get BATCH_SYNODIC_STATES => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 22);
+  List<double>? get batchSynodicStates => BATCH_SYNODIC_STATES;
+  ///  Batch inertial/target states (N * 6 values, km and km/s) for vectorized conversion.
+  List<double>? get BATCH_INERTIAL_STATES => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 24);
+  List<double>? get batchInertialStates => BATCH_INERTIAL_STATES;
 
   @override
   String toString() {
-    return 'tbpFrameConversion{DIRECTION: ${DIRECTION}, referenceEpochMs: ${referenceEpochMs}, elapsedS: ${elapsedS}, SYNODIC: ${SYNODIC}, INERTIAL: ${INERTIAL}}';
+    return 'tbpFrameConversion{DIRECTION: ${DIRECTION}, referenceEpochMs: ${referenceEpochMs}, elapsedS: ${elapsedS}, SYNODIC: ${SYNODIC}, INERTIAL: ${INERTIAL}, referencePrimary: ${referencePrimary}, julianDate: ${julianDate}, llaDegKm: ${llaDegKm}, orbitalElements: ${orbitalElements}, batchSynodicStates: ${batchSynodicStates}, batchInertialStates: ${batchInertialStates}}';
   }
 }
 
@@ -1745,7 +2211,7 @@ class tbpFrameConversionBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(5);
+    fbBuilder.startTable(11);
   }
 
   int addDirection(tbpConversionDirection? DIRECTION) {
@@ -1768,6 +2234,30 @@ class tbpFrameConversionBuilder {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
+  int addReferencePrimary(int? REFERENCE_PRIMARY) {
+    fbBuilder.addUint8(5, REFERENCE_PRIMARY);
+    return fbBuilder.offset;
+  }
+  int addJulianDate(double? JULIAN_DATE) {
+    fbBuilder.addFloat64(6, JULIAN_DATE);
+    return fbBuilder.offset;
+  }
+  int addLlaDegKmOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addOrbitalElementsOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addBatchSynodicStatesOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addBatchInertialStatesOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1780,6 +2270,12 @@ class tbpFrameConversionObjectBuilder extends fb.ObjectBuilder {
   final double? _ELAPSED_S;
   final tbpStateObjectBuilder? _SYNODIC;
   final List<double>? _INERTIAL;
+  final int? _REFERENCE_PRIMARY;
+  final double? _JULIAN_DATE;
+  final List<double>? _LLA_DEG_KM;
+  final List<double>? _ORBITAL_ELEMENTS;
+  final List<double>? _BATCH_SYNODIC_STATES;
+  final List<double>? _BATCH_INERTIAL_STATES;
 
   tbpFrameConversionObjectBuilder({
     tbpConversionDirection? DIRECTION,
@@ -1789,12 +2285,30 @@ class tbpFrameConversionObjectBuilder extends fb.ObjectBuilder {
     double? elapsedS,
     tbpStateObjectBuilder? SYNODIC,
     List<double>? INERTIAL,
+    int? REFERENCE_PRIMARY,
+    int? referencePrimary,
+    double? JULIAN_DATE,
+    double? julianDate,
+    List<double>? LLA_DEG_KM,
+    List<double>? llaDegKm,
+    List<double>? ORBITAL_ELEMENTS,
+    List<double>? orbitalElements,
+    List<double>? BATCH_SYNODIC_STATES,
+    List<double>? batchSynodicStates,
+    List<double>? BATCH_INERTIAL_STATES,
+    List<double>? batchInertialStates,
   })
       : _DIRECTION = DIRECTION,
         _REFERENCE_EPOCH_MS = referenceEpochMs ?? REFERENCE_EPOCH_MS,
         _ELAPSED_S = elapsedS ?? ELAPSED_S,
         _SYNODIC = SYNODIC,
-        _INERTIAL = INERTIAL;
+        _INERTIAL = INERTIAL,
+        _REFERENCE_PRIMARY = referencePrimary ?? REFERENCE_PRIMARY,
+        _JULIAN_DATE = julianDate ?? JULIAN_DATE,
+        _LLA_DEG_KM = llaDegKm ?? LLA_DEG_KM,
+        _ORBITAL_ELEMENTS = orbitalElements ?? ORBITAL_ELEMENTS,
+        _BATCH_SYNODIC_STATES = batchSynodicStates ?? BATCH_SYNODIC_STATES,
+        _BATCH_INERTIAL_STATES = batchInertialStates ?? BATCH_INERTIAL_STATES;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1802,12 +2316,826 @@ class tbpFrameConversionObjectBuilder extends fb.ObjectBuilder {
     final int? SYNODICOffset = _SYNODIC?.getOrCreateOffset(fbBuilder);
     final int? INERTIALOffset = _INERTIAL == null ? null
         : fbBuilder.writeListFloat64(_INERTIAL!);
-    fbBuilder.startTable(5);
+    final int? LLA_DEG_KMOffset = _LLA_DEG_KM == null ? null
+        : fbBuilder.writeListFloat64(_LLA_DEG_KM!);
+    final int? ORBITAL_ELEMENTSOffset = _ORBITAL_ELEMENTS == null ? null
+        : fbBuilder.writeListFloat64(_ORBITAL_ELEMENTS!);
+    final int? BATCH_SYNODIC_STATESOffset = _BATCH_SYNODIC_STATES == null ? null
+        : fbBuilder.writeListFloat64(_BATCH_SYNODIC_STATES!);
+    final int? BATCH_INERTIAL_STATESOffset = _BATCH_INERTIAL_STATES == null ? null
+        : fbBuilder.writeListFloat64(_BATCH_INERTIAL_STATES!);
+    fbBuilder.startTable(11);
     fbBuilder.addUint8(0, _DIRECTION?.value);
     fbBuilder.addInt64(1, _REFERENCE_EPOCH_MS);
     fbBuilder.addFloat64(2, _ELAPSED_S);
     fbBuilder.addOffset(3, SYNODICOffset);
     fbBuilder.addOffset(4, INERTIALOffset);
+    fbBuilder.addUint8(5, _REFERENCE_PRIMARY);
+    fbBuilder.addFloat64(6, _JULIAN_DATE);
+    fbBuilder.addOffset(7, LLA_DEG_KMOffset);
+    fbBuilder.addOffset(8, ORBITAL_ELEMENTSOffset);
+    fbBuilder.addOffset(9, BATCH_SYNODIC_STATESOffset);
+    fbBuilder.addOffset(10, BATCH_INERTIAL_STATESOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Request parameters for pseudo-arclength or natural-parameter continuation.
+class tbpContinuationRequest {
+  tbpContinuationRequest._(this._bc, this._bcOffset);
+  factory tbpContinuationRequest(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<tbpContinuationRequest> reader = _tbpContinuationRequestReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Seed periodic orbit (INITIAL_STATE and PERIOD required).
+  tbpPeriodicOrbit? get SEED_ORBIT => tbpPeriodicOrbit.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  tbpPeriodicOrbit? get seedOrbit => SEED_ORBIT;
+  ///  Arclength step size ds (signed); 0 = natural-parameter fixed-period refinement.
+  double get STEP_SIZE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  double get stepSize => STEP_SIZE;
+  ///  Number of continuation steps to generate; 0 = 1.
+  int get STEPS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  ///  True = fixed-period natural parameter continuation (cont_np); false = pseudo-arclength (cont).
+  bool get FIXED_PERIOD => const fb.BoolReader().vTableGet(_bc, _bcOffset, 10, false);
+  bool get fixedPeriod => FIXED_PERIOD;
+  ///  Optional 7-element previous null-vector tangent for directional continuation.
+  List<double>? get NULL_VECTOR => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 12);
+  List<double>? get nullVector => NULL_VECTOR;
+  ///  Convergence tolerance on periodicity residual; 0 = default (1e-10).
+  double get TOLERANCE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  ///  Maximum corrector iterations per step; 0 = default.
+  int get MAX_ITERATIONS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 16, 0);
+  int get maxIterations => MAX_ITERATIONS;
+
+  @override
+  String toString() {
+    return 'tbpContinuationRequest{seedOrbit: ${seedOrbit}, stepSize: ${stepSize}, STEPS: ${STEPS}, fixedPeriod: ${fixedPeriod}, nullVector: ${nullVector}, TOLERANCE: ${TOLERANCE}, maxIterations: ${maxIterations}}';
+  }
+}
+
+class _tbpContinuationRequestReader extends fb.TableReader<tbpContinuationRequest> {
+  const _tbpContinuationRequestReader();
+
+  @override
+  tbpContinuationRequest createObject(fb.BufferContext bc, int offset) =>
+    tbpContinuationRequest._(bc, offset);
+}
+
+class tbpContinuationRequestBuilder {
+  tbpContinuationRequestBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(7);
+  }
+
+  int addSeedOrbitOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addStepSize(double? STEP_SIZE) {
+    fbBuilder.addFloat64(1, STEP_SIZE);
+    return fbBuilder.offset;
+  }
+  int addSteps(int? STEPS) {
+    fbBuilder.addUint32(2, STEPS);
+    return fbBuilder.offset;
+  }
+  int addFixedPeriod(bool? FIXED_PERIOD) {
+    fbBuilder.addBool(3, FIXED_PERIOD);
+    return fbBuilder.offset;
+  }
+  int addNullVectorOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addTolerance(double? TOLERANCE) {
+    fbBuilder.addFloat64(5, TOLERANCE);
+    return fbBuilder.offset;
+  }
+  int addMaxIterations(int? MAX_ITERATIONS) {
+    fbBuilder.addUint32(6, MAX_ITERATIONS);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class tbpContinuationRequestObjectBuilder extends fb.ObjectBuilder {
+  final tbpPeriodicOrbitObjectBuilder? _SEED_ORBIT;
+  final double? _STEP_SIZE;
+  final int? _STEPS;
+  final bool? _FIXED_PERIOD;
+  final List<double>? _NULL_VECTOR;
+  final double? _TOLERANCE;
+  final int? _MAX_ITERATIONS;
+
+  tbpContinuationRequestObjectBuilder({
+    tbpPeriodicOrbitObjectBuilder? SEED_ORBIT,
+    tbpPeriodicOrbitObjectBuilder? seedOrbit,
+    double? STEP_SIZE,
+    double? stepSize,
+    int? STEPS,
+    bool? FIXED_PERIOD,
+    bool? fixedPeriod,
+    List<double>? NULL_VECTOR,
+    List<double>? nullVector,
+    double? TOLERANCE,
+    int? MAX_ITERATIONS,
+    int? maxIterations,
+  })
+      : _SEED_ORBIT = seedOrbit ?? SEED_ORBIT,
+        _STEP_SIZE = stepSize ?? STEP_SIZE,
+        _STEPS = STEPS,
+        _FIXED_PERIOD = fixedPeriod ?? FIXED_PERIOD,
+        _NULL_VECTOR = nullVector ?? NULL_VECTOR,
+        _TOLERANCE = TOLERANCE,
+        _MAX_ITERATIONS = maxIterations ?? MAX_ITERATIONS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? SEED_ORBITOffset = _SEED_ORBIT?.getOrCreateOffset(fbBuilder);
+    final int? NULL_VECTOROffset = _NULL_VECTOR == null ? null
+        : fbBuilder.writeListFloat64(_NULL_VECTOR!);
+    fbBuilder.startTable(7);
+    fbBuilder.addOffset(0, SEED_ORBITOffset);
+    fbBuilder.addFloat64(1, _STEP_SIZE);
+    fbBuilder.addUint32(2, _STEPS);
+    fbBuilder.addBool(3, _FIXED_PERIOD);
+    fbBuilder.addOffset(4, NULL_VECTOROffset);
+    fbBuilder.addFloat64(5, _TOLERANCE);
+    fbBuilder.addUint32(6, _MAX_ITERATIONS);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  One stable or unstable invariant manifold branch emanating from a periodic orbit.
+class tbpManifoldBranch {
+  tbpManifoldBranch._(this._bc, this._bcOffset);
+  factory tbpManifoldBranch(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<tbpManifoldBranch> reader = _tbpManifoldBranchReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  True = stable branch (integrated backward), false = unstable branch (forward).
+  bool get STABLE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 4, false);
+  ///  True = exterior (+eigenvector), false = interior (-eigenvector).
+  bool get EXTERIOR => const fb.BoolReader().vTableGet(_bc, _bcOffset, 6, false);
+  ///  Index of the seed point along the periodic orbit.
+  int get SEED_INDEX => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  int get seedIndex => SEED_INDEX;
+  ///  Perturbed initial state on the manifold, non-dimensional.
+  tbpState? get INITIAL_STATE => tbpState.reader.vTableGetNullable(_bc, _bcOffset, 10);
+  tbpState? get initialState => INITIAL_STATE;
+  ///  Propagated manifold trajectory.
+  tbpTrajectory? get TRAJECTORY => tbpTrajectory.reader.vTableGetNullable(_bc, _bcOffset, 12);
+
+  @override
+  String toString() {
+    return 'tbpManifoldBranch{STABLE: ${STABLE}, EXTERIOR: ${EXTERIOR}, seedIndex: ${seedIndex}, initialState: ${initialState}, TRAJECTORY: ${TRAJECTORY}}';
+  }
+}
+
+class _tbpManifoldBranchReader extends fb.TableReader<tbpManifoldBranch> {
+  const _tbpManifoldBranchReader();
+
+  @override
+  tbpManifoldBranch createObject(fb.BufferContext bc, int offset) =>
+    tbpManifoldBranch._(bc, offset);
+}
+
+class tbpManifoldBranchBuilder {
+  tbpManifoldBranchBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(5);
+  }
+
+  int addStable(bool? STABLE) {
+    fbBuilder.addBool(0, STABLE);
+    return fbBuilder.offset;
+  }
+  int addExterior(bool? EXTERIOR) {
+    fbBuilder.addBool(1, EXTERIOR);
+    return fbBuilder.offset;
+  }
+  int addSeedIndex(int? SEED_INDEX) {
+    fbBuilder.addUint32(2, SEED_INDEX);
+    return fbBuilder.offset;
+  }
+  int addInitialStateOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addTrajectoryOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class tbpManifoldBranchObjectBuilder extends fb.ObjectBuilder {
+  final bool? _STABLE;
+  final bool? _EXTERIOR;
+  final int? _SEED_INDEX;
+  final tbpStateObjectBuilder? _INITIAL_STATE;
+  final tbpTrajectoryObjectBuilder? _TRAJECTORY;
+
+  tbpManifoldBranchObjectBuilder({
+    bool? STABLE,
+    bool? EXTERIOR,
+    int? SEED_INDEX,
+    int? seedIndex,
+    tbpStateObjectBuilder? INITIAL_STATE,
+    tbpStateObjectBuilder? initialState,
+    tbpTrajectoryObjectBuilder? TRAJECTORY,
+  })
+      : _STABLE = STABLE,
+        _EXTERIOR = EXTERIOR,
+        _SEED_INDEX = seedIndex ?? SEED_INDEX,
+        _INITIAL_STATE = initialState ?? INITIAL_STATE,
+        _TRAJECTORY = TRAJECTORY;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? INITIAL_STATEOffset = _INITIAL_STATE?.getOrCreateOffset(fbBuilder);
+    final int? TRAJECTORYOffset = _TRAJECTORY?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(5);
+    fbBuilder.addBool(0, _STABLE);
+    fbBuilder.addBool(1, _EXTERIOR);
+    fbBuilder.addUint32(2, _SEED_INDEX);
+    fbBuilder.addOffset(3, INITIAL_STATEOffset);
+    fbBuilder.addOffset(4, TRAJECTORYOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Invariant manifold request and computed branches for an unstable periodic orbit.
+class tbpManifolds {
+  tbpManifolds._(this._bc, this._bcOffset);
+  factory tbpManifolds(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<tbpManifolds> reader = _tbpManifoldsReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Periodic orbit to perturb (INITIAL_STATE and PERIOD required).
+  tbpPeriodicOrbit? get ORBIT => tbpPeriodicOrbit.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Perturbation distance epsilon (non-dimensional); 0 = default (1e-5).
+  double get PERTURBATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  ///  Propagation duration per branch, non-dimensional; 0 = one orbit period.
+  double get DURATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  ///  Number of seed points along the periodic orbit; 0 = default (12).
+  int get SAMPLE_POINTS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 10, 0);
+  int get samplePoints => SAMPLE_POINTS;
+  ///  Which manifold branches to generate.
+  tbpManifoldBranchKind get BRANCH_KIND => tbpManifoldBranchKind.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 12, 0));
+  tbpManifoldBranchKind get branchKind => BRANCH_KIND;
+  ///  Computed manifold branches.
+  List<tbpManifoldBranch>? get BRANCHES => const fb.ListReader<tbpManifoldBranch>(tbpManifoldBranch.reader).vTableGetNullable(_bc, _bcOffset, 14);
+
+  @override
+  String toString() {
+    return 'tbpManifolds{ORBIT: ${ORBIT}, PERTURBATION: ${PERTURBATION}, DURATION: ${DURATION}, samplePoints: ${samplePoints}, branchKind: ${branchKind}, BRANCHES: ${BRANCHES}}';
+  }
+}
+
+class _tbpManifoldsReader extends fb.TableReader<tbpManifolds> {
+  const _tbpManifoldsReader();
+
+  @override
+  tbpManifolds createObject(fb.BufferContext bc, int offset) =>
+    tbpManifolds._(bc, offset);
+}
+
+class tbpManifoldsBuilder {
+  tbpManifoldsBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(6);
+  }
+
+  int addOrbitOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addPerturbation(double? PERTURBATION) {
+    fbBuilder.addFloat64(1, PERTURBATION);
+    return fbBuilder.offset;
+  }
+  int addDuration(double? DURATION) {
+    fbBuilder.addFloat64(2, DURATION);
+    return fbBuilder.offset;
+  }
+  int addSamplePoints(int? SAMPLE_POINTS) {
+    fbBuilder.addUint32(3, SAMPLE_POINTS);
+    return fbBuilder.offset;
+  }
+  int addBranchKind(tbpManifoldBranchKind? BRANCH_KIND) {
+    fbBuilder.addUint8(4, BRANCH_KIND?.value);
+    return fbBuilder.offset;
+  }
+  int addBranchesOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class tbpManifoldsObjectBuilder extends fb.ObjectBuilder {
+  final tbpPeriodicOrbitObjectBuilder? _ORBIT;
+  final double? _PERTURBATION;
+  final double? _DURATION;
+  final int? _SAMPLE_POINTS;
+  final tbpManifoldBranchKind? _BRANCH_KIND;
+  final List<tbpManifoldBranchObjectBuilder>? _BRANCHES;
+
+  tbpManifoldsObjectBuilder({
+    tbpPeriodicOrbitObjectBuilder? ORBIT,
+    double? PERTURBATION,
+    double? DURATION,
+    int? SAMPLE_POINTS,
+    int? samplePoints,
+    tbpManifoldBranchKind? BRANCH_KIND,
+    tbpManifoldBranchKind? branchKind,
+    List<tbpManifoldBranchObjectBuilder>? BRANCHES,
+  })
+      : _ORBIT = ORBIT,
+        _PERTURBATION = PERTURBATION,
+        _DURATION = DURATION,
+        _SAMPLE_POINTS = samplePoints ?? SAMPLE_POINTS,
+        _BRANCH_KIND = branchKind ?? BRANCH_KIND,
+        _BRANCHES = BRANCHES;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? ORBITOffset = _ORBIT?.getOrCreateOffset(fbBuilder);
+    final int? BRANCHESOffset = _BRANCHES == null ? null
+        : fbBuilder.writeList(_BRANCHES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(6);
+    fbBuilder.addOffset(0, ORBITOffset);
+    fbBuilder.addFloat64(1, _PERTURBATION);
+    fbBuilder.addFloat64(2, _DURATION);
+    fbBuilder.addUint32(3, _SAMPLE_POINTS);
+    fbBuilder.addUint8(4, _BRANCH_KIND?.value);
+    fbBuilder.addOffset(5, BRANCHESOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Multi-spacecraft time-phased CR3BP constellation along a periodic orbit.
+class tbpConstellation {
+  tbpConstellation._(this._bc, this._bcOffset);
+  factory tbpConstellation(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<tbpConstellation> reader = _tbpConstellationReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Generating periodic orbit (FAMILY + PETALS + PERIOD or explicit INITIAL_STATE).
+  tbpPeriodicOrbit? get ORBIT => tbpPeriodicOrbit.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Number of spacecraft in the constellation.
+  int get SATELLITE_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  int get satelliteCount => SATELLITE_COUNT;
+  ///  Number of orbit revolutions to propagate; 0 = 1.
+  int get REVOLUTIONS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  ///  Non-dimensional phase offsets (length SATELLITE_COUNT); empty = evenly spaced.
+  List<double>? get PHASE_OFFSETS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 10);
+  List<double>? get phaseOffsets => PHASE_OFFSETS;
+  ///  Uniform time samples per spacecraft trajectory; 0 = default.
+  int get OUTPUT_POINTS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 12, 0);
+  int get outputPoints => OUTPUT_POINTS;
+  ///  Result: propagated trajectory for each spacecraft in the constellation.
+  List<tbpTrajectory>? get TRAJECTORIES => const fb.ListReader<tbpTrajectory>(tbpTrajectory.reader).vTableGetNullable(_bc, _bcOffset, 14);
+
+  @override
+  String toString() {
+    return 'tbpConstellation{ORBIT: ${ORBIT}, satelliteCount: ${satelliteCount}, REVOLUTIONS: ${REVOLUTIONS}, phaseOffsets: ${phaseOffsets}, outputPoints: ${outputPoints}, TRAJECTORIES: ${TRAJECTORIES}}';
+  }
+}
+
+class _tbpConstellationReader extends fb.TableReader<tbpConstellation> {
+  const _tbpConstellationReader();
+
+  @override
+  tbpConstellation createObject(fb.BufferContext bc, int offset) =>
+    tbpConstellation._(bc, offset);
+}
+
+class tbpConstellationBuilder {
+  tbpConstellationBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(6);
+  }
+
+  int addOrbitOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addSatelliteCount(int? SATELLITE_COUNT) {
+    fbBuilder.addUint32(1, SATELLITE_COUNT);
+    return fbBuilder.offset;
+  }
+  int addRevolutions(int? REVOLUTIONS) {
+    fbBuilder.addUint32(2, REVOLUTIONS);
+    return fbBuilder.offset;
+  }
+  int addPhaseOffsetsOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addOutputPoints(int? OUTPUT_POINTS) {
+    fbBuilder.addUint32(4, OUTPUT_POINTS);
+    return fbBuilder.offset;
+  }
+  int addTrajectoriesOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class tbpConstellationObjectBuilder extends fb.ObjectBuilder {
+  final tbpPeriodicOrbitObjectBuilder? _ORBIT;
+  final int? _SATELLITE_COUNT;
+  final int? _REVOLUTIONS;
+  final List<double>? _PHASE_OFFSETS;
+  final int? _OUTPUT_POINTS;
+  final List<tbpTrajectoryObjectBuilder>? _TRAJECTORIES;
+
+  tbpConstellationObjectBuilder({
+    tbpPeriodicOrbitObjectBuilder? ORBIT,
+    int? SATELLITE_COUNT,
+    int? satelliteCount,
+    int? REVOLUTIONS,
+    List<double>? PHASE_OFFSETS,
+    List<double>? phaseOffsets,
+    int? OUTPUT_POINTS,
+    int? outputPoints,
+    List<tbpTrajectoryObjectBuilder>? TRAJECTORIES,
+  })
+      : _ORBIT = ORBIT,
+        _SATELLITE_COUNT = satelliteCount ?? SATELLITE_COUNT,
+        _REVOLUTIONS = REVOLUTIONS,
+        _PHASE_OFFSETS = phaseOffsets ?? PHASE_OFFSETS,
+        _OUTPUT_POINTS = outputPoints ?? OUTPUT_POINTS,
+        _TRAJECTORIES = TRAJECTORIES;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? ORBITOffset = _ORBIT?.getOrCreateOffset(fbBuilder);
+    final int? PHASE_OFFSETSOffset = _PHASE_OFFSETS == null ? null
+        : fbBuilder.writeListFloat64(_PHASE_OFFSETS!);
+    final int? TRAJECTORIESOffset = _TRAJECTORIES == null ? null
+        : fbBuilder.writeList(_TRAJECTORIES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(6);
+    fbBuilder.addOffset(0, ORBITOffset);
+    fbBuilder.addUint32(1, _SATELLITE_COUNT);
+    fbBuilder.addUint32(2, _REVOLUTIONS);
+    fbBuilder.addOffset(3, PHASE_OFFSETSOffset);
+    fbBuilder.addUint32(4, _OUTPUT_POINTS);
+    fbBuilder.addOffset(5, TRAJECTORIESOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Surface coverage gap, elevation angle, occultation, and DOP analysis on a primary body.
+class tbpSurfaceAnalysis {
+  tbpSurfaceAnalysis._(this._bc, this._bcOffset);
+  factory tbpSurfaceAnalysis(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<tbpSurfaceAnalysis> reader = _tbpSurfaceAnalysisReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Target primary body: 0 or 2 = smaller primary (Moon), 1 = larger primary (Earth).
+  int get REFERENCE_PRIMARY => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0);
+  int get referencePrimary => REFERENCE_PRIMARY;
+  ///  Radius of target primary body, km; 0 = default body radius.
+  double get PRIMARY_RADIUS_KM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  double get primaryRadiusKm => PRIMARY_RADIUS_KM;
+  ///  Minimum elevation mask angle above local horizon, deg; 0 = horizon (0 deg).
+  double get MIN_ELEVATION_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  double get minElevationDeg => MIN_ELEVATION_DEG;
+  ///  Minimum simultaneous satellites in view for coverage; 0 = 1.
+  int get MIN_SATELLITES => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 10, 0);
+  int get minSatellites => MIN_SATELLITES;
+  ///  Surface observer positions in synodic frame (P * 3 non-dimensional values); empty = auto Fibonacci sphere.
+  List<double>? get SURFACE_POINTS_SYNODIC => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 12);
+  List<double>? get surfacePointsSynodic => SURFACE_POINTS_SYNODIC;
+  ///  Surface observer lat/lon pairs [lat0, lon0, ...] in deg (P * 2 values).
+  List<double>? get SURFACE_LAT_LON_DEG => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 14);
+  List<double>? get surfaceLatLonDeg => SURFACE_LAT_LON_DEG;
+  ///  Number of Fibonacci surface grid points when SURFACE_POINTS_SYNODIC is empty; 0 = default.
+  int get GRID_POINT_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 16, 0);
+  int get gridPointCount => GRID_POINT_COUNT;
+  ///  Result: non-dimensional sample times (T values).
+  List<double>? get SAMPLE_TIMES => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 18);
+  List<double>? get sampleTimes => SAMPLE_TIMES;
+  ///  Result: maximum uncovered gap duration per surface point, s (P values).
+  List<double>? get MAX_GAP_S => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 20);
+  List<double>? get maxGapS => MAX_GAP_S;
+  ///  Result: geometric dilution of precision (T * P values, NaN/0 when <4 sats visible).
+  List<double>? get GDOP => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 22);
+  ///  Result: position dilution of precision (T * P values).
+  List<double>? get PDOP => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 24);
+  ///  Result: time dilution of precision (T * P values).
+  List<double>? get TDOP => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 26);
+  ///  Result: maximum elevation angle per sample and surface point, deg (T * P values).
+  List<double>? get ELEVATION_DEG => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 28);
+  List<double>? get elevationDeg => ELEVATION_DEG;
+  ///  Result: occultation interval start times, s (M values).
+  List<double>? get OCCULTATION_START_S => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 30);
+  List<double>? get occultationStartS => OCCULTATION_START_S;
+  ///  Result: occultation interval end times, s (M values).
+  List<double>? get OCCULTATION_END_S => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 32);
+  List<double>? get occultationEndS => OCCULTATION_END_S;
+  ///  Result: occulting body index per interval (1 = P1, 2 = P2; M values).
+  List<int>? get OCCULTING_PRIMARY => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 34);
+  List<int>? get occultingPrimary => OCCULTING_PRIMARY;
+
+  @override
+  String toString() {
+    return 'tbpSurfaceAnalysis{referencePrimary: ${referencePrimary}, primaryRadiusKm: ${primaryRadiusKm}, minElevationDeg: ${minElevationDeg}, minSatellites: ${minSatellites}, surfacePointsSynodic: ${surfacePointsSynodic}, surfaceLatLonDeg: ${surfaceLatLonDeg}, gridPointCount: ${gridPointCount}, sampleTimes: ${sampleTimes}, maxGapS: ${maxGapS}, GDOP: ${GDOP}, PDOP: ${PDOP}, TDOP: ${TDOP}, elevationDeg: ${elevationDeg}, occultationStartS: ${occultationStartS}, occultationEndS: ${occultationEndS}, occultingPrimary: ${occultingPrimary}}';
+  }
+}
+
+class _tbpSurfaceAnalysisReader extends fb.TableReader<tbpSurfaceAnalysis> {
+  const _tbpSurfaceAnalysisReader();
+
+  @override
+  tbpSurfaceAnalysis createObject(fb.BufferContext bc, int offset) =>
+    tbpSurfaceAnalysis._(bc, offset);
+}
+
+class tbpSurfaceAnalysisBuilder {
+  tbpSurfaceAnalysisBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(16);
+  }
+
+  int addReferencePrimary(int? REFERENCE_PRIMARY) {
+    fbBuilder.addUint8(0, REFERENCE_PRIMARY);
+    return fbBuilder.offset;
+  }
+  int addPrimaryRadiusKm(double? PRIMARY_RADIUS_KM) {
+    fbBuilder.addFloat64(1, PRIMARY_RADIUS_KM);
+    return fbBuilder.offset;
+  }
+  int addMinElevationDeg(double? MIN_ELEVATION_DEG) {
+    fbBuilder.addFloat64(2, MIN_ELEVATION_DEG);
+    return fbBuilder.offset;
+  }
+  int addMinSatellites(int? MIN_SATELLITES) {
+    fbBuilder.addUint32(3, MIN_SATELLITES);
+    return fbBuilder.offset;
+  }
+  int addSurfacePointsSynodicOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addSurfaceLatLonDegOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addGridPointCount(int? GRID_POINT_COUNT) {
+    fbBuilder.addUint32(6, GRID_POINT_COUNT);
+    return fbBuilder.offset;
+  }
+  int addSampleTimesOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addMaxGapSOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addGdopOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addPdopOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addTdopOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addElevationDegOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addOccultationStartSOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addOccultationEndSOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addOccultingPrimaryOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class tbpSurfaceAnalysisObjectBuilder extends fb.ObjectBuilder {
+  final int? _REFERENCE_PRIMARY;
+  final double? _PRIMARY_RADIUS_KM;
+  final double? _MIN_ELEVATION_DEG;
+  final int? _MIN_SATELLITES;
+  final List<double>? _SURFACE_POINTS_SYNODIC;
+  final List<double>? _SURFACE_LAT_LON_DEG;
+  final int? _GRID_POINT_COUNT;
+  final List<double>? _SAMPLE_TIMES;
+  final List<double>? _MAX_GAP_S;
+  final List<double>? _GDOP;
+  final List<double>? _PDOP;
+  final List<double>? _TDOP;
+  final List<double>? _ELEVATION_DEG;
+  final List<double>? _OCCULTATION_START_S;
+  final List<double>? _OCCULTATION_END_S;
+  final List<int>? _OCCULTING_PRIMARY;
+
+  tbpSurfaceAnalysisObjectBuilder({
+    int? REFERENCE_PRIMARY,
+    int? referencePrimary,
+    double? PRIMARY_RADIUS_KM,
+    double? primaryRadiusKm,
+    double? MIN_ELEVATION_DEG,
+    double? minElevationDeg,
+    int? MIN_SATELLITES,
+    int? minSatellites,
+    List<double>? SURFACE_POINTS_SYNODIC,
+    List<double>? surfacePointsSynodic,
+    List<double>? SURFACE_LAT_LON_DEG,
+    List<double>? surfaceLatLonDeg,
+    int? GRID_POINT_COUNT,
+    int? gridPointCount,
+    List<double>? SAMPLE_TIMES,
+    List<double>? sampleTimes,
+    List<double>? MAX_GAP_S,
+    List<double>? maxGapS,
+    List<double>? GDOP,
+    List<double>? PDOP,
+    List<double>? TDOP,
+    List<double>? ELEVATION_DEG,
+    List<double>? elevationDeg,
+    List<double>? OCCULTATION_START_S,
+    List<double>? occultationStartS,
+    List<double>? OCCULTATION_END_S,
+    List<double>? occultationEndS,
+    List<int>? OCCULTING_PRIMARY,
+    List<int>? occultingPrimary,
+  })
+      : _REFERENCE_PRIMARY = referencePrimary ?? REFERENCE_PRIMARY,
+        _PRIMARY_RADIUS_KM = primaryRadiusKm ?? PRIMARY_RADIUS_KM,
+        _MIN_ELEVATION_DEG = minElevationDeg ?? MIN_ELEVATION_DEG,
+        _MIN_SATELLITES = minSatellites ?? MIN_SATELLITES,
+        _SURFACE_POINTS_SYNODIC = surfacePointsSynodic ?? SURFACE_POINTS_SYNODIC,
+        _SURFACE_LAT_LON_DEG = surfaceLatLonDeg ?? SURFACE_LAT_LON_DEG,
+        _GRID_POINT_COUNT = gridPointCount ?? GRID_POINT_COUNT,
+        _SAMPLE_TIMES = sampleTimes ?? SAMPLE_TIMES,
+        _MAX_GAP_S = maxGapS ?? MAX_GAP_S,
+        _GDOP = GDOP,
+        _PDOP = PDOP,
+        _TDOP = TDOP,
+        _ELEVATION_DEG = elevationDeg ?? ELEVATION_DEG,
+        _OCCULTATION_START_S = occultationStartS ?? OCCULTATION_START_S,
+        _OCCULTATION_END_S = occultationEndS ?? OCCULTATION_END_S,
+        _OCCULTING_PRIMARY = occultingPrimary ?? OCCULTING_PRIMARY;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? SURFACE_POINTS_SYNODICOffset = _SURFACE_POINTS_SYNODIC == null ? null
+        : fbBuilder.writeListFloat64(_SURFACE_POINTS_SYNODIC!);
+    final int? SURFACE_LAT_LON_DEGOffset = _SURFACE_LAT_LON_DEG == null ? null
+        : fbBuilder.writeListFloat64(_SURFACE_LAT_LON_DEG!);
+    final int? SAMPLE_TIMESOffset = _SAMPLE_TIMES == null ? null
+        : fbBuilder.writeListFloat64(_SAMPLE_TIMES!);
+    final int? MAX_GAP_SOffset = _MAX_GAP_S == null ? null
+        : fbBuilder.writeListFloat64(_MAX_GAP_S!);
+    final int? GDOPOffset = _GDOP == null ? null
+        : fbBuilder.writeListFloat64(_GDOP!);
+    final int? PDOPOffset = _PDOP == null ? null
+        : fbBuilder.writeListFloat64(_PDOP!);
+    final int? TDOPOffset = _TDOP == null ? null
+        : fbBuilder.writeListFloat64(_TDOP!);
+    final int? ELEVATION_DEGOffset = _ELEVATION_DEG == null ? null
+        : fbBuilder.writeListFloat64(_ELEVATION_DEG!);
+    final int? OCCULTATION_START_SOffset = _OCCULTATION_START_S == null ? null
+        : fbBuilder.writeListFloat64(_OCCULTATION_START_S!);
+    final int? OCCULTATION_END_SOffset = _OCCULTATION_END_S == null ? null
+        : fbBuilder.writeListFloat64(_OCCULTATION_END_S!);
+    final int? OCCULTING_PRIMARYOffset = _OCCULTING_PRIMARY == null ? null
+        : fbBuilder.writeListUint8(_OCCULTING_PRIMARY!);
+    fbBuilder.startTable(16);
+    fbBuilder.addUint8(0, _REFERENCE_PRIMARY);
+    fbBuilder.addFloat64(1, _PRIMARY_RADIUS_KM);
+    fbBuilder.addFloat64(2, _MIN_ELEVATION_DEG);
+    fbBuilder.addUint32(3, _MIN_SATELLITES);
+    fbBuilder.addOffset(4, SURFACE_POINTS_SYNODICOffset);
+    fbBuilder.addOffset(5, SURFACE_LAT_LON_DEGOffset);
+    fbBuilder.addUint32(6, _GRID_POINT_COUNT);
+    fbBuilder.addOffset(7, SAMPLE_TIMESOffset);
+    fbBuilder.addOffset(8, MAX_GAP_SOffset);
+    fbBuilder.addOffset(9, GDOPOffset);
+    fbBuilder.addOffset(10, PDOPOffset);
+    fbBuilder.addOffset(11, TDOPOffset);
+    fbBuilder.addOffset(12, ELEVATION_DEGOffset);
+    fbBuilder.addOffset(13, OCCULTATION_START_SOffset);
+    fbBuilder.addOffset(14, OCCULTATION_END_SOffset);
+    fbBuilder.addOffset(15, OCCULTING_PRIMARYOffset);
     return fbBuilder.endTable();
   }
 
@@ -1856,20 +3184,29 @@ class TBP {
   ///  JacobiConstant: the state, and its Jacobi constant.
   tbpState? get STATE => tbpState.reader.vTableGetNullable(_bc, _bcOffset, 26);
   double get JACOBI => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
-  ///  PeriodicOrbit, HaloFirstGuess, NearRectilinearHalo: the request fields
-  ///  (FAMILY, LIBRATION_POINT, AMPLITUDE or perilune/apolune, TOLERANCE,
-  ///  MAX_ITERATIONS) and the result. Family: the members, ordered along the
-  ///  family's continuation parameter (AMPLITUDE).
+  ///  PeriodicOrbit, HaloFirstGuess, NearRectilinearHalo, OrbitProperties: the
+  ///  request fields (FAMILY, LIBRATION_POINT, AMPLITUDE, PETALS, or
+  ///  perilune/apolune, TOLERANCE, MAX_ITERATIONS) and the result. Family and
+  ///  Continuation: the members ordered along the continuation parameter.
   List<tbpPeriodicOrbit>? get ORBITS => const fb.ListReader<tbpPeriodicOrbit>(tbpPeriodicOrbit.reader).vTableGetNullable(_bc, _bcOffset, 30);
   tbpTransfer? get TRANSFER => tbpTransfer.reader.vTableGetNullable(_bc, _bcOffset, 32);
   tbpStationKeeping? get STATION_KEEPING => tbpStationKeeping.reader.vTableGetNullable(_bc, _bcOffset, 34);
   tbpStationKeeping? get stationKeeping => STATION_KEEPING;
   tbpFrameConversion? get FRAME_CONVERSION => tbpFrameConversion.reader.vTableGetNullable(_bc, _bcOffset, 36);
   tbpFrameConversion? get frameConversion => FRAME_CONVERSION;
+  ///  Continuation: pseudo-arclength or natural-parameter continuation request.
+  tbpContinuationRequest? get CONTINUATION => tbpContinuationRequest.reader.vTableGetNullable(_bc, _bcOffset, 38);
+  ///  Manifolds: invariant stable/unstable manifold request and branches.
+  tbpManifolds? get MANIFOLDS => tbpManifolds.reader.vTableGetNullable(_bc, _bcOffset, 40);
+  ///  Constellation: time-phased multi-spacecraft CR3BP constellation.
+  tbpConstellation? get CONSTELLATION => tbpConstellation.reader.vTableGetNullable(_bc, _bcOffset, 42);
+  ///  SurfaceAnalysis: surface coverage gaps, elevation, occultations, and DOP.
+  tbpSurfaceAnalysis? get SURFACE_ANALYSIS => tbpSurfaceAnalysis.reader.vTableGetNullable(_bc, _bcOffset, 44);
+  tbpSurfaceAnalysis? get surfaceAnalysis => SURFACE_ANALYSIS;
 
   @override
   String toString() {
-    return 'TBP{ID: ${ID}, createdAtMs: ${createdAtMs}, PRODUCER: ${PRODUCER}, PROBLEM: ${PROBLEM}, SYSTEM: ${SYSTEM}, STATUS: ${STATUS}, errorCode: ${errorCode}, errorMessage: ${errorMessage}, PROPAGATION: ${PROPAGATION}, TRAJECTORY: ${TRAJECTORY}, librationPoints: ${librationPoints}, STATE: ${STATE}, JACOBI: ${JACOBI}, ORBITS: ${ORBITS}, TRANSFER: ${TRANSFER}, stationKeeping: ${stationKeeping}, frameConversion: ${frameConversion}}';
+    return 'TBP{ID: ${ID}, createdAtMs: ${createdAtMs}, PRODUCER: ${PRODUCER}, PROBLEM: ${PROBLEM}, SYSTEM: ${SYSTEM}, STATUS: ${STATUS}, errorCode: ${errorCode}, errorMessage: ${errorMessage}, PROPAGATION: ${PROPAGATION}, TRAJECTORY: ${TRAJECTORY}, librationPoints: ${librationPoints}, STATE: ${STATE}, JACOBI: ${JACOBI}, ORBITS: ${ORBITS}, TRANSFER: ${TRANSFER}, stationKeeping: ${stationKeeping}, frameConversion: ${frameConversion}, CONTINUATION: ${CONTINUATION}, MANIFOLDS: ${MANIFOLDS}, CONSTELLATION: ${CONSTELLATION}, surfaceAnalysis: ${surfaceAnalysis}}';
   }
 }
 
@@ -1887,7 +3224,7 @@ class TBPBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(17);
+    fbBuilder.startTable(21);
   }
 
   int addIdOffset(int? offset) {
@@ -1958,6 +3295,22 @@ class TBPBuilder {
     fbBuilder.addOffset(16, offset);
     return fbBuilder.offset;
   }
+  int addContinuationOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
+  int addManifoldsOffset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
+  int addConstellationOffset(int? offset) {
+    fbBuilder.addOffset(19, offset);
+    return fbBuilder.offset;
+  }
+  int addSurfaceAnalysisOffset(int? offset) {
+    fbBuilder.addOffset(20, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1982,6 +3335,10 @@ class TBPObjectBuilder extends fb.ObjectBuilder {
   final tbpTransferObjectBuilder? _TRANSFER;
   final tbpStationKeepingObjectBuilder? _STATION_KEEPING;
   final tbpFrameConversionObjectBuilder? _FRAME_CONVERSION;
+  final tbpContinuationRequestObjectBuilder? _CONTINUATION;
+  final tbpManifoldsObjectBuilder? _MANIFOLDS;
+  final tbpConstellationObjectBuilder? _CONSTELLATION;
+  final tbpSurfaceAnalysisObjectBuilder? _SURFACE_ANALYSIS;
 
   TBPObjectBuilder({
     String? ID,
@@ -2007,6 +3364,11 @@ class TBPObjectBuilder extends fb.ObjectBuilder {
     tbpStationKeepingObjectBuilder? stationKeeping,
     tbpFrameConversionObjectBuilder? FRAME_CONVERSION,
     tbpFrameConversionObjectBuilder? frameConversion,
+    tbpContinuationRequestObjectBuilder? CONTINUATION,
+    tbpManifoldsObjectBuilder? MANIFOLDS,
+    tbpConstellationObjectBuilder? CONSTELLATION,
+    tbpSurfaceAnalysisObjectBuilder? SURFACE_ANALYSIS,
+    tbpSurfaceAnalysisObjectBuilder? surfaceAnalysis,
   })
       : _ID = ID,
         _CREATED_AT_MS = createdAtMs ?? CREATED_AT_MS,
@@ -2024,7 +3386,11 @@ class TBPObjectBuilder extends fb.ObjectBuilder {
         _ORBITS = ORBITS,
         _TRANSFER = TRANSFER,
         _STATION_KEEPING = stationKeeping ?? STATION_KEEPING,
-        _FRAME_CONVERSION = frameConversion ?? FRAME_CONVERSION;
+        _FRAME_CONVERSION = frameConversion ?? FRAME_CONVERSION,
+        _CONTINUATION = CONTINUATION,
+        _MANIFOLDS = MANIFOLDS,
+        _CONSTELLATION = CONSTELLATION,
+        _SURFACE_ANALYSIS = surfaceAnalysis ?? SURFACE_ANALYSIS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -2048,7 +3414,11 @@ class TBPObjectBuilder extends fb.ObjectBuilder {
     final int? TRANSFEROffset = _TRANSFER?.getOrCreateOffset(fbBuilder);
     final int? STATION_KEEPINGOffset = _STATION_KEEPING?.getOrCreateOffset(fbBuilder);
     final int? FRAME_CONVERSIONOffset = _FRAME_CONVERSION?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(17);
+    final int? CONTINUATIONOffset = _CONTINUATION?.getOrCreateOffset(fbBuilder);
+    final int? MANIFOLDSOffset = _MANIFOLDS?.getOrCreateOffset(fbBuilder);
+    final int? CONSTELLATIONOffset = _CONSTELLATION?.getOrCreateOffset(fbBuilder);
+    final int? SURFACE_ANALYSISOffset = _SURFACE_ANALYSIS?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(21);
     fbBuilder.addOffset(0, IDOffset);
     fbBuilder.addInt64(1, _CREATED_AT_MS);
     fbBuilder.addOffset(2, PRODUCEROffset);
@@ -2066,6 +3436,10 @@ class TBPObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(14, TRANSFEROffset);
     fbBuilder.addOffset(15, STATION_KEEPINGOffset);
     fbBuilder.addOffset(16, FRAME_CONVERSIONOffset);
+    fbBuilder.addOffset(17, CONTINUATIONOffset);
+    fbBuilder.addOffset(18, MANIFOLDSOffset);
+    fbBuilder.addOffset(19, CONSTELLATIONOffset);
+    fbBuilder.addOffset(20, SURFACE_ANALYSISOffset);
     return fbBuilder.endTable();
   }
 

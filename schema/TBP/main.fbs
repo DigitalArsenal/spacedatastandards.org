@@ -1,5 +1,5 @@
-// Hash: 7692bd090e2b9f879bdcc9389be7ec7dc40fc3279983094309b4440cd07a8db1
-// Version: 1.248.0
+// Hash: 738e3eb99d3035545cb62e1e7ed74a82188523d2c0f3381835eaf2868faafd49
+// Version: 1.248.1
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 include "../MPL/main.fbs";
@@ -56,7 +56,17 @@ enum tbpProblem : ubyte {
   /// State conversion between the synodic and inertial frames.
   FrameConversion,
   /// Members of a periodic-orbit family.
-  Family
+  Family,
+  /// Pseudo-arclength or natural-parameter continuation from a seed orbit.
+  Continuation,
+  /// Stable and unstable invariant manifolds of an unstable periodic orbit.
+  Manifolds,
+  /// Diagnostic properties of a periodic orbit (apsides, stability, occultations).
+  OrbitProperties,
+  /// Time-phased multi-spacecraft constellation along a periodic CR3BP orbit.
+  Constellation,
+  /// Primary-body surface coverage gaps, elevation, occultations, and DOP.
+  SurfaceAnalysis
 }
 
 /// Family of a periodic orbit. Append new values only; never reorder or reuse
@@ -80,7 +90,15 @@ enum tbpOrbitFamily : ubyte {
   /// Axial orbit.
   Axial,
   /// Short- or long-period orbit about L4 or L5.
-  LongShortPeriod
+  LongShortPeriod,
+  /// Northern-hemisphere sidereal-resonant tulip-shaped CR3BP orbit.
+  TulipNorthern,
+  /// Southern-hemisphere sidereal-resonant tulip-shaped CR3BP orbit.
+  TulipSouthern,
+  /// Northern-hemisphere multi-petal pumpkin-shaped CR3BP orbit.
+  PumpkinNorthern,
+  /// Southern-hemisphere multi-petal pumpkin-shaped CR3BP orbit.
+  PumpkinSouthern
 }
 
 /// How a transfer is built. Append new values only; never reorder or reuse
@@ -100,7 +118,15 @@ enum tbpTransferKind : ubyte {
   /// Direct insertion into an orbit about the smaller primary.
   DirectInsertion,
   /// Insertion into a periodic orbit (TARGET_ORBIT).
-  PeriodicOrbitInsertion
+  PeriodicOrbitInsertion,
+  /// Theoretical minimum Jacobi-energy delta-v between states or to surface.
+  MinEnergy,
+  /// Single-revolution STM-targeted direct CR3BP Lambert transfer.
+  DirectLambert,
+  /// Minimum-delta-v CR3BP Lambert across prograde/retrograde and primaries.
+  MinLambert,
+  /// Minimum-time low-thrust optimal control (Pontryagin Minimum Principle).
+  LowThrustMinTime
 }
 
 /// When station-keeping burns are placed. Append new values only; never
@@ -111,14 +137,35 @@ enum tbpStationKeepingStrategy : ubyte {
   /// Target a reference point on the periodic orbit.
   TargetPoint,
   /// Suppress the unstable Floquet mode.
-  FloquetMode
+  FloquetMode,
+  /// Linear stability lower/upper annual delta-v bounds across intervals.
+  LinearStabilityBounds
 }
 
 /// Direction of a frame conversion. Append new values only; never reorder or
 /// reuse existing values.
 enum tbpConversionDirection : ubyte {
   SynodicToInertial,
-  InertialToSynodic
+  InertialToSynodic,
+  SynodicToJ2000,
+  J2000ToSynodic,
+  SynodicToPrimaryInertial,
+  PrimaryInertialToSynodic,
+  SynodicToLla,
+  LlaToSynodic,
+  SynodicToOrbitalElements,
+  OrbitalElementsToSynodic
+}
+
+/// Which invariant manifold branches to compute. Append new values only;
+/// never reorder or reuse existing values.
+enum tbpManifoldBranchKind : ubyte {
+  /// Both stable and unstable branches (interior and exterior).
+  Both,
+  /// Stable invariant manifold branches only (backward propagation).
+  StableOnly,
+  /// Unstable invariant manifold branches only (forward propagation).
+  UnstableOnly
 }
 
 /// Outcome. Append new values only; never reorder or reuse existing values.
@@ -250,6 +297,34 @@ table tbpPeriodicOrbit {
   STABLE: bool;
   /// One period of the orbit; empty = not sampled.
   TRAJECTORY: tbpTrajectory;
+  /// Tulip/pumpkin petal count Np; 0 = not applicable.
+  PETALS: uint32;
+  /// Sidereal resonance denominator p (period = q * 2*pi / p); 0 = not stated.
+  RESONANCE_P: uint32;
+  /// Sidereal resonance numerator q; 0 = not stated.
+  RESONANCE_Q: uint32;
+  /// CR3BP pseudo-potential U* at the initial state.
+  PSEUDO_POTENTIAL: double;
+  /// Minimum distance from the larger primary (P1), km; 0 = not computed.
+  PERIGEE_KM: double;
+  /// Maximum distance from the larger primary (P1), km; 0 = not computed.
+  APOGEE_KM: double;
+  /// Instability doubling time, non-dimensional; 0 = stable or not computed.
+  DOUBLING_TIME: double;
+  /// Floquet/Lyapunov characteristic exponent, non-dimensional; 0 = not computed.
+  CHARACTERISTIC_EXPONENT: double;
+  /// Longest continuous P2 (lunar) occultation per period, s.
+  MAX_LUNAR_OCCULTATION_S: double;
+  /// Total P2 (lunar) occultation duration per period, s.
+  TOTAL_LUNAR_OCCULTATION_S: double;
+  /// Longest continuous P1 (Earth) occultation per period, s.
+  MAX_EARTH_OCCULTATION_S: double;
+  /// Total P1 (Earth) occultation duration per period, s.
+  TOTAL_EARTH_OCCULTATION_S: double;
+  /// Unit stable eigenvector of the monodromy matrix (6 values); empty = none.
+  STABLE_EIGENVECTOR: [double];
+  /// Unit unstable eigenvector of the monodromy matrix (6 values); empty = none.
+  UNSTABLE_EIGENVECTOR: [double];
 }
 
 /// Options for a propagation.
@@ -289,6 +364,30 @@ table tbpTransfer {
   TIME_OF_FLIGHT_S: double;
   /// Result: the transfer trajectory; empty = not sampled.
   TRAJECTORY: tbpTrajectory;
+  /// Departure state in synodic frame (MinEnergy, DirectLambert, MinLambert, LowThrustMinTime).
+  INITIAL_STATE: tbpState;
+  /// Arrival state in synodic frame.
+  FINAL_STATE: tbpState;
+  /// False = prograde (default), true = retrograde (DirectLambert).
+  RETROGRADE: bool;
+  /// Reference primary body for Lambert seeding: 0 = auto, 1 = P1, 2 = P2.
+  REFERENCE_PRIMARY: ubyte;
+  /// Low-thrust maximum thrust, N (LowThrustMinTime).
+  MAX_THRUST_N: double;
+  /// Engine specific impulse Isp, s (LowThrustMinTime).
+  SPECIFIC_IMPULSE_S: double;
+  /// Initial wet spacecraft mass, kg.
+  INITIAL_MASS_KG: double;
+  /// Result: final spacecraft mass at arrival, kg.
+  FINAL_MASS_KG: double;
+  /// Result: propellant consumed, kg.
+  PROPELLANT_MASS_KG: double;
+  /// Initial costates [lambda_rx, ry, rz, vx, vy, vz, m] guess or solved.
+  INITIAL_COSTATES: [double];
+  /// Result: normalized throttle [0..1] per trajectory sample.
+  THROTTLE_HISTORY: [double];
+  /// Result: theoretical minimum Jacobi-energy delta-v, km/s (MinEnergy).
+  MIN_ENERGY_DELTA_V_KM_S: double;
 }
 
 /// Station-keeping budget for a periodic orbit.
@@ -311,6 +410,14 @@ table tbpStationKeeping {
   CYCLE_DELTA_V_KM_S: [double];
   /// Result: true when the orbit stays bounded over the simulation.
   BOUNDED: bool;
+  /// Time between correction maneuvers, s (LinearStabilityBounds).
+  CORRECTION_INTERVAL_S: double;
+  /// 3-axis velocity execution error magnitude, km/s (LinearStabilityBounds).
+  DELTA_V_EXECUTION_ERROR_KM_S: double;
+  /// Result: linear-stability lower bound annual delta-v, km/s/yr.
+  LOWER_BOUND_ANNUAL_DELTA_V_KM_S: double;
+  /// Result: linear-stability upper bound annual delta-v, km/s/yr.
+  UPPER_BOUND_ANNUAL_DELTA_V_KM_S: double;
 }
 
 /// A state converted between the synodic and inertial frames. The inertial
@@ -328,6 +435,118 @@ table tbpFrameConversion {
   SYNODIC: tbpState;
   /// The inertial state (input or result): km and km/s, 6 values.
   INERTIAL: [double];
+  /// Reference primary body: 0 = barycenter, 1 = P1 (Earth), 2 = P2 (Moon).
+  REFERENCE_PRIMARY: ubyte;
+  /// Epoch Julian date (days) for J2000/ephemeris conversions; 0 = from REFERENCE_EPOCH_MS.
+  JULIAN_DATE: double;
+  /// Geodetic/selenodetic coordinates [lat_deg, lon_deg, alt_km] (3 values).
+  LLA_DEG_KM: [double];
+  /// Classical Keplerian elements [a_km, e, inc_deg, raan_deg, argp_deg, nu_deg] (6 values).
+  ORBITAL_ELEMENTS: [double];
+  /// Batch synodic states (N * 6 values, non-dimensional) for vectorized conversion.
+  BATCH_SYNODIC_STATES: [double];
+  /// Batch inertial/target states (N * 6 values, km and km/s) for vectorized conversion.
+  BATCH_INERTIAL_STATES: [double];
+}
+
+/// Request parameters for pseudo-arclength or natural-parameter continuation.
+table tbpContinuationRequest {
+  /// Seed periodic orbit (INITIAL_STATE and PERIOD required).
+  SEED_ORBIT: tbpPeriodicOrbit;
+  /// Arclength step size ds (signed); 0 = natural-parameter fixed-period refinement.
+  STEP_SIZE: double;
+  /// Number of continuation steps to generate; 0 = 1.
+  STEPS: uint32;
+  /// True = fixed-period natural parameter continuation (cont_np); false = pseudo-arclength (cont).
+  FIXED_PERIOD: bool;
+  /// Optional 7-element previous null-vector tangent for directional continuation.
+  NULL_VECTOR: [double];
+  /// Convergence tolerance on periodicity residual; 0 = default (1e-10).
+  TOLERANCE: double;
+  /// Maximum corrector iterations per step; 0 = default.
+  MAX_ITERATIONS: uint32;
+}
+
+/// One stable or unstable invariant manifold branch emanating from a periodic orbit.
+table tbpManifoldBranch {
+  /// True = stable branch (integrated backward), false = unstable branch (forward).
+  STABLE: bool;
+  /// True = exterior (+eigenvector), false = interior (-eigenvector).
+  EXTERIOR: bool;
+  /// Index of the seed point along the periodic orbit.
+  SEED_INDEX: uint32;
+  /// Perturbed initial state on the manifold, non-dimensional.
+  INITIAL_STATE: tbpState;
+  /// Propagated manifold trajectory.
+  TRAJECTORY: tbpTrajectory;
+}
+
+/// Invariant manifold request and computed branches for an unstable periodic orbit.
+table tbpManifolds {
+  /// Periodic orbit to perturb (INITIAL_STATE and PERIOD required).
+  ORBIT: tbpPeriodicOrbit;
+  /// Perturbation distance epsilon (non-dimensional); 0 = default (1e-5).
+  PERTURBATION: double;
+  /// Propagation duration per branch, non-dimensional; 0 = one orbit period.
+  DURATION: double;
+  /// Number of seed points along the periodic orbit; 0 = default (12).
+  SAMPLE_POINTS: uint32;
+  /// Which manifold branches to generate.
+  BRANCH_KIND: tbpManifoldBranchKind = Both;
+  /// Computed manifold branches.
+  BRANCHES: [tbpManifoldBranch];
+}
+
+/// Multi-spacecraft time-phased CR3BP constellation along a periodic orbit.
+table tbpConstellation {
+  /// Generating periodic orbit (FAMILY + PETALS + PERIOD or explicit INITIAL_STATE).
+  ORBIT: tbpPeriodicOrbit;
+  /// Number of spacecraft in the constellation.
+  SATELLITE_COUNT: uint32;
+  /// Number of orbit revolutions to propagate; 0 = 1.
+  REVOLUTIONS: uint32;
+  /// Non-dimensional phase offsets (length SATELLITE_COUNT); empty = evenly spaced.
+  PHASE_OFFSETS: [double];
+  /// Uniform time samples per spacecraft trajectory; 0 = default.
+  OUTPUT_POINTS: uint32;
+  /// Result: propagated trajectory for each spacecraft in the constellation.
+  TRAJECTORIES: [tbpTrajectory];
+}
+
+/// Surface coverage gap, elevation angle, occultation, and DOP analysis on a primary body.
+table tbpSurfaceAnalysis {
+  /// Target primary body: 0 or 2 = smaller primary (Moon), 1 = larger primary (Earth).
+  REFERENCE_PRIMARY: ubyte;
+  /// Radius of target primary body, km; 0 = default body radius.
+  PRIMARY_RADIUS_KM: double;
+  /// Minimum elevation mask angle above local horizon, deg; 0 = horizon (0 deg).
+  MIN_ELEVATION_DEG: double;
+  /// Minimum simultaneous satellites in view for coverage; 0 = 1.
+  MIN_SATELLITES: uint32;
+  /// Surface observer positions in synodic frame (P * 3 non-dimensional values); empty = auto Fibonacci sphere.
+  SURFACE_POINTS_SYNODIC: [double];
+  /// Surface observer lat/lon pairs [lat0, lon0, ...] in deg (P * 2 values).
+  SURFACE_LAT_LON_DEG: [double];
+  /// Number of Fibonacci surface grid points when SURFACE_POINTS_SYNODIC is empty; 0 = default.
+  GRID_POINT_COUNT: uint32;
+  /// Result: non-dimensional sample times (T values).
+  SAMPLE_TIMES: [double];
+  /// Result: maximum uncovered gap duration per surface point, s (P values).
+  MAX_GAP_S: [double];
+  /// Result: geometric dilution of precision (T * P values, NaN/0 when <4 sats visible).
+  GDOP: [double];
+  /// Result: position dilution of precision (T * P values).
+  PDOP: [double];
+  /// Result: time dilution of precision (T * P values).
+  TDOP: [double];
+  /// Result: maximum elevation angle per sample and surface point, deg (T * P values).
+  ELEVATION_DEG: [double];
+  /// Result: occultation interval start times, s (M values).
+  OCCULTATION_START_S: [double];
+  /// Result: occultation interval end times, s (M values).
+  OCCULTATION_END_S: [double];
+  /// Result: occulting body index per interval (1 = P1, 2 = P2; M values).
+  OCCULTING_PRIMARY: [ubyte];
 }
 
 /// Three-Body Problem - a CR3BP system and one answer about it.
@@ -352,14 +571,22 @@ table TBP {
   /// JacobiConstant: the state, and its Jacobi constant.
   STATE: tbpState;
   JACOBI: double;
-  /// PeriodicOrbit, HaloFirstGuess, NearRectilinearHalo: the request fields
-  /// (FAMILY, LIBRATION_POINT, AMPLITUDE or perilune/apolune, TOLERANCE,
-  /// MAX_ITERATIONS) and the result. Family: the members, ordered along the
-  /// family's continuation parameter (AMPLITUDE).
+  /// PeriodicOrbit, HaloFirstGuess, NearRectilinearHalo, OrbitProperties: the
+  /// request fields (FAMILY, LIBRATION_POINT, AMPLITUDE, PETALS, or
+  /// perilune/apolune, TOLERANCE, MAX_ITERATIONS) and the result. Family and
+  /// Continuation: the members ordered along the continuation parameter.
   ORBITS: [tbpPeriodicOrbit];
   TRANSFER: tbpTransfer;
   STATION_KEEPING: tbpStationKeeping;
   FRAME_CONVERSION: tbpFrameConversion;
+  /// Continuation: pseudo-arclength or natural-parameter continuation request.
+  CONTINUATION: tbpContinuationRequest;
+  /// Manifolds: invariant stable/unstable manifold request and branches.
+  MANIFOLDS: tbpManifolds;
+  /// Constellation: time-phased multi-spacecraft CR3BP constellation.
+  CONSTELLATION: tbpConstellation;
+  /// SurfaceAnalysis: surface coverage gaps, elevation, occultations, and DOP.
+  SURFACE_ANALYSIS: tbpSurfaceAnalysis;
 }
 
 root_type TBP;

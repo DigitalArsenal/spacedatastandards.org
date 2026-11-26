@@ -28,6 +28,14 @@ const (
 	tbpOrbitFamilyAxial               tbpOrbitFamily = 8
 	/// Short- or long-period orbit about L4 or L5.
 	tbpOrbitFamilyLongShortPeriod     tbpOrbitFamily = 9
+	/// Northern-hemisphere sidereal-resonant tulip-shaped CR3BP orbit.
+	tbpOrbitFamilyTulipNorthern       tbpOrbitFamily = 10
+	/// Southern-hemisphere sidereal-resonant tulip-shaped CR3BP orbit.
+	tbpOrbitFamilyTulipSouthern       tbpOrbitFamily = 11
+	/// Northern-hemisphere multi-petal pumpkin-shaped CR3BP orbit.
+	tbpOrbitFamilyPumpkinNorthern     tbpOrbitFamily = 12
+	/// Southern-hemisphere multi-petal pumpkin-shaped CR3BP orbit.
+	tbpOrbitFamilyPumpkinSouthern     tbpOrbitFamily = 13
 )
 
 var EnumNamestbpOrbitFamily = map[tbpOrbitFamily]string{
@@ -41,6 +49,10 @@ var EnumNamestbpOrbitFamily = map[tbpOrbitFamily]string{
 	tbpOrbitFamilyButterfly:           "Butterfly",
 	tbpOrbitFamilyAxial:               "Axial",
 	tbpOrbitFamilyLongShortPeriod:     "LongShortPeriod",
+	tbpOrbitFamilyTulipNorthern:       "TulipNorthern",
+	tbpOrbitFamilyTulipSouthern:       "TulipSouthern",
+	tbpOrbitFamilyPumpkinNorthern:     "PumpkinNorthern",
+	tbpOrbitFamilyPumpkinSouthern:     "PumpkinSouthern",
 }
 
 var EnumValuestbpOrbitFamily = map[string]tbpOrbitFamily{
@@ -54,6 +66,10 @@ var EnumValuestbpOrbitFamily = map[string]tbpOrbitFamily{
 	"Butterfly":           tbpOrbitFamilyButterfly,
 	"Axial":               tbpOrbitFamilyAxial,
 	"LongShortPeriod":     tbpOrbitFamilyLongShortPeriod,
+	"TulipNorthern":       tbpOrbitFamilyTulipNorthern,
+	"TulipSouthern":       tbpOrbitFamilyTulipSouthern,
+	"PumpkinNorthern":     tbpOrbitFamilyPumpkinNorthern,
+	"PumpkinSouthern":     tbpOrbitFamilyPumpkinSouthern,
 }
 
 func (v tbpOrbitFamily) String() string {

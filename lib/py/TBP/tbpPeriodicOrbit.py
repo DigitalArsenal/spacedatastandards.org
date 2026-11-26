@@ -260,8 +260,160 @@ class tbpPeriodicOrbit(object):
             return obj
         return None
 
+    # Tulip/pumpkin petal count Np; 0 = not applicable.
+    # tbpPeriodicOrbit
+    def PETALS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Sidereal resonance denominator p (period = q * 2*pi / p); 0 = not stated.
+    # tbpPeriodicOrbit
+    def RESONANCE_P(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Sidereal resonance numerator q; 0 = not stated.
+    # tbpPeriodicOrbit
+    def RESONANCE_Q(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # CR3BP pseudo-potential U* at the initial state.
+    # tbpPeriodicOrbit
+    def PSEUDO_POTENTIAL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Minimum distance from the larger primary (P1), km; 0 = not computed.
+    # tbpPeriodicOrbit
+    def PERIGEE_KM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Maximum distance from the larger primary (P1), km; 0 = not computed.
+    # tbpPeriodicOrbit
+    def APOGEE_KM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Instability doubling time, non-dimensional; 0 = stable or not computed.
+    # tbpPeriodicOrbit
+    def DOUBLING_TIME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Floquet/Lyapunov characteristic exponent, non-dimensional; 0 = not computed.
+    # tbpPeriodicOrbit
+    def CHARACTERISTIC_EXPONENT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Longest continuous P2 (lunar) occultation per period, s.
+    # tbpPeriodicOrbit
+    def MAX_LUNAR_OCCULTATION_S(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Total P2 (lunar) occultation duration per period, s.
+    # tbpPeriodicOrbit
+    def TOTAL_LUNAR_OCCULTATION_S(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Longest continuous P1 (Earth) occultation per period, s.
+    # tbpPeriodicOrbit
+    def MAX_EARTH_OCCULTATION_S(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Total P1 (Earth) occultation duration per period, s.
+    # tbpPeriodicOrbit
+    def TOTAL_EARTH_OCCULTATION_S(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Unit stable eigenvector of the monodromy matrix (6 values); empty = none.
+    # tbpPeriodicOrbit
+    def STABLE_EIGENVECTOR(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # tbpPeriodicOrbit
+    def STABLE_EIGENVECTORAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # tbpPeriodicOrbit
+    def STABLE_EIGENVECTORLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # tbpPeriodicOrbit
+    def STABLE_EIGENVECTORIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        return o == 0
+
+    # Unit unstable eigenvector of the monodromy matrix (6 values); empty = none.
+    # tbpPeriodicOrbit
+    def UNSTABLE_EIGENVECTOR(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # tbpPeriodicOrbit
+    def UNSTABLE_EIGENVECTORAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # tbpPeriodicOrbit
+    def UNSTABLE_EIGENVECTORLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # tbpPeriodicOrbit
+    def UNSTABLE_EIGENVECTORIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        return o == 0
+
 def tbpPeriodicOrbitStart(builder):
-    builder.StartObject(20)
+    builder.StartObject(34)
 
 def Start(builder):
     tbpPeriodicOrbitStart(builder)
@@ -434,6 +586,122 @@ def tbpPeriodicOrbitAddTRAJECTORY(builder, TRAJECTORY):
 def AddTRAJECTORY(builder, TRAJECTORY):
     tbpPeriodicOrbitAddTRAJECTORY(builder, TRAJECTORY)
 
+def tbpPeriodicOrbitAddPETALS(builder, PETALS):
+    builder.PrependUint32Slot(20, PETALS, 0)
+
+def AddPETALS(builder, PETALS):
+    tbpPeriodicOrbitAddPETALS(builder, PETALS)
+
+def tbpPeriodicOrbitAddRESONANCE_P(builder, RESONANCE_P):
+    builder.PrependUint32Slot(21, RESONANCE_P, 0)
+
+def AddRESONANCE_P(builder, RESONANCE_P):
+    tbpPeriodicOrbitAddRESONANCE_P(builder, RESONANCE_P)
+
+def tbpPeriodicOrbitAddRESONANCE_Q(builder, RESONANCE_Q):
+    builder.PrependUint32Slot(22, RESONANCE_Q, 0)
+
+def AddRESONANCE_Q(builder, RESONANCE_Q):
+    tbpPeriodicOrbitAddRESONANCE_Q(builder, RESONANCE_Q)
+
+def tbpPeriodicOrbitAddPSEUDO_POTENTIAL(builder, PSEUDO_POTENTIAL):
+    builder.PrependFloat64Slot(23, PSEUDO_POTENTIAL, 0.0)
+
+def AddPSEUDO_POTENTIAL(builder, PSEUDO_POTENTIAL):
+    tbpPeriodicOrbitAddPSEUDO_POTENTIAL(builder, PSEUDO_POTENTIAL)
+
+def tbpPeriodicOrbitAddPERIGEE_KM(builder, PERIGEE_KM):
+    builder.PrependFloat64Slot(24, PERIGEE_KM, 0.0)
+
+def AddPERIGEE_KM(builder, PERIGEE_KM):
+    tbpPeriodicOrbitAddPERIGEE_KM(builder, PERIGEE_KM)
+
+def tbpPeriodicOrbitAddAPOGEE_KM(builder, APOGEE_KM):
+    builder.PrependFloat64Slot(25, APOGEE_KM, 0.0)
+
+def AddAPOGEE_KM(builder, APOGEE_KM):
+    tbpPeriodicOrbitAddAPOGEE_KM(builder, APOGEE_KM)
+
+def tbpPeriodicOrbitAddDOUBLING_TIME(builder, DOUBLING_TIME):
+    builder.PrependFloat64Slot(26, DOUBLING_TIME, 0.0)
+
+def AddDOUBLING_TIME(builder, DOUBLING_TIME):
+    tbpPeriodicOrbitAddDOUBLING_TIME(builder, DOUBLING_TIME)
+
+def tbpPeriodicOrbitAddCHARACTERISTIC_EXPONENT(builder, CHARACTERISTIC_EXPONENT):
+    builder.PrependFloat64Slot(27, CHARACTERISTIC_EXPONENT, 0.0)
+
+def AddCHARACTERISTIC_EXPONENT(builder, CHARACTERISTIC_EXPONENT):
+    tbpPeriodicOrbitAddCHARACTERISTIC_EXPONENT(builder, CHARACTERISTIC_EXPONENT)
+
+def tbpPeriodicOrbitAddMAX_LUNAR_OCCULTATION_S(builder, MAX_LUNAR_OCCULTATION_S):
+    builder.PrependFloat64Slot(28, MAX_LUNAR_OCCULTATION_S, 0.0)
+
+def AddMAX_LUNAR_OCCULTATION_S(builder, MAX_LUNAR_OCCULTATION_S):
+    tbpPeriodicOrbitAddMAX_LUNAR_OCCULTATION_S(builder, MAX_LUNAR_OCCULTATION_S)
+
+def tbpPeriodicOrbitAddTOTAL_LUNAR_OCCULTATION_S(builder, TOTAL_LUNAR_OCCULTATION_S):
+    builder.PrependFloat64Slot(29, TOTAL_LUNAR_OCCULTATION_S, 0.0)
+
+def AddTOTAL_LUNAR_OCCULTATION_S(builder, TOTAL_LUNAR_OCCULTATION_S):
+    tbpPeriodicOrbitAddTOTAL_LUNAR_OCCULTATION_S(builder, TOTAL_LUNAR_OCCULTATION_S)
+
+def tbpPeriodicOrbitAddMAX_EARTH_OCCULTATION_S(builder, MAX_EARTH_OCCULTATION_S):
+    builder.PrependFloat64Slot(30, MAX_EARTH_OCCULTATION_S, 0.0)
+
+def AddMAX_EARTH_OCCULTATION_S(builder, MAX_EARTH_OCCULTATION_S):
+    tbpPeriodicOrbitAddMAX_EARTH_OCCULTATION_S(builder, MAX_EARTH_OCCULTATION_S)
+
+def tbpPeriodicOrbitAddTOTAL_EARTH_OCCULTATION_S(builder, TOTAL_EARTH_OCCULTATION_S):
+    builder.PrependFloat64Slot(31, TOTAL_EARTH_OCCULTATION_S, 0.0)
+
+def AddTOTAL_EARTH_OCCULTATION_S(builder, TOTAL_EARTH_OCCULTATION_S):
+    tbpPeriodicOrbitAddTOTAL_EARTH_OCCULTATION_S(builder, TOTAL_EARTH_OCCULTATION_S)
+
+def tbpPeriodicOrbitAddSTABLE_EIGENVECTOR(builder, STABLE_EIGENVECTOR):
+    builder.PrependUOffsetTRelativeSlot(32, flatbuffers.number_types.UOffsetTFlags.py_type(STABLE_EIGENVECTOR), 0)
+
+def AddSTABLE_EIGENVECTOR(builder, STABLE_EIGENVECTOR):
+    tbpPeriodicOrbitAddSTABLE_EIGENVECTOR(builder, STABLE_EIGENVECTOR)
+
+def tbpPeriodicOrbitStartSTABLE_EIGENVECTORVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartSTABLE_EIGENVECTORVector(builder, numElems):
+    return tbpPeriodicOrbitStartSTABLE_EIGENVECTORVector(builder, numElems)
+
+def tbpPeriodicOrbitCreateSTABLE_EIGENVECTORVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateSTABLE_EIGENVECTORVector(builder, data):
+    return tbpPeriodicOrbitCreateSTABLE_EIGENVECTORVector(builder, data)
+
+def tbpPeriodicOrbitAddUNSTABLE_EIGENVECTOR(builder, UNSTABLE_EIGENVECTOR):
+    builder.PrependUOffsetTRelativeSlot(33, flatbuffers.number_types.UOffsetTFlags.py_type(UNSTABLE_EIGENVECTOR), 0)
+
+def AddUNSTABLE_EIGENVECTOR(builder, UNSTABLE_EIGENVECTOR):
+    tbpPeriodicOrbitAddUNSTABLE_EIGENVECTOR(builder, UNSTABLE_EIGENVECTOR)
+
+def tbpPeriodicOrbitStartUNSTABLE_EIGENVECTORVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartUNSTABLE_EIGENVECTORVector(builder, numElems):
+    return tbpPeriodicOrbitStartUNSTABLE_EIGENVECTORVector(builder, numElems)
+
+def tbpPeriodicOrbitCreateUNSTABLE_EIGENVECTORVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateUNSTABLE_EIGENVECTORVector(builder, data):
+    return tbpPeriodicOrbitCreateUNSTABLE_EIGENVECTORVector(builder, data)
+
 def tbpPeriodicOrbitEnd(builder):
     return builder.EndObject()
 
@@ -472,6 +740,20 @@ class tbpPeriodicOrbitT(object):
         STABILITY_INDEX = 0.0,
         STABLE = False,
         TRAJECTORY = None,
+        PETALS = 0,
+        RESONANCE_P = 0,
+        RESONANCE_Q = 0,
+        PSEUDO_POTENTIAL = 0.0,
+        PERIGEE_KM = 0.0,
+        APOGEE_KM = 0.0,
+        DOUBLING_TIME = 0.0,
+        CHARACTERISTIC_EXPONENT = 0.0,
+        MAX_LUNAR_OCCULTATION_S = 0.0,
+        TOTAL_LUNAR_OCCULTATION_S = 0.0,
+        MAX_EARTH_OCCULTATION_S = 0.0,
+        TOTAL_EARTH_OCCULTATION_S = 0.0,
+        STABLE_EIGENVECTOR = None,
+        UNSTABLE_EIGENVECTOR = None,
     ):
         self.FAMILY = FAMILY  # type: int
         self.LIBRATION_POINT = LIBRATION_POINT  # type: int
@@ -493,6 +775,20 @@ class tbpPeriodicOrbitT(object):
         self.STABILITY_INDEX = STABILITY_INDEX  # type: float
         self.STABLE = STABLE  # type: bool
         self.TRAJECTORY = TRAJECTORY  # type: Optional[tbpTrajectory.tbpTrajectoryT]
+        self.PETALS = PETALS  # type: int
+        self.RESONANCE_P = RESONANCE_P  # type: int
+        self.RESONANCE_Q = RESONANCE_Q  # type: int
+        self.PSEUDO_POTENTIAL = PSEUDO_POTENTIAL  # type: float
+        self.PERIGEE_KM = PERIGEE_KM  # type: float
+        self.APOGEE_KM = APOGEE_KM  # type: float
+        self.DOUBLING_TIME = DOUBLING_TIME  # type: float
+        self.CHARACTERISTIC_EXPONENT = CHARACTERISTIC_EXPONENT  # type: float
+        self.MAX_LUNAR_OCCULTATION_S = MAX_LUNAR_OCCULTATION_S  # type: float
+        self.TOTAL_LUNAR_OCCULTATION_S = TOTAL_LUNAR_OCCULTATION_S  # type: float
+        self.MAX_EARTH_OCCULTATION_S = MAX_EARTH_OCCULTATION_S  # type: float
+        self.TOTAL_EARTH_OCCULTATION_S = TOTAL_EARTH_OCCULTATION_S  # type: float
+        self.STABLE_EIGENVECTOR = STABLE_EIGENVECTOR  # type: Optional[List[float]]
+        self.UNSTABLE_EIGENVECTOR = UNSTABLE_EIGENVECTOR  # type: Optional[List[float]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -555,6 +851,32 @@ class tbpPeriodicOrbitT(object):
         self.STABLE = tbpPeriodicOrbit.STABLE()
         if tbpPeriodicOrbit.TRAJECTORY() is not None:
             self.TRAJECTORY = tbpTrajectory.tbpTrajectoryT.InitFromObj(tbpPeriodicOrbit.TRAJECTORY())
+        self.PETALS = tbpPeriodicOrbit.PETALS()
+        self.RESONANCE_P = tbpPeriodicOrbit.RESONANCE_P()
+        self.RESONANCE_Q = tbpPeriodicOrbit.RESONANCE_Q()
+        self.PSEUDO_POTENTIAL = tbpPeriodicOrbit.PSEUDO_POTENTIAL()
+        self.PERIGEE_KM = tbpPeriodicOrbit.PERIGEE_KM()
+        self.APOGEE_KM = tbpPeriodicOrbit.APOGEE_KM()
+        self.DOUBLING_TIME = tbpPeriodicOrbit.DOUBLING_TIME()
+        self.CHARACTERISTIC_EXPONENT = tbpPeriodicOrbit.CHARACTERISTIC_EXPONENT()
+        self.MAX_LUNAR_OCCULTATION_S = tbpPeriodicOrbit.MAX_LUNAR_OCCULTATION_S()
+        self.TOTAL_LUNAR_OCCULTATION_S = tbpPeriodicOrbit.TOTAL_LUNAR_OCCULTATION_S()
+        self.MAX_EARTH_OCCULTATION_S = tbpPeriodicOrbit.MAX_EARTH_OCCULTATION_S()
+        self.TOTAL_EARTH_OCCULTATION_S = tbpPeriodicOrbit.TOTAL_EARTH_OCCULTATION_S()
+        if not tbpPeriodicOrbit.STABLE_EIGENVECTORIsNone():
+            if np is None:
+                self.STABLE_EIGENVECTOR = []
+                for i in range(tbpPeriodicOrbit.STABLE_EIGENVECTORLength()):
+                    self.STABLE_EIGENVECTOR.append(tbpPeriodicOrbit.STABLE_EIGENVECTOR(i))
+            else:
+                self.STABLE_EIGENVECTOR = tbpPeriodicOrbit.STABLE_EIGENVECTORAsNumpy()
+        if not tbpPeriodicOrbit.UNSTABLE_EIGENVECTORIsNone():
+            if np is None:
+                self.UNSTABLE_EIGENVECTOR = []
+                for i in range(tbpPeriodicOrbit.UNSTABLE_EIGENVECTORLength()):
+                    self.UNSTABLE_EIGENVECTOR.append(tbpPeriodicOrbit.UNSTABLE_EIGENVECTOR(i))
+            else:
+                self.UNSTABLE_EIGENVECTOR = tbpPeriodicOrbit.UNSTABLE_EIGENVECTORAsNumpy()
 
     # tbpPeriodicOrbitT
     def Pack(self, builder):
@@ -586,6 +908,22 @@ class tbpPeriodicOrbitT(object):
                 FLOQUET_IMAGINARY = builder.EndVector()
         if self.TRAJECTORY is not None:
             TRAJECTORY = self.TRAJECTORY.Pack(builder)
+        if self.STABLE_EIGENVECTOR is not None:
+            if np is not None and type(self.STABLE_EIGENVECTOR) is np.ndarray:
+                STABLE_EIGENVECTOR = builder.CreateNumpyVector(self.STABLE_EIGENVECTOR)
+            else:
+                tbpPeriodicOrbitStartSTABLE_EIGENVECTORVector(builder, len(self.STABLE_EIGENVECTOR))
+                for i in reversed(range(len(self.STABLE_EIGENVECTOR))):
+                    builder.PrependFloat64(self.STABLE_EIGENVECTOR[i])
+                STABLE_EIGENVECTOR = builder.EndVector()
+        if self.UNSTABLE_EIGENVECTOR is not None:
+            if np is not None and type(self.UNSTABLE_EIGENVECTOR) is np.ndarray:
+                UNSTABLE_EIGENVECTOR = builder.CreateNumpyVector(self.UNSTABLE_EIGENVECTOR)
+            else:
+                tbpPeriodicOrbitStartUNSTABLE_EIGENVECTORVector(builder, len(self.UNSTABLE_EIGENVECTOR))
+                for i in reversed(range(len(self.UNSTABLE_EIGENVECTOR))):
+                    builder.PrependFloat64(self.UNSTABLE_EIGENVECTOR[i])
+                UNSTABLE_EIGENVECTOR = builder.EndVector()
         tbpPeriodicOrbitStart(builder)
         tbpPeriodicOrbitAddFAMILY(builder, self.FAMILY)
         tbpPeriodicOrbitAddLIBRATION_POINT(builder, self.LIBRATION_POINT)
@@ -612,5 +950,21 @@ class tbpPeriodicOrbitT(object):
         tbpPeriodicOrbitAddSTABLE(builder, self.STABLE)
         if self.TRAJECTORY is not None:
             tbpPeriodicOrbitAddTRAJECTORY(builder, TRAJECTORY)
+        tbpPeriodicOrbitAddPETALS(builder, self.PETALS)
+        tbpPeriodicOrbitAddRESONANCE_P(builder, self.RESONANCE_P)
+        tbpPeriodicOrbitAddRESONANCE_Q(builder, self.RESONANCE_Q)
+        tbpPeriodicOrbitAddPSEUDO_POTENTIAL(builder, self.PSEUDO_POTENTIAL)
+        tbpPeriodicOrbitAddPERIGEE_KM(builder, self.PERIGEE_KM)
+        tbpPeriodicOrbitAddAPOGEE_KM(builder, self.APOGEE_KM)
+        tbpPeriodicOrbitAddDOUBLING_TIME(builder, self.DOUBLING_TIME)
+        tbpPeriodicOrbitAddCHARACTERISTIC_EXPONENT(builder, self.CHARACTERISTIC_EXPONENT)
+        tbpPeriodicOrbitAddMAX_LUNAR_OCCULTATION_S(builder, self.MAX_LUNAR_OCCULTATION_S)
+        tbpPeriodicOrbitAddTOTAL_LUNAR_OCCULTATION_S(builder, self.TOTAL_LUNAR_OCCULTATION_S)
+        tbpPeriodicOrbitAddMAX_EARTH_OCCULTATION_S(builder, self.MAX_EARTH_OCCULTATION_S)
+        tbpPeriodicOrbitAddTOTAL_EARTH_OCCULTATION_S(builder, self.TOTAL_EARTH_OCCULTATION_S)
+        if self.STABLE_EIGENVECTOR is not None:
+            tbpPeriodicOrbitAddSTABLE_EIGENVECTOR(builder, STABLE_EIGENVECTOR)
+        if self.UNSTABLE_EIGENVECTOR is not None:
+            tbpPeriodicOrbitAddUNSTABLE_EIGENVECTOR(builder, UNSTABLE_EIGENVECTOR)
         tbpPeriodicOrbit = tbpPeriodicOrbitEnd(builder)
         return tbpPeriodicOrbit

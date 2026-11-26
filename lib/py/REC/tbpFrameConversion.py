@@ -96,8 +96,136 @@ class tbpFrameConversion(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         return o == 0
 
+    # Reference primary body: 0 = barycenter, 1 = P1 (Earth), 2 = P2 (Moon).
+    # tbpFrameConversion
+    def REFERENCE_PRIMARY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Epoch Julian date (days) for J2000/ephemeris conversions; 0 = from REFERENCE_EPOCH_MS.
+    # tbpFrameConversion
+    def JULIAN_DATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Geodetic/selenodetic coordinates [lat_deg, lon_deg, alt_km] (3 values).
+    # tbpFrameConversion
+    def LLA_DEG_KM(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # tbpFrameConversion
+    def LLA_DEG_KMAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # tbpFrameConversion
+    def LLA_DEG_KMLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # tbpFrameConversion
+    def LLA_DEG_KMIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        return o == 0
+
+    # Classical Keplerian elements [a_km, e, inc_deg, raan_deg, argp_deg, nu_deg] (6 values).
+    # tbpFrameConversion
+    def ORBITAL_ELEMENTS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # tbpFrameConversion
+    def ORBITAL_ELEMENTSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # tbpFrameConversion
+    def ORBITAL_ELEMENTSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # tbpFrameConversion
+    def ORBITAL_ELEMENTSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        return o == 0
+
+    # Batch synodic states (N * 6 values, non-dimensional) for vectorized conversion.
+    # tbpFrameConversion
+    def BATCH_SYNODIC_STATES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # tbpFrameConversion
+    def BATCH_SYNODIC_STATESAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # tbpFrameConversion
+    def BATCH_SYNODIC_STATESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # tbpFrameConversion
+    def BATCH_SYNODIC_STATESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        return o == 0
+
+    # Batch inertial/target states (N * 6 values, km and km/s) for vectorized conversion.
+    # tbpFrameConversion
+    def BATCH_INERTIAL_STATES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # tbpFrameConversion
+    def BATCH_INERTIAL_STATESAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # tbpFrameConversion
+    def BATCH_INERTIAL_STATESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # tbpFrameConversion
+    def BATCH_INERTIAL_STATESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        return o == 0
+
 def tbpFrameConversionStart(builder):
-    builder.StartObject(5)
+    builder.StartObject(11)
 
 def Start(builder):
     tbpFrameConversionStart(builder)
@@ -148,6 +276,106 @@ def tbpFrameConversionCreateINERTIALVector(builder, data):
 def CreateINERTIALVector(builder, data):
     return tbpFrameConversionCreateINERTIALVector(builder, data)
 
+def tbpFrameConversionAddREFERENCE_PRIMARY(builder, REFERENCE_PRIMARY):
+    builder.PrependUint8Slot(5, REFERENCE_PRIMARY, 0)
+
+def AddREFERENCE_PRIMARY(builder, REFERENCE_PRIMARY):
+    tbpFrameConversionAddREFERENCE_PRIMARY(builder, REFERENCE_PRIMARY)
+
+def tbpFrameConversionAddJULIAN_DATE(builder, JULIAN_DATE):
+    builder.PrependFloat64Slot(6, JULIAN_DATE, 0.0)
+
+def AddJULIAN_DATE(builder, JULIAN_DATE):
+    tbpFrameConversionAddJULIAN_DATE(builder, JULIAN_DATE)
+
+def tbpFrameConversionAddLLA_DEG_KM(builder, LLA_DEG_KM):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(LLA_DEG_KM), 0)
+
+def AddLLA_DEG_KM(builder, LLA_DEG_KM):
+    tbpFrameConversionAddLLA_DEG_KM(builder, LLA_DEG_KM)
+
+def tbpFrameConversionStartLLA_DEG_KMVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartLLA_DEG_KMVector(builder, numElems):
+    return tbpFrameConversionStartLLA_DEG_KMVector(builder, numElems)
+
+def tbpFrameConversionCreateLLA_DEG_KMVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateLLA_DEG_KMVector(builder, data):
+    return tbpFrameConversionCreateLLA_DEG_KMVector(builder, data)
+
+def tbpFrameConversionAddORBITAL_ELEMENTS(builder, ORBITAL_ELEMENTS):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(ORBITAL_ELEMENTS), 0)
+
+def AddORBITAL_ELEMENTS(builder, ORBITAL_ELEMENTS):
+    tbpFrameConversionAddORBITAL_ELEMENTS(builder, ORBITAL_ELEMENTS)
+
+def tbpFrameConversionStartORBITAL_ELEMENTSVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartORBITAL_ELEMENTSVector(builder, numElems):
+    return tbpFrameConversionStartORBITAL_ELEMENTSVector(builder, numElems)
+
+def tbpFrameConversionCreateORBITAL_ELEMENTSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateORBITAL_ELEMENTSVector(builder, data):
+    return tbpFrameConversionCreateORBITAL_ELEMENTSVector(builder, data)
+
+def tbpFrameConversionAddBATCH_SYNODIC_STATES(builder, BATCH_SYNODIC_STATES):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(BATCH_SYNODIC_STATES), 0)
+
+def AddBATCH_SYNODIC_STATES(builder, BATCH_SYNODIC_STATES):
+    tbpFrameConversionAddBATCH_SYNODIC_STATES(builder, BATCH_SYNODIC_STATES)
+
+def tbpFrameConversionStartBATCH_SYNODIC_STATESVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartBATCH_SYNODIC_STATESVector(builder, numElems):
+    return tbpFrameConversionStartBATCH_SYNODIC_STATESVector(builder, numElems)
+
+def tbpFrameConversionCreateBATCH_SYNODIC_STATESVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateBATCH_SYNODIC_STATESVector(builder, data):
+    return tbpFrameConversionCreateBATCH_SYNODIC_STATESVector(builder, data)
+
+def tbpFrameConversionAddBATCH_INERTIAL_STATES(builder, BATCH_INERTIAL_STATES):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(BATCH_INERTIAL_STATES), 0)
+
+def AddBATCH_INERTIAL_STATES(builder, BATCH_INERTIAL_STATES):
+    tbpFrameConversionAddBATCH_INERTIAL_STATES(builder, BATCH_INERTIAL_STATES)
+
+def tbpFrameConversionStartBATCH_INERTIAL_STATESVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartBATCH_INERTIAL_STATESVector(builder, numElems):
+    return tbpFrameConversionStartBATCH_INERTIAL_STATESVector(builder, numElems)
+
+def tbpFrameConversionCreateBATCH_INERTIAL_STATESVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateBATCH_INERTIAL_STATESVector(builder, data):
+    return tbpFrameConversionCreateBATCH_INERTIAL_STATESVector(builder, data)
+
 def tbpFrameConversionEnd(builder):
     return builder.EndObject()
 
@@ -170,12 +398,24 @@ class tbpFrameConversionT(object):
         ELAPSED_S = 0.0,
         SYNODIC = None,
         INERTIAL = None,
+        REFERENCE_PRIMARY = 0,
+        JULIAN_DATE = 0.0,
+        LLA_DEG_KM = None,
+        ORBITAL_ELEMENTS = None,
+        BATCH_SYNODIC_STATES = None,
+        BATCH_INERTIAL_STATES = None,
     ):
         self.DIRECTION = DIRECTION  # type: int
         self.REFERENCE_EPOCH_MS = REFERENCE_EPOCH_MS  # type: int
         self.ELAPSED_S = ELAPSED_S  # type: float
         self.SYNODIC = SYNODIC  # type: Optional[tbpState.tbpStateT]
         self.INERTIAL = INERTIAL  # type: Optional[List[float]]
+        self.REFERENCE_PRIMARY = REFERENCE_PRIMARY  # type: int
+        self.JULIAN_DATE = JULIAN_DATE  # type: float
+        self.LLA_DEG_KM = LLA_DEG_KM  # type: Optional[List[float]]
+        self.ORBITAL_ELEMENTS = ORBITAL_ELEMENTS  # type: Optional[List[float]]
+        self.BATCH_SYNODIC_STATES = BATCH_SYNODIC_STATES  # type: Optional[List[float]]
+        self.BATCH_INERTIAL_STATES = BATCH_INERTIAL_STATES  # type: Optional[List[float]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -210,6 +450,36 @@ class tbpFrameConversionT(object):
                     self.INERTIAL.append(tbpFrameConversion.INERTIAL(i))
             else:
                 self.INERTIAL = tbpFrameConversion.INERTIALAsNumpy()
+        self.REFERENCE_PRIMARY = tbpFrameConversion.REFERENCE_PRIMARY()
+        self.JULIAN_DATE = tbpFrameConversion.JULIAN_DATE()
+        if not tbpFrameConversion.LLA_DEG_KMIsNone():
+            if np is None:
+                self.LLA_DEG_KM = []
+                for i in range(tbpFrameConversion.LLA_DEG_KMLength()):
+                    self.LLA_DEG_KM.append(tbpFrameConversion.LLA_DEG_KM(i))
+            else:
+                self.LLA_DEG_KM = tbpFrameConversion.LLA_DEG_KMAsNumpy()
+        if not tbpFrameConversion.ORBITAL_ELEMENTSIsNone():
+            if np is None:
+                self.ORBITAL_ELEMENTS = []
+                for i in range(tbpFrameConversion.ORBITAL_ELEMENTSLength()):
+                    self.ORBITAL_ELEMENTS.append(tbpFrameConversion.ORBITAL_ELEMENTS(i))
+            else:
+                self.ORBITAL_ELEMENTS = tbpFrameConversion.ORBITAL_ELEMENTSAsNumpy()
+        if not tbpFrameConversion.BATCH_SYNODIC_STATESIsNone():
+            if np is None:
+                self.BATCH_SYNODIC_STATES = []
+                for i in range(tbpFrameConversion.BATCH_SYNODIC_STATESLength()):
+                    self.BATCH_SYNODIC_STATES.append(tbpFrameConversion.BATCH_SYNODIC_STATES(i))
+            else:
+                self.BATCH_SYNODIC_STATES = tbpFrameConversion.BATCH_SYNODIC_STATESAsNumpy()
+        if not tbpFrameConversion.BATCH_INERTIAL_STATESIsNone():
+            if np is None:
+                self.BATCH_INERTIAL_STATES = []
+                for i in range(tbpFrameConversion.BATCH_INERTIAL_STATESLength()):
+                    self.BATCH_INERTIAL_STATES.append(tbpFrameConversion.BATCH_INERTIAL_STATES(i))
+            else:
+                self.BATCH_INERTIAL_STATES = tbpFrameConversion.BATCH_INERTIAL_STATESAsNumpy()
 
     # tbpFrameConversionT
     def Pack(self, builder):
@@ -223,6 +493,38 @@ class tbpFrameConversionT(object):
                 for i in reversed(range(len(self.INERTIAL))):
                     builder.PrependFloat64(self.INERTIAL[i])
                 INERTIAL = builder.EndVector()
+        if self.LLA_DEG_KM is not None:
+            if np is not None and type(self.LLA_DEG_KM) is np.ndarray:
+                LLA_DEG_KM = builder.CreateNumpyVector(self.LLA_DEG_KM)
+            else:
+                tbpFrameConversionStartLLA_DEG_KMVector(builder, len(self.LLA_DEG_KM))
+                for i in reversed(range(len(self.LLA_DEG_KM))):
+                    builder.PrependFloat64(self.LLA_DEG_KM[i])
+                LLA_DEG_KM = builder.EndVector()
+        if self.ORBITAL_ELEMENTS is not None:
+            if np is not None and type(self.ORBITAL_ELEMENTS) is np.ndarray:
+                ORBITAL_ELEMENTS = builder.CreateNumpyVector(self.ORBITAL_ELEMENTS)
+            else:
+                tbpFrameConversionStartORBITAL_ELEMENTSVector(builder, len(self.ORBITAL_ELEMENTS))
+                for i in reversed(range(len(self.ORBITAL_ELEMENTS))):
+                    builder.PrependFloat64(self.ORBITAL_ELEMENTS[i])
+                ORBITAL_ELEMENTS = builder.EndVector()
+        if self.BATCH_SYNODIC_STATES is not None:
+            if np is not None and type(self.BATCH_SYNODIC_STATES) is np.ndarray:
+                BATCH_SYNODIC_STATES = builder.CreateNumpyVector(self.BATCH_SYNODIC_STATES)
+            else:
+                tbpFrameConversionStartBATCH_SYNODIC_STATESVector(builder, len(self.BATCH_SYNODIC_STATES))
+                for i in reversed(range(len(self.BATCH_SYNODIC_STATES))):
+                    builder.PrependFloat64(self.BATCH_SYNODIC_STATES[i])
+                BATCH_SYNODIC_STATES = builder.EndVector()
+        if self.BATCH_INERTIAL_STATES is not None:
+            if np is not None and type(self.BATCH_INERTIAL_STATES) is np.ndarray:
+                BATCH_INERTIAL_STATES = builder.CreateNumpyVector(self.BATCH_INERTIAL_STATES)
+            else:
+                tbpFrameConversionStartBATCH_INERTIAL_STATESVector(builder, len(self.BATCH_INERTIAL_STATES))
+                for i in reversed(range(len(self.BATCH_INERTIAL_STATES))):
+                    builder.PrependFloat64(self.BATCH_INERTIAL_STATES[i])
+                BATCH_INERTIAL_STATES = builder.EndVector()
         tbpFrameConversionStart(builder)
         tbpFrameConversionAddDIRECTION(builder, self.DIRECTION)
         tbpFrameConversionAddREFERENCE_EPOCH_MS(builder, self.REFERENCE_EPOCH_MS)
@@ -231,5 +533,15 @@ class tbpFrameConversionT(object):
             tbpFrameConversionAddSYNODIC(builder, SYNODIC)
         if self.INERTIAL is not None:
             tbpFrameConversionAddINERTIAL(builder, INERTIAL)
+        tbpFrameConversionAddREFERENCE_PRIMARY(builder, self.REFERENCE_PRIMARY)
+        tbpFrameConversionAddJULIAN_DATE(builder, self.JULIAN_DATE)
+        if self.LLA_DEG_KM is not None:
+            tbpFrameConversionAddLLA_DEG_KM(builder, LLA_DEG_KM)
+        if self.ORBITAL_ELEMENTS is not None:
+            tbpFrameConversionAddORBITAL_ELEMENTS(builder, ORBITAL_ELEMENTS)
+        if self.BATCH_SYNODIC_STATES is not None:
+            tbpFrameConversionAddBATCH_SYNODIC_STATES(builder, BATCH_SYNODIC_STATES)
+        if self.BATCH_INERTIAL_STATES is not None:
+            tbpFrameConversionAddBATCH_INERTIAL_STATES(builder, BATCH_INERTIAL_STATES)
         tbpFrameConversion = tbpFrameConversionEnd(builder)
         return tbpFrameConversion

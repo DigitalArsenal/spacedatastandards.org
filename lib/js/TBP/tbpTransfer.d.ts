@@ -1,6 +1,7 @@
 import * as flatbuffers from 'flatbuffers';
 import { mplBurn, mplBurnT } from './mplBurn.js';
 import { tbpPeriodicOrbit, tbpPeriodicOrbitT } from './tbpPeriodicOrbit.js';
+import { tbpState, tbpStateT } from './tbpState.js';
 import { tbpTrajectory, tbpTrajectoryT } from './tbpTrajectory.js';
 import { tbpTransferKind } from './tbpTransferKind.js';
 /**
@@ -53,6 +54,58 @@ export declare class tbpTransfer implements flatbuffers.IUnpackableObject<tbpTra
      * Result: the transfer trajectory; empty = not sampled.
      */
     TRAJECTORY(obj?: tbpTrajectory): tbpTrajectory | null;
+    /**
+     * Departure state in synodic frame (MinEnergy, DirectLambert, MinLambert, LowThrustMinTime).
+     */
+    INITIAL_STATE(obj?: tbpState): tbpState | null;
+    /**
+     * Arrival state in synodic frame.
+     */
+    FINAL_STATE(obj?: tbpState): tbpState | null;
+    /**
+     * False = prograde (default), true = retrograde (DirectLambert).
+     */
+    RETROGRADE(): boolean;
+    /**
+     * Reference primary body for Lambert seeding: 0 = auto, 1 = P1, 2 = P2.
+     */
+    REFERENCE_PRIMARY(): number;
+    /**
+     * Low-thrust maximum thrust, N (LowThrustMinTime).
+     */
+    MAX_THRUST_N(): number;
+    /**
+     * Engine specific impulse Isp, s (LowThrustMinTime).
+     */
+    SPECIFIC_IMPULSE_S(): number;
+    /**
+     * Initial wet spacecraft mass, kg.
+     */
+    INITIAL_MASS_KG(): number;
+    /**
+     * Result: final spacecraft mass at arrival, kg.
+     */
+    FINAL_MASS_KG(): number;
+    /**
+     * Result: propellant consumed, kg.
+     */
+    PROPELLANT_MASS_KG(): number;
+    /**
+     * Initial costates [lambda_rx, ry, rz, vx, vy, vz, m] guess or solved.
+     */
+    INITIAL_COSTATES(index: number): number | null;
+    initialCostatesLength(): number;
+    initialCostatesArray(): Float64Array | null;
+    /**
+     * Result: normalized throttle [0..1] per trajectory sample.
+     */
+    THROTTLE_HISTORY(index: number): number | null;
+    throttleHistoryLength(): number;
+    throttleHistoryArray(): Float64Array | null;
+    /**
+     * Result: theoretical minimum Jacobi-energy delta-v, km/s (MinEnergy).
+     */
+    MIN_ENERGY_DELTA_V_KM_S(): number;
     static starttbpTransfer(builder: flatbuffers.Builder): void;
     static addKind(builder: flatbuffers.Builder, KIND: tbpTransferKind): void;
     static addParkingAltitudeKm(builder: flatbuffers.Builder, PARKING_ALTITUDE_KM: number): void;
@@ -68,6 +121,30 @@ export declare class tbpTransfer implements flatbuffers.IUnpackableObject<tbpTra
     static addTotalDeltaVKmS(builder: flatbuffers.Builder, TOTAL_DELTA_V_KM_S: number): void;
     static addTimeOfFlightS(builder: flatbuffers.Builder, TIME_OF_FLIGHT_S: number): void;
     static addTrajectory(builder: flatbuffers.Builder, TRAJECTORYOffset: flatbuffers.Offset): void;
+    static addInitialState(builder: flatbuffers.Builder, INITIAL_STATEOffset: flatbuffers.Offset): void;
+    static addFinalState(builder: flatbuffers.Builder, FINAL_STATEOffset: flatbuffers.Offset): void;
+    static addRetrograde(builder: flatbuffers.Builder, RETROGRADE: boolean): void;
+    static addReferencePrimary(builder: flatbuffers.Builder, REFERENCE_PRIMARY: number): void;
+    static addMaxThrustN(builder: flatbuffers.Builder, MAX_THRUST_N: number): void;
+    static addSpecificImpulseS(builder: flatbuffers.Builder, SPECIFIC_IMPULSE_S: number): void;
+    static addInitialMassKg(builder: flatbuffers.Builder, INITIAL_MASS_KG: number): void;
+    static addFinalMassKg(builder: flatbuffers.Builder, FINAL_MASS_KG: number): void;
+    static addPropellantMassKg(builder: flatbuffers.Builder, PROPELLANT_MASS_KG: number): void;
+    static addInitialCostates(builder: flatbuffers.Builder, INITIAL_COSTATESOffset: flatbuffers.Offset): void;
+    static createInitialCostatesVector(builder: flatbuffers.Builder, data: number[] | Float64Array): flatbuffers.Offset;
+    /**
+     * @deprecated This Uint8Array overload will be removed in the future.
+     */
+    static createInitialCostatesVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startInitialCostatesVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addThrottleHistory(builder: flatbuffers.Builder, THROTTLE_HISTORYOffset: flatbuffers.Offset): void;
+    static createThrottleHistoryVector(builder: flatbuffers.Builder, data: number[] | Float64Array): flatbuffers.Offset;
+    /**
+     * @deprecated This Uint8Array overload will be removed in the future.
+     */
+    static createThrottleHistoryVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startThrottleHistoryVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addMinEnergyDeltaVKmS(builder: flatbuffers.Builder, MIN_ENERGY_DELTA_V_KM_S: number): void;
     static endtbpTransfer(builder: flatbuffers.Builder): flatbuffers.Offset;
     unpack(): tbpTransferT;
     unpackTo(_o: tbpTransferT): void;
@@ -85,7 +162,19 @@ export declare class tbpTransferT implements flatbuffers.IGeneratedObject {
     TOTAL_DELTA_V_KM_S: number;
     TIME_OF_FLIGHT_S: number;
     TRAJECTORY: tbpTrajectoryT | null;
-    constructor(KIND?: tbpTransferKind, PARKING_ALTITUDE_KM?: number, TARGET_ALTITUDE_KM?: number, INCLINATION_DEG?: number, TARGET_ORBIT?: tbpPeriodicOrbitT | null, MAX_ITERATIONS?: number, TOLERANCE?: number, CONVERGED?: boolean, BURNS?: (mplBurnT)[], TOTAL_DELTA_V_KM_S?: number, TIME_OF_FLIGHT_S?: number, TRAJECTORY?: tbpTrajectoryT | null);
+    INITIAL_STATE: tbpStateT | null;
+    FINAL_STATE: tbpStateT | null;
+    RETROGRADE: boolean;
+    REFERENCE_PRIMARY: number;
+    MAX_THRUST_N: number;
+    SPECIFIC_IMPULSE_S: number;
+    INITIAL_MASS_KG: number;
+    FINAL_MASS_KG: number;
+    PROPELLANT_MASS_KG: number;
+    INITIAL_COSTATES: (number)[];
+    THROTTLE_HISTORY: (number)[];
+    MIN_ENERGY_DELTA_V_KM_S: number;
+    constructor(KIND?: tbpTransferKind, PARKING_ALTITUDE_KM?: number, TARGET_ALTITUDE_KM?: number, INCLINATION_DEG?: number, TARGET_ORBIT?: tbpPeriodicOrbitT | null, MAX_ITERATIONS?: number, TOLERANCE?: number, CONVERGED?: boolean, BURNS?: (mplBurnT)[], TOTAL_DELTA_V_KM_S?: number, TIME_OF_FLIGHT_S?: number, TRAJECTORY?: tbpTrajectoryT | null, INITIAL_STATE?: tbpStateT | null, FINAL_STATE?: tbpStateT | null, RETROGRADE?: boolean, REFERENCE_PRIMARY?: number, MAX_THRUST_N?: number, SPECIFIC_IMPULSE_S?: number, INITIAL_MASS_KG?: number, FINAL_MASS_KG?: number, PROPELLANT_MASS_KG?: number, INITIAL_COSTATES?: (number)[], THROTTLE_HISTORY?: (number)[], MIN_ENERGY_DELTA_V_KM_S?: number);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=tbpTransfer.d.ts.map
