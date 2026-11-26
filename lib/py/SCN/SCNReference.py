@@ -368,8 +368,24 @@ class SCNReference(object):
             return obj
         return None
 
+    # Optional display color token (for example "#ff9f0a") for this reference.
+    # SCNReference
+    def COLOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # True when the 1-sigma covariance ellipsoid is shown on this reference.
+    # SCNReference
+    def SHOW_COVARIANCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
 def SCNReferenceStart(builder):
-    builder.StartObject(26)
+    builder.StartObject(28)
 
 def Start(builder):
     SCNReferenceStart(builder)
@@ -602,6 +618,18 @@ def SCNReferenceAddOBSERVATION_RADAR(builder, OBSERVATION_RADAR):
 def AddOBSERVATION_RADAR(builder, OBSERVATION_RADAR):
     SCNReferenceAddOBSERVATION_RADAR(builder, OBSERVATION_RADAR)
 
+def SCNReferenceAddCOLOR(builder, COLOR):
+    builder.PrependUOffsetTRelativeSlot(26, flatbuffers.number_types.UOffsetTFlags.py_type(COLOR), 0)
+
+def AddCOLOR(builder, COLOR):
+    SCNReferenceAddCOLOR(builder, COLOR)
+
+def SCNReferenceAddSHOW_COVARIANCE(builder, SHOW_COVARIANCE):
+    builder.PrependBoolSlot(27, SHOW_COVARIANCE, 0)
+
+def AddSHOW_COVARIANCE(builder, SHOW_COVARIANCE):
+    SCNReferenceAddSHOW_COVARIANCE(builder, SHOW_COVARIANCE)
+
 def SCNReferenceEnd(builder):
     return builder.EndObject()
 
@@ -656,6 +684,8 @@ class SCNReferenceT(object):
         EXCLUSION_ZONE = None,
         OBSERVATION_EO = None,
         OBSERVATION_RADAR = None,
+        COLOR = None,
+        SHOW_COVARIANCE = False,
     ):
         self.REFERENCE_ID = REFERENCE_ID  # type: Optional[str]
         self.NAME = NAME  # type: Optional[str]
@@ -683,6 +713,8 @@ class SCNReferenceT(object):
         self.EXCLUSION_ZONE = EXCLUSION_ZONE  # type: Optional[SCNExclusionZone.SCNExclusionZoneT]
         self.OBSERVATION_EO = OBSERVATION_EO  # type: Optional[EOO.EOOT]
         self.OBSERVATION_RADAR = OBSERVATION_RADAR  # type: Optional[RDO.RDOT]
+        self.COLOR = COLOR  # type: Optional[str]
+        self.SHOW_COVARIANCE = SHOW_COVARIANCE  # type: bool
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -773,6 +805,8 @@ class SCNReferenceT(object):
             self.OBSERVATION_EO = EOO.EOOT.InitFromObj(SCNReference.OBSERVATION_EO())
         if SCNReference.OBSERVATION_RADAR() is not None:
             self.OBSERVATION_RADAR = RDO.RDOT.InitFromObj(SCNReference.OBSERVATION_RADAR())
+        self.COLOR = SCNReference.COLOR()
+        self.SHOW_COVARIANCE = SCNReference.SHOW_COVARIANCE()
 
     # SCNReferenceT
     def Pack(self, builder):
@@ -858,6 +892,8 @@ class SCNReferenceT(object):
             OBSERVATION_EO = self.OBSERVATION_EO.Pack(builder)
         if self.OBSERVATION_RADAR is not None:
             OBSERVATION_RADAR = self.OBSERVATION_RADAR.Pack(builder)
+        if self.COLOR is not None:
+            COLOR = builder.CreateString(self.COLOR)
         SCNReferenceStart(builder)
         if self.REFERENCE_ID is not None:
             SCNReferenceAddREFERENCE_ID(builder, REFERENCE_ID)
@@ -908,5 +944,8 @@ class SCNReferenceT(object):
             SCNReferenceAddOBSERVATION_EO(builder, OBSERVATION_EO)
         if self.OBSERVATION_RADAR is not None:
             SCNReferenceAddOBSERVATION_RADAR(builder, OBSERVATION_RADAR)
+        if self.COLOR is not None:
+            SCNReferenceAddCOLOR(builder, COLOR)
+        SCNReferenceAddSHOW_COVARIANCE(builder, self.SHOW_COVARIANCE)
         SCNReference = SCNReferenceEnd(builder)
         return SCNReference

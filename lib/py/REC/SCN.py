@@ -274,8 +274,20 @@ class SCN(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
         return o == 0
 
+    # Relative-motion RIC box and multi-chaser RPO view settings, when active.
+    # SCN
+    def RIC_BOX(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from SCNRicBox import SCNRicBox
+            obj = SCNRicBox()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def SCNStart(builder):
-    builder.StartObject(20)
+    builder.StartObject(21)
 
 def Start(builder):
     SCNStart(builder)
@@ -440,6 +452,12 @@ def SCNCreateSIGNATUREVector(builder, data):
 def CreateSIGNATUREVector(builder, data):
     return SCNCreateSIGNATUREVector(builder, data)
 
+def SCNAddRIC_BOX(builder, RIC_BOX):
+    builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(RIC_BOX), 0)
+
+def AddRIC_BOX(builder, RIC_BOX):
+    SCNAddRIC_BOX(builder, RIC_BOX)
+
 def SCNEnd(builder):
     return builder.EndObject()
 
@@ -451,6 +469,7 @@ import SCNAssetsChanged
 import SCNEvent
 import SCNPinnedRow
 import SCNReference
+import SCNRicBox
 import VST
 try:
     from typing import List, Optional
@@ -482,6 +501,7 @@ class SCNT(object):
         PROPAGATOR_MODULE_ID = None,
         PINNED_ROWS = None,
         SIGNATURE = None,
+        RIC_BOX = None,
     ):
         self.SCENARIO_ID = SCENARIO_ID  # type: Optional[str]
         self.REFERENCES = REFERENCES  # type: Optional[List[SCNReference.SCNReferenceT]]
@@ -503,6 +523,7 @@ class SCNT(object):
         self.PROPAGATOR_MODULE_ID = PROPAGATOR_MODULE_ID  # type: Optional[str]
         self.PINNED_ROWS = PINNED_ROWS  # type: Optional[List[SCNPinnedRow.SCNPinnedRowT]]
         self.SIGNATURE = SIGNATURE  # type: Optional[List[int]]
+        self.RIC_BOX = RIC_BOX  # type: Optional[SCNRicBox.SCNRicBoxT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -569,6 +590,8 @@ class SCNT(object):
                     self.SIGNATURE.append(SCN.SIGNATURE(i))
             else:
                 self.SIGNATURE = SCN.SIGNATUREAsNumpy()
+        if SCN.RIC_BOX() is not None:
+            self.RIC_BOX = SCNRicBox.SCNRicBoxT.InitFromObj(SCN.RIC_BOX())
 
     # SCNT
     def Pack(self, builder):
@@ -620,6 +643,8 @@ class SCNT(object):
                 for i in reversed(range(len(self.SIGNATURE))):
                     builder.PrependUint8(self.SIGNATURE[i])
                 SIGNATURE = builder.EndVector()
+        if self.RIC_BOX is not None:
+            RIC_BOX = self.RIC_BOX.Pack(builder)
         SCNStart(builder)
         if self.SCENARIO_ID is not None:
             SCNAddSCENARIO_ID(builder, SCENARIO_ID)
@@ -656,5 +681,7 @@ class SCNT(object):
             SCNAddPINNED_ROWS(builder, PINNED_ROWS)
         if self.SIGNATURE is not None:
             SCNAddSIGNATURE(builder, SIGNATURE)
+        if self.RIC_BOX is not None:
+            SCNAddRIC_BOX(builder, RIC_BOX)
         SCN = SCNEnd(builder)
         return SCN

@@ -154,6 +154,11 @@ public final class SCN extends com.google.flatbuffers.Table {
   public ByteVector signatureVector(ByteVector obj) { int o = __offset(42); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
   public ByteBuffer SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(42, 1); }
   public ByteBuffer SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 42, 1); }
+  /**
+   * Relative-motion RIC box and multi-chaser RPO view settings, when active.
+   */
+  public SCNRicBox RIC_BOX() { return RIC_BOX(new SCNRicBox()); }
+  public SCNRicBox RIC_BOX(SCNRicBox obj) { int o = __offset(44); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createSCN(FlatBufferBuilder builder,
       int SCENARIO_IDOffset,
@@ -175,9 +180,11 @@ public final class SCN extends com.google.flatbuffers.Table {
       int WINDOW_STOPOffset,
       int PROPAGATOR_MODULE_IDOffset,
       int PINNED_ROWSOffset,
-      int SIGNATUREOffset) {
-    builder.startTable(20);
+      int SIGNATUREOffset,
+      int RIC_BOXOffset) {
+    builder.startTable(21);
     SCN.addSimSpeed(builder, SIM_SPEED);
+    SCN.addRicBox(builder, RIC_BOXOffset);
     SCN.addSignature(builder, SIGNATUREOffset);
     SCN.addPinnedRows(builder, PINNED_ROWSOffset);
     SCN.addPropagatorModuleId(builder, PROPAGATOR_MODULE_IDOffset);
@@ -200,7 +207,7 @@ public final class SCN extends com.google.flatbuffers.Table {
     return SCN.endSCN(builder);
   }
 
-  public static void startSCN(FlatBufferBuilder builder) { builder.startTable(20); }
+  public static void startSCN(FlatBufferBuilder builder) { builder.startTable(21); }
   public static void addScenarioId(FlatBufferBuilder builder, int SCENARIO_IDOffset) { builder.addOffset(0, SCENARIO_IDOffset, 0); }
   public static void addReferences(FlatBufferBuilder builder, int REFERENCESOffset) { builder.addOffset(1, REFERENCESOffset, 0); }
   public static int createReferencesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
@@ -228,6 +235,7 @@ public final class SCN extends com.google.flatbuffers.Table {
   public static int createSignatureVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
   public static int createSignatureVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
   public static void startSignatureVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
+  public static void addRicBox(FlatBufferBuilder builder, int RIC_BOXOffset) { builder.addOffset(20, RIC_BOXOffset, 0); }
   public static int endSCN(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

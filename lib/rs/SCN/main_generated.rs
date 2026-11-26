@@ -157,6 +157,202 @@ impl<'a> ::flatbuffers::Verifiable for scenarioReferenceKind {
 impl ::flatbuffers::SimpleToVerifyInSlice for scenarioReferenceKind {}
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_SCN_RIC_COORDINATES: i8 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_SCN_RIC_COORDINATES: i8 = 1;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_SCN_RIC_COORDINATES: [scnRicCoordinates; 2] = [
+    scnRicCoordinates::CURVILINEAR,
+    scnRicCoordinates::RECTILINEAR,
+];
+
+/// Coordinate convention for a relative-motion RIC box.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct scnRicCoordinates(pub i8);
+
+#[allow(non_upper_case_globals)]
+impl scnRicCoordinates {
+    pub const CURVILINEAR: Self = Self(0);
+    pub const RECTILINEAR: Self = Self(1);
+
+    pub const ENUM_MIN: i8 = 0;
+    pub const ENUM_MAX: i8 = 1;
+    pub const ENUM_VALUES: &'static [Self] = &[
+        Self::CURVILINEAR,
+        Self::RECTILINEAR,
+    ];
+
+    /// Returns the variant's name or "" if unknown.
+    pub fn variant_name(self) -> Option<&'static str> {
+        match self {
+            Self::CURVILINEAR => Some("CURVILINEAR"),
+            Self::RECTILINEAR => Some("RECTILINEAR"),
+            _ => None,
+        }
+    }
+}
+
+impl ::core::fmt::Debug for scnRicCoordinates {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        if let Some(name) = self.variant_name() {
+            f.write_str(name)
+        } else {
+            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+        }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for scnRicCoordinates {
+    type Inner = Self;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+        Self(b)
+    }
+}
+
+impl ::flatbuffers::Push for scnRicCoordinates {
+    type Output = scnRicCoordinates;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for scnRicCoordinates {
+    type Scalar = i8;
+
+    #[inline]
+    fn to_little_endian(self) -> i8 {
+        self.0.to_le()
+    }
+
+    #[inline]
+    #[allow(clippy::wrong_self_convention)]
+    fn from_little_endian(v: i8) -> Self {
+        let b = i8::from_le(v);
+        Self(b)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for scnRicCoordinates {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        i8::run_verifier(v, pos)
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for scnRicCoordinates {}
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_SCN_GLOBE_DISPLAY: i8 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_SCN_GLOBE_DISPLAY: i8 = 2;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_SCN_GLOBE_DISPLAY: [scnGlobeDisplay; 3] = [
+    scnGlobeDisplay::SOLID,
+    scnGlobeDisplay::WIREFRAME,
+    scnGlobeDisplay::HIDDEN,
+];
+
+/// Central-body globe display mode while a RIC box is shown.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct scnGlobeDisplay(pub i8);
+
+#[allow(non_upper_case_globals)]
+impl scnGlobeDisplay {
+    pub const SOLID: Self = Self(0);
+    pub const WIREFRAME: Self = Self(1);
+    pub const HIDDEN: Self = Self(2);
+
+    pub const ENUM_MIN: i8 = 0;
+    pub const ENUM_MAX: i8 = 2;
+    pub const ENUM_VALUES: &'static [Self] = &[
+        Self::SOLID,
+        Self::WIREFRAME,
+        Self::HIDDEN,
+    ];
+
+    /// Returns the variant's name or "" if unknown.
+    pub fn variant_name(self) -> Option<&'static str> {
+        match self {
+            Self::SOLID => Some("SOLID"),
+            Self::WIREFRAME => Some("WIREFRAME"),
+            Self::HIDDEN => Some("HIDDEN"),
+            _ => None,
+        }
+    }
+}
+
+impl ::core::fmt::Debug for scnGlobeDisplay {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        if let Some(name) = self.variant_name() {
+            f.write_str(name)
+        } else {
+            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+        }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for scnGlobeDisplay {
+    type Inner = Self;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+        Self(b)
+    }
+}
+
+impl ::flatbuffers::Push for scnGlobeDisplay {
+    type Output = scnGlobeDisplay;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for scnGlobeDisplay {
+    type Scalar = i8;
+
+    #[inline]
+    fn to_little_endian(self) -> i8 {
+        self.0.to_le()
+    }
+
+    #[inline]
+    #[allow(clippy::wrong_self_convention)]
+    fn from_little_endian(v: i8) -> Self {
+        let b = i8::from_le(v);
+        Self(b)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for scnGlobeDisplay {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        i8::run_verifier(v, pos)
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for scnGlobeDisplay {}
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_SCENARIO_ACTION_CODE: i8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
@@ -255,6 +451,468 @@ impl<'a> ::flatbuffers::Verifiable for scenarioActionCode {
 }
 
 impl ::flatbuffers::SimpleToVerifyInSlice for scenarioActionCode {}
+
+pub enum SCNRicBoxOffset {}
+
+/// Relative-motion RIC box and RPO time-lapse settings kept with a scenario.
+#[derive(Copy, Clone, PartialEq)]
+pub struct SCNRicBox<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for SCNRicBox<'a> {
+    type Inner = SCNRicBox<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> SCNRicBox<'a> {
+    pub const VT_CENTER_ID: ::flatbuffers::VOffsetT = 4;
+    pub const VT_MEMBER_IDS: ::flatbuffers::VOffsetT = 6;
+    pub const VT_HALF_RADIAL_M: ::flatbuffers::VOffsetT = 8;
+    pub const VT_HALF_IN_TRACK_M: ::flatbuffers::VOffsetT = 10;
+    pub const VT_HALF_CROSS_TRACK_M: ::flatbuffers::VOffsetT = 12;
+    pub const VT_COORDINATES: ::flatbuffers::VOffsetT = 14;
+    pub const VT_RELATIVE_ORBITS: ::flatbuffers::VOffsetT = 16;
+    pub const VT_GLOBE_DISPLAY: ::flatbuffers::VOffsetT = 18;
+    pub const VT_SHOW_COVARIANCE: ::flatbuffers::VOffsetT = 20;
+    pub const VT_DIVISIONS: ::flatbuffers::VOffsetT = 22;
+    pub const VT_RPO_TRAIL_SECONDS: ::flatbuffers::VOffsetT = 24;
+    pub const VT_RPO_CHASER_IDS: ::flatbuffers::VOffsetT = 26;
+    pub const VT_SHOW_BOX: ::flatbuffers::VOffsetT = 28;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        SCNRicBox { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args SCNRicBoxArgs<'args>
+    ) -> ::flatbuffers::WIPOffset<SCNRicBox<'bldr>> {
+        let mut builder = SCNRicBoxBuilder::new(_fbb);
+        builder.add_RPO_TRAIL_SECONDS(args.RPO_TRAIL_SECONDS);
+        builder.add_HALF_CROSS_TRACK_M(args.HALF_CROSS_TRACK_M);
+        builder.add_HALF_IN_TRACK_M(args.HALF_IN_TRACK_M);
+        builder.add_HALF_RADIAL_M(args.HALF_RADIAL_M);
+        if let Some(x) = args.RPO_CHASER_IDS { builder.add_RPO_CHASER_IDS(x); }
+        if let Some(x) = args.MEMBER_IDS { builder.add_MEMBER_IDS(x); }
+        if let Some(x) = args.CENTER_ID { builder.add_CENTER_ID(x); }
+        builder.add_SHOW_BOX(args.SHOW_BOX);
+        builder.add_DIVISIONS(args.DIVISIONS);
+        builder.add_SHOW_COVARIANCE(args.SHOW_COVARIANCE);
+        builder.add_GLOBE_DISPLAY(args.GLOBE_DISPLAY);
+        builder.add_RELATIVE_ORBITS(args.RELATIVE_ORBITS);
+        builder.add_COORDINATES(args.COORDINATES);
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> SCNRicBoxT {
+        let CENTER_ID = self.CENTER_ID().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let MEMBER_IDS = self.MEMBER_IDS().map(|x| {
+            x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+        });
+        let HALF_RADIAL_M = self.HALF_RADIAL_M();
+        let HALF_IN_TRACK_M = self.HALF_IN_TRACK_M();
+        let HALF_CROSS_TRACK_M = self.HALF_CROSS_TRACK_M();
+        let COORDINATES = self.COORDINATES();
+        let RELATIVE_ORBITS = self.RELATIVE_ORBITS();
+        let GLOBE_DISPLAY = self.GLOBE_DISPLAY();
+        let SHOW_COVARIANCE = self.SHOW_COVARIANCE();
+        let DIVISIONS = self.DIVISIONS();
+        let RPO_TRAIL_SECONDS = self.RPO_TRAIL_SECONDS();
+        let RPO_CHASER_IDS = self.RPO_CHASER_IDS().map(|x| {
+            x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+        });
+        let SHOW_BOX = self.SHOW_BOX();
+        SCNRicBoxT {
+            CENTER_ID,
+            MEMBER_IDS,
+            HALF_RADIAL_M,
+            HALF_IN_TRACK_M,
+            HALF_CROSS_TRACK_M,
+            COORDINATES,
+            RELATIVE_ORBITS,
+            GLOBE_DISPLAY,
+            SHOW_COVARIANCE,
+            DIVISIONS,
+            RPO_TRAIL_SECONDS,
+            RPO_CHASER_IDS,
+            SHOW_BOX,
+        }
+    }
+
+    /// Reference id of the center (target) object.
+    #[inline]
+    pub fn CENTER_ID(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNRicBox::VT_CENTER_ID, None)}
+    }
+
+    /// Reference ids of the member (chaser / companion) objects inside the box.
+    #[inline]
+    pub fn MEMBER_IDS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(SCNRicBox::VT_MEMBER_IDS, None)}
+    }
+
+    /// Half-size along the radial axis in meters (0 means auto-fit).
+    #[inline]
+    pub fn HALF_RADIAL_M(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(SCNRicBox::VT_HALF_RADIAL_M, Some(0.0)).unwrap()}
+    }
+
+    /// Half-size along the in-track axis in meters (0 means auto-fit).
+    #[inline]
+    pub fn HALF_IN_TRACK_M(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(SCNRicBox::VT_HALF_IN_TRACK_M, Some(0.0)).unwrap()}
+    }
+
+    /// Half-size along the cross-track axis in meters (0 means auto-fit).
+    #[inline]
+    pub fn HALF_CROSS_TRACK_M(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(SCNRicBox::VT_HALF_CROSS_TRACK_M, Some(0.0)).unwrap()}
+    }
+
+    /// Coordinate convention (curvilinear along the orbit, or rectilinear).
+    #[inline]
+    pub fn COORDINATES(&self) -> scnRicCoordinates {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<scnRicCoordinates>(SCNRicBox::VT_COORDINATES, Some(scnRicCoordinates::CURVILINEAR)).unwrap()}
+    }
+
+    /// True when member orbits are drawn relative to the center object.
+    #[inline]
+    pub fn RELATIVE_ORBITS(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(SCNRicBox::VT_RELATIVE_ORBITS, Some(true)).unwrap()}
+    }
+
+    /// Globe display mode while the RIC box is shown.
+    #[inline]
+    pub fn GLOBE_DISPLAY(&self) -> scnGlobeDisplay {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<scnGlobeDisplay>(SCNRicBox::VT_GLOBE_DISPLAY, Some(scnGlobeDisplay::SOLID)).unwrap()}
+    }
+
+    /// True when 1-sigma wireframe covariance ellipsoids are shown on boxed objects.
+    #[inline]
+    pub fn SHOW_COVARIANCE(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(SCNRicBox::VT_SHOW_COVARIANCE, Some(false)).unwrap()}
+    }
+
+    /// Grid divisions per side (0 uses viewer default).
+    #[inline]
+    pub fn DIVISIONS(&self) -> u8 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u8>(SCNRicBox::VT_DIVISIONS, Some(4)).unwrap()}
+    }
+
+    /// RPO time-lapse trail duration in seconds (0 uses viewer default).
+    #[inline]
+    pub fn RPO_TRAIL_SECONDS(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(SCNRicBox::VT_RPO_TRAIL_SECONDS, Some(0.0)).unwrap()}
+    }
+
+    /// Reference ids of chasers flying historical RPO trajectories in this RIC box.
+    #[inline]
+    pub fn RPO_CHASER_IDS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(SCNRicBox::VT_RPO_CHASER_IDS, None)}
+    }
+
+    /// True when the RIC box itself is visible.
+    #[inline]
+    pub fn SHOW_BOX(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(SCNRicBox::VT_SHOW_BOX, Some(true)).unwrap()}
+    }
+}
+
+impl ::flatbuffers::Verifiable for SCNRicBox<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CENTER_ID", Self::VT_CENTER_ID, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("MEMBER_IDS", Self::VT_MEMBER_IDS, false)?
+            .visit_field::<f64>("HALF_RADIAL_M", Self::VT_HALF_RADIAL_M, false)?
+            .visit_field::<f64>("HALF_IN_TRACK_M", Self::VT_HALF_IN_TRACK_M, false)?
+            .visit_field::<f64>("HALF_CROSS_TRACK_M", Self::VT_HALF_CROSS_TRACK_M, false)?
+            .visit_field::<scnRicCoordinates>("COORDINATES", Self::VT_COORDINATES, false)?
+            .visit_field::<bool>("RELATIVE_ORBITS", Self::VT_RELATIVE_ORBITS, false)?
+            .visit_field::<scnGlobeDisplay>("GLOBE_DISPLAY", Self::VT_GLOBE_DISPLAY, false)?
+            .visit_field::<bool>("SHOW_COVARIANCE", Self::VT_SHOW_COVARIANCE, false)?
+            .visit_field::<u8>("DIVISIONS", Self::VT_DIVISIONS, false)?
+            .visit_field::<f64>("RPO_TRAIL_SECONDS", Self::VT_RPO_TRAIL_SECONDS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("RPO_CHASER_IDS", Self::VT_RPO_CHASER_IDS, false)?
+            .visit_field::<bool>("SHOW_BOX", Self::VT_SHOW_BOX, false)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct SCNRicBoxArgs<'a> {
+    pub CENTER_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MEMBER_IDS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub HALF_RADIAL_M: f64,
+    pub HALF_IN_TRACK_M: f64,
+    pub HALF_CROSS_TRACK_M: f64,
+    pub COORDINATES: scnRicCoordinates,
+    pub RELATIVE_ORBITS: bool,
+    pub GLOBE_DISPLAY: scnGlobeDisplay,
+    pub SHOW_COVARIANCE: bool,
+    pub DIVISIONS: u8,
+    pub RPO_TRAIL_SECONDS: f64,
+    pub RPO_CHASER_IDS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub SHOW_BOX: bool,
+}
+
+impl<'a> Default for SCNRicBoxArgs<'a> {
+    #[inline]
+    fn default() -> Self {
+        SCNRicBoxArgs {
+            CENTER_ID: None,
+            MEMBER_IDS: None,
+            HALF_RADIAL_M: 0.0,
+            HALF_IN_TRACK_M: 0.0,
+            HALF_CROSS_TRACK_M: 0.0,
+            COORDINATES: scnRicCoordinates::CURVILINEAR,
+            RELATIVE_ORBITS: true,
+            GLOBE_DISPLAY: scnGlobeDisplay::SOLID,
+            SHOW_COVARIANCE: false,
+            DIVISIONS: 4,
+            RPO_TRAIL_SECONDS: 0.0,
+            RPO_CHASER_IDS: None,
+            SHOW_BOX: true,
+        }
+    }
+}
+
+pub struct SCNRicBoxBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCNRicBoxBuilder<'a, 'b, A> {
+    #[inline]
+    pub fn add_CENTER_ID(&mut self, CENTER_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCNRicBox::VT_CENTER_ID, CENTER_ID);
+    }
+
+    #[inline]
+    pub fn add_MEMBER_IDS(&mut self, MEMBER_IDS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCNRicBox::VT_MEMBER_IDS, MEMBER_IDS);
+    }
+
+    #[inline]
+    pub fn add_HALF_RADIAL_M(&mut self, HALF_RADIAL_M: f64) {
+        self.fbb_.push_slot::<f64>(SCNRicBox::VT_HALF_RADIAL_M, HALF_RADIAL_M, 0.0);
+    }
+
+    #[inline]
+    pub fn add_HALF_IN_TRACK_M(&mut self, HALF_IN_TRACK_M: f64) {
+        self.fbb_.push_slot::<f64>(SCNRicBox::VT_HALF_IN_TRACK_M, HALF_IN_TRACK_M, 0.0);
+    }
+
+    #[inline]
+    pub fn add_HALF_CROSS_TRACK_M(&mut self, HALF_CROSS_TRACK_M: f64) {
+        self.fbb_.push_slot::<f64>(SCNRicBox::VT_HALF_CROSS_TRACK_M, HALF_CROSS_TRACK_M, 0.0);
+    }
+
+    #[inline]
+    pub fn add_COORDINATES(&mut self, COORDINATES: scnRicCoordinates) {
+        self.fbb_.push_slot::<scnRicCoordinates>(SCNRicBox::VT_COORDINATES, COORDINATES, scnRicCoordinates::CURVILINEAR);
+    }
+
+    #[inline]
+    pub fn add_RELATIVE_ORBITS(&mut self, RELATIVE_ORBITS: bool) {
+        self.fbb_.push_slot::<bool>(SCNRicBox::VT_RELATIVE_ORBITS, RELATIVE_ORBITS, true);
+    }
+
+    #[inline]
+    pub fn add_GLOBE_DISPLAY(&mut self, GLOBE_DISPLAY: scnGlobeDisplay) {
+        self.fbb_.push_slot::<scnGlobeDisplay>(SCNRicBox::VT_GLOBE_DISPLAY, GLOBE_DISPLAY, scnGlobeDisplay::SOLID);
+    }
+
+    #[inline]
+    pub fn add_SHOW_COVARIANCE(&mut self, SHOW_COVARIANCE: bool) {
+        self.fbb_.push_slot::<bool>(SCNRicBox::VT_SHOW_COVARIANCE, SHOW_COVARIANCE, false);
+    }
+
+    #[inline]
+    pub fn add_DIVISIONS(&mut self, DIVISIONS: u8) {
+        self.fbb_.push_slot::<u8>(SCNRicBox::VT_DIVISIONS, DIVISIONS, 4);
+    }
+
+    #[inline]
+    pub fn add_RPO_TRAIL_SECONDS(&mut self, RPO_TRAIL_SECONDS: f64) {
+        self.fbb_.push_slot::<f64>(SCNRicBox::VT_RPO_TRAIL_SECONDS, RPO_TRAIL_SECONDS, 0.0);
+    }
+
+    #[inline]
+    pub fn add_RPO_CHASER_IDS(&mut self, RPO_CHASER_IDS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCNRicBox::VT_RPO_CHASER_IDS, RPO_CHASER_IDS);
+    }
+
+    #[inline]
+    pub fn add_SHOW_BOX(&mut self, SHOW_BOX: bool) {
+        self.fbb_.push_slot::<bool>(SCNRicBox::VT_SHOW_BOX, SHOW_BOX, true);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SCNRicBoxBuilder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        SCNRicBoxBuilder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<SCNRicBox<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for SCNRicBox<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("SCNRicBox");
+        ds.field("CENTER_ID", &self.CENTER_ID());
+        ds.field("MEMBER_IDS", &self.MEMBER_IDS());
+        ds.field("HALF_RADIAL_M", &self.HALF_RADIAL_M());
+        ds.field("HALF_IN_TRACK_M", &self.HALF_IN_TRACK_M());
+        ds.field("HALF_CROSS_TRACK_M", &self.HALF_CROSS_TRACK_M());
+        ds.field("COORDINATES", &self.COORDINATES());
+        ds.field("RELATIVE_ORBITS", &self.RELATIVE_ORBITS());
+        ds.field("GLOBE_DISPLAY", &self.GLOBE_DISPLAY());
+        ds.field("SHOW_COVARIANCE", &self.SHOW_COVARIANCE());
+        ds.field("DIVISIONS", &self.DIVISIONS());
+        ds.field("RPO_TRAIL_SECONDS", &self.RPO_TRAIL_SECONDS());
+        ds.field("RPO_CHASER_IDS", &self.RPO_CHASER_IDS());
+        ds.field("SHOW_BOX", &self.SHOW_BOX());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct SCNRicBoxT {
+    pub CENTER_ID: Option<alloc::string::String>,
+    pub MEMBER_IDS: Option<alloc::vec::Vec<alloc::string::String>>,
+    pub HALF_RADIAL_M: f64,
+    pub HALF_IN_TRACK_M: f64,
+    pub HALF_CROSS_TRACK_M: f64,
+    pub COORDINATES: scnRicCoordinates,
+    pub RELATIVE_ORBITS: bool,
+    pub GLOBE_DISPLAY: scnGlobeDisplay,
+    pub SHOW_COVARIANCE: bool,
+    pub DIVISIONS: u8,
+    pub RPO_TRAIL_SECONDS: f64,
+    pub RPO_CHASER_IDS: Option<alloc::vec::Vec<alloc::string::String>>,
+    pub SHOW_BOX: bool,
+}
+
+impl Default for SCNRicBoxT {
+    fn default() -> Self {
+        Self {
+            CENTER_ID: None,
+            MEMBER_IDS: None,
+            HALF_RADIAL_M: 0.0,
+            HALF_IN_TRACK_M: 0.0,
+            HALF_CROSS_TRACK_M: 0.0,
+            COORDINATES: scnRicCoordinates::CURVILINEAR,
+            RELATIVE_ORBITS: true,
+            GLOBE_DISPLAY: scnGlobeDisplay::SOLID,
+            SHOW_COVARIANCE: false,
+            DIVISIONS: 4,
+            RPO_TRAIL_SECONDS: 0.0,
+            RPO_CHASER_IDS: None,
+            SHOW_BOX: true,
+        }
+    }
+}
+
+impl SCNRicBoxT {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<SCNRicBox<'b>> {
+        let CENTER_ID = self.CENTER_ID.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let MEMBER_IDS = self.MEMBER_IDS.as_ref().map(|x|{
+            let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+        });
+        let HALF_RADIAL_M = self.HALF_RADIAL_M;
+        let HALF_IN_TRACK_M = self.HALF_IN_TRACK_M;
+        let HALF_CROSS_TRACK_M = self.HALF_CROSS_TRACK_M;
+        let COORDINATES = self.COORDINATES;
+        let RELATIVE_ORBITS = self.RELATIVE_ORBITS;
+        let GLOBE_DISPLAY = self.GLOBE_DISPLAY;
+        let SHOW_COVARIANCE = self.SHOW_COVARIANCE;
+        let DIVISIONS = self.DIVISIONS;
+        let RPO_TRAIL_SECONDS = self.RPO_TRAIL_SECONDS;
+        let RPO_CHASER_IDS = self.RPO_CHASER_IDS.as_ref().map(|x|{
+            let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+        });
+        let SHOW_BOX = self.SHOW_BOX;
+        SCNRicBox::create(_fbb, &SCNRicBoxArgs{
+            CENTER_ID,
+            MEMBER_IDS,
+            HALF_RADIAL_M,
+            HALF_IN_TRACK_M,
+            HALF_CROSS_TRACK_M,
+            COORDINATES,
+            RELATIVE_ORBITS,
+            GLOBE_DISPLAY,
+            SHOW_COVARIANCE,
+            DIVISIONS,
+            RPO_TRAIL_SECONDS,
+            RPO_CHASER_IDS,
+            SHOW_BOX,
+        })
+    }
+}
 
 pub enum SCNPointOfInterestOffset {}
 
@@ -1400,6 +2058,8 @@ impl<'a> SCNReference<'a> {
     pub const VT_EXCLUSION_ZONE: ::flatbuffers::VOffsetT = 50;
     pub const VT_OBSERVATION_EO: ::flatbuffers::VOffsetT = 52;
     pub const VT_OBSERVATION_RADAR: ::flatbuffers::VOffsetT = 54;
+    pub const VT_COLOR: ::flatbuffers::VOffsetT = 56;
+    pub const VT_SHOW_COVARIANCE: ::flatbuffers::VOffsetT = 58;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1412,6 +2072,7 @@ impl<'a> SCNReference<'a> {
         args: &'args SCNReferenceArgs<'args>
     ) -> ::flatbuffers::WIPOffset<SCNReference<'bldr>> {
         let mut builder = SCNReferenceBuilder::new(_fbb);
+        if let Some(x) = args.COLOR { builder.add_COLOR(x); }
         if let Some(x) = args.OBSERVATION_RADAR { builder.add_OBSERVATION_RADAR(x); }
         if let Some(x) = args.OBSERVATION_EO { builder.add_OBSERVATION_EO(x); }
         if let Some(x) = args.EXCLUSION_ZONE { builder.add_EXCLUSION_ZONE(x); }
@@ -1436,6 +2097,7 @@ impl<'a> SCNReference<'a> {
         builder.add_NORAD_CAT_ID(args.NORAD_CAT_ID);
         if let Some(x) = args.NAME { builder.add_NAME(x); }
         if let Some(x) = args.REFERENCE_ID { builder.add_REFERENCE_ID(x); }
+        builder.add_SHOW_COVARIANCE(args.SHOW_COVARIANCE);
         builder.add_REMOVE(args.REMOVE);
         builder.add_REFERENCE_KIND(args.REFERENCE_KIND);
         builder.finish()
@@ -1514,6 +2176,10 @@ impl<'a> SCNReference<'a> {
         let OBSERVATION_RADAR = self.OBSERVATION_RADAR().map(|x| {
             alloc::boxed::Box::new(x.unpack())
         });
+        let COLOR = self.COLOR().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let SHOW_COVARIANCE = self.SHOW_COVARIANCE();
         SCNReferenceT {
             REFERENCE_ID,
             NAME,
@@ -1541,6 +2207,8 @@ impl<'a> SCNReference<'a> {
             EXCLUSION_ZONE,
             OBSERVATION_EO,
             OBSERVATION_RADAR,
+            COLOR,
+            SHOW_COVARIANCE,
         }
     }
 
@@ -1777,6 +2445,24 @@ impl<'a> SCNReference<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<RDO>>(SCNReference::VT_OBSERVATION_RADAR, None)}
     }
+
+    /// Optional display color token (for example "#ff9f0a") for this reference.
+    #[inline]
+    pub fn COLOR(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNReference::VT_COLOR, None)}
+    }
+
+    /// True when the 1-sigma covariance ellipsoid is shown on this reference.
+    #[inline]
+    pub fn SHOW_COVARIANCE(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(SCNReference::VT_SHOW_COVARIANCE, Some(false)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for SCNReference<'_> {
@@ -1811,6 +2497,8 @@ impl ::flatbuffers::Verifiable for SCNReference<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<SCNExclusionZone>>("EXCLUSION_ZONE", Self::VT_EXCLUSION_ZONE, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<EOO>>("OBSERVATION_EO", Self::VT_OBSERVATION_EO, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<RDO>>("OBSERVATION_RADAR", Self::VT_OBSERVATION_RADAR, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("COLOR", Self::VT_COLOR, false)?
+            .visit_field::<bool>("SHOW_COVARIANCE", Self::VT_SHOW_COVARIANCE, false)?
             .finish();
         Ok(())
     }
@@ -1843,6 +2531,8 @@ pub struct SCNReferenceArgs<'a> {
     pub EXCLUSION_ZONE: Option<::flatbuffers::WIPOffset<SCNExclusionZone<'a>>>,
     pub OBSERVATION_EO: Option<::flatbuffers::WIPOffset<EOO<'a>>>,
     pub OBSERVATION_RADAR: Option<::flatbuffers::WIPOffset<RDO<'a>>>,
+    pub COLOR: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SHOW_COVARIANCE: bool,
 }
 
 impl<'a> Default for SCNReferenceArgs<'a> {
@@ -1875,6 +2565,8 @@ impl<'a> Default for SCNReferenceArgs<'a> {
             EXCLUSION_ZONE: None,
             OBSERVATION_EO: None,
             OBSERVATION_RADAR: None,
+            COLOR: None,
+            SHOW_COVARIANCE: false,
         }
     }
 }
@@ -2016,6 +2708,16 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCNReferenceBuilder<'a, 'b, A
     }
 
     #[inline]
+    pub fn add_COLOR(&mut self, COLOR: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCNReference::VT_COLOR, COLOR);
+    }
+
+    #[inline]
+    pub fn add_SHOW_COVARIANCE(&mut self, SHOW_COVARIANCE: bool) {
+        self.fbb_.push_slot::<bool>(SCNReference::VT_SHOW_COVARIANCE, SHOW_COVARIANCE, false);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SCNReferenceBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         SCNReferenceBuilder {
@@ -2060,6 +2762,8 @@ impl ::core::fmt::Debug for SCNReference<'_> {
         ds.field("EXCLUSION_ZONE", &self.EXCLUSION_ZONE());
         ds.field("OBSERVATION_EO", &self.OBSERVATION_EO());
         ds.field("OBSERVATION_RADAR", &self.OBSERVATION_RADAR());
+        ds.field("COLOR", &self.COLOR());
+        ds.field("SHOW_COVARIANCE", &self.SHOW_COVARIANCE());
         ds.finish()
     }
 }
@@ -2093,6 +2797,8 @@ pub struct SCNReferenceT {
     pub EXCLUSION_ZONE: Option<alloc::boxed::Box<SCNExclusionZoneT>>,
     pub OBSERVATION_EO: Option<alloc::boxed::Box<EOOT>>,
     pub OBSERVATION_RADAR: Option<alloc::boxed::Box<RDOT>>,
+    pub COLOR: Option<alloc::string::String>,
+    pub SHOW_COVARIANCE: bool,
 }
 
 impl Default for SCNReferenceT {
@@ -2124,6 +2830,8 @@ impl Default for SCNReferenceT {
             EXCLUSION_ZONE: None,
             OBSERVATION_EO: None,
             OBSERVATION_RADAR: None,
+            COLOR: None,
+            SHOW_COVARIANCE: false,
         }
     }
 }
@@ -2205,6 +2913,10 @@ impl SCNReferenceT {
         let OBSERVATION_RADAR = self.OBSERVATION_RADAR.as_ref().map(|x|{
             x.pack(_fbb)
         });
+        let COLOR = self.COLOR.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let SHOW_COVARIANCE = self.SHOW_COVARIANCE;
         SCNReference::create(_fbb, &SCNReferenceArgs{
             REFERENCE_ID,
             NAME,
@@ -2232,6 +2944,8 @@ impl SCNReferenceT {
             EXCLUSION_ZONE,
             OBSERVATION_EO,
             OBSERVATION_RADAR,
+            COLOR,
+            SHOW_COVARIANCE,
         })
     }
 }
@@ -3130,6 +3844,7 @@ impl<'a> SCN<'a> {
     pub const VT_PROPAGATOR_MODULE_ID: ::flatbuffers::VOffsetT = 38;
     pub const VT_PINNED_ROWS: ::flatbuffers::VOffsetT = 40;
     pub const VT_SIGNATURE: ::flatbuffers::VOffsetT = 42;
+    pub const VT_RIC_BOX: ::flatbuffers::VOffsetT = 44;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -3143,6 +3858,7 @@ impl<'a> SCN<'a> {
     ) -> ::flatbuffers::WIPOffset<SCN<'bldr>> {
         let mut builder = SCNBuilder::new(_fbb);
         builder.add_SIM_SPEED(args.SIM_SPEED);
+        if let Some(x) = args.RIC_BOX { builder.add_RIC_BOX(x); }
         if let Some(x) = args.SIGNATURE { builder.add_SIGNATURE(x); }
         if let Some(x) = args.PINNED_ROWS { builder.add_PINNED_ROWS(x); }
         if let Some(x) = args.PROPAGATOR_MODULE_ID { builder.add_PROPAGATOR_MODULE_ID(x); }
@@ -3216,6 +3932,9 @@ impl<'a> SCN<'a> {
         let SIGNATURE = self.SIGNATURE().map(|x| {
             x.into_iter().collect()
         });
+        let RIC_BOX = self.RIC_BOX().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
         SCNT {
             SCENARIO_ID,
             REFERENCES,
@@ -3237,6 +3956,7 @@ impl<'a> SCN<'a> {
             PROPAGATOR_MODULE_ID,
             PINNED_ROWS,
             SIGNATURE,
+            RIC_BOX,
         }
     }
 
@@ -3425,6 +4145,15 @@ impl<'a> SCN<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(SCN::VT_SIGNATURE, None)}
     }
+
+    /// Relative-motion RIC box and multi-chaser RPO view settings, when active.
+    #[inline]
+    pub fn RIC_BOX(&self) -> Option<SCNRicBox<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<SCNRicBox>>(SCN::VT_RIC_BOX, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for SCN<'_> {
@@ -3453,6 +4182,7 @@ impl ::flatbuffers::Verifiable for SCN<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PROPAGATOR_MODULE_ID", Self::VT_PROPAGATOR_MODULE_ID, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<SCNPinnedRow>>>>("PINNED_ROWS", Self::VT_PINNED_ROWS, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("SIGNATURE", Self::VT_SIGNATURE, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<SCNRicBox>>("RIC_BOX", Self::VT_RIC_BOX, false)?
             .finish();
         Ok(())
     }
@@ -3479,6 +4209,7 @@ pub struct SCNArgs<'a> {
     pub PROPAGATOR_MODULE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub PINNED_ROWS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCNPinnedRow<'a>>>>>,
     pub SIGNATURE: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
+    pub RIC_BOX: Option<::flatbuffers::WIPOffset<SCNRicBox<'a>>>,
 }
 
 impl<'a> Default for SCNArgs<'a> {
@@ -3505,6 +4236,7 @@ impl<'a> Default for SCNArgs<'a> {
             PROPAGATOR_MODULE_ID: None,
             PINNED_ROWS: None,
             SIGNATURE: None,
+            RIC_BOX: None,
         }
     }
 }
@@ -3616,6 +4348,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCNBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_RIC_BOX(&mut self, RIC_BOX: ::flatbuffers::WIPOffset<SCNRicBox<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<SCNRicBox>>(SCN::VT_RIC_BOX, RIC_BOX);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SCNBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         SCNBuilder {
@@ -3654,6 +4391,7 @@ impl ::core::fmt::Debug for SCN<'_> {
         ds.field("PROPAGATOR_MODULE_ID", &self.PROPAGATOR_MODULE_ID());
         ds.field("PINNED_ROWS", &self.PINNED_ROWS());
         ds.field("SIGNATURE", &self.SIGNATURE());
+        ds.field("RIC_BOX", &self.RIC_BOX());
         ds.finish()
     }
 }
@@ -3681,6 +4419,7 @@ pub struct SCNT {
     pub PROPAGATOR_MODULE_ID: Option<alloc::string::String>,
     pub PINNED_ROWS: Option<alloc::vec::Vec<SCNPinnedRowT>>,
     pub SIGNATURE: Option<alloc::vec::Vec<u8>>,
+    pub RIC_BOX: Option<alloc::boxed::Box<SCNRicBoxT>>,
 }
 
 impl Default for SCNT {
@@ -3706,6 +4445,7 @@ impl Default for SCNT {
             PROPAGATOR_MODULE_ID: None,
             PINNED_ROWS: None,
             SIGNATURE: None,
+            RIC_BOX: None,
         }
     }
 }
@@ -3765,6 +4505,9 @@ impl SCNT {
         let SIGNATURE = self.SIGNATURE.as_ref().map(|x|{
             _fbb.create_vector(x)
         });
+        let RIC_BOX = self.RIC_BOX.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
         SCN::create(_fbb, &SCNArgs{
             SCENARIO_ID,
             REFERENCES,
@@ -3786,6 +4529,7 @@ impl SCNT {
             PROPAGATOR_MODULE_ID,
             PINNED_ROWS,
             SIGNATURE,
+            RIC_BOX,
         })
     }
 }

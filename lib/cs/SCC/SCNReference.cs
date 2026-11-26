@@ -130,6 +130,16 @@ public struct SCNReference : IFlatbufferObject
   public EOO? OBSERVATION_EO { get { int o = __p.__offset(52); return o != 0 ? (EOO?)(new EOO()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Radar observation record associated with this reference.
   public RDO? OBSERVATION_RADAR { get { int o = __p.__offset(54); return o != 0 ? (RDO?)(new RDO()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Optional display color token (for example "#ff9f0a") for this reference.
+  public string COLOR { get { int o = __p.__offset(56); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCOLORBytes() { return __p.__vector_as_span<byte>(56, 1); }
+#else
+  public ArraySegment<byte>? GetCOLORBytes() { return __p.__vector_as_arraysegment(56); }
+#endif
+  public byte[] GetCOLORArray() { return __p.__vector_as_array<byte>(56); }
+  /// True when the 1-sigma covariance ellipsoid is shown on this reference.
+  public bool SHOW_COVARIANCE { get { int o = __p.__offset(58); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
 
   public static Offset<SCNReference> CreateSCNReference(FlatBufferBuilder builder,
       StringOffset REFERENCE_IDOffset = default(StringOffset),
@@ -157,8 +167,11 @@ public struct SCNReference : IFlatbufferObject
       Offset<SCNSunAdvantageTarget> SUN_ADVANTAGE_TARGETOffset = default(Offset<SCNSunAdvantageTarget>),
       Offset<SCNExclusionZone> EXCLUSION_ZONEOffset = default(Offset<SCNExclusionZone>),
       Offset<EOO> OBSERVATION_EOOffset = default(Offset<EOO>),
-      Offset<RDO> OBSERVATION_RADAROffset = default(Offset<RDO>)) {
-    builder.StartTable(26);
+      Offset<RDO> OBSERVATION_RADAROffset = default(Offset<RDO>),
+      StringOffset COLOROffset = default(StringOffset),
+      bool SHOW_COVARIANCE = false) {
+    builder.StartTable(28);
+    SCNReference.AddCOLOR(builder, COLOROffset);
     SCNReference.AddOBSERVATION_RADAR(builder, OBSERVATION_RADAROffset);
     SCNReference.AddOBSERVATION_EO(builder, OBSERVATION_EOOffset);
     SCNReference.AddEXCLUSION_ZONE(builder, EXCLUSION_ZONEOffset);
@@ -183,12 +196,13 @@ public struct SCNReference : IFlatbufferObject
     SCNReference.AddNORAD_CAT_ID(builder, NORAD_CAT_ID);
     SCNReference.AddNAME(builder, NAMEOffset);
     SCNReference.AddREFERENCE_ID(builder, REFERENCE_IDOffset);
+    SCNReference.AddSHOW_COVARIANCE(builder, SHOW_COVARIANCE);
     SCNReference.AddREMOVE(builder, REMOVE);
     SCNReference.AddREFERENCE_KIND(builder, REFERENCE_KIND);
     return SCNReference.EndSCNReference(builder);
   }
 
-  public static void StartSCNReference(FlatBufferBuilder builder) { builder.StartTable(26); }
+  public static void StartSCNReference(FlatBufferBuilder builder) { builder.StartTable(28); }
   public static void AddREFERENCE_ID(FlatBufferBuilder builder, StringOffset REFERENCE_IDOffset) { builder.AddOffset(0, REFERENCE_IDOffset.Value, 0); }
   public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(1, NAMEOffset.Value, 0); }
   public static void AddREFERENCE_KIND(FlatBufferBuilder builder, scenarioReferenceKind REFERENCE_KIND) { builder.AddSbyte(2, (sbyte)REFERENCE_KIND, 0); }
@@ -245,6 +259,8 @@ public struct SCNReference : IFlatbufferObject
   public static void AddEXCLUSION_ZONE(FlatBufferBuilder builder, Offset<SCNExclusionZone> EXCLUSION_ZONEOffset) { builder.AddOffset(23, EXCLUSION_ZONEOffset.Value, 0); }
   public static void AddOBSERVATION_EO(FlatBufferBuilder builder, Offset<EOO> OBSERVATION_EOOffset) { builder.AddOffset(24, OBSERVATION_EOOffset.Value, 0); }
   public static void AddOBSERVATION_RADAR(FlatBufferBuilder builder, Offset<RDO> OBSERVATION_RADAROffset) { builder.AddOffset(25, OBSERVATION_RADAROffset.Value, 0); }
+  public static void AddCOLOR(FlatBufferBuilder builder, StringOffset COLOROffset) { builder.AddOffset(26, COLOROffset.Value, 0); }
+  public static void AddSHOW_COVARIANCE(FlatBufferBuilder builder, bool SHOW_COVARIANCE) { builder.AddBool(27, SHOW_COVARIANCE, false); }
   public static Offset<SCNReference> EndSCNReference(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<SCNReference>(o);
@@ -287,6 +303,8 @@ public struct SCNReference : IFlatbufferObject
     _o.EXCLUSION_ZONE = this.EXCLUSION_ZONE.HasValue ? this.EXCLUSION_ZONE.Value.UnPack() : null;
     _o.OBSERVATION_EO = this.OBSERVATION_EO.HasValue ? this.OBSERVATION_EO.Value.UnPack() : null;
     _o.OBSERVATION_RADAR = this.OBSERVATION_RADAR.HasValue ? this.OBSERVATION_RADAR.Value.UnPack() : null;
+    _o.COLOR = this.COLOR;
+    _o.SHOW_COVARIANCE = this.SHOW_COVARIANCE;
   }
   public static Offset<SCNReference> Pack(FlatBufferBuilder builder, SCNReferenceT _o) {
     if (_o == null) return default(Offset<SCNReference>);
@@ -343,6 +361,7 @@ public struct SCNReference : IFlatbufferObject
     var _EXCLUSION_ZONE = _o.EXCLUSION_ZONE == null ? default(Offset<SCNExclusionZone>) : SCNExclusionZone.Pack(builder, _o.EXCLUSION_ZONE);
     var _OBSERVATION_EO = _o.OBSERVATION_EO == null ? default(Offset<EOO>) : EOO.Pack(builder, _o.OBSERVATION_EO);
     var _OBSERVATION_RADAR = _o.OBSERVATION_RADAR == null ? default(Offset<RDO>) : RDO.Pack(builder, _o.OBSERVATION_RADAR);
+    var _COLOR = _o.COLOR == null ? default(StringOffset) : builder.CreateString(_o.COLOR);
     return CreateSCNReference(
       builder,
       _REFERENCE_ID,
@@ -370,7 +389,9 @@ public struct SCNReference : IFlatbufferObject
       _SUN_ADVANTAGE_TARGET,
       _EXCLUSION_ZONE,
       _OBSERVATION_EO,
-      _OBSERVATION_RADAR);
+      _OBSERVATION_RADAR,
+      _COLOR,
+      _o.SHOW_COVARIANCE);
   }
 }
 
@@ -402,6 +423,8 @@ public class SCNReferenceT
   public SCNExclusionZoneT EXCLUSION_ZONE { get; set; }
   public EOOT OBSERVATION_EO { get; set; }
   public RDOT OBSERVATION_RADAR { get; set; }
+  public string COLOR { get; set; }
+  public bool SHOW_COVARIANCE { get; set; }
 
   public SCNReferenceT() {
     this.REFERENCE_ID = null;
@@ -430,6 +453,8 @@ public class SCNReferenceT
     this.EXCLUSION_ZONE = null;
     this.OBSERVATION_EO = null;
     this.OBSERVATION_RADAR = null;
+    this.COLOR = null;
+    this.SHOW_COVARIANCE = false;
   }
 }
 
@@ -465,6 +490,8 @@ static public class SCNReferenceVerify
       && verifier.VerifyTable(tablePos, 50 /*EXCLUSION_ZONE*/, SCNExclusionZoneVerify.Verify, false)
       && verifier.VerifyTable(tablePos, 52 /*OBSERVATION_EO*/, EOOVerify.Verify, false)
       && verifier.VerifyTable(tablePos, 54 /*OBSERVATION_RADAR*/, RDOVerify.Verify, false)
+      && verifier.VerifyString(tablePos, 56 /*COLOR*/, false)
+      && verifier.VerifyField(tablePos, 58 /*SHOW_COVARIANCE*/, 1 /*bool*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

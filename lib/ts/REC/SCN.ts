@@ -9,6 +9,7 @@ import { SCNAssetsChanged, SCNAssetsChangedT } from './SCNAssetsChanged.js';
 import { SCNEvent, SCNEventT } from './SCNEvent.js';
 import { SCNPinnedRow, SCNPinnedRowT } from './SCNPinnedRow.js';
 import { SCNReference, SCNReferenceT } from './SCNReference.js';
+import { SCNRicBox, SCNRicBoxT } from './SCNRicBox.js';
 import { VST, VSTT } from './VST.js';
 import { scenarioActionCode } from './scenarioActionCode.js';
 
@@ -247,8 +248,16 @@ signatureArray():Uint8Array|null {
   return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 }
 
+/**
+ * Relative-motion RIC box and multi-chaser RPO view settings, when active.
+ */
+RIC_BOX(obj?:SCNRicBox):SCNRicBox|null {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? (obj || new SCNRicBox()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startSCN(builder:flatbuffers.Builder) {
-  builder.startObject(20);
+  builder.startObject(21);
 }
 
 static addScenarioId(builder:flatbuffers.Builder, SCENARIO_IDOffset:flatbuffers.Offset) {
@@ -367,6 +376,10 @@ static startSignatureVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(1, numElems, 1);
 }
 
+static addRicBox(builder:flatbuffers.Builder, RIC_BOXOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(20, RIC_BOXOffset, 0);
+}
+
 static endSCN(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -402,7 +415,8 @@ unpack(): SCNT {
     this.WINDOW_STOP(),
     this.PROPAGATOR_MODULE_ID(),
     this.bb!.createObjList<SCNPinnedRow, SCNPinnedRowT>(this.PINNED_ROWS.bind(this), this.pinnedRowsLength()),
-    this.bb!.createScalarList<number>(this.SIGNATURE.bind(this), this.signatureLength())
+    this.bb!.createScalarList<number>(this.SIGNATURE.bind(this), this.signatureLength()),
+    (this.RIC_BOX() !== null ? this.RIC_BOX()!.unpack() : null)
   );
 }
 
@@ -428,6 +442,7 @@ unpackTo(_o: SCNT): void {
   _o.PROPAGATOR_MODULE_ID = this.PROPAGATOR_MODULE_ID();
   _o.PINNED_ROWS = this.bb!.createObjList<SCNPinnedRow, SCNPinnedRowT>(this.PINNED_ROWS.bind(this), this.pinnedRowsLength());
   _o.SIGNATURE = this.bb!.createScalarList<number>(this.SIGNATURE.bind(this), this.signatureLength());
+  _o.RIC_BOX = (this.RIC_BOX() !== null ? this.RIC_BOX()!.unpack() : null);
 }
 }
 
@@ -452,7 +467,8 @@ constructor(
   public WINDOW_STOP: string|Uint8Array|null = null,
   public PROPAGATOR_MODULE_ID: string|Uint8Array|null = null,
   public PINNED_ROWS: (SCNPinnedRowT)[] = [],
-  public SIGNATURE: (number)[] = []
+  public SIGNATURE: (number)[] = [],
+  public RIC_BOX: SCNRicBoxT|null = null
 ){}
 
 
@@ -472,6 +488,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const PROPAGATOR_MODULE_ID = (this.PROPAGATOR_MODULE_ID !== null ? builder.createString(this.PROPAGATOR_MODULE_ID!) : 0);
   const PINNED_ROWS = SCN.createPinnedRowsVector(builder, builder.createObjectOffsetList(this.PINNED_ROWS));
   const SIGNATURE = SCN.createSignatureVector(builder, this.SIGNATURE);
+  const RIC_BOX = (this.RIC_BOX !== null ? this.RIC_BOX!.pack(builder) : 0);
 
   SCN.startSCN(builder);
   SCN.addScenarioId(builder, SCENARIO_ID);
@@ -494,6 +511,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   SCN.addPropagatorModuleId(builder, PROPAGATOR_MODULE_ID);
   SCN.addPinnedRows(builder, PINNED_ROWS);
   SCN.addSignature(builder, SIGNATURE);
+  SCN.addRicBox(builder, RIC_BOX);
 
   return SCN.endSCN(builder);
 }

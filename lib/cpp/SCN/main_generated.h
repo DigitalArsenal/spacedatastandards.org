@@ -24,6 +24,9 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 #include "../STV/main_generated.h"
 #include "../VST/main_generated.h"
 
+struct SCNRicBox;
+struct SCNRicBoxBuilder;
+
 struct SCNPointOfInterest;
 struct SCNPointOfInterestBuilder;
 
@@ -116,6 +119,71 @@ inline const char *EnumNamescenarioReferenceKind(scenarioReferenceKind e) {
   return EnumNamesscenarioReferenceKind()[index];
 }
 
+/// Coordinate convention for a relative-motion RIC box.
+enum scnRicCoordinates : int8_t {
+  scnRicCoordinates_CURVILINEAR = 0,
+  scnRicCoordinates_RECTILINEAR = 1,
+  scnRicCoordinates_MIN = scnRicCoordinates_CURVILINEAR,
+  scnRicCoordinates_MAX = scnRicCoordinates_RECTILINEAR
+};
+
+inline const scnRicCoordinates (&EnumValuesscnRicCoordinates())[2] {
+  static const scnRicCoordinates values[] = {
+    scnRicCoordinates_CURVILINEAR,
+    scnRicCoordinates_RECTILINEAR
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesscnRicCoordinates() {
+  static const char * const names[3] = {
+    "CURVILINEAR",
+    "RECTILINEAR",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamescnRicCoordinates(scnRicCoordinates e) {
+  if (::flatbuffers::IsOutRange(e, scnRicCoordinates_CURVILINEAR, scnRicCoordinates_RECTILINEAR)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesscnRicCoordinates()[index];
+}
+
+/// Central-body globe display mode while a RIC box is shown.
+enum scnGlobeDisplay : int8_t {
+  scnGlobeDisplay_SOLID = 0,
+  scnGlobeDisplay_WIREFRAME = 1,
+  scnGlobeDisplay_HIDDEN = 2,
+  scnGlobeDisplay_MIN = scnGlobeDisplay_SOLID,
+  scnGlobeDisplay_MAX = scnGlobeDisplay_HIDDEN
+};
+
+inline const scnGlobeDisplay (&EnumValuesscnGlobeDisplay())[3] {
+  static const scnGlobeDisplay values[] = {
+    scnGlobeDisplay_SOLID,
+    scnGlobeDisplay_WIREFRAME,
+    scnGlobeDisplay_HIDDEN
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesscnGlobeDisplay() {
+  static const char * const names[4] = {
+    "SOLID",
+    "WIREFRAME",
+    "HIDDEN",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamescnGlobeDisplay(scnGlobeDisplay e) {
+  if (::flatbuffers::IsOutRange(e, scnGlobeDisplay_SOLID, scnGlobeDisplay_HIDDEN)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesscnGlobeDisplay()[index];
+}
+
 /// Scenario command action.
 enum scenarioActionCode : int8_t {
   scenarioActionCode_NONE = 0,
@@ -148,6 +216,222 @@ inline const char *EnumNamescenarioActionCode(scenarioActionCode e) {
   if (::flatbuffers::IsOutRange(e, scenarioActionCode_NONE, scenarioActionCode_RESET)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesscenarioActionCode()[index];
+}
+
+/// Relative-motion RIC box and RPO time-lapse settings kept with a scenario.
+struct SCNRicBox FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef SCNRicBoxBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_CENTER_ID = 4,
+    VT_MEMBER_IDS = 6,
+    VT_HALF_RADIAL_M = 8,
+    VT_HALF_IN_TRACK_M = 10,
+    VT_HALF_CROSS_TRACK_M = 12,
+    VT_COORDINATES = 14,
+    VT_RELATIVE_ORBITS = 16,
+    VT_GLOBE_DISPLAY = 18,
+    VT_SHOW_COVARIANCE = 20,
+    VT_DIVISIONS = 22,
+    VT_RPO_TRAIL_SECONDS = 24,
+    VT_RPO_CHASER_IDS = 26,
+    VT_SHOW_BOX = 28
+  };
+  /// Reference id of the center (target) object.
+  const ::flatbuffers::String *CENTER_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CENTER_ID);
+  }
+  /// Reference ids of the member (chaser / companion) objects inside the box.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *MEMBER_IDS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_MEMBER_IDS);
+  }
+  /// Half-size along the radial axis in meters (0 means auto-fit).
+  double HALF_RADIAL_M() const {
+    return GetField<double>(VT_HALF_RADIAL_M, 0.0);
+  }
+  /// Half-size along the in-track axis in meters (0 means auto-fit).
+  double HALF_IN_TRACK_M() const {
+    return GetField<double>(VT_HALF_IN_TRACK_M, 0.0);
+  }
+  /// Half-size along the cross-track axis in meters (0 means auto-fit).
+  double HALF_CROSS_TRACK_M() const {
+    return GetField<double>(VT_HALF_CROSS_TRACK_M, 0.0);
+  }
+  /// Coordinate convention (curvilinear along the orbit, or rectilinear).
+  scnRicCoordinates COORDINATES() const {
+    return static_cast<scnRicCoordinates>(GetField<int8_t>(VT_COORDINATES, 0));
+  }
+  /// True when member orbits are drawn relative to the center object.
+  bool RELATIVE_ORBITS() const {
+    return GetField<uint8_t>(VT_RELATIVE_ORBITS, 1) != 0;
+  }
+  /// Globe display mode while the RIC box is shown.
+  scnGlobeDisplay GLOBE_DISPLAY() const {
+    return static_cast<scnGlobeDisplay>(GetField<int8_t>(VT_GLOBE_DISPLAY, 0));
+  }
+  /// True when 1-sigma wireframe covariance ellipsoids are shown on boxed objects.
+  bool SHOW_COVARIANCE() const {
+    return GetField<uint8_t>(VT_SHOW_COVARIANCE, 0) != 0;
+  }
+  /// Grid divisions per side (0 uses viewer default).
+  uint8_t DIVISIONS() const {
+    return GetField<uint8_t>(VT_DIVISIONS, 4);
+  }
+  /// RPO time-lapse trail duration in seconds (0 uses viewer default).
+  double RPO_TRAIL_SECONDS() const {
+    return GetField<double>(VT_RPO_TRAIL_SECONDS, 0.0);
+  }
+  /// Reference ids of chasers flying historical RPO trajectories in this RIC box.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *RPO_CHASER_IDS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_RPO_CHASER_IDS);
+  }
+  /// True when the RIC box itself is visible.
+  bool SHOW_BOX() const {
+    return GetField<uint8_t>(VT_SHOW_BOX, 1) != 0;
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_CENTER_ID) &&
+           verifier.VerifyString(CENTER_ID()) &&
+           VerifyOffset(verifier, VT_MEMBER_IDS) &&
+           verifier.VerifyVector(MEMBER_IDS()) &&
+           verifier.VerifyVectorOfStrings(MEMBER_IDS()) &&
+           VerifyField<double>(verifier, VT_HALF_RADIAL_M, 8) &&
+           VerifyField<double>(verifier, VT_HALF_IN_TRACK_M, 8) &&
+           VerifyField<double>(verifier, VT_HALF_CROSS_TRACK_M, 8) &&
+           VerifyField<int8_t>(verifier, VT_COORDINATES, 1) &&
+           VerifyField<uint8_t>(verifier, VT_RELATIVE_ORBITS, 1) &&
+           VerifyField<int8_t>(verifier, VT_GLOBE_DISPLAY, 1) &&
+           VerifyField<uint8_t>(verifier, VT_SHOW_COVARIANCE, 1) &&
+           VerifyField<uint8_t>(verifier, VT_DIVISIONS, 1) &&
+           VerifyField<double>(verifier, VT_RPO_TRAIL_SECONDS, 8) &&
+           VerifyOffset(verifier, VT_RPO_CHASER_IDS) &&
+           verifier.VerifyVector(RPO_CHASER_IDS()) &&
+           verifier.VerifyVectorOfStrings(RPO_CHASER_IDS()) &&
+           VerifyField<uint8_t>(verifier, VT_SHOW_BOX, 1) &&
+           verifier.EndTable();
+  }
+};
+
+struct SCNRicBoxBuilder {
+  typedef SCNRicBox Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_CENTER_ID(::flatbuffers::Offset<::flatbuffers::String> CENTER_ID) {
+    fbb_.AddOffset(SCNRicBox::VT_CENTER_ID, CENTER_ID);
+  }
+  void add_MEMBER_IDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> MEMBER_IDS) {
+    fbb_.AddOffset(SCNRicBox::VT_MEMBER_IDS, MEMBER_IDS);
+  }
+  void add_HALF_RADIAL_M(double HALF_RADIAL_M) {
+    fbb_.AddElement<double>(SCNRicBox::VT_HALF_RADIAL_M, HALF_RADIAL_M, 0.0);
+  }
+  void add_HALF_IN_TRACK_M(double HALF_IN_TRACK_M) {
+    fbb_.AddElement<double>(SCNRicBox::VT_HALF_IN_TRACK_M, HALF_IN_TRACK_M, 0.0);
+  }
+  void add_HALF_CROSS_TRACK_M(double HALF_CROSS_TRACK_M) {
+    fbb_.AddElement<double>(SCNRicBox::VT_HALF_CROSS_TRACK_M, HALF_CROSS_TRACK_M, 0.0);
+  }
+  void add_COORDINATES(scnRicCoordinates COORDINATES) {
+    fbb_.AddElement<int8_t>(SCNRicBox::VT_COORDINATES, static_cast<int8_t>(COORDINATES), 0);
+  }
+  void add_RELATIVE_ORBITS(bool RELATIVE_ORBITS) {
+    fbb_.AddElement<uint8_t>(SCNRicBox::VT_RELATIVE_ORBITS, static_cast<uint8_t>(RELATIVE_ORBITS), 1);
+  }
+  void add_GLOBE_DISPLAY(scnGlobeDisplay GLOBE_DISPLAY) {
+    fbb_.AddElement<int8_t>(SCNRicBox::VT_GLOBE_DISPLAY, static_cast<int8_t>(GLOBE_DISPLAY), 0);
+  }
+  void add_SHOW_COVARIANCE(bool SHOW_COVARIANCE) {
+    fbb_.AddElement<uint8_t>(SCNRicBox::VT_SHOW_COVARIANCE, static_cast<uint8_t>(SHOW_COVARIANCE), 0);
+  }
+  void add_DIVISIONS(uint8_t DIVISIONS) {
+    fbb_.AddElement<uint8_t>(SCNRicBox::VT_DIVISIONS, DIVISIONS, 4);
+  }
+  void add_RPO_TRAIL_SECONDS(double RPO_TRAIL_SECONDS) {
+    fbb_.AddElement<double>(SCNRicBox::VT_RPO_TRAIL_SECONDS, RPO_TRAIL_SECONDS, 0.0);
+  }
+  void add_RPO_CHASER_IDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> RPO_CHASER_IDS) {
+    fbb_.AddOffset(SCNRicBox::VT_RPO_CHASER_IDS, RPO_CHASER_IDS);
+  }
+  void add_SHOW_BOX(bool SHOW_BOX) {
+    fbb_.AddElement<uint8_t>(SCNRicBox::VT_SHOW_BOX, static_cast<uint8_t>(SHOW_BOX), 1);
+  }
+  explicit SCNRicBoxBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<SCNRicBox> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<SCNRicBox>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<SCNRicBox> CreateSCNRicBox(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> CENTER_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> MEMBER_IDS = 0,
+    double HALF_RADIAL_M = 0.0,
+    double HALF_IN_TRACK_M = 0.0,
+    double HALF_CROSS_TRACK_M = 0.0,
+    scnRicCoordinates COORDINATES = scnRicCoordinates_CURVILINEAR,
+    bool RELATIVE_ORBITS = true,
+    scnGlobeDisplay GLOBE_DISPLAY = scnGlobeDisplay_SOLID,
+    bool SHOW_COVARIANCE = false,
+    uint8_t DIVISIONS = 4,
+    double RPO_TRAIL_SECONDS = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> RPO_CHASER_IDS = 0,
+    bool SHOW_BOX = true) {
+  SCNRicBoxBuilder builder_(_fbb);
+  builder_.add_RPO_TRAIL_SECONDS(RPO_TRAIL_SECONDS);
+  builder_.add_HALF_CROSS_TRACK_M(HALF_CROSS_TRACK_M);
+  builder_.add_HALF_IN_TRACK_M(HALF_IN_TRACK_M);
+  builder_.add_HALF_RADIAL_M(HALF_RADIAL_M);
+  builder_.add_RPO_CHASER_IDS(RPO_CHASER_IDS);
+  builder_.add_MEMBER_IDS(MEMBER_IDS);
+  builder_.add_CENTER_ID(CENTER_ID);
+  builder_.add_SHOW_BOX(SHOW_BOX);
+  builder_.add_DIVISIONS(DIVISIONS);
+  builder_.add_SHOW_COVARIANCE(SHOW_COVARIANCE);
+  builder_.add_GLOBE_DISPLAY(GLOBE_DISPLAY);
+  builder_.add_RELATIVE_ORBITS(RELATIVE_ORBITS);
+  builder_.add_COORDINATES(COORDINATES);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<SCNRicBox> CreateSCNRicBoxDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *CENTER_ID = nullptr,
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *MEMBER_IDS = nullptr,
+    double HALF_RADIAL_M = 0.0,
+    double HALF_IN_TRACK_M = 0.0,
+    double HALF_CROSS_TRACK_M = 0.0,
+    scnRicCoordinates COORDINATES = scnRicCoordinates_CURVILINEAR,
+    bool RELATIVE_ORBITS = true,
+    scnGlobeDisplay GLOBE_DISPLAY = scnGlobeDisplay_SOLID,
+    bool SHOW_COVARIANCE = false,
+    uint8_t DIVISIONS = 4,
+    double RPO_TRAIL_SECONDS = 0.0,
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *RPO_CHASER_IDS = nullptr,
+    bool SHOW_BOX = true) {
+  auto CENTER_ID__ = CENTER_ID ? _fbb.CreateString(CENTER_ID) : 0;
+  auto MEMBER_IDS__ = MEMBER_IDS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*MEMBER_IDS) : 0;
+  auto RPO_CHASER_IDS__ = RPO_CHASER_IDS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*RPO_CHASER_IDS) : 0;
+  return CreateSCNRicBox(
+      _fbb,
+      CENTER_ID__,
+      MEMBER_IDS__,
+      HALF_RADIAL_M,
+      HALF_IN_TRACK_M,
+      HALF_CROSS_TRACK_M,
+      COORDINATES,
+      RELATIVE_ORBITS,
+      GLOBE_DISPLAY,
+      SHOW_COVARIANCE,
+      DIVISIONS,
+      RPO_TRAIL_SECONDS,
+      RPO_CHASER_IDS__,
+      SHOW_BOX);
 }
 
 /// Time-tagged point or annotation shown in a scenario.
@@ -661,7 +945,9 @@ struct SCNReference FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_SUN_ADVANTAGE_TARGET = 48,
     VT_EXCLUSION_ZONE = 50,
     VT_OBSERVATION_EO = 52,
-    VT_OBSERVATION_RADAR = 54
+    VT_OBSERVATION_RADAR = 54,
+    VT_COLOR = 56,
+    VT_SHOW_COVARIANCE = 58
   };
   /// Stable scenario-local id for this reference.
   const ::flatbuffers::String *REFERENCE_ID() const {
@@ -767,6 +1053,14 @@ struct SCNReference FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const RDO *OBSERVATION_RADAR() const {
     return GetPointer<const RDO *>(VT_OBSERVATION_RADAR);
   }
+  /// Optional display color token (for example "#ff9f0a") for this reference.
+  const ::flatbuffers::String *COLOR() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_COLOR);
+  }
+  /// True when the 1-sigma covariance ellipsoid is shown on this reference.
+  bool SHOW_COVARIANCE() const {
+    return GetField<uint8_t>(VT_SHOW_COVARIANCE, 0) != 0;
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -825,6 +1119,9 @@ struct SCNReference FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyTable(OBSERVATION_EO()) &&
            VerifyOffset(verifier, VT_OBSERVATION_RADAR) &&
            verifier.VerifyTable(OBSERVATION_RADAR()) &&
+           VerifyOffset(verifier, VT_COLOR) &&
+           verifier.VerifyString(COLOR()) &&
+           VerifyField<uint8_t>(verifier, VT_SHOW_COVARIANCE, 1) &&
            verifier.EndTable();
   }
 };
@@ -911,6 +1208,12 @@ struct SCNReferenceBuilder {
   void add_OBSERVATION_RADAR(::flatbuffers::Offset<RDO> OBSERVATION_RADAR) {
     fbb_.AddOffset(SCNReference::VT_OBSERVATION_RADAR, OBSERVATION_RADAR);
   }
+  void add_COLOR(::flatbuffers::Offset<::flatbuffers::String> COLOR) {
+    fbb_.AddOffset(SCNReference::VT_COLOR, COLOR);
+  }
+  void add_SHOW_COVARIANCE(bool SHOW_COVARIANCE) {
+    fbb_.AddElement<uint8_t>(SCNReference::VT_SHOW_COVARIANCE, static_cast<uint8_t>(SHOW_COVARIANCE), 0);
+  }
   explicit SCNReferenceBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -949,8 +1252,11 @@ inline ::flatbuffers::Offset<SCNReference> CreateSCNReference(
     ::flatbuffers::Offset<SCNSunAdvantageTarget> SUN_ADVANTAGE_TARGET = 0,
     ::flatbuffers::Offset<SCNExclusionZone> EXCLUSION_ZONE = 0,
     ::flatbuffers::Offset<EOO> OBSERVATION_EO = 0,
-    ::flatbuffers::Offset<RDO> OBSERVATION_RADAR = 0) {
+    ::flatbuffers::Offset<RDO> OBSERVATION_RADAR = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> COLOR = 0,
+    bool SHOW_COVARIANCE = false) {
   SCNReferenceBuilder builder_(_fbb);
+  builder_.add_COLOR(COLOR);
   builder_.add_OBSERVATION_RADAR(OBSERVATION_RADAR);
   builder_.add_OBSERVATION_EO(OBSERVATION_EO);
   builder_.add_EXCLUSION_ZONE(EXCLUSION_ZONE);
@@ -975,6 +1281,7 @@ inline ::flatbuffers::Offset<SCNReference> CreateSCNReference(
   builder_.add_NORAD_CAT_ID(NORAD_CAT_ID);
   builder_.add_NAME(NAME);
   builder_.add_REFERENCE_ID(REFERENCE_ID);
+  builder_.add_SHOW_COVARIANCE(SHOW_COVARIANCE);
   builder_.add_REMOVE(REMOVE);
   builder_.add_REFERENCE_KIND(REFERENCE_KIND);
   return builder_.Finish();
@@ -1007,7 +1314,9 @@ inline ::flatbuffers::Offset<SCNReference> CreateSCNReferenceDirect(
     ::flatbuffers::Offset<SCNSunAdvantageTarget> SUN_ADVANTAGE_TARGET = 0,
     ::flatbuffers::Offset<SCNExclusionZone> EXCLUSION_ZONE = 0,
     ::flatbuffers::Offset<EOO> OBSERVATION_EO = 0,
-    ::flatbuffers::Offset<RDO> OBSERVATION_RADAR = 0) {
+    ::flatbuffers::Offset<RDO> OBSERVATION_RADAR = 0,
+    const char *COLOR = nullptr,
+    bool SHOW_COVARIANCE = false) {
   auto REFERENCE_ID__ = REFERENCE_ID ? _fbb.CreateString(REFERENCE_ID) : 0;
   auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
   auto OBJECT_ID__ = OBJECT_ID ? _fbb.CreateString(OBJECT_ID) : 0;
@@ -1023,6 +1332,7 @@ inline ::flatbuffers::Offset<SCNReference> CreateSCNReferenceDirect(
   auto VARIABLE_SATELLITE_ID__ = VARIABLE_SATELLITE_ID ? _fbb.CreateString(VARIABLE_SATELLITE_ID) : 0;
   auto VARIABLE_SITE_ID__ = VARIABLE_SITE_ID ? _fbb.CreateString(VARIABLE_SITE_ID) : 0;
   auto POINTS__ = POINTS ? _fbb.CreateVector<::flatbuffers::Offset<SCNPointOfInterest>>(*POINTS) : 0;
+  auto COLOR__ = COLOR ? _fbb.CreateString(COLOR) : 0;
   return CreateSCNReference(
       _fbb,
       REFERENCE_ID__,
@@ -1050,7 +1360,9 @@ inline ::flatbuffers::Offset<SCNReference> CreateSCNReferenceDirect(
       SUN_ADVANTAGE_TARGET,
       EXCLUSION_ZONE,
       OBSERVATION_EO,
-      OBSERVATION_RADAR);
+      OBSERVATION_RADAR,
+      COLOR__,
+      SHOW_COVARIANCE);
 }
 
 /// Imported scenario event payload composed from existing SDS records.
@@ -1470,7 +1782,8 @@ struct SCN FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_WINDOW_STOP = 36,
     VT_PROPAGATOR_MODULE_ID = 38,
     VT_PINNED_ROWS = 40,
-    VT_SIGNATURE = 42
+    VT_SIGNATURE = 42,
+    VT_RIC_BOX = 44
   };
   /// Stable id for the scenario.
   const ::flatbuffers::String *SCENARIO_ID() const {
@@ -1558,6 +1871,10 @@ struct SCN FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<uint8_t> *SIGNATURE() const {
     return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_SIGNATURE);
   }
+  /// Relative-motion RIC box and multi-chaser RPO view settings, when active.
+  const SCNRicBox *RIC_BOX() const {
+    return GetPointer<const SCNRicBox *>(VT_RIC_BOX);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -1598,6 +1915,8 @@ struct SCN FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyVectorOfTables(PINNED_ROWS()) &&
            VerifyOffset(verifier, VT_SIGNATURE) &&
            verifier.VerifyVector(SIGNATURE()) &&
+           VerifyOffset(verifier, VT_RIC_BOX) &&
+           verifier.VerifyTable(RIC_BOX()) &&
            verifier.EndTable();
   }
 };
@@ -1666,6 +1985,9 @@ struct SCNBuilder {
   void add_SIGNATURE(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> SIGNATURE) {
     fbb_.AddOffset(SCN::VT_SIGNATURE, SIGNATURE);
   }
+  void add_RIC_BOX(::flatbuffers::Offset<SCNRicBox> RIC_BOX) {
+    fbb_.AddOffset(SCN::VT_RIC_BOX, RIC_BOX);
+  }
   explicit SCNBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1698,9 +2020,11 @@ inline ::flatbuffers::Offset<SCN> CreateSCN(
     ::flatbuffers::Offset<::flatbuffers::String> WINDOW_STOP = 0,
     ::flatbuffers::Offset<::flatbuffers::String> PROPAGATOR_MODULE_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<SCNPinnedRow>>> PINNED_ROWS = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> SIGNATURE = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> SIGNATURE = 0,
+    ::flatbuffers::Offset<SCNRicBox> RIC_BOX = 0) {
   SCNBuilder builder_(_fbb);
   builder_.add_SIM_SPEED(SIM_SPEED);
+  builder_.add_RIC_BOX(RIC_BOX);
   builder_.add_SIGNATURE(SIGNATURE);
   builder_.add_PINNED_ROWS(PINNED_ROWS);
   builder_.add_PROPAGATOR_MODULE_ID(PROPAGATOR_MODULE_ID);
@@ -1744,7 +2068,8 @@ inline ::flatbuffers::Offset<SCN> CreateSCNDirect(
     const char *WINDOW_STOP = nullptr,
     const char *PROPAGATOR_MODULE_ID = nullptr,
     const std::vector<::flatbuffers::Offset<SCNPinnedRow>> *PINNED_ROWS = nullptr,
-    const std::vector<uint8_t> *SIGNATURE = nullptr) {
+    const std::vector<uint8_t> *SIGNATURE = nullptr,
+    ::flatbuffers::Offset<SCNRicBox> RIC_BOX = 0) {
   auto SCENARIO_ID__ = SCENARIO_ID ? _fbb.CreateString(SCENARIO_ID) : 0;
   auto REFERENCES__ = REFERENCES ? _fbb.CreateVector<::flatbuffers::Offset<SCNReference>>(*REFERENCES) : 0;
   auto FOCUSED_REFERENCE_ID__ = FOCUSED_REFERENCE_ID ? _fbb.CreateString(FOCUSED_REFERENCE_ID) : 0;
@@ -1777,7 +2102,8 @@ inline ::flatbuffers::Offset<SCN> CreateSCNDirect(
       WINDOW_STOP__,
       PROPAGATOR_MODULE_ID__,
       PINNED_ROWS__,
-      SIGNATURE__);
+      SIGNATURE__,
+      RIC_BOX);
 }
 
 inline const SCN *GetSCN(const void *buf) {

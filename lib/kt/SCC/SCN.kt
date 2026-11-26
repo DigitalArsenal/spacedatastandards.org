@@ -291,6 +291,18 @@ class SCN : Table() {
         }
     val signatureAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(42, 1)
     fun signatureInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 42, 1)
+    /**
+     * Relative-motion RIC box and multi-chaser RPO view settings, when active.
+     */
+    val ricBox : SCNRicBox? get() = ricBox(SCNRicBox())
+    fun ricBox(obj: SCNRicBox) : SCNRicBox? {
+        val o = __offset(44)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSCN(_bb: ByteBuffer): SCN = getRootAsSCN(_bb, SCN())
@@ -299,9 +311,10 @@ class SCN : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun SCNBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$SCN")
-        fun createSCN(builder: FlatBufferBuilder, scenarioIdOffset: Int, referencesOffset: Int, eventOffset: Int, focusedReferenceIndex: Int, focusedReferenceIdOffset: Int, epochOffset: Int, simSpeed: Double, useBodyFixedFrame: Boolean, referenceFrameOffset: Int, action: Byte, viewStateOffset: Int, assetsChangedOffset: Int, startEpochOffset: Int, stopEpochOffset: Int, animating: Boolean, windowStartOffset: Int, windowStopOffset: Int, propagatorModuleIdOffset: Int, pinnedRowsOffset: Int, signatureOffset: Int) : Int {
-            builder.startTable(20)
+        fun createSCN(builder: FlatBufferBuilder, scenarioIdOffset: Int, referencesOffset: Int, eventOffset: Int, focusedReferenceIndex: Int, focusedReferenceIdOffset: Int, epochOffset: Int, simSpeed: Double, useBodyFixedFrame: Boolean, referenceFrameOffset: Int, action: Byte, viewStateOffset: Int, assetsChangedOffset: Int, startEpochOffset: Int, stopEpochOffset: Int, animating: Boolean, windowStartOffset: Int, windowStopOffset: Int, propagatorModuleIdOffset: Int, pinnedRowsOffset: Int, signatureOffset: Int, ricBoxOffset: Int) : Int {
+            builder.startTable(21)
             addSIMSPEED(builder, simSpeed)
+            addRICBOX(builder, ricBoxOffset)
             addSIGNATURE(builder, signatureOffset)
             addPINNEDROWS(builder, pinnedRowsOffset)
             addPROPAGATORMODULEID(builder, propagatorModuleIdOffset)
@@ -323,7 +336,7 @@ class SCN : Table() {
             addUSEBODYFIXEDFRAME(builder, useBodyFixedFrame)
             return endSCN(builder)
         }
-        fun startSCN(builder: FlatBufferBuilder) = builder.startTable(20)
+        fun startSCN(builder: FlatBufferBuilder) = builder.startTable(21)
         fun addSCENARIOID(builder: FlatBufferBuilder, scenarioId: Int) = builder.addOffset(0, scenarioId, 0)
         fun addREFERENCES(builder: FlatBufferBuilder, references: Int) = builder.addOffset(1, references, 0)
         fun createReferencesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
@@ -369,6 +382,7 @@ class SCN : Table() {
             return builder.endVector()
         }
         fun startSignatureVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
+        fun addRICBOX(builder: FlatBufferBuilder, ricBox: Int) = builder.addOffset(20, ricBox, 0)
         fun endSCN(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

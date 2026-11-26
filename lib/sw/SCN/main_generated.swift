@@ -37,6 +37,33 @@ public enum scenarioReferenceKind: Int8, FlatbuffersVectorInitializable, Enum, V
 }
 
 
+///  Coordinate convention for a relative-motion RIC box.
+public enum scnRicCoordinates: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case curvilinear = 0
+  case rectilinear = 1
+
+  public static var max: scnRicCoordinates { return .rectilinear }
+  public static var min: scnRicCoordinates { return .curvilinear }
+}
+
+
+///  Central-body globe display mode while a RIC box is shown.
+public enum scnGlobeDisplay: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case solid = 0
+  case wireframe = 1
+  case hidden = 2
+
+  public static var max: scnGlobeDisplay { return .hidden }
+  public static var min: scnGlobeDisplay { return .solid }
+}
+
+
 ///  Scenario command action.
 public enum scenarioActionCode: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
@@ -50,6 +77,131 @@ public enum scenarioActionCode: Int8, FlatbuffersVectorInitializable, Enum, Veri
   public static var min: scenarioActionCode { return .none_ }
 }
 
+
+///  Relative-motion RIC box and RPO time-lapse settings kept with a scenario.
+public struct SCNRicBox: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$SCN" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: SCNRicBox.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let CENTER_ID: VOffset = 4
+    static let MEMBER_IDS: VOffset = 6
+    static let HALF_RADIAL_M: VOffset = 8
+    static let HALF_IN_TRACK_M: VOffset = 10
+    static let HALF_CROSS_TRACK_M: VOffset = 12
+    static let COORDINATES: VOffset = 14
+    static let RELATIVE_ORBITS: VOffset = 16
+    static let GLOBE_DISPLAY: VOffset = 18
+    static let SHOW_COVARIANCE: VOffset = 20
+    static let DIVISIONS: VOffset = 22
+    static let RPO_TRAIL_SECONDS: VOffset = 24
+    static let RPO_CHASER_IDS: VOffset = 26
+    static let SHOW_BOX: VOffset = 28
+  }
+
+  ///  Reference id of the center (target) object.
+  public var CENTER_ID: String? { let o = _accessor.offset(VT.CENTER_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CENTER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CENTER_ID) }
+  ///  Reference ids of the member (chaser / companion) objects inside the box.
+  public var MEMBER_IDS: FlatbufferVector<String?> { return _accessor.vector(at: VT.MEMBER_IDS, byteSize: 4) }
+  ///  Half-size along the radial axis in meters (0 means auto-fit).
+  public var HALF_RADIAL_M: Double { let o = _accessor.offset(VT.HALF_RADIAL_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Half-size along the in-track axis in meters (0 means auto-fit).
+  public var HALF_IN_TRACK_M: Double { let o = _accessor.offset(VT.HALF_IN_TRACK_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Half-size along the cross-track axis in meters (0 means auto-fit).
+  public var HALF_CROSS_TRACK_M: Double { let o = _accessor.offset(VT.HALF_CROSS_TRACK_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Coordinate convention (curvilinear along the orbit, or rectilinear).
+  public var COORDINATES: scnRicCoordinates { let o = _accessor.offset(VT.COORDINATES); return o == 0 ? .curvilinear : scnRicCoordinates(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .curvilinear }
+  ///  True when member orbits are drawn relative to the center object.
+  public var RELATIVE_ORBITS: Bool { let o = _accessor.offset(VT.RELATIVE_ORBITS); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Globe display mode while the RIC box is shown.
+  public var GLOBE_DISPLAY: scnGlobeDisplay { let o = _accessor.offset(VT.GLOBE_DISPLAY); return o == 0 ? .solid : scnGlobeDisplay(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .solid }
+  ///  True when 1-sigma wireframe covariance ellipsoids are shown on boxed objects.
+  public var SHOW_COVARIANCE: Bool { let o = _accessor.offset(VT.SHOW_COVARIANCE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Grid divisions per side (0 uses viewer default).
+  public var DIVISIONS: UInt8 { let o = _accessor.offset(VT.DIVISIONS); return o == 0 ? 4 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  RPO time-lapse trail duration in seconds (0 uses viewer default).
+  public var RPO_TRAIL_SECONDS: Double { let o = _accessor.offset(VT.RPO_TRAIL_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Reference ids of chasers flying historical RPO trajectories in this RIC box.
+  public var RPO_CHASER_IDS: FlatbufferVector<String?> { return _accessor.vector(at: VT.RPO_CHASER_IDS, byteSize: 4) }
+  ///  True when the RIC box itself is visible.
+  public var SHOW_BOX: Bool { let o = _accessor.offset(VT.SHOW_BOX); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startSCNRicBox(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 13) }
+  public static func add(CENTER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CENTER_ID, at: VT.CENTER_ID) }
+  public static func addVectorOf(MEMBER_IDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MEMBER_IDS, at: VT.MEMBER_IDS) }
+  public static func add(HALF_RADIAL_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HALF_RADIAL_M, def: 0.0, at: VT.HALF_RADIAL_M) }
+  public static func add(HALF_IN_TRACK_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HALF_IN_TRACK_M, def: 0.0, at: VT.HALF_IN_TRACK_M) }
+  public static func add(HALF_CROSS_TRACK_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HALF_CROSS_TRACK_M, def: 0.0, at: VT.HALF_CROSS_TRACK_M) }
+  public static func add(COORDINATES: scnRicCoordinates, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COORDINATES.rawValue, def: 0, at: VT.COORDINATES) }
+  public static func add(RELATIVE_ORBITS: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RELATIVE_ORBITS, def: true,
+   at: VT.RELATIVE_ORBITS) }
+  public static func add(GLOBE_DISPLAY: scnGlobeDisplay, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GLOBE_DISPLAY.rawValue, def: 0, at: VT.GLOBE_DISPLAY) }
+  public static func add(SHOW_COVARIANCE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHOW_COVARIANCE, def: false,
+   at: VT.SHOW_COVARIANCE) }
+  public static func add(DIVISIONS: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DIVISIONS, def: 4, at: VT.DIVISIONS) }
+  public static func add(RPO_TRAIL_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RPO_TRAIL_SECONDS, def: 0.0, at: VT.RPO_TRAIL_SECONDS) }
+  public static func addVectorOf(RPO_CHASER_IDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RPO_CHASER_IDS, at: VT.RPO_CHASER_IDS) }
+  public static func add(SHOW_BOX: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHOW_BOX, def: true,
+   at: VT.SHOW_BOX) }
+  public static func endSCNRicBox(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createSCNRicBox(
+    _ fbb: inout FlatBufferBuilder,
+    CENTER_IDOffset CENTER_ID: Offset = Offset(),
+    MEMBER_IDSVectorOffset MEMBER_IDS: Offset = Offset(),
+    HALF_RADIAL_M: Double = 0.0,
+    HALF_IN_TRACK_M: Double = 0.0,
+    HALF_CROSS_TRACK_M: Double = 0.0,
+    COORDINATES: scnRicCoordinates = .curvilinear,
+    RELATIVE_ORBITS: Bool = true,
+    GLOBE_DISPLAY: scnGlobeDisplay = .solid,
+    SHOW_COVARIANCE: Bool = false,
+    DIVISIONS: UInt8 = 4,
+    RPO_TRAIL_SECONDS: Double = 0.0,
+    RPO_CHASER_IDSVectorOffset RPO_CHASER_IDS: Offset = Offset(),
+    SHOW_BOX: Bool = true
+  ) -> Offset {
+    let __start = SCNRicBox.startSCNRicBox(&fbb)
+    SCNRicBox.add(CENTER_ID: CENTER_ID, &fbb)
+    SCNRicBox.addVectorOf(MEMBER_IDS: MEMBER_IDS, &fbb)
+    SCNRicBox.add(HALF_RADIAL_M: HALF_RADIAL_M, &fbb)
+    SCNRicBox.add(HALF_IN_TRACK_M: HALF_IN_TRACK_M, &fbb)
+    SCNRicBox.add(HALF_CROSS_TRACK_M: HALF_CROSS_TRACK_M, &fbb)
+    SCNRicBox.add(COORDINATES: COORDINATES, &fbb)
+    SCNRicBox.add(RELATIVE_ORBITS: RELATIVE_ORBITS, &fbb)
+    SCNRicBox.add(GLOBE_DISPLAY: GLOBE_DISPLAY, &fbb)
+    SCNRicBox.add(SHOW_COVARIANCE: SHOW_COVARIANCE, &fbb)
+    SCNRicBox.add(DIVISIONS: DIVISIONS, &fbb)
+    SCNRicBox.add(RPO_TRAIL_SECONDS: RPO_TRAIL_SECONDS, &fbb)
+    SCNRicBox.addVectorOf(RPO_CHASER_IDS: RPO_CHASER_IDS, &fbb)
+    SCNRicBox.add(SHOW_BOX: SHOW_BOX, &fbb)
+    return SCNRicBox.endSCNRicBox(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.CENTER_ID, fieldName: "CENTER_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MEMBER_IDS, fieldName: "MEMBER_IDS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.HALF_RADIAL_M, fieldName: "HALF_RADIAL_M", required: false, type: Double.self)
+    try _v.visit(field: VT.HALF_IN_TRACK_M, fieldName: "HALF_IN_TRACK_M", required: false, type: Double.self)
+    try _v.visit(field: VT.HALF_CROSS_TRACK_M, fieldName: "HALF_CROSS_TRACK_M", required: false, type: Double.self)
+    try _v.visit(field: VT.COORDINATES, fieldName: "COORDINATES", required: false, type: scnRicCoordinates.self)
+    try _v.visit(field: VT.RELATIVE_ORBITS, fieldName: "RELATIVE_ORBITS", required: false, type: Bool.self)
+    try _v.visit(field: VT.GLOBE_DISPLAY, fieldName: "GLOBE_DISPLAY", required: false, type: scnGlobeDisplay.self)
+    try _v.visit(field: VT.SHOW_COVARIANCE, fieldName: "SHOW_COVARIANCE", required: false, type: Bool.self)
+    try _v.visit(field: VT.DIVISIONS, fieldName: "DIVISIONS", required: false, type: UInt8.self)
+    try _v.visit(field: VT.RPO_TRAIL_SECONDS, fieldName: "RPO_TRAIL_SECONDS", required: false, type: Double.self)
+    try _v.visit(field: VT.RPO_CHASER_IDS, fieldName: "RPO_CHASER_IDS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.SHOW_BOX, fieldName: "SHOW_BOX", required: false, type: Bool.self)
+    _v.finish()
+  }
+}
 
 ///  Time-tagged point or annotation shown in a scenario.
 public struct SCNPointOfInterest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
@@ -384,6 +536,8 @@ public struct SCNReference: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
     static let EXCLUSION_ZONE: VOffset = 50
     static let OBSERVATION_EO: VOffset = 52
     static let OBSERVATION_RADAR: VOffset = 54
+    static let COLOR: VOffset = 56
+    static let SHOW_COVARIANCE: VOffset = 58
   }
 
   ///  Stable scenario-local id for this reference.
@@ -447,7 +601,12 @@ public struct SCNReference: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
   public var OBSERVATION_EO: EOO? { let o = _accessor.offset(VT.OBSERVATION_EO); return o == 0 ? nil : EOO(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Radar observation record associated with this reference.
   public var OBSERVATION_RADAR: RDO? { let o = _accessor.offset(VT.OBSERVATION_RADAR); return o == 0 ? nil : RDO(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public static func startSCNReference(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 26) }
+  ///  Optional display color token (for example "#ff9f0a") for this reference.
+  public var COLOR: String? { let o = _accessor.offset(VT.COLOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COLORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COLOR) }
+  ///  True when the 1-sigma covariance ellipsoid is shown on this reference.
+  public var SHOW_COVARIANCE: Bool { let o = _accessor.offset(VT.SHOW_COVARIANCE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startSCNReference(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 28) }
   public static func add(REFERENCE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REFERENCE_ID, at: VT.REFERENCE_ID) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
   public static func add(REFERENCE_KIND: scenarioReferenceKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFERENCE_KIND.rawValue, def: 0, at: VT.REFERENCE_KIND) }
@@ -475,6 +634,9 @@ public struct SCNReference: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
   public static func add(EXCLUSION_ZONE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EXCLUSION_ZONE, at: VT.EXCLUSION_ZONE) }
   public static func add(OBSERVATION_EO: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBSERVATION_EO, at: VT.OBSERVATION_EO) }
   public static func add(OBSERVATION_RADAR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBSERVATION_RADAR, at: VT.OBSERVATION_RADAR) }
+  public static func add(COLOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLOR, at: VT.COLOR) }
+  public static func add(SHOW_COVARIANCE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHOW_COVARIANCE, def: false,
+   at: VT.SHOW_COVARIANCE) }
   public static func endSCNReference(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSCNReference(
     _ fbb: inout FlatBufferBuilder,
@@ -503,7 +665,9 @@ public struct SCNReference: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
     SUN_ADVANTAGE_TARGETOffset SUN_ADVANTAGE_TARGET: Offset = Offset(),
     EXCLUSION_ZONEOffset EXCLUSION_ZONE: Offset = Offset(),
     OBSERVATION_EOOffset OBSERVATION_EO: Offset = Offset(),
-    OBSERVATION_RADAROffset OBSERVATION_RADAR: Offset = Offset()
+    OBSERVATION_RADAROffset OBSERVATION_RADAR: Offset = Offset(),
+    COLOROffset COLOR: Offset = Offset(),
+    SHOW_COVARIANCE: Bool = false
   ) -> Offset {
     let __start = SCNReference.startSCNReference(&fbb)
     SCNReference.add(REFERENCE_ID: REFERENCE_ID, &fbb)
@@ -532,6 +696,8 @@ public struct SCNReference: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
     SCNReference.add(EXCLUSION_ZONE: EXCLUSION_ZONE, &fbb)
     SCNReference.add(OBSERVATION_EO: OBSERVATION_EO, &fbb)
     SCNReference.add(OBSERVATION_RADAR: OBSERVATION_RADAR, &fbb)
+    SCNReference.add(COLOR: COLOR, &fbb)
+    SCNReference.add(SHOW_COVARIANCE: SHOW_COVARIANCE, &fbb)
     return SCNReference.endSCNReference(&fbb, start: __start)
   }
 
@@ -563,6 +729,8 @@ public struct SCNReference: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
     try _v.visit(field: VT.EXCLUSION_ZONE, fieldName: "EXCLUSION_ZONE", required: false, type: ForwardOffset<SCNExclusionZone>.self)
     try _v.visit(field: VT.OBSERVATION_EO, fieldName: "OBSERVATION_EO", required: false, type: ForwardOffset<EOO>.self)
     try _v.visit(field: VT.OBSERVATION_RADAR, fieldName: "OBSERVATION_RADAR", required: false, type: ForwardOffset<RDO>.self)
+    try _v.visit(field: VT.COLOR, fieldName: "COLOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SHOW_COVARIANCE, fieldName: "SHOW_COVARIANCE", required: false, type: Bool.self)
     _v.finish()
   }
 }
@@ -824,6 +992,7 @@ public struct SCN: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let PROPAGATOR_MODULE_ID: VOffset = 38
     static let PINNED_ROWS: VOffset = 40
     static let SIGNATURE: VOffset = 42
+    static let RIC_BOX: VOffset = 44
   }
 
   ///  Stable id for the scenario.
@@ -881,7 +1050,9 @@ public struct SCN: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  zero. The record's CID is computed over the signed bytes.
   public var SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.SIGNATURE, byteSize: 1) }
   public func withUnsafePointerToSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SIGNATURE, body: body) }
-  public static func startSCN(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 20) }
+  ///  Relative-motion RIC box and multi-chaser RPO view settings, when active.
+  public var RIC_BOX: SCNRicBox? { let o = _accessor.offset(VT.RIC_BOX); return o == 0 ? nil : SCNRicBox(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startSCN(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 21) }
   public static func add(SCENARIO_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCENARIO_ID, at: VT.SCENARIO_ID) }
   public static func addVectorOf(REFERENCES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REFERENCES, at: VT.REFERENCES) }
   public static func add(EVENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVENT, at: VT.EVENT) }
@@ -904,6 +1075,7 @@ public struct SCN: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func add(PROPAGATOR_MODULE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROPAGATOR_MODULE_ID, at: VT.PROPAGATOR_MODULE_ID) }
   public static func addVectorOf(PINNED_ROWS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PINNED_ROWS, at: VT.PINNED_ROWS) }
   public static func addVectorOf(SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE, at: VT.SIGNATURE) }
+  public static func add(RIC_BOX: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RIC_BOX, at: VT.RIC_BOX) }
   public static func endSCN(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSCN(
     _ fbb: inout FlatBufferBuilder,
@@ -926,7 +1098,8 @@ public struct SCN: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     WINDOW_STOPOffset WINDOW_STOP: Offset = Offset(),
     PROPAGATOR_MODULE_IDOffset PROPAGATOR_MODULE_ID: Offset = Offset(),
     PINNED_ROWSVectorOffset PINNED_ROWS: Offset = Offset(),
-    SIGNATUREVectorOffset SIGNATURE: Offset = Offset()
+    SIGNATUREVectorOffset SIGNATURE: Offset = Offset(),
+    RIC_BOXOffset RIC_BOX: Offset = Offset()
   ) -> Offset {
     let __start = SCN.startSCN(&fbb)
     SCN.add(SCENARIO_ID: SCENARIO_ID, &fbb)
@@ -949,6 +1122,7 @@ public struct SCN: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     SCN.add(PROPAGATOR_MODULE_ID: PROPAGATOR_MODULE_ID, &fbb)
     SCN.addVectorOf(PINNED_ROWS: PINNED_ROWS, &fbb)
     SCN.addVectorOf(SIGNATURE: SIGNATURE, &fbb)
+    SCN.add(RIC_BOX: RIC_BOX, &fbb)
     return SCN.endSCN(&fbb, start: __start)
   }
 
@@ -974,6 +1148,7 @@ public struct SCN: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.PROPAGATOR_MODULE_ID, fieldName: "PROPAGATOR_MODULE_ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.PINNED_ROWS, fieldName: "PINNED_ROWS", required: false, type: ForwardOffset<Vector<ForwardOffset<SCNPinnedRow>, SCNPinnedRow>>.self)
     try _v.visit(field: VT.SIGNATURE, fieldName: "SIGNATURE", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.RIC_BOX, fieldName: "RIC_BOX", required: false, type: ForwardOffset<SCNRicBox>.self)
     _v.finish()
   }
 }

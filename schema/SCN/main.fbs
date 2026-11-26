@@ -1,5 +1,5 @@
-// Hash: 091ef0a1caaed12241e4d895843693dfe6fba10886f18bc073bd6abcb3a9d57a
-// Version: 1.136.6
+// Hash: 4f2ffbe7ec6d9766d08b6a0bf9147f86f0f0ee547608cdbd063aede13a7867a2
+// Version: 1.136.7
 // -----------------------------------END_HEADER
 include "../EOO/main.fbs";
 include "../RDO/main.fbs";
@@ -32,6 +32,49 @@ enum scenarioReferenceKind : byte {
   /// equals REFERENCE_ID. NAME is its label; COUNTRY is its ISO 3166-1
   /// alpha-2 code when the area is a country.
   AREA_OF_INTEREST
+}
+
+/// Coordinate convention for a relative-motion RIC box.
+enum scnRicCoordinates : byte {
+  CURVILINEAR,
+  RECTILINEAR
+}
+
+/// Central-body globe display mode while a RIC box is shown.
+enum scnGlobeDisplay : byte {
+  SOLID,
+  WIREFRAME,
+  HIDDEN
+}
+
+/// Relative-motion RIC box and RPO time-lapse settings kept with a scenario.
+table SCNRicBox {
+  /// Reference id of the center (target) object.
+  CENTER_ID:string;
+  /// Reference ids of the member (chaser / companion) objects inside the box.
+  MEMBER_IDS:[string];
+  /// Half-size along the radial axis in meters (0 means auto-fit).
+  HALF_RADIAL_M:double;
+  /// Half-size along the in-track axis in meters (0 means auto-fit).
+  HALF_IN_TRACK_M:double;
+  /// Half-size along the cross-track axis in meters (0 means auto-fit).
+  HALF_CROSS_TRACK_M:double;
+  /// Coordinate convention (curvilinear along the orbit, or rectilinear).
+  COORDINATES:scnRicCoordinates = CURVILINEAR;
+  /// True when member orbits are drawn relative to the center object.
+  RELATIVE_ORBITS:bool = true;
+  /// Globe display mode while the RIC box is shown.
+  GLOBE_DISPLAY:scnGlobeDisplay = SOLID;
+  /// True when 1-sigma wireframe covariance ellipsoids are shown on boxed objects.
+  SHOW_COVARIANCE:bool = false;
+  /// Grid divisions per side (0 uses viewer default).
+  DIVISIONS:ubyte = 4;
+  /// RPO time-lapse trail duration in seconds (0 uses viewer default).
+  RPO_TRAIL_SECONDS:double = 0;
+  /// Reference ids of chasers flying historical RPO trajectories in this RIC box.
+  RPO_CHASER_IDS:[string];
+  /// True when the RIC box itself is visible.
+  SHOW_BOX:bool = true;
 }
 
 /// Scenario command action.
@@ -159,6 +202,10 @@ table SCNReference {
   OBSERVATION_EO:EOO;
   /// Radar observation record associated with this reference.
   OBSERVATION_RADAR:RDO;
+  /// Optional display color token (for example "#ff9f0a") for this reference.
+  COLOR:string;
+  /// True when the 1-sigma covariance ellipsoid is shown on this reference.
+  SHOW_COVARIANCE:bool;
 }
 
 /// Imported scenario event payload composed from existing SDS records.
@@ -265,6 +312,8 @@ table SCN {
   /// enclosing $REC's bytes (without a size prefix) with these 64 bytes set to
   /// zero. The record's CID is computed over the signed bytes.
   SIGNATURE:[ubyte];
+  /// Relative-motion RIC box and multi-chaser RPO view settings, when active.
+  RIC_BOX:SCNRicBox;
 }
 
 root_type SCN;

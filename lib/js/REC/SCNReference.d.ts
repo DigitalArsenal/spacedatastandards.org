@@ -143,6 +143,15 @@ export declare class SCNReference implements flatbuffers.IUnpackableObject<SCNRe
      * Radar observation record associated with this reference.
      */
     OBSERVATION_RADAR(obj?: RDO): RDO | null;
+    /**
+     * Optional display color token (for example "#ff9f0a") for this reference.
+     */
+    COLOR(): string | null;
+    COLOR(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * True when the 1-sigma covariance ellipsoid is shown on this reference.
+     */
+    SHOW_COVARIANCE(): boolean;
     static startSCNReference(builder: flatbuffers.Builder): void;
     static addReferenceId(builder: flatbuffers.Builder, REFERENCE_IDOffset: flatbuffers.Offset): void;
     static addName(builder: flatbuffers.Builder, NAMEOffset: flatbuffers.Offset): void;
@@ -182,6 +191,8 @@ export declare class SCNReference implements flatbuffers.IUnpackableObject<SCNRe
     static addExclusionZone(builder: flatbuffers.Builder, EXCLUSION_ZONEOffset: flatbuffers.Offset): void;
     static addObservationEo(builder: flatbuffers.Builder, OBSERVATION_EOOffset: flatbuffers.Offset): void;
     static addObservationRadar(builder: flatbuffers.Builder, OBSERVATION_RADAROffset: flatbuffers.Offset): void;
+    static addColor(builder: flatbuffers.Builder, COLOROffset: flatbuffers.Offset): void;
+    static addShowCovariance(builder: flatbuffers.Builder, SHOW_COVARIANCE: boolean): void;
     static endSCNReference(builder: flatbuffers.Builder): flatbuffers.Offset;
     unpack(): SCNReferenceT;
     unpackTo(_o: SCNReferenceT): void;
@@ -213,7 +224,9 @@ export declare class SCNReferenceT implements flatbuffers.IGeneratedObject {
     EXCLUSION_ZONE: SCNExclusionZoneT | null;
     OBSERVATION_EO: EOOT | null;
     OBSERVATION_RADAR: RDOT | null;
-    constructor(REFERENCE_ID?: string | Uint8Array | null, NAME?: string | Uint8Array | null, REFERENCE_KIND?: scenarioReferenceKind, REMOVE?: boolean, NORAD_CAT_ID?: number, OBJECT_ID?: string | Uint8Array | null, COUNTRY?: string | Uint8Array | null, OWNER?: string | Uint8Array | null, SOURCES?: (string)[], DATA_MODES?: (string)[], MEAN_ELEMENTS?: (OMMT)[], STATE_VECTORS?: (STVT)[], MANEUVERS?: (MNVT)[], SITE?: SITT | null, SENSOR?: SENT | null, SENSOR_SYSTEM_ID?: string | Uint8Array | null, SENSOR_ID?: string | Uint8Array | null, SITE_POSITION?: GJNPositionT | null, VARIABLE_SATELLITE_ID?: string | Uint8Array | null, VARIABLE_SITE_ID?: string | Uint8Array | null, POINTS?: (SCNPointOfInterestT)[], VIEW_CONE?: SCNViewConeT | null, SUN_ADVANTAGE_TARGET?: SCNSunAdvantageTargetT | null, EXCLUSION_ZONE?: SCNExclusionZoneT | null, OBSERVATION_EO?: EOOT | null, OBSERVATION_RADAR?: RDOT | null);
+    COLOR: string | Uint8Array | null;
+    SHOW_COVARIANCE: boolean;
+    constructor(REFERENCE_ID?: string | Uint8Array | null, NAME?: string | Uint8Array | null, REFERENCE_KIND?: scenarioReferenceKind, REMOVE?: boolean, NORAD_CAT_ID?: number, OBJECT_ID?: string | Uint8Array | null, COUNTRY?: string | Uint8Array | null, OWNER?: string | Uint8Array | null, SOURCES?: (string)[], DATA_MODES?: (string)[], MEAN_ELEMENTS?: (OMMT)[], STATE_VECTORS?: (STVT)[], MANEUVERS?: (MNVT)[], SITE?: SITT | null, SENSOR?: SENT | null, SENSOR_SYSTEM_ID?: string | Uint8Array | null, SENSOR_ID?: string | Uint8Array | null, SITE_POSITION?: GJNPositionT | null, VARIABLE_SATELLITE_ID?: string | Uint8Array | null, VARIABLE_SITE_ID?: string | Uint8Array | null, POINTS?: (SCNPointOfInterestT)[], VIEW_CONE?: SCNViewConeT | null, SUN_ADVANTAGE_TARGET?: SCNSunAdvantageTargetT | null, EXCLUSION_ZONE?: SCNExclusionZoneT | null, OBSERVATION_EO?: EOOT | null, OBSERVATION_RADAR?: RDOT | null, COLOR?: string | Uint8Array | null, SHOW_COVARIANCE?: boolean);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=SCNReference.d.ts.map

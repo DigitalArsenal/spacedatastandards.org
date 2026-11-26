@@ -489,8 +489,27 @@ func (rcv *SCN) MutateSignature(j int, n byte) bool {
 	return rcv.MutateSIGNATURE(j, n)
 }
 
+/// Relative-motion RIC box and multi-chaser RPO view settings, when active.
+func (rcv *SCN) RIC_BOX(obj *SCNRicBox) *SCNRicBox {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(SCNRicBox)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *SCN) RicBox(obj *SCNRicBox) *SCNRicBox {
+	return rcv.RIC_BOX(obj)
+}
+
+/// Relative-motion RIC box and multi-chaser RPO view settings, when active.
 func SCNStart(builder *flatbuffers.Builder) {
-	builder.StartObject(20)
+	builder.StartObject(21)
 }
 func SCNAddSCENARIO_ID(builder *flatbuffers.Builder, SCENARIO_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(SCENARIO_ID), 0)
@@ -629,6 +648,12 @@ func SCNStartSIGNATUREVector(builder *flatbuffers.Builder, numElems int) flatbuf
 }
 func SCNStartSignatureVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return SCNStartSIGNATUREVector(builder, numElems)
+}
+func SCNAddRIC_BOX(builder *flatbuffers.Builder, RIC_BOX flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(20, flatbuffers.UOffsetT(RIC_BOX), 0)
+}
+func SCNAddRicBox(builder *flatbuffers.Builder, RIC_BOX flatbuffers.UOffsetT) {
+	SCNAddRIC_BOX(builder, RIC_BOX)
 }
 func SCNEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

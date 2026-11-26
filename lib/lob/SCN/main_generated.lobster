@@ -37,11 +37,24 @@ enum scenarioReferenceKind:
     /// alpha-2 code when the area is a country.
     scenarioReferenceKind_AREA_OF_INTEREST = 10
 
+/// Coordinate convention for a relative-motion RIC box.
+enum scnRicCoordinates:
+    scnRicCoordinates_CURVILINEAR = 0
+    scnRicCoordinates_RECTILINEAR = 1
+
+/// Central-body globe display mode while a RIC box is shown.
+enum scnGlobeDisplay:
+    scnGlobeDisplay_SOLID = 0
+    scnGlobeDisplay_WIREFRAME = 1
+    scnGlobeDisplay_HIDDEN = 2
+
 /// Scenario command action.
 enum scenarioActionCode:
     scenarioActionCode_NONE = 0
     scenarioActionCode_CLEAR = 1
     scenarioActionCode_RESET = 2
+
+class SCNRicBox
 
 class SCNPointOfInterest
 
@@ -60,6 +73,115 @@ class SCNAssetsChanged
 class SCNPinnedRow
 
 class SCN
+
+/// Relative-motion RIC box and RPO time-lapse settings kept with a scenario.
+class SCNRicBox : flatbuffers.handle
+    /// Reference id of the center (target) object.
+    def CENTER_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// Reference ids of the member (chaser / companion) objects inside the box.
+    def MEMBER_IDS(i:int) -> string:
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 6) + i * 4)
+    def MEMBER_IDS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 6)
+    /// Half-size along the radial axis in meters (0 means auto-fit).
+    def HALF_RADIAL_M() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
+    /// Half-size along the in-track axis in meters (0 means auto-fit).
+    def HALF_IN_TRACK_M() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
+    /// Half-size along the cross-track axis in meters (0 means auto-fit).
+    def HALF_CROSS_TRACK_M() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
+    /// Coordinate convention (curvilinear along the orbit, or rectilinear).
+    def COORDINATES() -> scnRicCoordinates:
+        return scnRicCoordinates(flatbuffers.field_int8(buf_, pos_, 14, 0))
+    /// True when member orbits are drawn relative to the center object.
+    def RELATIVE_ORBITS() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 16, 1))
+    /// Globe display mode while the RIC box is shown.
+    def GLOBE_DISPLAY() -> scnGlobeDisplay:
+        return scnGlobeDisplay(flatbuffers.field_int8(buf_, pos_, 18, 0))
+    /// True when 1-sigma wireframe covariance ellipsoids are shown on boxed objects.
+    def SHOW_COVARIANCE() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 20, 0))
+    /// Grid divisions per side (0 uses viewer default).
+    def DIVISIONS() -> int:
+        return flatbuffers.field_uint8(buf_, pos_, 22, 4)
+    /// RPO time-lapse trail duration in seconds (0 uses viewer default).
+    def RPO_TRAIL_SECONDS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 24, 0.0)
+    /// Reference ids of chasers flying historical RPO trajectories in this RIC box.
+    def RPO_CHASER_IDS(i:int) -> string:
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 26) + i * 4)
+    def RPO_CHASER_IDS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 26)
+    /// True when the RIC box itself is visible.
+    def SHOW_BOX() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 28, 1))
+
+def GetRootAsSCNRicBox(buf:string): return SCNRicBox { buf, flatbuffers.indirect(buf, 0) }
+
+struct SCNRicBoxBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(13)
+        return this
+    def add_CENTER_ID(CENTER_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, CENTER_ID)
+        return this
+    def add_MEMBER_IDS(MEMBER_IDS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, MEMBER_IDS)
+        return this
+    def add_HALF_RADIAL_M(HALF_RADIAL_M:float):
+        b_.PrependFloat64Slot(2, HALF_RADIAL_M, 0.0)
+        return this
+    def add_HALF_IN_TRACK_M(HALF_IN_TRACK_M:float):
+        b_.PrependFloat64Slot(3, HALF_IN_TRACK_M, 0.0)
+        return this
+    def add_HALF_CROSS_TRACK_M(HALF_CROSS_TRACK_M:float):
+        b_.PrependFloat64Slot(4, HALF_CROSS_TRACK_M, 0.0)
+        return this
+    def add_COORDINATES(COORDINATES:scnRicCoordinates):
+        b_.PrependInt8Slot(5, COORDINATES, 0)
+        return this
+    def add_RELATIVE_ORBITS(RELATIVE_ORBITS:bool):
+        b_.PrependBoolSlot(6, RELATIVE_ORBITS, 1)
+        return this
+    def add_GLOBE_DISPLAY(GLOBE_DISPLAY:scnGlobeDisplay):
+        b_.PrependInt8Slot(7, GLOBE_DISPLAY, 0)
+        return this
+    def add_SHOW_COVARIANCE(SHOW_COVARIANCE:bool):
+        b_.PrependBoolSlot(8, SHOW_COVARIANCE, 0)
+        return this
+    def add_DIVISIONS(DIVISIONS:int):
+        b_.PrependUint8Slot(9, DIVISIONS, 4)
+        return this
+    def add_RPO_TRAIL_SECONDS(RPO_TRAIL_SECONDS:float):
+        b_.PrependFloat64Slot(10, RPO_TRAIL_SECONDS, 0.0)
+        return this
+    def add_RPO_CHASER_IDS(RPO_CHASER_IDS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(11, RPO_CHASER_IDS)
+        return this
+    def add_SHOW_BOX(SHOW_BOX:bool):
+        b_.PrependBoolSlot(12, SHOW_BOX, 1)
+        return this
+    def end():
+        return b_.EndObject()
+
+def SCNRicBoxStartMEMBERIDSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def SCNRicBoxCreateMEMBERIDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def SCNRicBoxStartRPOCHASERIDSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def SCNRicBoxCreateRPOCHASERIDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
 
 /// Time-tagged point or annotation shown in a scenario.
 class SCNPointOfInterest : flatbuffers.handle
@@ -364,13 +486,19 @@ class SCNReference : flatbuffers.handle
     def OBSERVATION_RADAR() -> RDO?:
         let o = flatbuffers.field_table(buf_, pos_, 54)
         return if o: RDO { buf_, o } else: nil
+    /// Optional display color token (for example "#ff9f0a") for this reference.
+    def COLOR() -> string:
+        return flatbuffers.field_string(buf_, pos_, 56)
+    /// True when the 1-sigma covariance ellipsoid is shown on this reference.
+    def SHOW_COVARIANCE() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 58, 0))
 
 def GetRootAsSCNReference(buf:string): return SCNReference { buf, flatbuffers.indirect(buf, 0) }
 
 struct SCNReferenceBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(26)
+        b_.StartObject(28)
         return this
     def add_REFERENCE_ID(REFERENCE_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, REFERENCE_ID)
@@ -449,6 +577,12 @@ struct SCNReferenceBuilder:
         return this
     def add_OBSERVATION_RADAR(OBSERVATION_RADAR:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(25, OBSERVATION_RADAR)
+        return this
+    def add_COLOR(COLOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(26, COLOR)
+        return this
+    def add_SHOW_COVARIANCE(SHOW_COVARIANCE:bool):
+        b_.PrependBoolSlot(27, SHOW_COVARIANCE, 0)
         return this
     def end():
         return b_.EndObject()
@@ -832,13 +966,17 @@ class SCN : flatbuffers.handle
         return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 42) + i * 1)
     def SIGNATURE_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 42)
+    /// Relative-motion RIC box and multi-chaser RPO view settings, when active.
+    def RIC_BOX() -> SCNRicBox?:
+        let o = flatbuffers.field_table(buf_, pos_, 44)
+        return if o: SCNRicBox { buf_, o } else: nil
 
 def GetRootAsSCN(buf:string): return SCN { buf, flatbuffers.indirect(buf, 0) }
 
 struct SCNBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(20)
+        b_.StartObject(21)
         return this
     def add_SCENARIO_ID(SCENARIO_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, SCENARIO_ID)
@@ -899,6 +1037,9 @@ struct SCNBuilder:
         return this
     def add_SIGNATURE(SIGNATURE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(19, SIGNATURE)
+        return this
+    def add_RIC_BOX(RIC_BOX:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(20, RIC_BOX)
         return this
     def end():
         return b_.EndObject()

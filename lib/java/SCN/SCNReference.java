@@ -180,6 +180,16 @@ public final class SCNReference extends com.google.flatbuffers.Table {
    */
   public RDO OBSERVATION_RADAR() { return OBSERVATION_RADAR(new RDO()); }
   public RDO OBSERVATION_RADAR(RDO obj) { int o = __offset(54); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Optional display color token (for example "#ff9f0a") for this reference.
+   */
+  public String COLOR() { int o = __offset(56); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer COLORAsByteBuffer() { return __vector_as_bytebuffer(56, 1); }
+  public ByteBuffer COLORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 56, 1); }
+  /**
+   * True when the 1-sigma covariance ellipsoid is shown on this reference.
+   */
+  public boolean SHOW_COVARIANCE() { int o = __offset(58); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
 
   public static int createSCNReference(FlatBufferBuilder builder,
       int REFERENCE_IDOffset,
@@ -207,8 +217,11 @@ public final class SCNReference extends com.google.flatbuffers.Table {
       int SUN_ADVANTAGE_TARGETOffset,
       int EXCLUSION_ZONEOffset,
       int OBSERVATION_EOOffset,
-      int OBSERVATION_RADAROffset) {
-    builder.startTable(26);
+      int OBSERVATION_RADAROffset,
+      int COLOROffset,
+      boolean SHOW_COVARIANCE) {
+    builder.startTable(28);
+    SCNReference.addColor(builder, COLOROffset);
     SCNReference.addObservationRadar(builder, OBSERVATION_RADAROffset);
     SCNReference.addObservationEo(builder, OBSERVATION_EOOffset);
     SCNReference.addExclusionZone(builder, EXCLUSION_ZONEOffset);
@@ -233,12 +246,13 @@ public final class SCNReference extends com.google.flatbuffers.Table {
     SCNReference.addNoradCatId(builder, NORAD_CAT_ID);
     SCNReference.addName(builder, NAMEOffset);
     SCNReference.addReferenceId(builder, REFERENCE_IDOffset);
+    SCNReference.addShowCovariance(builder, SHOW_COVARIANCE);
     SCNReference.addRemove(builder, REMOVE);
     SCNReference.addReferenceKind(builder, REFERENCE_KIND);
     return SCNReference.endSCNReference(builder);
   }
 
-  public static void startSCNReference(FlatBufferBuilder builder) { builder.startTable(26); }
+  public static void startSCNReference(FlatBufferBuilder builder) { builder.startTable(28); }
   public static void addReferenceId(FlatBufferBuilder builder, int REFERENCE_IDOffset) { builder.addOffset(0, REFERENCE_IDOffset, 0); }
   public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(1, NAMEOffset, 0); }
   public static void addReferenceKind(FlatBufferBuilder builder, byte REFERENCE_KIND) { builder.addByte(2, REFERENCE_KIND, 0); }
@@ -277,6 +291,8 @@ public final class SCNReference extends com.google.flatbuffers.Table {
   public static void addExclusionZone(FlatBufferBuilder builder, int EXCLUSION_ZONEOffset) { builder.addOffset(23, EXCLUSION_ZONEOffset, 0); }
   public static void addObservationEo(FlatBufferBuilder builder, int OBSERVATION_EOOffset) { builder.addOffset(24, OBSERVATION_EOOffset, 0); }
   public static void addObservationRadar(FlatBufferBuilder builder, int OBSERVATION_RADAROffset) { builder.addOffset(25, OBSERVATION_RADAROffset, 0); }
+  public static void addColor(FlatBufferBuilder builder, int COLOROffset) { builder.addOffset(26, COLOROffset, 0); }
+  public static void addShowCovariance(FlatBufferBuilder builder, boolean SHOW_COVARIANCE) { builder.addBoolean(27, SHOW_COVARIANCE, false); }
   public static int endSCNReference(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;
