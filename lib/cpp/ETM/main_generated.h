@@ -93,7 +93,15 @@ struct ETM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_ECCENTRICITY = 50,
     VT_BSTAR = 52,
     VT_HAS_GP = 54,
-    VT_RESERVED = 56
+    VT_RESERVED = 56,
+    VT_OBJECT_TYPE = 58,
+    VT_DECAY_DATE = 60,
+    VT_MANEUVERABLE = 62,
+    VT_ESTIMATED_DELTA_V_MPS = 64,
+    VT_HISTORICAL_DELTA_V_MPS = 66,
+    VT_MANEUVER_COUNT = 68,
+    VT_LAST_MANEUVER_EPOCH = 70,
+    VT_DELTA_V_AS_OF = 72
   };
   /// Stable host-local entity identifier.
   const ::flatbuffers::String *ENTITY_ID() const {
@@ -203,6 +211,38 @@ struct ETM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<uint8_t> *RESERVED() const {
     return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_RESERVED);
   }
+  /// CAT object class (PAYLOAD, ROCKET_BODY, DEBRIS, UNKNOWN); null when absent.
+  const ::flatbuffers::String *OBJECT_TYPE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_OBJECT_TYPE);
+  }
+  /// CAT decay date [YYYY-MM-DD] when decayed; null otherwise.
+  const ::flatbuffers::String *DECAY_DATE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DECAY_DATE);
+  }
+  /// CAT maneuverability flag.
+  bool MANEUVERABLE() const {
+    return GetField<uint8_t>(VT_MANEUVERABLE, 0) != 0;
+  }
+  /// CAT estimated remaining maneuvering delta-V capability [m/s]; NaN when unassessed.
+  double ESTIMATED_DELTA_V_MPS() const {
+    return GetField<double>(VT_ESTIMATED_DELTA_V_MPS, 0.0);
+  }
+  /// CAT cumulative historical maneuver delta-V magnitude [m/s]; NaN when unassessed.
+  double HISTORICAL_DELTA_V_MPS() const {
+    return GetField<double>(VT_HISTORICAL_DELTA_V_MPS, 0.0);
+  }
+  /// CAT count of detected or confirmed historical maneuvers.
+  uint32_t MANEUVER_COUNT() const {
+    return GetField<uint32_t>(VT_MANEUVER_COUNT, 0);
+  }
+  /// CAT ISO 8601 UTC epoch of the most recent detected or confirmed maneuver.
+  const ::flatbuffers::String *LAST_MANEUVER_EPOCH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_LAST_MANEUVER_EPOCH);
+  }
+  /// CAT ISO 8601 UTC instant when the delta-V fields were last evaluated.
+  const ::flatbuffers::String *DELTA_V_AS_OF() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DELTA_V_AS_OF);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -249,6 +289,18 @@ struct ETM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<uint8_t>(verifier, VT_HAS_GP, 1) &&
            VerifyOffset(verifier, VT_RESERVED) &&
            verifier.VerifyVector(RESERVED()) &&
+           VerifyOffset(verifier, VT_OBJECT_TYPE) &&
+           verifier.VerifyString(OBJECT_TYPE()) &&
+           VerifyOffset(verifier, VT_DECAY_DATE) &&
+           verifier.VerifyString(DECAY_DATE()) &&
+           VerifyField<uint8_t>(verifier, VT_MANEUVERABLE, 1) &&
+           VerifyField<double>(verifier, VT_ESTIMATED_DELTA_V_MPS, 8) &&
+           VerifyField<double>(verifier, VT_HISTORICAL_DELTA_V_MPS, 8) &&
+           VerifyField<uint32_t>(verifier, VT_MANEUVER_COUNT, 4) &&
+           VerifyOffset(verifier, VT_LAST_MANEUVER_EPOCH) &&
+           verifier.VerifyString(LAST_MANEUVER_EPOCH()) &&
+           VerifyOffset(verifier, VT_DELTA_V_AS_OF) &&
+           verifier.VerifyString(DELTA_V_AS_OF()) &&
            verifier.EndTable();
   }
 };
@@ -338,6 +390,30 @@ struct ETMBuilder {
   void add_RESERVED(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> RESERVED) {
     fbb_.AddOffset(ETM::VT_RESERVED, RESERVED);
   }
+  void add_OBJECT_TYPE(::flatbuffers::Offset<::flatbuffers::String> OBJECT_TYPE) {
+    fbb_.AddOffset(ETM::VT_OBJECT_TYPE, OBJECT_TYPE);
+  }
+  void add_DECAY_DATE(::flatbuffers::Offset<::flatbuffers::String> DECAY_DATE) {
+    fbb_.AddOffset(ETM::VT_DECAY_DATE, DECAY_DATE);
+  }
+  void add_MANEUVERABLE(bool MANEUVERABLE) {
+    fbb_.AddElement<uint8_t>(ETM::VT_MANEUVERABLE, static_cast<uint8_t>(MANEUVERABLE), 0);
+  }
+  void add_ESTIMATED_DELTA_V_MPS(double ESTIMATED_DELTA_V_MPS) {
+    fbb_.AddElement<double>(ETM::VT_ESTIMATED_DELTA_V_MPS, ESTIMATED_DELTA_V_MPS, 0.0);
+  }
+  void add_HISTORICAL_DELTA_V_MPS(double HISTORICAL_DELTA_V_MPS) {
+    fbb_.AddElement<double>(ETM::VT_HISTORICAL_DELTA_V_MPS, HISTORICAL_DELTA_V_MPS, 0.0);
+  }
+  void add_MANEUVER_COUNT(uint32_t MANEUVER_COUNT) {
+    fbb_.AddElement<uint32_t>(ETM::VT_MANEUVER_COUNT, MANEUVER_COUNT, 0);
+  }
+  void add_LAST_MANEUVER_EPOCH(::flatbuffers::Offset<::flatbuffers::String> LAST_MANEUVER_EPOCH) {
+    fbb_.AddOffset(ETM::VT_LAST_MANEUVER_EPOCH, LAST_MANEUVER_EPOCH);
+  }
+  void add_DELTA_V_AS_OF(::flatbuffers::Offset<::flatbuffers::String> DELTA_V_AS_OF) {
+    fbb_.AddOffset(ETM::VT_DELTA_V_AS_OF, DELTA_V_AS_OF);
+  }
   explicit ETMBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -377,8 +453,18 @@ inline ::flatbuffers::Offset<ETM> CreateETM(
     double ECCENTRICITY = 0.0,
     double BSTAR = 0.0,
     bool HAS_GP = false,
-    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> RESERVED = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> RESERVED = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> OBJECT_TYPE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> DECAY_DATE = 0,
+    bool MANEUVERABLE = false,
+    double ESTIMATED_DELTA_V_MPS = 0.0,
+    double HISTORICAL_DELTA_V_MPS = 0.0,
+    uint32_t MANEUVER_COUNT = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> LAST_MANEUVER_EPOCH = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> DELTA_V_AS_OF = 0) {
   ETMBuilder builder_(_fbb);
+  builder_.add_HISTORICAL_DELTA_V_MPS(HISTORICAL_DELTA_V_MPS);
+  builder_.add_ESTIMATED_DELTA_V_MPS(ESTIMATED_DELTA_V_MPS);
   builder_.add_BSTAR(BSTAR);
   builder_.add_ECCENTRICITY(ECCENTRICITY);
   builder_.add_MEAN_MOTION(MEAN_MOTION);
@@ -386,6 +472,11 @@ inline ::flatbuffers::Offset<ETM> CreateETM(
   builder_.add_APOGEE(APOGEE);
   builder_.add_INCLINATION(INCLINATION);
   builder_.add_PERIOD(PERIOD);
+  builder_.add_DELTA_V_AS_OF(DELTA_V_AS_OF);
+  builder_.add_LAST_MANEUVER_EPOCH(LAST_MANEUVER_EPOCH);
+  builder_.add_MANEUVER_COUNT(MANEUVER_COUNT);
+  builder_.add_DECAY_DATE(DECAY_DATE);
+  builder_.add_OBJECT_TYPE(OBJECT_TYPE);
   builder_.add_RESERVED(RESERVED);
   builder_.add_ORBIT_REGIME(ORBIT_REGIME);
   builder_.add_LAUNCH_YEAR(LAUNCH_YEAR);
@@ -404,6 +495,7 @@ inline ::flatbuffers::Offset<ETM> CreateETM(
   builder_.add_SUBTYPE(SUBTYPE);
   builder_.add_NAME(NAME);
   builder_.add_ENTITY_ID(ENTITY_ID);
+  builder_.add_MANEUVERABLE(MANEUVERABLE);
   builder_.add_HAS_GP(HAS_GP);
   builder_.add_KIND(KIND);
   return builder_.Finish();
@@ -437,7 +529,15 @@ inline ::flatbuffers::Offset<ETM> CreateETMDirect(
     double ECCENTRICITY = 0.0,
     double BSTAR = 0.0,
     bool HAS_GP = false,
-    const std::vector<uint8_t> *RESERVED = nullptr) {
+    const std::vector<uint8_t> *RESERVED = nullptr,
+    const char *OBJECT_TYPE = nullptr,
+    const char *DECAY_DATE = nullptr,
+    bool MANEUVERABLE = false,
+    double ESTIMATED_DELTA_V_MPS = 0.0,
+    double HISTORICAL_DELTA_V_MPS = 0.0,
+    uint32_t MANEUVER_COUNT = 0,
+    const char *LAST_MANEUVER_EPOCH = nullptr,
+    const char *DELTA_V_AS_OF = nullptr) {
   auto ENTITY_ID__ = ENTITY_ID ? _fbb.CreateString(ENTITY_ID) : 0;
   auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
   auto SUBTYPE__ = SUBTYPE ? _fbb.CreateString(SUBTYPE) : 0;
@@ -454,6 +554,10 @@ inline ::flatbuffers::Offset<ETM> CreateETMDirect(
   auto LAUNCH_YEAR__ = LAUNCH_YEAR ? _fbb.CreateString(LAUNCH_YEAR) : 0;
   auto ORBIT_REGIME__ = ORBIT_REGIME ? _fbb.CreateString(ORBIT_REGIME) : 0;
   auto RESERVED__ = RESERVED ? _fbb.CreateVector<uint8_t>(*RESERVED) : 0;
+  auto OBJECT_TYPE__ = OBJECT_TYPE ? _fbb.CreateString(OBJECT_TYPE) : 0;
+  auto DECAY_DATE__ = DECAY_DATE ? _fbb.CreateString(DECAY_DATE) : 0;
+  auto LAST_MANEUVER_EPOCH__ = LAST_MANEUVER_EPOCH ? _fbb.CreateString(LAST_MANEUVER_EPOCH) : 0;
+  auto DELTA_V_AS_OF__ = DELTA_V_AS_OF ? _fbb.CreateString(DELTA_V_AS_OF) : 0;
   return CreateETM(
       _fbb,
       ENTITY_ID__,
@@ -482,7 +586,15 @@ inline ::flatbuffers::Offset<ETM> CreateETMDirect(
       ECCENTRICITY,
       BSTAR,
       HAS_GP,
-      RESERVED__);
+      RESERVED__,
+      OBJECT_TYPE__,
+      DECAY_DATE__,
+      MANEUVERABLE,
+      ESTIMATED_DELTA_V_MPS,
+      HISTORICAL_DELTA_V_MPS,
+      MANEUVER_COUNT,
+      LAST_MANEUVER_EPOCH__,
+      DELTA_V_AS_OF__);
 }
 
 inline const ETM *GetETM(const void *buf) {

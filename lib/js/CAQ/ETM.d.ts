@@ -137,6 +137,42 @@ export declare class ETM implements flatbuffers.IUnpackableObject<ETMT> {
     RESERVED(index: number): number | null;
     reservedLength(): number;
     reservedArray(): Uint8Array | null;
+    /**
+     * CAT object class (PAYLOAD, ROCKET_BODY, DEBRIS, UNKNOWN); null when absent.
+     */
+    OBJECT_TYPE(): string | null;
+    OBJECT_TYPE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * CAT decay date [YYYY-MM-DD] when decayed; null otherwise.
+     */
+    DECAY_DATE(): string | null;
+    DECAY_DATE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * CAT maneuverability flag.
+     */
+    MANEUVERABLE(): boolean;
+    /**
+     * CAT estimated remaining maneuvering delta-V capability [m/s]; NaN when unassessed.
+     */
+    ESTIMATED_DELTA_V_MPS(): number;
+    /**
+     * CAT cumulative historical maneuver delta-V magnitude [m/s]; NaN when unassessed.
+     */
+    HISTORICAL_DELTA_V_MPS(): number;
+    /**
+     * CAT count of detected or confirmed historical maneuvers.
+     */
+    MANEUVER_COUNT(): number;
+    /**
+     * CAT ISO 8601 UTC epoch of the most recent detected or confirmed maneuver.
+     */
+    LAST_MANEUVER_EPOCH(): string | null;
+    LAST_MANEUVER_EPOCH(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * CAT ISO 8601 UTC instant when the delta-V fields were last evaluated.
+     */
+    DELTA_V_AS_OF(): string | null;
+    DELTA_V_AS_OF(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     static startETM(builder: flatbuffers.Builder): void;
     static addEntityId(builder: flatbuffers.Builder, ENTITY_IDOffset: flatbuffers.Offset): void;
     static addName(builder: flatbuffers.Builder, NAMEOffset: flatbuffers.Offset): void;
@@ -167,10 +203,18 @@ export declare class ETM implements flatbuffers.IUnpackableObject<ETMT> {
     static addReserved(builder: flatbuffers.Builder, RESERVEDOffset: flatbuffers.Offset): void;
     static createReservedVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
     static startReservedVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addObjectType(builder: flatbuffers.Builder, OBJECT_TYPEOffset: flatbuffers.Offset): void;
+    static addDecayDate(builder: flatbuffers.Builder, DECAY_DATEOffset: flatbuffers.Offset): void;
+    static addManeuverable(builder: flatbuffers.Builder, MANEUVERABLE: boolean): void;
+    static addEstimatedDeltaVMps(builder: flatbuffers.Builder, ESTIMATED_DELTA_V_MPS: number): void;
+    static addHistoricalDeltaVMps(builder: flatbuffers.Builder, HISTORICAL_DELTA_V_MPS: number): void;
+    static addManeuverCount(builder: flatbuffers.Builder, MANEUVER_COUNT: number): void;
+    static addLastManeuverEpoch(builder: flatbuffers.Builder, LAST_MANEUVER_EPOCHOffset: flatbuffers.Offset): void;
+    static addDeltaVAsOf(builder: flatbuffers.Builder, DELTA_V_AS_OFOffset: flatbuffers.Offset): void;
     static endETM(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishETMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedETMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createETM(builder: flatbuffers.Builder, ENTITY_IDOffset: flatbuffers.Offset, NAMEOffset: flatbuffers.Offset, KIND: entityKind, SUBTYPEOffset: flatbuffers.Offset, PARENT_ENTITY_IDOffset: flatbuffers.Offset, WASM_HANDLE: number, NORAD_CAT_ID: number, OBJECT_NAMEOffset: flatbuffers.Offset, OBJECT_IDOffset: flatbuffers.Offset, CAT_OBJECT_NAMEOffset: flatbuffers.Offset, CAT_OBJECT_IDOffset: flatbuffers.Offset, FACILITY_TYPEOffset: flatbuffers.Offset, SEARCH_TEXTOffset: flatbuffers.Offset, OWNEROffset: flatbuffers.Offset, STATUS_CODEOffset: flatbuffers.Offset, LAUNCH_DATEOffset: flatbuffers.Offset, LAUNCH_YEAROffset: flatbuffers.Offset, ORBIT_REGIMEOffset: flatbuffers.Offset, PERIOD: number, INCLINATION: number, APOGEE: number, PERIGEE: number, MEAN_MOTION: number, ECCENTRICITY: number, BSTAR: number, HAS_GP: boolean, RESERVEDOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createETM(builder: flatbuffers.Builder, ENTITY_IDOffset: flatbuffers.Offset, NAMEOffset: flatbuffers.Offset, KIND: entityKind, SUBTYPEOffset: flatbuffers.Offset, PARENT_ENTITY_IDOffset: flatbuffers.Offset, WASM_HANDLE: number, NORAD_CAT_ID: number, OBJECT_NAMEOffset: flatbuffers.Offset, OBJECT_IDOffset: flatbuffers.Offset, CAT_OBJECT_NAMEOffset: flatbuffers.Offset, CAT_OBJECT_IDOffset: flatbuffers.Offset, FACILITY_TYPEOffset: flatbuffers.Offset, SEARCH_TEXTOffset: flatbuffers.Offset, OWNEROffset: flatbuffers.Offset, STATUS_CODEOffset: flatbuffers.Offset, LAUNCH_DATEOffset: flatbuffers.Offset, LAUNCH_YEAROffset: flatbuffers.Offset, ORBIT_REGIMEOffset: flatbuffers.Offset, PERIOD: number, INCLINATION: number, APOGEE: number, PERIGEE: number, MEAN_MOTION: number, ECCENTRICITY: number, BSTAR: number, HAS_GP: boolean, RESERVEDOffset: flatbuffers.Offset, OBJECT_TYPEOffset: flatbuffers.Offset, DECAY_DATEOffset: flatbuffers.Offset, MANEUVERABLE: boolean, ESTIMATED_DELTA_V_MPS: number, HISTORICAL_DELTA_V_MPS: number, MANEUVER_COUNT: number, LAST_MANEUVER_EPOCHOffset: flatbuffers.Offset, DELTA_V_AS_OFOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): ETMT;
     unpackTo(_o: ETMT): void;
 }
@@ -202,7 +246,15 @@ export declare class ETMT implements flatbuffers.IGeneratedObject {
     BSTAR: number;
     HAS_GP: boolean;
     RESERVED: (number)[];
-    constructor(ENTITY_ID?: string | Uint8Array | null, NAME?: string | Uint8Array | null, KIND?: entityKind, SUBTYPE?: string | Uint8Array | null, PARENT_ENTITY_ID?: string | Uint8Array | null, WASM_HANDLE?: number, NORAD_CAT_ID?: number, OBJECT_NAME?: string | Uint8Array | null, OBJECT_ID?: string | Uint8Array | null, CAT_OBJECT_NAME?: string | Uint8Array | null, CAT_OBJECT_ID?: string | Uint8Array | null, FACILITY_TYPE?: string | Uint8Array | null, SEARCH_TEXT?: string | Uint8Array | null, OWNER?: string | Uint8Array | null, STATUS_CODE?: string | Uint8Array | null, LAUNCH_DATE?: string | Uint8Array | null, LAUNCH_YEAR?: string | Uint8Array | null, ORBIT_REGIME?: string | Uint8Array | null, PERIOD?: number, INCLINATION?: number, APOGEE?: number, PERIGEE?: number, MEAN_MOTION?: number, ECCENTRICITY?: number, BSTAR?: number, HAS_GP?: boolean, RESERVED?: (number)[]);
+    OBJECT_TYPE: string | Uint8Array | null;
+    DECAY_DATE: string | Uint8Array | null;
+    MANEUVERABLE: boolean;
+    ESTIMATED_DELTA_V_MPS: number;
+    HISTORICAL_DELTA_V_MPS: number;
+    MANEUVER_COUNT: number;
+    LAST_MANEUVER_EPOCH: string | Uint8Array | null;
+    DELTA_V_AS_OF: string | Uint8Array | null;
+    constructor(ENTITY_ID?: string | Uint8Array | null, NAME?: string | Uint8Array | null, KIND?: entityKind, SUBTYPE?: string | Uint8Array | null, PARENT_ENTITY_ID?: string | Uint8Array | null, WASM_HANDLE?: number, NORAD_CAT_ID?: number, OBJECT_NAME?: string | Uint8Array | null, OBJECT_ID?: string | Uint8Array | null, CAT_OBJECT_NAME?: string | Uint8Array | null, CAT_OBJECT_ID?: string | Uint8Array | null, FACILITY_TYPE?: string | Uint8Array | null, SEARCH_TEXT?: string | Uint8Array | null, OWNER?: string | Uint8Array | null, STATUS_CODE?: string | Uint8Array | null, LAUNCH_DATE?: string | Uint8Array | null, LAUNCH_YEAR?: string | Uint8Array | null, ORBIT_REGIME?: string | Uint8Array | null, PERIOD?: number, INCLINATION?: number, APOGEE?: number, PERIGEE?: number, MEAN_MOTION?: number, ECCENTRICITY?: number, BSTAR?: number, HAS_GP?: boolean, RESERVED?: (number)[], OBJECT_TYPE?: string | Uint8Array | null, DECAY_DATE?: string | Uint8Array | null, MANEUVERABLE?: boolean, ESTIMATED_DELTA_V_MPS?: number, HISTORICAL_DELTA_V_MPS?: number, MANEUVER_COUNT?: number, LAST_MANEUVER_EPOCH?: string | Uint8Array | null, DELTA_V_AS_OF?: string | Uint8Array | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=ETM.d.ts.map

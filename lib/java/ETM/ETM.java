@@ -173,6 +173,46 @@ public final class ETM extends com.google.flatbuffers.Table {
   public ByteVector reservedVector(ByteVector obj) { int o = __offset(56); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
   public ByteBuffer RESERVEDAsByteBuffer() { return __vector_as_bytebuffer(56, 1); }
   public ByteBuffer RESERVEDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 56, 1); }
+  /**
+   * CAT object class (PAYLOAD, ROCKET_BODY, DEBRIS, UNKNOWN); null when absent.
+   */
+  public String OBJECT_TYPE() { int o = __offset(58); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer OBJECT_TYPEAsByteBuffer() { return __vector_as_bytebuffer(58, 1); }
+  public ByteBuffer OBJECT_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 58, 1); }
+  /**
+   * CAT decay date [YYYY-MM-DD] when decayed; null otherwise.
+   */
+  public String DECAY_DATE() { int o = __offset(60); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer DECAY_DATEAsByteBuffer() { return __vector_as_bytebuffer(60, 1); }
+  public ByteBuffer DECAY_DATEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 60, 1); }
+  /**
+   * CAT maneuverability flag.
+   */
+  public boolean MANEUVERABLE() { int o = __offset(62); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * CAT estimated remaining maneuvering delta-V capability [m/s]; NaN when unassessed.
+   */
+  public double ESTIMATED_DELTA_V_MPS() { int o = __offset(64); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * CAT cumulative historical maneuver delta-V magnitude [m/s]; NaN when unassessed.
+   */
+  public double HISTORICAL_DELTA_V_MPS() { int o = __offset(66); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * CAT count of detected or confirmed historical maneuvers.
+   */
+  public long MANEUVER_COUNT() { int o = __offset(68); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * CAT ISO 8601 UTC epoch of the most recent detected or confirmed maneuver.
+   */
+  public String LAST_MANEUVER_EPOCH() { int o = __offset(70); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer LAST_MANEUVER_EPOCHAsByteBuffer() { return __vector_as_bytebuffer(70, 1); }
+  public ByteBuffer LAST_MANEUVER_EPOCHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 70, 1); }
+  /**
+   * CAT ISO 8601 UTC instant when the delta-V fields were last evaluated.
+   */
+  public String DELTA_V_AS_OF() { int o = __offset(72); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer DELTA_V_AS_OFAsByteBuffer() { return __vector_as_bytebuffer(72, 1); }
+  public ByteBuffer DELTA_V_AS_OFInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 72, 1); }
 
   public static int createETM(FlatBufferBuilder builder,
       int ENTITY_IDOffset,
@@ -201,8 +241,18 @@ public final class ETM extends com.google.flatbuffers.Table {
       double ECCENTRICITY,
       double BSTAR,
       boolean HAS_GP,
-      int RESERVEDOffset) {
-    builder.startTable(27);
+      int RESERVEDOffset,
+      int OBJECT_TYPEOffset,
+      int DECAY_DATEOffset,
+      boolean MANEUVERABLE,
+      double ESTIMATED_DELTA_V_MPS,
+      double HISTORICAL_DELTA_V_MPS,
+      long MANEUVER_COUNT,
+      int LAST_MANEUVER_EPOCHOffset,
+      int DELTA_V_AS_OFOffset) {
+    builder.startTable(35);
+    ETM.addHistoricalDeltaVMps(builder, HISTORICAL_DELTA_V_MPS);
+    ETM.addEstimatedDeltaVMps(builder, ESTIMATED_DELTA_V_MPS);
     ETM.addBstar(builder, BSTAR);
     ETM.addEccentricity(builder, ECCENTRICITY);
     ETM.addMeanMotion(builder, MEAN_MOTION);
@@ -210,6 +260,11 @@ public final class ETM extends com.google.flatbuffers.Table {
     ETM.addApogee(builder, APOGEE);
     ETM.addInclination(builder, INCLINATION);
     ETM.addPeriod(builder, PERIOD);
+    ETM.addDeltaVAsOf(builder, DELTA_V_AS_OFOffset);
+    ETM.addLastManeuverEpoch(builder, LAST_MANEUVER_EPOCHOffset);
+    ETM.addManeuverCount(builder, MANEUVER_COUNT);
+    ETM.addDecayDate(builder, DECAY_DATEOffset);
+    ETM.addObjectType(builder, OBJECT_TYPEOffset);
     ETM.addReserved(builder, RESERVEDOffset);
     ETM.addOrbitRegime(builder, ORBIT_REGIMEOffset);
     ETM.addLaunchYear(builder, LAUNCH_YEAROffset);
@@ -228,12 +283,13 @@ public final class ETM extends com.google.flatbuffers.Table {
     ETM.addSubtype(builder, SUBTYPEOffset);
     ETM.addName(builder, NAMEOffset);
     ETM.addEntityId(builder, ENTITY_IDOffset);
+    ETM.addManeuverable(builder, MANEUVERABLE);
     ETM.addHasGp(builder, HAS_GP);
     ETM.addKind(builder, KIND);
     return ETM.endETM(builder);
   }
 
-  public static void startETM(FlatBufferBuilder builder) { builder.startTable(27); }
+  public static void startETM(FlatBufferBuilder builder) { builder.startTable(35); }
   public static void addEntityId(FlatBufferBuilder builder, int ENTITY_IDOffset) { builder.addOffset(0, ENTITY_IDOffset, 0); }
   public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(1, NAMEOffset, 0); }
   public static void addKind(FlatBufferBuilder builder, byte KIND) { builder.addByte(2, KIND, 0); }
@@ -264,6 +320,14 @@ public final class ETM extends com.google.flatbuffers.Table {
   public static int createReservedVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
   public static int createReservedVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
   public static void startReservedVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
+  public static void addObjectType(FlatBufferBuilder builder, int OBJECT_TYPEOffset) { builder.addOffset(27, OBJECT_TYPEOffset, 0); }
+  public static void addDecayDate(FlatBufferBuilder builder, int DECAY_DATEOffset) { builder.addOffset(28, DECAY_DATEOffset, 0); }
+  public static void addManeuverable(FlatBufferBuilder builder, boolean MANEUVERABLE) { builder.addBoolean(29, MANEUVERABLE, false); }
+  public static void addEstimatedDeltaVMps(FlatBufferBuilder builder, double ESTIMATED_DELTA_V_MPS) { builder.addDouble(30, ESTIMATED_DELTA_V_MPS, 0.0); }
+  public static void addHistoricalDeltaVMps(FlatBufferBuilder builder, double HISTORICAL_DELTA_V_MPS) { builder.addDouble(31, HISTORICAL_DELTA_V_MPS, 0.0); }
+  public static void addManeuverCount(FlatBufferBuilder builder, long MANEUVER_COUNT) { builder.addInt(32, (int) MANEUVER_COUNT, (int) 0L); }
+  public static void addLastManeuverEpoch(FlatBufferBuilder builder, int LAST_MANEUVER_EPOCHOffset) { builder.addOffset(33, LAST_MANEUVER_EPOCHOffset, 0); }
+  public static void addDeltaVAsOf(FlatBufferBuilder builder, int DELTA_V_AS_OFOffset) { builder.addOffset(34, DELTA_V_AS_OFOffset, 0); }
   public static int endETM(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

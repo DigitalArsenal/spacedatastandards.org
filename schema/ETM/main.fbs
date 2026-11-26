@@ -1,5 +1,5 @@
-// Hash: 75da6975561f73e9b968483e08a03fc4c314bc32a31499fb947f0c03ec799b1c
-// Version: 0.0.2
+// Hash: e5ae8c09ced8221da1506caa0bd89be3598682a28ec4e2ca32e37dc97a3415c5
+// Version: 0.0.3
 // -----------------------------------END_HEADER
 /// Entity category for shared entity metadata index rows.
 enum entityKind : byte {
@@ -72,6 +72,22 @@ table ETM {
   HAS_GP:bool;
   /// Reserved for forward-compatible growth.
   RESERVED:[uint8];
+  /// CAT object class (PAYLOAD, ROCKET_BODY, DEBRIS, UNKNOWN); null when absent.
+  OBJECT_TYPE:string;
+  /// CAT decay date [YYYY-MM-DD] when decayed; null otherwise.
+  DECAY_DATE:string;
+  /// CAT maneuverability flag.
+  MANEUVERABLE:bool;
+  /// CAT estimated remaining maneuvering delta-V capability [m/s]; NaN when unassessed.
+  ESTIMATED_DELTA_V_MPS:double;
+  /// CAT cumulative historical maneuver delta-V magnitude [m/s]; NaN when unassessed.
+  HISTORICAL_DELTA_V_MPS:double;
+  /// CAT count of detected or confirmed historical maneuvers.
+  MANEUVER_COUNT:uint;
+  /// CAT ISO 8601 UTC epoch of the most recent detected or confirmed maneuver.
+  LAST_MANEUVER_EPOCH:string;
+  /// CAT ISO 8601 UTC instant when the delta-V fields were last evaluated.
+  DELTA_V_AS_OF:string;
 }
 
 root_type ETM;

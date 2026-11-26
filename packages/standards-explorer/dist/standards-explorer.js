@@ -31,11 +31,11 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.299.0+1795712678827",
+  version: "1.299.0+1795715007344",
   STANDARDS: {
     PCF: {
       IDL: `// Hash: 58396ab63fe33b2405c946f37774d457858d3b791a556e04cec3b67e62fb0cd8
-// Version: 1.0.11
+// Version: 1.0.10
 // -----------------------------------END_HEADER
 include "../FRM/main.fbs";
 include "../TIM/main.fbs";
@@ -11029,7 +11029,7 @@ file_identifier "$SCN";`,
       ]
     },
     ETM: {
-      IDL: '// Hash: 75da6975561f73e9b968483e08a03fc4c314bc32a31499fb947f0c03ec799b1c\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n/// Entity category for shared entity metadata index rows.\nenum entityKind : byte {\n  ENTITY,\n  SPACE,\n  GROUND,\n  AIRCRAFT,\n  MISSILE,\n  SHIP,\n  VEHICLE,\n  SENSOR,\n  OTHER = 127\n}\n\n/// Entity Metadata \u2014 generic queryable metadata for a host-local entity.\n/// Participates in shared FlatSQL/WASM runtimes where multiple plugins\n/// cross-query the same entity collection.\ntable ETM {\n  /// Stable host-local entity identifier.\n  ENTITY_ID:string;\n  /// Human-readable entity name used for shared query/search surfaces.\n  NAME:string;\n  /// Broad entity category.\n  KIND:entityKind;\n  /// More specific runtime subtype or class name.\n  SUBTYPE:string;\n  /// Optional parent entity id for hierarchy / linkage queries.\n  PARENT_ENTITY_ID:string;\n  /// Collection-scoped WASM handle used for batch visibility application.\n  WASM_HANDLE:uint;\n  /// Optional NORAD catalog id for standards-backed entities.\n  NORAD_CAT_ID:uint;\n  /// Primary object name surfaced by attached standards metadata.\n  OBJECT_NAME:string;\n  /// Primary international / object designator surfaced by attached standards metadata.\n  OBJECT_ID:string;\n  /// Secondary CAT object name when different from the primary object name.\n  CAT_OBJECT_NAME:string;\n  /// Secondary CAT object id when different from the primary object id.\n  CAT_OBJECT_ID:string;\n  /// Ground / facility subtype metadata for non-space entity search.\n  FACILITY_TYPE:string;\n  /// Pre-normalized phrase-search text for collection-wide shared queries.\n  SEARCH_TEXT:string;\n  /// CAT owner country code.\n  OWNER:string;\n  /// CAT operational status code.\n  STATUS_CODE:string;\n  /// CAT launch date.\n  LAUNCH_DATE:string;\n  /// Launch year derived from launch date.\n  LAUNCH_YEAR:string;\n  /// Derived orbit regime classification.\n  ORBIT_REGIME:string;\n  /// Orbital period in minutes.\n  PERIOD:double;\n  /// Inclination in degrees.\n  INCLINATION:double;\n  /// Apogee altitude in kilometers.\n  APOGEE:double;\n  /// Perigee altitude in kilometers.\n  PERIGEE:double;\n  /// Mean motion in revolutions per day.\n  MEAN_MOTION:double;\n  /// Orbital eccentricity.\n  ECCENTRICITY:double;\n  /// B* drag term from OMM.\n  BSTAR:double;\n  /// Whether GP / OMM state is present for the entity.\n  HAS_GP:bool;\n  /// Reserved for forward-compatible growth.\n  RESERVED:[uint8];\n}\n\nroot_type ETM;\nfile_identifier "$ETM";',
+      IDL: '// Hash: e5ae8c09ced8221da1506caa0bd89be3598682a28ec4e2ca32e37dc97a3415c5\n// Version: 0.0.3\n// -----------------------------------END_HEADER\n/// Entity category for shared entity metadata index rows.\nenum entityKind : byte {\n  ENTITY,\n  SPACE,\n  GROUND,\n  AIRCRAFT,\n  MISSILE,\n  SHIP,\n  VEHICLE,\n  SENSOR,\n  OTHER = 127\n}\n\n/// Entity Metadata \u2014 generic queryable metadata for a host-local entity.\n/// Participates in shared FlatSQL/WASM runtimes where multiple plugins\n/// cross-query the same entity collection.\ntable ETM {\n  /// Stable host-local entity identifier.\n  ENTITY_ID:string;\n  /// Human-readable entity name used for shared query/search surfaces.\n  NAME:string;\n  /// Broad entity category.\n  KIND:entityKind;\n  /// More specific runtime subtype or class name.\n  SUBTYPE:string;\n  /// Optional parent entity id for hierarchy / linkage queries.\n  PARENT_ENTITY_ID:string;\n  /// Collection-scoped WASM handle used for batch visibility application.\n  WASM_HANDLE:uint;\n  /// Optional NORAD catalog id for standards-backed entities.\n  NORAD_CAT_ID:uint;\n  /// Primary object name surfaced by attached standards metadata.\n  OBJECT_NAME:string;\n  /// Primary international / object designator surfaced by attached standards metadata.\n  OBJECT_ID:string;\n  /// Secondary CAT object name when different from the primary object name.\n  CAT_OBJECT_NAME:string;\n  /// Secondary CAT object id when different from the primary object id.\n  CAT_OBJECT_ID:string;\n  /// Ground / facility subtype metadata for non-space entity search.\n  FACILITY_TYPE:string;\n  /// Pre-normalized phrase-search text for collection-wide shared queries.\n  SEARCH_TEXT:string;\n  /// CAT owner country code.\n  OWNER:string;\n  /// CAT operational status code.\n  STATUS_CODE:string;\n  /// CAT launch date.\n  LAUNCH_DATE:string;\n  /// Launch year derived from launch date.\n  LAUNCH_YEAR:string;\n  /// Derived orbit regime classification.\n  ORBIT_REGIME:string;\n  /// Orbital period in minutes.\n  PERIOD:double;\n  /// Inclination in degrees.\n  INCLINATION:double;\n  /// Apogee altitude in kilometers.\n  APOGEE:double;\n  /// Perigee altitude in kilometers.\n  PERIGEE:double;\n  /// Mean motion in revolutions per day.\n  MEAN_MOTION:double;\n  /// Orbital eccentricity.\n  ECCENTRICITY:double;\n  /// B* drag term from OMM.\n  BSTAR:double;\n  /// Whether GP / OMM state is present for the entity.\n  HAS_GP:bool;\n  /// Reserved for forward-compatible growth.\n  RESERVED:[uint8];\n  /// CAT object class (PAYLOAD, ROCKET_BODY, DEBRIS, UNKNOWN); null when absent.\n  OBJECT_TYPE:string;\n  /// CAT decay date [YYYY-MM-DD] when decayed; null otherwise.\n  DECAY_DATE:string;\n  /// CAT maneuverability flag.\n  MANEUVERABLE:bool;\n  /// CAT estimated remaining maneuvering delta-V capability [m/s]; NaN when unassessed.\n  ESTIMATED_DELTA_V_MPS:double;\n  /// CAT cumulative historical maneuver delta-V magnitude [m/s]; NaN when unassessed.\n  HISTORICAL_DELTA_V_MPS:double;\n  /// CAT count of detected or confirmed historical maneuvers.\n  MANEUVER_COUNT:uint;\n  /// CAT ISO 8601 UTC epoch of the most recent detected or confirmed maneuver.\n  LAST_MANEUVER_EPOCH:string;\n  /// CAT ISO 8601 UTC instant when the delta-V fields were last evaluated.\n  DELTA_V_AS_OF:string;\n}\n\nroot_type ETM;\nfile_identifier "$ETM";',
       files: [
         "./dist/ETM/ETM.sw.tar.gz",
         "./dist/ETM/ETM.py.tar.gz",
@@ -26352,7 +26352,7 @@ file_identifier "$DAV";`,
     },
     CQR: {
       IDL: `// Hash: 96539c8a59b644b6288ba9cdaaafdd2980491f1a9cb19dd90b66a547ce9cb062
-// Version: 1.219.6
+// Version: 1.219.5
 // -----------------------------------END_HEADER
 include "../PRW/main.fbs";
 include "../OMM/main.fbs";
@@ -30797,7 +30797,7 @@ file_identifier "$TDM";`,
     },
     OCM: {
       IDL: `// Hash: c3608998c28dee9d32b9b40c21224f7e46c2caa7303a408ca751eeccd13956a1
-// Version: 2.1.13
+// Version: 2.1.12
 // -----------------------------------END_HEADER
 include "../ATM/main.fbs";
 include "../CVR/main.fbs";
@@ -126138,6 +126138,40 @@ zero. The record's CID is computed over the signed bytes.`
                 maximum: 255
               },
               description: "Reserved for forward-compatible growth."
+            },
+            OBJECT_TYPE: {
+              type: "string",
+              description: "CAT object class (PAYLOAD, ROCKET_BODY, DEBRIS, UNKNOWN); null when absent."
+            },
+            DECAY_DATE: {
+              type: "string",
+              description: "CAT decay date [YYYY-MM-DD] when decayed; null otherwise."
+            },
+            MANEUVERABLE: {
+              type: "boolean",
+              description: "CAT maneuverability flag."
+            },
+            ESTIMATED_DELTA_V_MPS: {
+              type: "number",
+              description: "CAT estimated remaining maneuvering delta-V capability [m/s]; NaN when unassessed."
+            },
+            HISTORICAL_DELTA_V_MPS: {
+              type: "number",
+              description: "CAT cumulative historical maneuver delta-V magnitude [m/s]; NaN when unassessed."
+            },
+            MANEUVER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "CAT count of detected or confirmed historical maneuvers."
+            },
+            LAST_MANEUVER_EPOCH: {
+              type: "string",
+              description: "CAT ISO 8601 UTC epoch of the most recent detected or confirmed maneuver."
+            },
+            DELTA_V_AS_OF: {
+              type: "string",
+              description: "CAT ISO 8601 UTC instant when the delta-V fields were last evaluated."
             }
           },
           additionalProperties: false
@@ -185976,6 +186010,40 @@ serves the request, e.g. "bulk", "query", "status", "activity",
                 maximum: 255
               },
               description: "Reserved for forward-compatible growth."
+            },
+            OBJECT_TYPE: {
+              type: "string",
+              description: "CAT object class (PAYLOAD, ROCKET_BODY, DEBRIS, UNKNOWN); null when absent."
+            },
+            DECAY_DATE: {
+              type: "string",
+              description: "CAT decay date [YYYY-MM-DD] when decayed; null otherwise."
+            },
+            MANEUVERABLE: {
+              type: "boolean",
+              description: "CAT maneuverability flag."
+            },
+            ESTIMATED_DELTA_V_MPS: {
+              type: "number",
+              description: "CAT estimated remaining maneuvering delta-V capability [m/s]; NaN when unassessed."
+            },
+            HISTORICAL_DELTA_V_MPS: {
+              type: "number",
+              description: "CAT cumulative historical maneuver delta-V magnitude [m/s]; NaN when unassessed."
+            },
+            MANEUVER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "CAT count of detected or confirmed historical maneuvers."
+            },
+            LAST_MANEUVER_EPOCH: {
+              type: "string",
+              description: "CAT ISO 8601 UTC epoch of the most recent detected or confirmed maneuver."
+            },
+            DELTA_V_AS_OF: {
+              type: "string",
+              description: "CAT ISO 8601 UTC instant when the delta-V fields were last evaluated."
             }
           },
           additionalProperties: false
@@ -267667,6 +267735,40 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
                 maximum: 255
               },
               description: "Reserved for forward-compatible growth."
+            },
+            OBJECT_TYPE: {
+              type: "string",
+              description: "CAT object class (PAYLOAD, ROCKET_BODY, DEBRIS, UNKNOWN); null when absent."
+            },
+            DECAY_DATE: {
+              type: "string",
+              description: "CAT decay date [YYYY-MM-DD] when decayed; null otherwise."
+            },
+            MANEUVERABLE: {
+              type: "boolean",
+              description: "CAT maneuverability flag."
+            },
+            ESTIMATED_DELTA_V_MPS: {
+              type: "number",
+              description: "CAT estimated remaining maneuvering delta-V capability [m/s]; NaN when unassessed."
+            },
+            HISTORICAL_DELTA_V_MPS: {
+              type: "number",
+              description: "CAT cumulative historical maneuver delta-V magnitude [m/s]; NaN when unassessed."
+            },
+            MANEUVER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "CAT count of detected or confirmed historical maneuvers."
+            },
+            LAST_MANEUVER_EPOCH: {
+              type: "string",
+              description: "CAT ISO 8601 UTC epoch of the most recent detected or confirmed maneuver."
+            },
+            DELTA_V_AS_OF: {
+              type: "string",
+              description: "CAT ISO 8601 UTC instant when the delta-V fields were last evaluated."
             }
           },
           additionalProperties: false
@@ -608565,6 +608667,48 @@ zero. The record's CID is computed over the signed bytes.`,
               },
               description: "Reserved for forward-compatible growth.",
               "x-flatbuffer-type": "[uint8]"
+            },
+            OBJECT_TYPE: {
+              type: "string",
+              description: "CAT object class (PAYLOAD, ROCKET_BODY, DEBRIS, UNKNOWN); null when absent.",
+              "x-flatbuffer-type": "string"
+            },
+            DECAY_DATE: {
+              type: "string",
+              description: "CAT decay date [YYYY-MM-DD] when decayed; null otherwise.",
+              "x-flatbuffer-type": "string"
+            },
+            MANEUVERABLE: {
+              type: "boolean",
+              description: "CAT maneuverability flag.",
+              "x-flatbuffer-type": "bool"
+            },
+            ESTIMATED_DELTA_V_MPS: {
+              type: "number",
+              description: "CAT estimated remaining maneuvering delta-V capability [m/s]; NaN when unassessed.",
+              "x-flatbuffer-type": "double"
+            },
+            HISTORICAL_DELTA_V_MPS: {
+              type: "number",
+              description: "CAT cumulative historical maneuver delta-V magnitude [m/s]; NaN when unassessed.",
+              "x-flatbuffer-type": "double"
+            },
+            MANEUVER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "CAT count of detected or confirmed historical maneuvers.",
+              "x-flatbuffer-type": "uint"
+            },
+            LAST_MANEUVER_EPOCH: {
+              type: "string",
+              description: "CAT ISO 8601 UTC epoch of the most recent detected or confirmed maneuver.",
+              "x-flatbuffer-type": "string"
+            },
+            DELTA_V_AS_OF: {
+              type: "string",
+              description: "CAT ISO 8601 UTC instant when the delta-V fields were last evaluated.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -746512,6 +746656,48 @@ serves the request, e.g. "bulk", "query", "status", "activity",
               },
               description: "Reserved for forward-compatible growth.",
               "x-flatbuffer-type": "[uint8]"
+            },
+            OBJECT_TYPE: {
+              type: "string",
+              description: "CAT object class (PAYLOAD, ROCKET_BODY, DEBRIS, UNKNOWN); null when absent.",
+              "x-flatbuffer-type": "string"
+            },
+            DECAY_DATE: {
+              type: "string",
+              description: "CAT decay date [YYYY-MM-DD] when decayed; null otherwise.",
+              "x-flatbuffer-type": "string"
+            },
+            MANEUVERABLE: {
+              type: "boolean",
+              description: "CAT maneuverability flag.",
+              "x-flatbuffer-type": "bool"
+            },
+            ESTIMATED_DELTA_V_MPS: {
+              type: "number",
+              description: "CAT estimated remaining maneuvering delta-V capability [m/s]; NaN when unassessed.",
+              "x-flatbuffer-type": "double"
+            },
+            HISTORICAL_DELTA_V_MPS: {
+              type: "number",
+              description: "CAT cumulative historical maneuver delta-V magnitude [m/s]; NaN when unassessed.",
+              "x-flatbuffer-type": "double"
+            },
+            MANEUVER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "CAT count of detected or confirmed historical maneuvers.",
+              "x-flatbuffer-type": "uint"
+            },
+            LAST_MANEUVER_EPOCH: {
+              type: "string",
+              description: "CAT ISO 8601 UTC epoch of the most recent detected or confirmed maneuver.",
+              "x-flatbuffer-type": "string"
+            },
+            DELTA_V_AS_OF: {
+              type: "string",
+              description: "CAT ISO 8601 UTC instant when the delta-V fields were last evaluated.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -891153,6 +891339,48 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
               },
               description: "Reserved for forward-compatible growth.",
               "x-flatbuffer-type": "[uint8]"
+            },
+            OBJECT_TYPE: {
+              type: "string",
+              description: "CAT object class (PAYLOAD, ROCKET_BODY, DEBRIS, UNKNOWN); null when absent.",
+              "x-flatbuffer-type": "string"
+            },
+            DECAY_DATE: {
+              type: "string",
+              description: "CAT decay date [YYYY-MM-DD] when decayed; null otherwise.",
+              "x-flatbuffer-type": "string"
+            },
+            MANEUVERABLE: {
+              type: "boolean",
+              description: "CAT maneuverability flag.",
+              "x-flatbuffer-type": "bool"
+            },
+            ESTIMATED_DELTA_V_MPS: {
+              type: "number",
+              description: "CAT estimated remaining maneuvering delta-V capability [m/s]; NaN when unassessed.",
+              "x-flatbuffer-type": "double"
+            },
+            HISTORICAL_DELTA_V_MPS: {
+              type: "number",
+              description: "CAT cumulative historical maneuver delta-V magnitude [m/s]; NaN when unassessed.",
+              "x-flatbuffer-type": "double"
+            },
+            MANEUVER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "CAT count of detected or confirmed historical maneuvers.",
+              "x-flatbuffer-type": "uint"
+            },
+            LAST_MANEUVER_EPOCH: {
+              type: "string",
+              description: "CAT ISO 8601 UTC epoch of the most recent detected or confirmed maneuver.",
+              "x-flatbuffer-type": "string"
+            },
+            DELTA_V_AS_OF: {
+              type: "string",
+              description: "CAT ISO 8601 UTC instant when the delta-V fields were last evaluated.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false

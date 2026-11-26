@@ -172,6 +172,46 @@ public struct ETM : IFlatbufferObject
   public ArraySegment<byte>? GetRESERVEDBytes() { return __p.__vector_as_arraysegment(56); }
 #endif
   public byte[] GetRESERVEDArray() { return __p.__vector_as_array<byte>(56); }
+  /// CAT object class (PAYLOAD, ROCKET_BODY, DEBRIS, UNKNOWN); null when absent.
+  public string OBJECT_TYPE { get { int o = __p.__offset(58); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetOBJECT_TYPEBytes() { return __p.__vector_as_span<byte>(58, 1); }
+#else
+  public ArraySegment<byte>? GetOBJECT_TYPEBytes() { return __p.__vector_as_arraysegment(58); }
+#endif
+  public byte[] GetOBJECT_TYPEArray() { return __p.__vector_as_array<byte>(58); }
+  /// CAT decay date [YYYY-MM-DD] when decayed; null otherwise.
+  public string DECAY_DATE { get { int o = __p.__offset(60); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetDECAY_DATEBytes() { return __p.__vector_as_span<byte>(60, 1); }
+#else
+  public ArraySegment<byte>? GetDECAY_DATEBytes() { return __p.__vector_as_arraysegment(60); }
+#endif
+  public byte[] GetDECAY_DATEArray() { return __p.__vector_as_array<byte>(60); }
+  /// CAT maneuverability flag.
+  public bool MANEUVERABLE { get { int o = __p.__offset(62); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// CAT estimated remaining maneuvering delta-V capability [m/s]; NaN when unassessed.
+  public double ESTIMATED_DELTA_V_MPS { get { int o = __p.__offset(64); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// CAT cumulative historical maneuver delta-V magnitude [m/s]; NaN when unassessed.
+  public double HISTORICAL_DELTA_V_MPS { get { int o = __p.__offset(66); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// CAT count of detected or confirmed historical maneuvers.
+  public uint MANEUVER_COUNT { get { int o = __p.__offset(68); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// CAT ISO 8601 UTC epoch of the most recent detected or confirmed maneuver.
+  public string LAST_MANEUVER_EPOCH { get { int o = __p.__offset(70); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetLAST_MANEUVER_EPOCHBytes() { return __p.__vector_as_span<byte>(70, 1); }
+#else
+  public ArraySegment<byte>? GetLAST_MANEUVER_EPOCHBytes() { return __p.__vector_as_arraysegment(70); }
+#endif
+  public byte[] GetLAST_MANEUVER_EPOCHArray() { return __p.__vector_as_array<byte>(70); }
+  /// CAT ISO 8601 UTC instant when the delta-V fields were last evaluated.
+  public string DELTA_V_AS_OF { get { int o = __p.__offset(72); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetDELTA_V_AS_OFBytes() { return __p.__vector_as_span<byte>(72, 1); }
+#else
+  public ArraySegment<byte>? GetDELTA_V_AS_OFBytes() { return __p.__vector_as_arraysegment(72); }
+#endif
+  public byte[] GetDELTA_V_AS_OFArray() { return __p.__vector_as_array<byte>(72); }
 
   public static Offset<ETM> CreateETM(FlatBufferBuilder builder,
       StringOffset ENTITY_IDOffset = default(StringOffset),
@@ -200,8 +240,18 @@ public struct ETM : IFlatbufferObject
       double ECCENTRICITY = 0.0,
       double BSTAR = 0.0,
       bool HAS_GP = false,
-      VectorOffset RESERVEDOffset = default(VectorOffset)) {
-    builder.StartTable(27);
+      VectorOffset RESERVEDOffset = default(VectorOffset),
+      StringOffset OBJECT_TYPEOffset = default(StringOffset),
+      StringOffset DECAY_DATEOffset = default(StringOffset),
+      bool MANEUVERABLE = false,
+      double ESTIMATED_DELTA_V_MPS = 0.0,
+      double HISTORICAL_DELTA_V_MPS = 0.0,
+      uint MANEUVER_COUNT = 0,
+      StringOffset LAST_MANEUVER_EPOCHOffset = default(StringOffset),
+      StringOffset DELTA_V_AS_OFOffset = default(StringOffset)) {
+    builder.StartTable(35);
+    ETM.AddHISTORICAL_DELTA_V_MPS(builder, HISTORICAL_DELTA_V_MPS);
+    ETM.AddESTIMATED_DELTA_V_MPS(builder, ESTIMATED_DELTA_V_MPS);
     ETM.AddBSTAR(builder, BSTAR);
     ETM.AddECCENTRICITY(builder, ECCENTRICITY);
     ETM.AddMEAN_MOTION(builder, MEAN_MOTION);
@@ -209,6 +259,11 @@ public struct ETM : IFlatbufferObject
     ETM.AddAPOGEE(builder, APOGEE);
     ETM.AddINCLINATION(builder, INCLINATION);
     ETM.AddPERIOD(builder, PERIOD);
+    ETM.AddDELTA_V_AS_OF(builder, DELTA_V_AS_OFOffset);
+    ETM.AddLAST_MANEUVER_EPOCH(builder, LAST_MANEUVER_EPOCHOffset);
+    ETM.AddMANEUVER_COUNT(builder, MANEUVER_COUNT);
+    ETM.AddDECAY_DATE(builder, DECAY_DATEOffset);
+    ETM.AddOBJECT_TYPE(builder, OBJECT_TYPEOffset);
     ETM.AddRESERVED(builder, RESERVEDOffset);
     ETM.AddORBIT_REGIME(builder, ORBIT_REGIMEOffset);
     ETM.AddLAUNCH_YEAR(builder, LAUNCH_YEAROffset);
@@ -227,12 +282,13 @@ public struct ETM : IFlatbufferObject
     ETM.AddSUBTYPE(builder, SUBTYPEOffset);
     ETM.AddNAME(builder, NAMEOffset);
     ETM.AddENTITY_ID(builder, ENTITY_IDOffset);
+    ETM.AddMANEUVERABLE(builder, MANEUVERABLE);
     ETM.AddHAS_GP(builder, HAS_GP);
     ETM.AddKIND(builder, KIND);
     return ETM.EndETM(builder);
   }
 
-  public static void StartETM(FlatBufferBuilder builder) { builder.StartTable(27); }
+  public static void StartETM(FlatBufferBuilder builder) { builder.StartTable(35); }
   public static void AddENTITY_ID(FlatBufferBuilder builder, StringOffset ENTITY_IDOffset) { builder.AddOffset(0, ENTITY_IDOffset.Value, 0); }
   public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(1, NAMEOffset.Value, 0); }
   public static void AddKIND(FlatBufferBuilder builder, entityKind KIND) { builder.AddSbyte(2, (sbyte)KIND, 0); }
@@ -265,6 +321,14 @@ public struct ETM : IFlatbufferObject
   public static VectorOffset CreateRESERVEDVectorBlock(FlatBufferBuilder builder, ArraySegment<byte> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateRESERVEDVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<byte>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartRESERVEDVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
+  public static void AddOBJECT_TYPE(FlatBufferBuilder builder, StringOffset OBJECT_TYPEOffset) { builder.AddOffset(27, OBJECT_TYPEOffset.Value, 0); }
+  public static void AddDECAY_DATE(FlatBufferBuilder builder, StringOffset DECAY_DATEOffset) { builder.AddOffset(28, DECAY_DATEOffset.Value, 0); }
+  public static void AddMANEUVERABLE(FlatBufferBuilder builder, bool MANEUVERABLE) { builder.AddBool(29, MANEUVERABLE, false); }
+  public static void AddESTIMATED_DELTA_V_MPS(FlatBufferBuilder builder, double ESTIMATED_DELTA_V_MPS) { builder.AddDouble(30, ESTIMATED_DELTA_V_MPS, 0.0); }
+  public static void AddHISTORICAL_DELTA_V_MPS(FlatBufferBuilder builder, double HISTORICAL_DELTA_V_MPS) { builder.AddDouble(31, HISTORICAL_DELTA_V_MPS, 0.0); }
+  public static void AddMANEUVER_COUNT(FlatBufferBuilder builder, uint MANEUVER_COUNT) { builder.AddUint(32, MANEUVER_COUNT, 0); }
+  public static void AddLAST_MANEUVER_EPOCH(FlatBufferBuilder builder, StringOffset LAST_MANEUVER_EPOCHOffset) { builder.AddOffset(33, LAST_MANEUVER_EPOCHOffset.Value, 0); }
+  public static void AddDELTA_V_AS_OF(FlatBufferBuilder builder, StringOffset DELTA_V_AS_OFOffset) { builder.AddOffset(34, DELTA_V_AS_OFOffset.Value, 0); }
   public static Offset<ETM> EndETM(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<ETM>(o);
@@ -305,6 +369,14 @@ public struct ETM : IFlatbufferObject
     _o.HAS_GP = this.HAS_GP;
     _o.RESERVED = new List<byte>();
     for (var _j = 0; _j < this.RESERVEDLength; ++_j) {_o.RESERVED.Add(this.RESERVED(_j));}
+    _o.OBJECT_TYPE = this.OBJECT_TYPE;
+    _o.DECAY_DATE = this.DECAY_DATE;
+    _o.MANEUVERABLE = this.MANEUVERABLE;
+    _o.ESTIMATED_DELTA_V_MPS = this.ESTIMATED_DELTA_V_MPS;
+    _o.HISTORICAL_DELTA_V_MPS = this.HISTORICAL_DELTA_V_MPS;
+    _o.MANEUVER_COUNT = this.MANEUVER_COUNT;
+    _o.LAST_MANEUVER_EPOCH = this.LAST_MANEUVER_EPOCH;
+    _o.DELTA_V_AS_OF = this.DELTA_V_AS_OF;
   }
   public static Offset<ETM> Pack(FlatBufferBuilder builder, ETMT _o) {
     if (_o == null) return default(Offset<ETM>);
@@ -328,6 +400,10 @@ public struct ETM : IFlatbufferObject
       var __RESERVED = _o.RESERVED.ToArray();
       _RESERVED = CreateRESERVEDVector(builder, __RESERVED);
     }
+    var _OBJECT_TYPE = _o.OBJECT_TYPE == null ? default(StringOffset) : builder.CreateString(_o.OBJECT_TYPE);
+    var _DECAY_DATE = _o.DECAY_DATE == null ? default(StringOffset) : builder.CreateString(_o.DECAY_DATE);
+    var _LAST_MANEUVER_EPOCH = _o.LAST_MANEUVER_EPOCH == null ? default(StringOffset) : builder.CreateString(_o.LAST_MANEUVER_EPOCH);
+    var _DELTA_V_AS_OF = _o.DELTA_V_AS_OF == null ? default(StringOffset) : builder.CreateString(_o.DELTA_V_AS_OF);
     return CreateETM(
       builder,
       _ENTITY_ID,
@@ -356,7 +432,15 @@ public struct ETM : IFlatbufferObject
       _o.ECCENTRICITY,
       _o.BSTAR,
       _o.HAS_GP,
-      _RESERVED);
+      _RESERVED,
+      _OBJECT_TYPE,
+      _DECAY_DATE,
+      _o.MANEUVERABLE,
+      _o.ESTIMATED_DELTA_V_MPS,
+      _o.HISTORICAL_DELTA_V_MPS,
+      _o.MANEUVER_COUNT,
+      _LAST_MANEUVER_EPOCH,
+      _DELTA_V_AS_OF);
   }
 }
 
@@ -389,6 +473,14 @@ public class ETMT
   public double BSTAR { get; set; }
   public bool HAS_GP { get; set; }
   public List<byte> RESERVED { get; set; }
+  public string OBJECT_TYPE { get; set; }
+  public string DECAY_DATE { get; set; }
+  public bool MANEUVERABLE { get; set; }
+  public double ESTIMATED_DELTA_V_MPS { get; set; }
+  public double HISTORICAL_DELTA_V_MPS { get; set; }
+  public uint MANEUVER_COUNT { get; set; }
+  public string LAST_MANEUVER_EPOCH { get; set; }
+  public string DELTA_V_AS_OF { get; set; }
 
   public ETMT() {
     this.ENTITY_ID = null;
@@ -418,6 +510,14 @@ public class ETMT
     this.BSTAR = 0.0;
     this.HAS_GP = false;
     this.RESERVED = null;
+    this.OBJECT_TYPE = null;
+    this.DECAY_DATE = null;
+    this.MANEUVERABLE = false;
+    this.ESTIMATED_DELTA_V_MPS = 0.0;
+    this.HISTORICAL_DELTA_V_MPS = 0.0;
+    this.MANEUVER_COUNT = 0;
+    this.LAST_MANEUVER_EPOCH = null;
+    this.DELTA_V_AS_OF = null;
   }
   public static ETMT DeserializeFromBinary(byte[] fbBuffer) {
     return ETM.GetRootAsETM(new ByteBuffer(fbBuffer)).UnPack();
@@ -462,6 +562,14 @@ static public class ETMVerify
       && verifier.VerifyField(tablePos, 52 /*BSTAR*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 54 /*HAS_GP*/, 1 /*bool*/, 1, false)
       && verifier.VerifyVectorOfData(tablePos, 56 /*RESERVED*/, 1 /*byte*/, false)
+      && verifier.VerifyString(tablePos, 58 /*OBJECT_TYPE*/, false)
+      && verifier.VerifyString(tablePos, 60 /*DECAY_DATE*/, false)
+      && verifier.VerifyField(tablePos, 62 /*MANEUVERABLE*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 64 /*ESTIMATED_DELTA_V_MPS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 66 /*HISTORICAL_DELTA_V_MPS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 68 /*MANEUVER_COUNT*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyString(tablePos, 70 /*LAST_MANEUVER_EPOCH*/, false)
+      && verifier.VerifyString(tablePos, 72 /*DELTA_V_AS_OF*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

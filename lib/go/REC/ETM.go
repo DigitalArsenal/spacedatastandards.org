@@ -560,8 +560,152 @@ func (rcv *ETM) MutateReserved(j int, n byte) bool {
 	return rcv.MutateRESERVED(j, n)
 }
 
+/// CAT object class (PAYLOAD, ROCKET_BODY, DEBRIS, UNKNOWN); null when absent.
+func (rcv *ETM) OBJECT_TYPE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *ETM) ObjectType() []byte {
+	return rcv.OBJECT_TYPE()
+}
+
+/// CAT object class (PAYLOAD, ROCKET_BODY, DEBRIS, UNKNOWN); null when absent.
+/// CAT decay date [YYYY-MM-DD] when decayed; null otherwise.
+func (rcv *ETM) DECAY_DATE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *ETM) DecayDate() []byte {
+	return rcv.DECAY_DATE()
+}
+
+/// CAT decay date [YYYY-MM-DD] when decayed; null otherwise.
+/// CAT maneuverability flag.
+func (rcv *ETM) MANEUVERABLE() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ETM) Maneuverable() bool {
+	return rcv.MANEUVERABLE()
+}
+
+/// CAT maneuverability flag.
+func (rcv *ETM) MutateMANEUVERABLE(n bool) bool {
+	return rcv._tab.MutateBoolSlot(62, n)
+}
+
+func (rcv *ETM) MutateManeuverable(n bool) bool {
+	return rcv.MutateMANEUVERABLE(n)
+}
+
+/// CAT estimated remaining maneuvering delta-V capability [m/s]; NaN when unassessed.
+func (rcv *ETM) ESTIMATED_DELTA_V_MPS() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *ETM) EstimatedDeltaVMps() float64 {
+	return rcv.ESTIMATED_DELTA_V_MPS()
+}
+
+/// CAT estimated remaining maneuvering delta-V capability [m/s]; NaN when unassessed.
+func (rcv *ETM) MutateESTIMATED_DELTA_V_MPS(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(64, n)
+}
+
+func (rcv *ETM) MutateEstimatedDeltaVMps(n float64) bool {
+	return rcv.MutateESTIMATED_DELTA_V_MPS(n)
+}
+
+/// CAT cumulative historical maneuver delta-V magnitude [m/s]; NaN when unassessed.
+func (rcv *ETM) HISTORICAL_DELTA_V_MPS() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *ETM) HistoricalDeltaVMps() float64 {
+	return rcv.HISTORICAL_DELTA_V_MPS()
+}
+
+/// CAT cumulative historical maneuver delta-V magnitude [m/s]; NaN when unassessed.
+func (rcv *ETM) MutateHISTORICAL_DELTA_V_MPS(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(66, n)
+}
+
+func (rcv *ETM) MutateHistoricalDeltaVMps(n float64) bool {
+	return rcv.MutateHISTORICAL_DELTA_V_MPS(n)
+}
+
+/// CAT count of detected or confirmed historical maneuvers.
+func (rcv *ETM) MANEUVER_COUNT() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *ETM) ManeuverCount() uint32 {
+	return rcv.MANEUVER_COUNT()
+}
+
+/// CAT count of detected or confirmed historical maneuvers.
+func (rcv *ETM) MutateMANEUVER_COUNT(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(68, n)
+}
+
+func (rcv *ETM) MutateManeuverCount(n uint32) bool {
+	return rcv.MutateMANEUVER_COUNT(n)
+}
+
+/// CAT ISO 8601 UTC epoch of the most recent detected or confirmed maneuver.
+func (rcv *ETM) LAST_MANEUVER_EPOCH() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *ETM) LastManeuverEpoch() []byte {
+	return rcv.LAST_MANEUVER_EPOCH()
+}
+
+/// CAT ISO 8601 UTC epoch of the most recent detected or confirmed maneuver.
+/// CAT ISO 8601 UTC instant when the delta-V fields were last evaluated.
+func (rcv *ETM) DELTA_V_AS_OF() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *ETM) DeltaVAsOf() []byte {
+	return rcv.DELTA_V_AS_OF()
+}
+
+/// CAT ISO 8601 UTC instant when the delta-V fields were last evaluated.
 func ETMStart(builder *flatbuffers.Builder) {
-	builder.StartObject(27)
+	builder.StartObject(35)
 }
 func ETMAddENTITY_ID(builder *flatbuffers.Builder, ENTITY_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ENTITY_ID), 0)
@@ -730,6 +874,54 @@ func ETMStartRESERVEDVector(builder *flatbuffers.Builder, numElems int) flatbuff
 }
 func ETMStartReservedVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return ETMStartRESERVEDVector(builder, numElems)
+}
+func ETMAddOBJECT_TYPE(builder *flatbuffers.Builder, OBJECT_TYPE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(27, flatbuffers.UOffsetT(OBJECT_TYPE), 0)
+}
+func ETMAddObjectType(builder *flatbuffers.Builder, OBJECT_TYPE flatbuffers.UOffsetT) {
+	ETMAddOBJECT_TYPE(builder, OBJECT_TYPE)
+}
+func ETMAddDECAY_DATE(builder *flatbuffers.Builder, DECAY_DATE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(28, flatbuffers.UOffsetT(DECAY_DATE), 0)
+}
+func ETMAddDecayDate(builder *flatbuffers.Builder, DECAY_DATE flatbuffers.UOffsetT) {
+	ETMAddDECAY_DATE(builder, DECAY_DATE)
+}
+func ETMAddMANEUVERABLE(builder *flatbuffers.Builder, MANEUVERABLE bool) {
+	builder.PrependBoolSlot(29, MANEUVERABLE, false)
+}
+func ETMAddManeuverable(builder *flatbuffers.Builder, MANEUVERABLE bool) {
+	ETMAddMANEUVERABLE(builder, MANEUVERABLE)
+}
+func ETMAddESTIMATED_DELTA_V_MPS(builder *flatbuffers.Builder, ESTIMATED_DELTA_V_MPS float64) {
+	builder.PrependFloat64Slot(30, ESTIMATED_DELTA_V_MPS, 0.0)
+}
+func ETMAddEstimatedDeltaVMps(builder *flatbuffers.Builder, ESTIMATED_DELTA_V_MPS float64) {
+	ETMAddESTIMATED_DELTA_V_MPS(builder, ESTIMATED_DELTA_V_MPS)
+}
+func ETMAddHISTORICAL_DELTA_V_MPS(builder *flatbuffers.Builder, HISTORICAL_DELTA_V_MPS float64) {
+	builder.PrependFloat64Slot(31, HISTORICAL_DELTA_V_MPS, 0.0)
+}
+func ETMAddHistoricalDeltaVMps(builder *flatbuffers.Builder, HISTORICAL_DELTA_V_MPS float64) {
+	ETMAddHISTORICAL_DELTA_V_MPS(builder, HISTORICAL_DELTA_V_MPS)
+}
+func ETMAddMANEUVER_COUNT(builder *flatbuffers.Builder, MANEUVER_COUNT uint32) {
+	builder.PrependUint32Slot(32, MANEUVER_COUNT, 0)
+}
+func ETMAddManeuverCount(builder *flatbuffers.Builder, MANEUVER_COUNT uint32) {
+	ETMAddMANEUVER_COUNT(builder, MANEUVER_COUNT)
+}
+func ETMAddLAST_MANEUVER_EPOCH(builder *flatbuffers.Builder, LAST_MANEUVER_EPOCH flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(33, flatbuffers.UOffsetT(LAST_MANEUVER_EPOCH), 0)
+}
+func ETMAddLastManeuverEpoch(builder *flatbuffers.Builder, LAST_MANEUVER_EPOCH flatbuffers.UOffsetT) {
+	ETMAddLAST_MANEUVER_EPOCH(builder, LAST_MANEUVER_EPOCH)
+}
+func ETMAddDELTA_V_AS_OF(builder *flatbuffers.Builder, DELTA_V_AS_OF flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(34, flatbuffers.UOffsetT(DELTA_V_AS_OF), 0)
+}
+func ETMAddDeltaVAsOf(builder *flatbuffers.Builder, DELTA_V_AS_OF flatbuffers.UOffsetT) {
+	ETMAddDELTA_V_AS_OF(builder, DELTA_V_AS_OF)
 }
 func ETMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

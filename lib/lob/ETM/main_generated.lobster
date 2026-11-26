@@ -102,13 +102,37 @@ class ETM : flatbuffers.handle
         return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 56) + i * 1)
     def RESERVED_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 56)
+    /// CAT object class (PAYLOAD, ROCKET_BODY, DEBRIS, UNKNOWN); null when absent.
+    def OBJECT_TYPE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 58)
+    /// CAT decay date [YYYY-MM-DD] when decayed; null otherwise.
+    def DECAY_DATE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 60)
+    /// CAT maneuverability flag.
+    def MANEUVERABLE() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 62, 0))
+    /// CAT estimated remaining maneuvering delta-V capability [m/s]; NaN when unassessed.
+    def ESTIMATED_DELTA_V_MPS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 64, 0.0)
+    /// CAT cumulative historical maneuver delta-V magnitude [m/s]; NaN when unassessed.
+    def HISTORICAL_DELTA_V_MPS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 66, 0.0)
+    /// CAT count of detected or confirmed historical maneuvers.
+    def MANEUVER_COUNT() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 68, 0)
+    /// CAT ISO 8601 UTC epoch of the most recent detected or confirmed maneuver.
+    def LAST_MANEUVER_EPOCH() -> string:
+        return flatbuffers.field_string(buf_, pos_, 70)
+    /// CAT ISO 8601 UTC instant when the delta-V fields were last evaluated.
+    def DELTA_V_AS_OF() -> string:
+        return flatbuffers.field_string(buf_, pos_, 72)
 
 def GetRootAsETM(buf:string): return ETM { buf, flatbuffers.indirect(buf, 0) }
 
 struct ETMBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(27)
+        b_.StartObject(35)
         return this
     def add_ENTITY_ID(ENTITY_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, ENTITY_ID)
@@ -190,6 +214,30 @@ struct ETMBuilder:
         return this
     def add_RESERVED(RESERVED:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(26, RESERVED)
+        return this
+    def add_OBJECT_TYPE(OBJECT_TYPE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(27, OBJECT_TYPE)
+        return this
+    def add_DECAY_DATE(DECAY_DATE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(28, DECAY_DATE)
+        return this
+    def add_MANEUVERABLE(MANEUVERABLE:bool):
+        b_.PrependBoolSlot(29, MANEUVERABLE, 0)
+        return this
+    def add_ESTIMATED_DELTA_V_MPS(ESTIMATED_DELTA_V_MPS:float):
+        b_.PrependFloat64Slot(30, ESTIMATED_DELTA_V_MPS, 0.0)
+        return this
+    def add_HISTORICAL_DELTA_V_MPS(HISTORICAL_DELTA_V_MPS:float):
+        b_.PrependFloat64Slot(31, HISTORICAL_DELTA_V_MPS, 0.0)
+        return this
+    def add_MANEUVER_COUNT(MANEUVER_COUNT:int):
+        b_.PrependUint32Slot(32, MANEUVER_COUNT, 0)
+        return this
+    def add_LAST_MANEUVER_EPOCH(LAST_MANEUVER_EPOCH:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(33, LAST_MANEUVER_EPOCH)
+        return this
+    def add_DELTA_V_AS_OF(DELTA_V_AS_OF:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(34, DELTA_V_AS_OF)
         return this
     def end():
         return b_.EndObject()

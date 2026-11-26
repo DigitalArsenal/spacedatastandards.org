@@ -173,6 +173,14 @@ impl<'a> ETM<'a> {
     pub const VT_BSTAR: ::flatbuffers::VOffsetT = 52;
     pub const VT_HAS_GP: ::flatbuffers::VOffsetT = 54;
     pub const VT_RESERVED: ::flatbuffers::VOffsetT = 56;
+    pub const VT_OBJECT_TYPE: ::flatbuffers::VOffsetT = 58;
+    pub const VT_DECAY_DATE: ::flatbuffers::VOffsetT = 60;
+    pub const VT_MANEUVERABLE: ::flatbuffers::VOffsetT = 62;
+    pub const VT_ESTIMATED_DELTA_V_MPS: ::flatbuffers::VOffsetT = 64;
+    pub const VT_HISTORICAL_DELTA_V_MPS: ::flatbuffers::VOffsetT = 66;
+    pub const VT_MANEUVER_COUNT: ::flatbuffers::VOffsetT = 68;
+    pub const VT_LAST_MANEUVER_EPOCH: ::flatbuffers::VOffsetT = 70;
+    pub const VT_DELTA_V_AS_OF: ::flatbuffers::VOffsetT = 72;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -185,6 +193,8 @@ impl<'a> ETM<'a> {
         args: &'args ETMArgs<'args>
     ) -> ::flatbuffers::WIPOffset<ETM<'bldr>> {
         let mut builder = ETMBuilder::new(_fbb);
+        builder.add_HISTORICAL_DELTA_V_MPS(args.HISTORICAL_DELTA_V_MPS);
+        builder.add_ESTIMATED_DELTA_V_MPS(args.ESTIMATED_DELTA_V_MPS);
         builder.add_BSTAR(args.BSTAR);
         builder.add_ECCENTRICITY(args.ECCENTRICITY);
         builder.add_MEAN_MOTION(args.MEAN_MOTION);
@@ -192,6 +202,11 @@ impl<'a> ETM<'a> {
         builder.add_APOGEE(args.APOGEE);
         builder.add_INCLINATION(args.INCLINATION);
         builder.add_PERIOD(args.PERIOD);
+        if let Some(x) = args.DELTA_V_AS_OF { builder.add_DELTA_V_AS_OF(x); }
+        if let Some(x) = args.LAST_MANEUVER_EPOCH { builder.add_LAST_MANEUVER_EPOCH(x); }
+        builder.add_MANEUVER_COUNT(args.MANEUVER_COUNT);
+        if let Some(x) = args.DECAY_DATE { builder.add_DECAY_DATE(x); }
+        if let Some(x) = args.OBJECT_TYPE { builder.add_OBJECT_TYPE(x); }
         if let Some(x) = args.RESERVED { builder.add_RESERVED(x); }
         if let Some(x) = args.ORBIT_REGIME { builder.add_ORBIT_REGIME(x); }
         if let Some(x) = args.LAUNCH_YEAR { builder.add_LAUNCH_YEAR(x); }
@@ -210,6 +225,7 @@ impl<'a> ETM<'a> {
         if let Some(x) = args.SUBTYPE { builder.add_SUBTYPE(x); }
         if let Some(x) = args.NAME { builder.add_NAME(x); }
         if let Some(x) = args.ENTITY_ID { builder.add_ENTITY_ID(x); }
+        builder.add_MANEUVERABLE(args.MANEUVERABLE);
         builder.add_HAS_GP(args.HAS_GP);
         builder.add_KIND(args.KIND);
         builder.finish()
@@ -275,6 +291,22 @@ impl<'a> ETM<'a> {
         let RESERVED = self.RESERVED().map(|x| {
             x.into_iter().collect()
         });
+        let OBJECT_TYPE = self.OBJECT_TYPE().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let DECAY_DATE = self.DECAY_DATE().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let MANEUVERABLE = self.MANEUVERABLE();
+        let ESTIMATED_DELTA_V_MPS = self.ESTIMATED_DELTA_V_MPS();
+        let HISTORICAL_DELTA_V_MPS = self.HISTORICAL_DELTA_V_MPS();
+        let MANEUVER_COUNT = self.MANEUVER_COUNT();
+        let LAST_MANEUVER_EPOCH = self.LAST_MANEUVER_EPOCH().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let DELTA_V_AS_OF = self.DELTA_V_AS_OF().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
         ETMT {
             ENTITY_ID,
             NAME,
@@ -303,6 +335,14 @@ impl<'a> ETM<'a> {
             BSTAR,
             HAS_GP,
             RESERVED,
+            OBJECT_TYPE,
+            DECAY_DATE,
+            MANEUVERABLE,
+            ESTIMATED_DELTA_V_MPS,
+            HISTORICAL_DELTA_V_MPS,
+            MANEUVER_COUNT,
+            LAST_MANEUVER_EPOCH,
+            DELTA_V_AS_OF,
         }
     }
 
@@ -548,6 +588,78 @@ impl<'a> ETM<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(ETM::VT_RESERVED, None)}
     }
+
+    /// CAT object class (PAYLOAD, ROCKET_BODY, DEBRIS, UNKNOWN); null when absent.
+    #[inline]
+    pub fn OBJECT_TYPE(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ETM::VT_OBJECT_TYPE, None)}
+    }
+
+    /// CAT decay date [YYYY-MM-DD] when decayed; null otherwise.
+    #[inline]
+    pub fn DECAY_DATE(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ETM::VT_DECAY_DATE, None)}
+    }
+
+    /// CAT maneuverability flag.
+    #[inline]
+    pub fn MANEUVERABLE(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(ETM::VT_MANEUVERABLE, Some(false)).unwrap()}
+    }
+
+    /// CAT estimated remaining maneuvering delta-V capability [m/s]; NaN when unassessed.
+    #[inline]
+    pub fn ESTIMATED_DELTA_V_MPS(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(ETM::VT_ESTIMATED_DELTA_V_MPS, Some(0.0)).unwrap()}
+    }
+
+    /// CAT cumulative historical maneuver delta-V magnitude [m/s]; NaN when unassessed.
+    #[inline]
+    pub fn HISTORICAL_DELTA_V_MPS(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(ETM::VT_HISTORICAL_DELTA_V_MPS, Some(0.0)).unwrap()}
+    }
+
+    /// CAT count of detected or confirmed historical maneuvers.
+    #[inline]
+    pub fn MANEUVER_COUNT(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(ETM::VT_MANEUVER_COUNT, Some(0)).unwrap()}
+    }
+
+    /// CAT ISO 8601 UTC epoch of the most recent detected or confirmed maneuver.
+    #[inline]
+    pub fn LAST_MANEUVER_EPOCH(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ETM::VT_LAST_MANEUVER_EPOCH, None)}
+    }
+
+    /// CAT ISO 8601 UTC instant when the delta-V fields were last evaluated.
+    #[inline]
+    pub fn DELTA_V_AS_OF(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ETM::VT_DELTA_V_AS_OF, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for ETM<'_> {
@@ -583,6 +695,14 @@ impl ::flatbuffers::Verifiable for ETM<'_> {
             .visit_field::<f64>("BSTAR", Self::VT_BSTAR, false)?
             .visit_field::<bool>("HAS_GP", Self::VT_HAS_GP, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("RESERVED", Self::VT_RESERVED, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OBJECT_TYPE", Self::VT_OBJECT_TYPE, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DECAY_DATE", Self::VT_DECAY_DATE, false)?
+            .visit_field::<bool>("MANEUVERABLE", Self::VT_MANEUVERABLE, false)?
+            .visit_field::<f64>("ESTIMATED_DELTA_V_MPS", Self::VT_ESTIMATED_DELTA_V_MPS, false)?
+            .visit_field::<f64>("HISTORICAL_DELTA_V_MPS", Self::VT_HISTORICAL_DELTA_V_MPS, false)?
+            .visit_field::<u32>("MANEUVER_COUNT", Self::VT_MANEUVER_COUNT, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("LAST_MANEUVER_EPOCH", Self::VT_LAST_MANEUVER_EPOCH, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DELTA_V_AS_OF", Self::VT_DELTA_V_AS_OF, false)?
             .finish();
         Ok(())
     }
@@ -616,6 +736,14 @@ pub struct ETMArgs<'a> {
     pub BSTAR: f64,
     pub HAS_GP: bool,
     pub RESERVED: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
+    pub OBJECT_TYPE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DECAY_DATE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MANEUVERABLE: bool,
+    pub ESTIMATED_DELTA_V_MPS: f64,
+    pub HISTORICAL_DELTA_V_MPS: f64,
+    pub MANEUVER_COUNT: u32,
+    pub LAST_MANEUVER_EPOCH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DELTA_V_AS_OF: Option<::flatbuffers::WIPOffset<&'a str>>,
 }
 
 impl<'a> Default for ETMArgs<'a> {
@@ -649,6 +777,14 @@ impl<'a> Default for ETMArgs<'a> {
             BSTAR: 0.0,
             HAS_GP: false,
             RESERVED: None,
+            OBJECT_TYPE: None,
+            DECAY_DATE: None,
+            MANEUVERABLE: false,
+            ESTIMATED_DELTA_V_MPS: 0.0,
+            HISTORICAL_DELTA_V_MPS: 0.0,
+            MANEUVER_COUNT: 0,
+            LAST_MANEUVER_EPOCH: None,
+            DELTA_V_AS_OF: None,
         }
     }
 }
@@ -795,6 +931,46 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ETMBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_OBJECT_TYPE(&mut self, OBJECT_TYPE: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ETM::VT_OBJECT_TYPE, OBJECT_TYPE);
+    }
+
+    #[inline]
+    pub fn add_DECAY_DATE(&mut self, DECAY_DATE: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ETM::VT_DECAY_DATE, DECAY_DATE);
+    }
+
+    #[inline]
+    pub fn add_MANEUVERABLE(&mut self, MANEUVERABLE: bool) {
+        self.fbb_.push_slot::<bool>(ETM::VT_MANEUVERABLE, MANEUVERABLE, false);
+    }
+
+    #[inline]
+    pub fn add_ESTIMATED_DELTA_V_MPS(&mut self, ESTIMATED_DELTA_V_MPS: f64) {
+        self.fbb_.push_slot::<f64>(ETM::VT_ESTIMATED_DELTA_V_MPS, ESTIMATED_DELTA_V_MPS, 0.0);
+    }
+
+    #[inline]
+    pub fn add_HISTORICAL_DELTA_V_MPS(&mut self, HISTORICAL_DELTA_V_MPS: f64) {
+        self.fbb_.push_slot::<f64>(ETM::VT_HISTORICAL_DELTA_V_MPS, HISTORICAL_DELTA_V_MPS, 0.0);
+    }
+
+    #[inline]
+    pub fn add_MANEUVER_COUNT(&mut self, MANEUVER_COUNT: u32) {
+        self.fbb_.push_slot::<u32>(ETM::VT_MANEUVER_COUNT, MANEUVER_COUNT, 0);
+    }
+
+    #[inline]
+    pub fn add_LAST_MANEUVER_EPOCH(&mut self, LAST_MANEUVER_EPOCH: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ETM::VT_LAST_MANEUVER_EPOCH, LAST_MANEUVER_EPOCH);
+    }
+
+    #[inline]
+    pub fn add_DELTA_V_AS_OF(&mut self, DELTA_V_AS_OF: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ETM::VT_DELTA_V_AS_OF, DELTA_V_AS_OF);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> ETMBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         ETMBuilder {
@@ -840,6 +1016,14 @@ impl ::core::fmt::Debug for ETM<'_> {
         ds.field("BSTAR", &self.BSTAR());
         ds.field("HAS_GP", &self.HAS_GP());
         ds.field("RESERVED", &self.RESERVED());
+        ds.field("OBJECT_TYPE", &self.OBJECT_TYPE());
+        ds.field("DECAY_DATE", &self.DECAY_DATE());
+        ds.field("MANEUVERABLE", &self.MANEUVERABLE());
+        ds.field("ESTIMATED_DELTA_V_MPS", &self.ESTIMATED_DELTA_V_MPS());
+        ds.field("HISTORICAL_DELTA_V_MPS", &self.HISTORICAL_DELTA_V_MPS());
+        ds.field("MANEUVER_COUNT", &self.MANEUVER_COUNT());
+        ds.field("LAST_MANEUVER_EPOCH", &self.LAST_MANEUVER_EPOCH());
+        ds.field("DELTA_V_AS_OF", &self.DELTA_V_AS_OF());
         ds.finish()
     }
 }
@@ -874,6 +1058,14 @@ pub struct ETMT {
     pub BSTAR: f64,
     pub HAS_GP: bool,
     pub RESERVED: Option<alloc::vec::Vec<u8>>,
+    pub OBJECT_TYPE: Option<alloc::string::String>,
+    pub DECAY_DATE: Option<alloc::string::String>,
+    pub MANEUVERABLE: bool,
+    pub ESTIMATED_DELTA_V_MPS: f64,
+    pub HISTORICAL_DELTA_V_MPS: f64,
+    pub MANEUVER_COUNT: u32,
+    pub LAST_MANEUVER_EPOCH: Option<alloc::string::String>,
+    pub DELTA_V_AS_OF: Option<alloc::string::String>,
 }
 
 impl Default for ETMT {
@@ -906,6 +1098,14 @@ impl Default for ETMT {
             BSTAR: 0.0,
             HAS_GP: false,
             RESERVED: None,
+            OBJECT_TYPE: None,
+            DECAY_DATE: None,
+            MANEUVERABLE: false,
+            ESTIMATED_DELTA_V_MPS: 0.0,
+            HISTORICAL_DELTA_V_MPS: 0.0,
+            MANEUVER_COUNT: 0,
+            LAST_MANEUVER_EPOCH: None,
+            DELTA_V_AS_OF: None,
         }
     }
 }
@@ -974,6 +1174,22 @@ impl ETMT {
         let RESERVED = self.RESERVED.as_ref().map(|x|{
             _fbb.create_vector(x)
         });
+        let OBJECT_TYPE = self.OBJECT_TYPE.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let DECAY_DATE = self.DECAY_DATE.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let MANEUVERABLE = self.MANEUVERABLE;
+        let ESTIMATED_DELTA_V_MPS = self.ESTIMATED_DELTA_V_MPS;
+        let HISTORICAL_DELTA_V_MPS = self.HISTORICAL_DELTA_V_MPS;
+        let MANEUVER_COUNT = self.MANEUVER_COUNT;
+        let LAST_MANEUVER_EPOCH = self.LAST_MANEUVER_EPOCH.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let DELTA_V_AS_OF = self.DELTA_V_AS_OF.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
         ETM::create(_fbb, &ETMArgs{
             ENTITY_ID,
             NAME,
@@ -1002,6 +1218,14 @@ impl ETMT {
             BSTAR,
             HAS_GP,
             RESERVED,
+            OBJECT_TYPE,
+            DECAY_DATE,
+            MANEUVERABLE,
+            ESTIMATED_DELTA_V_MPS,
+            HISTORICAL_DELTA_V_MPS,
+            MANEUVER_COUNT,
+            LAST_MANEUVER_EPOCH,
+            DELTA_V_AS_OF,
         })
     }
 }
