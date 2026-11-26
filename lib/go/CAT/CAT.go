@@ -673,8 +673,154 @@ func (rcv *CAT) RecommendedLength() int {
 /// The recommended product per span of lead, in lead order, the spans not
 /// overlapping. Absent: the catalog recommends no product. Past the last
 /// span no product is recommended.
+/// Current estimated remaining maneuvering delta-V capability [m/s] as of
+/// DELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the
+/// element-set archive) and propulsion-class bounds. Zero when assessed as
+/// non-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty.
+func (rcv *CAT) ESTIMATED_DELTA_V_MPS() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *CAT) EstimatedDeltaVMps() float64 {
+	return rcv.ESTIMATED_DELTA_V_MPS()
+}
+
+/// Current estimated remaining maneuvering delta-V capability [m/s] as of
+/// DELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the
+/// element-set archive) and propulsion-class bounds. Zero when assessed as
+/// non-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty.
+func (rcv *CAT) MutateESTIMATED_DELTA_V_MPS(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(62, n)
+}
+
+func (rcv *CAT) MutateEstimatedDeltaVMps(n float64) bool {
+	return rcv.MutateESTIMATED_DELTA_V_MPS(n)
+}
+
+/// 1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s].
+func (rcv *CAT) ESTIMATED_DELTA_V_UNC_MPS() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *CAT) EstimatedDeltaVUncMps() float64 {
+	return rcv.ESTIMATED_DELTA_V_UNC_MPS()
+}
+
+/// 1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s].
+func (rcv *CAT) MutateESTIMATED_DELTA_V_UNC_MPS(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(64, n)
+}
+
+func (rcv *CAT) MutateEstimatedDeltaVUncMps(n float64) bool {
+	return rcv.MutateESTIMATED_DELTA_V_UNC_MPS(n)
+}
+
+/// Cumulative historical delta-V magnitude [m/s] summed across detected or
+/// confirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF.
+func (rcv *CAT) HISTORICAL_DELTA_V_MPS() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *CAT) HistoricalDeltaVMps() float64 {
+	return rcv.HISTORICAL_DELTA_V_MPS()
+}
+
+/// Cumulative historical delta-V magnitude [m/s] summed across detected or
+/// confirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF.
+func (rcv *CAT) MutateHISTORICAL_DELTA_V_MPS(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(66, n)
+}
+
+func (rcv *CAT) MutateHistoricalDeltaVMps(n float64) bool {
+	return rcv.MutateHISTORICAL_DELTA_V_MPS(n)
+}
+
+/// Number of merged detected or confirmed maneuvers observed in the object's
+/// historical archive up to DELTA_V_AS_OF.
+func (rcv *CAT) MANEUVER_COUNT() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *CAT) ManeuverCount() uint32 {
+	return rcv.MANEUVER_COUNT()
+}
+
+/// Number of merged detected or confirmed maneuvers observed in the object's
+/// historical archive up to DELTA_V_AS_OF.
+func (rcv *CAT) MutateMANEUVER_COUNT(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(68, n)
+}
+
+func (rcv *CAT) MutateManeuverCount(n uint32) bool {
+	return rcv.MutateMANEUVER_COUNT(n)
+}
+
+/// ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or
+/// empty when no maneuver has been observed.
+func (rcv *CAT) LAST_MANEUVER_EPOCH() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *CAT) LastManeuverEpoch() []byte {
+	return rcv.LAST_MANEUVER_EPOCH()
+}
+
+/// ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or
+/// empty when no maneuver has been observed.
+/// ISO 8601 UTC instant when the delta-V fields above were last evaluated.
+/// Non-empty distinguishes an assessed 0 m/s object from an unassessed record.
+func (rcv *CAT) DELTA_V_AS_OF() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *CAT) DeltaVAsOf() []byte {
+	return rcv.DELTA_V_AS_OF()
+}
+
+/// ISO 8601 UTC instant when the delta-V fields above were last evaluated.
+/// Non-empty distinguishes an assessed 0 m/s object from an unassessed record.
+/// Method and source provenance for the delta-V estimate (for example
+/// "sdn-ap/maneuver-detection+catalog-composer").
+func (rcv *CAT) DELTA_V_PROVENANCE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *CAT) DeltaVProvenance() []byte {
+	return rcv.DELTA_V_PROVENANCE()
+}
+
+/// Method and source provenance for the delta-V estimate (for example
+/// "sdn-ap/maneuver-detection+catalog-composer").
 func CATStart(builder *flatbuffers.Builder) {
-	builder.StartObject(29)
+	builder.StartObject(36)
 }
 func CATAddOBJECT_NAME(builder *flatbuffers.Builder, OBJECT_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(OBJECT_NAME), 0)
@@ -867,6 +1013,48 @@ func CATStartRECOMMENDEDVector(builder *flatbuffers.Builder, numElems int) flatb
 }
 func CATStartRecommendedVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return CATStartRECOMMENDEDVector(builder, numElems)
+}
+func CATAddESTIMATED_DELTA_V_MPS(builder *flatbuffers.Builder, ESTIMATED_DELTA_V_MPS float64) {
+	builder.PrependFloat64Slot(29, ESTIMATED_DELTA_V_MPS, 0.0)
+}
+func CATAddEstimatedDeltaVMps(builder *flatbuffers.Builder, ESTIMATED_DELTA_V_MPS float64) {
+	CATAddESTIMATED_DELTA_V_MPS(builder, ESTIMATED_DELTA_V_MPS)
+}
+func CATAddESTIMATED_DELTA_V_UNC_MPS(builder *flatbuffers.Builder, ESTIMATED_DELTA_V_UNC_MPS float64) {
+	builder.PrependFloat64Slot(30, ESTIMATED_DELTA_V_UNC_MPS, 0.0)
+}
+func CATAddEstimatedDeltaVUncMps(builder *flatbuffers.Builder, ESTIMATED_DELTA_V_UNC_MPS float64) {
+	CATAddESTIMATED_DELTA_V_UNC_MPS(builder, ESTIMATED_DELTA_V_UNC_MPS)
+}
+func CATAddHISTORICAL_DELTA_V_MPS(builder *flatbuffers.Builder, HISTORICAL_DELTA_V_MPS float64) {
+	builder.PrependFloat64Slot(31, HISTORICAL_DELTA_V_MPS, 0.0)
+}
+func CATAddHistoricalDeltaVMps(builder *flatbuffers.Builder, HISTORICAL_DELTA_V_MPS float64) {
+	CATAddHISTORICAL_DELTA_V_MPS(builder, HISTORICAL_DELTA_V_MPS)
+}
+func CATAddMANEUVER_COUNT(builder *flatbuffers.Builder, MANEUVER_COUNT uint32) {
+	builder.PrependUint32Slot(32, MANEUVER_COUNT, 0)
+}
+func CATAddManeuverCount(builder *flatbuffers.Builder, MANEUVER_COUNT uint32) {
+	CATAddMANEUVER_COUNT(builder, MANEUVER_COUNT)
+}
+func CATAddLAST_MANEUVER_EPOCH(builder *flatbuffers.Builder, LAST_MANEUVER_EPOCH flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(33, flatbuffers.UOffsetT(LAST_MANEUVER_EPOCH), 0)
+}
+func CATAddLastManeuverEpoch(builder *flatbuffers.Builder, LAST_MANEUVER_EPOCH flatbuffers.UOffsetT) {
+	CATAddLAST_MANEUVER_EPOCH(builder, LAST_MANEUVER_EPOCH)
+}
+func CATAddDELTA_V_AS_OF(builder *flatbuffers.Builder, DELTA_V_AS_OF flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(34, flatbuffers.UOffsetT(DELTA_V_AS_OF), 0)
+}
+func CATAddDeltaVAsOf(builder *flatbuffers.Builder, DELTA_V_AS_OF flatbuffers.UOffsetT) {
+	CATAddDELTA_V_AS_OF(builder, DELTA_V_AS_OF)
+}
+func CATAddDELTA_V_PROVENANCE(builder *flatbuffers.Builder, DELTA_V_PROVENANCE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(35, flatbuffers.UOffsetT(DELTA_V_PROVENANCE), 0)
+}
+func CATAddDeltaVProvenance(builder *flatbuffers.Builder, DELTA_V_PROVENANCE flatbuffers.UOffsetT) {
+	CATAddDELTA_V_PROVENANCE(builder, DELTA_V_PROVENANCE)
 }
 func CATEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

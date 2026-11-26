@@ -555,7 +555,14 @@ struct CAT FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_CATALOG_OBJECT_ID = 54,
     VT_PRODUCTS = 56,
     VT_PRODUCTS_AS_OF = 58,
-    VT_RECOMMENDED = 60
+    VT_RECOMMENDED = 60,
+    VT_ESTIMATED_DELTA_V_MPS = 62,
+    VT_ESTIMATED_DELTA_V_UNC_MPS = 64,
+    VT_HISTORICAL_DELTA_V_MPS = 66,
+    VT_MANEUVER_COUNT = 68,
+    VT_LAST_MANEUVER_EPOCH = 70,
+    VT_DELTA_V_AS_OF = 72,
+    VT_DELTA_V_PROVENANCE = 74
   };
   /// Satellite Name(s)
   const ::flatbuffers::String *OBJECT_NAME() const {
@@ -691,6 +698,42 @@ struct CAT FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<CATRecommendation>> *RECOMMENDED() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<CATRecommendation>> *>(VT_RECOMMENDED);
   }
+  /// Current estimated remaining maneuvering delta-V capability [m/s] as of
+  /// DELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the
+  /// element-set archive) and propulsion-class bounds. Zero when assessed as
+  /// non-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty.
+  double ESTIMATED_DELTA_V_MPS() const {
+    return GetField<double>(VT_ESTIMATED_DELTA_V_MPS, 0.0);
+  }
+  /// 1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s].
+  double ESTIMATED_DELTA_V_UNC_MPS() const {
+    return GetField<double>(VT_ESTIMATED_DELTA_V_UNC_MPS, 0.0);
+  }
+  /// Cumulative historical delta-V magnitude [m/s] summed across detected or
+  /// confirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF.
+  double HISTORICAL_DELTA_V_MPS() const {
+    return GetField<double>(VT_HISTORICAL_DELTA_V_MPS, 0.0);
+  }
+  /// Number of merged detected or confirmed maneuvers observed in the object's
+  /// historical archive up to DELTA_V_AS_OF.
+  uint32_t MANEUVER_COUNT() const {
+    return GetField<uint32_t>(VT_MANEUVER_COUNT, 0);
+  }
+  /// ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or
+  /// empty when no maneuver has been observed.
+  const ::flatbuffers::String *LAST_MANEUVER_EPOCH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_LAST_MANEUVER_EPOCH);
+  }
+  /// ISO 8601 UTC instant when the delta-V fields above were last evaluated.
+  /// Non-empty distinguishes an assessed 0 m/s object from an unassessed record.
+  const ::flatbuffers::String *DELTA_V_AS_OF() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DELTA_V_AS_OF);
+  }
+  /// Method and source provenance for the delta-V estimate (for example
+  /// "sdn-ap/maneuver-detection+catalog-composer").
+  const ::flatbuffers::String *DELTA_V_PROVENANCE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DELTA_V_PROVENANCE);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -740,6 +783,16 @@ struct CAT FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_RECOMMENDED) &&
            verifier.VerifyVector(RECOMMENDED()) &&
            verifier.VerifyVectorOfTables(RECOMMENDED()) &&
+           VerifyField<double>(verifier, VT_ESTIMATED_DELTA_V_MPS, 8) &&
+           VerifyField<double>(verifier, VT_ESTIMATED_DELTA_V_UNC_MPS, 8) &&
+           VerifyField<double>(verifier, VT_HISTORICAL_DELTA_V_MPS, 8) &&
+           VerifyField<uint32_t>(verifier, VT_MANEUVER_COUNT, 4) &&
+           VerifyOffset(verifier, VT_LAST_MANEUVER_EPOCH) &&
+           verifier.VerifyString(LAST_MANEUVER_EPOCH()) &&
+           VerifyOffset(verifier, VT_DELTA_V_AS_OF) &&
+           verifier.VerifyString(DELTA_V_AS_OF()) &&
+           VerifyOffset(verifier, VT_DELTA_V_PROVENANCE) &&
+           verifier.VerifyString(DELTA_V_PROVENANCE()) &&
            verifier.EndTable();
   }
 };
@@ -835,6 +888,27 @@ struct CATBuilder {
   void add_RECOMMENDED(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<CATRecommendation>>> RECOMMENDED) {
     fbb_.AddOffset(CAT::VT_RECOMMENDED, RECOMMENDED);
   }
+  void add_ESTIMATED_DELTA_V_MPS(double ESTIMATED_DELTA_V_MPS) {
+    fbb_.AddElement<double>(CAT::VT_ESTIMATED_DELTA_V_MPS, ESTIMATED_DELTA_V_MPS, 0.0);
+  }
+  void add_ESTIMATED_DELTA_V_UNC_MPS(double ESTIMATED_DELTA_V_UNC_MPS) {
+    fbb_.AddElement<double>(CAT::VT_ESTIMATED_DELTA_V_UNC_MPS, ESTIMATED_DELTA_V_UNC_MPS, 0.0);
+  }
+  void add_HISTORICAL_DELTA_V_MPS(double HISTORICAL_DELTA_V_MPS) {
+    fbb_.AddElement<double>(CAT::VT_HISTORICAL_DELTA_V_MPS, HISTORICAL_DELTA_V_MPS, 0.0);
+  }
+  void add_MANEUVER_COUNT(uint32_t MANEUVER_COUNT) {
+    fbb_.AddElement<uint32_t>(CAT::VT_MANEUVER_COUNT, MANEUVER_COUNT, 0);
+  }
+  void add_LAST_MANEUVER_EPOCH(::flatbuffers::Offset<::flatbuffers::String> LAST_MANEUVER_EPOCH) {
+    fbb_.AddOffset(CAT::VT_LAST_MANEUVER_EPOCH, LAST_MANEUVER_EPOCH);
+  }
+  void add_DELTA_V_AS_OF(::flatbuffers::Offset<::flatbuffers::String> DELTA_V_AS_OF) {
+    fbb_.AddOffset(CAT::VT_DELTA_V_AS_OF, DELTA_V_AS_OF);
+  }
+  void add_DELTA_V_PROVENANCE(::flatbuffers::Offset<::flatbuffers::String> DELTA_V_PROVENANCE) {
+    fbb_.AddOffset(CAT::VT_DELTA_V_PROVENANCE, DELTA_V_PROVENANCE);
+  }
   explicit CATBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -876,8 +950,18 @@ inline ::flatbuffers::Offset<CAT> CreateCAT(
     ::flatbuffers::Offset<::flatbuffers::String> CATALOG_OBJECT_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<CATProduct>>> PRODUCTS = 0,
     ::flatbuffers::Offset<::flatbuffers::String> PRODUCTS_AS_OF = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<CATRecommendation>>> RECOMMENDED = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<CATRecommendation>>> RECOMMENDED = 0,
+    double ESTIMATED_DELTA_V_MPS = 0.0,
+    double ESTIMATED_DELTA_V_UNC_MPS = 0.0,
+    double HISTORICAL_DELTA_V_MPS = 0.0,
+    uint32_t MANEUVER_COUNT = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> LAST_MANEUVER_EPOCH = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> DELTA_V_AS_OF = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> DELTA_V_PROVENANCE = 0) {
   CATBuilder builder_(_fbb);
+  builder_.add_HISTORICAL_DELTA_V_MPS(HISTORICAL_DELTA_V_MPS);
+  builder_.add_ESTIMATED_DELTA_V_UNC_MPS(ESTIMATED_DELTA_V_UNC_MPS);
+  builder_.add_ESTIMATED_DELTA_V_MPS(ESTIMATED_DELTA_V_MPS);
   builder_.add_MASS(MASS);
   builder_.add_SIZE(SIZE);
   builder_.add_RCS(RCS);
@@ -885,6 +969,10 @@ inline ::flatbuffers::Offset<CAT> CreateCAT(
   builder_.add_APOGEE(APOGEE);
   builder_.add_INCLINATION(INCLINATION);
   builder_.add_PERIOD(PERIOD);
+  builder_.add_DELTA_V_PROVENANCE(DELTA_V_PROVENANCE);
+  builder_.add_DELTA_V_AS_OF(DELTA_V_AS_OF);
+  builder_.add_LAST_MANEUVER_EPOCH(LAST_MANEUVER_EPOCH);
+  builder_.add_MANEUVER_COUNT(MANEUVER_COUNT);
   builder_.add_RECOMMENDED(RECOMMENDED);
   builder_.add_PRODUCTS_AS_OF(PRODUCTS_AS_OF);
   builder_.add_PRODUCTS(PRODUCTS);
@@ -940,7 +1028,14 @@ inline ::flatbuffers::Offset<CAT> CreateCATDirect(
     const char *CATALOG_OBJECT_ID = nullptr,
     const std::vector<::flatbuffers::Offset<CATProduct>> *PRODUCTS = nullptr,
     const char *PRODUCTS_AS_OF = nullptr,
-    const std::vector<::flatbuffers::Offset<CATRecommendation>> *RECOMMENDED = nullptr) {
+    const std::vector<::flatbuffers::Offset<CATRecommendation>> *RECOMMENDED = nullptr,
+    double ESTIMATED_DELTA_V_MPS = 0.0,
+    double ESTIMATED_DELTA_V_UNC_MPS = 0.0,
+    double HISTORICAL_DELTA_V_MPS = 0.0,
+    uint32_t MANEUVER_COUNT = 0,
+    const char *LAST_MANEUVER_EPOCH = nullptr,
+    const char *DELTA_V_AS_OF = nullptr,
+    const char *DELTA_V_PROVENANCE = nullptr) {
   auto OBJECT_NAME__ = OBJECT_NAME ? _fbb.CreateString(OBJECT_NAME) : 0;
   auto OBJECT_ID__ = OBJECT_ID ? _fbb.CreateString(OBJECT_ID) : 0;
   auto LAUNCH_DATE__ = LAUNCH_DATE ? _fbb.CreateString(LAUNCH_DATE) : 0;
@@ -955,6 +1050,9 @@ inline ::flatbuffers::Offset<CAT> CreateCATDirect(
   auto PRODUCTS__ = PRODUCTS ? _fbb.CreateVector<::flatbuffers::Offset<CATProduct>>(*PRODUCTS) : 0;
   auto PRODUCTS_AS_OF__ = PRODUCTS_AS_OF ? _fbb.CreateString(PRODUCTS_AS_OF) : 0;
   auto RECOMMENDED__ = RECOMMENDED ? _fbb.CreateVector<::flatbuffers::Offset<CATRecommendation>>(*RECOMMENDED) : 0;
+  auto LAST_MANEUVER_EPOCH__ = LAST_MANEUVER_EPOCH ? _fbb.CreateString(LAST_MANEUVER_EPOCH) : 0;
+  auto DELTA_V_AS_OF__ = DELTA_V_AS_OF ? _fbb.CreateString(DELTA_V_AS_OF) : 0;
+  auto DELTA_V_PROVENANCE__ = DELTA_V_PROVENANCE ? _fbb.CreateString(DELTA_V_PROVENANCE) : 0;
   return CreateCAT(
       _fbb,
       OBJECT_NAME__,
@@ -985,7 +1083,14 @@ inline ::flatbuffers::Offset<CAT> CreateCATDirect(
       CATALOG_OBJECT_ID__,
       PRODUCTS__,
       PRODUCTS_AS_OF__,
-      RECOMMENDED__);
+      RECOMMENDED__,
+      ESTIMATED_DELTA_V_MPS,
+      ESTIMATED_DELTA_V_UNC_MPS,
+      HISTORICAL_DELTA_V_MPS,
+      MANEUVER_COUNT,
+      LAST_MANEUVER_EPOCH__,
+      DELTA_V_AS_OF__,
+      DELTA_V_PROVENANCE__);
 }
 
 inline const CAT *GetCAT(const void *buf) {

@@ -321,6 +321,13 @@ public struct CAT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let PRODUCTS: VOffset = 56
     static let PRODUCTS_AS_OF: VOffset = 58
     static let RECOMMENDED: VOffset = 60
+    static let ESTIMATED_DELTA_V_MPS: VOffset = 62
+    static let ESTIMATED_DELTA_V_UNC_MPS: VOffset = 64
+    static let HISTORICAL_DELTA_V_MPS: VOffset = 66
+    static let MANEUVER_COUNT: VOffset = 68
+    static let LAST_MANEUVER_EPOCH: VOffset = 70
+    static let DELTA_V_AS_OF: VOffset = 72
+    static let DELTA_V_PROVENANCE: VOffset = 74
   }
 
   ///  Satellite Name(s)
@@ -410,7 +417,32 @@ public struct CAT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  overlapping. Absent: the catalog recommends no product. Past the last
   ///  span no product is recommended.
   public var RECOMMENDED: FlatbufferVector<CATRecommendation> { return _accessor.vector(at: VT.RECOMMENDED, byteSize: 4) }
-  public static func startCAT(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 29) }
+  ///  Current estimated remaining maneuvering delta-V capability [m/s] as of
+  ///  DELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the
+  ///  element-set archive) and propulsion-class bounds. Zero when assessed as
+  ///  non-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty.
+  public var ESTIMATED_DELTA_V_MPS: Double { let o = _accessor.offset(VT.ESTIMATED_DELTA_V_MPS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s].
+  public var ESTIMATED_DELTA_V_UNC_MPS: Double { let o = _accessor.offset(VT.ESTIMATED_DELTA_V_UNC_MPS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Cumulative historical delta-V magnitude [m/s] summed across detected or
+  ///  confirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF.
+  public var HISTORICAL_DELTA_V_MPS: Double { let o = _accessor.offset(VT.HISTORICAL_DELTA_V_MPS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Number of merged detected or confirmed maneuvers observed in the object's
+  ///  historical archive up to DELTA_V_AS_OF.
+  public var MANEUVER_COUNT: UInt32 { let o = _accessor.offset(VT.MANEUVER_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or
+  ///  empty when no maneuver has been observed.
+  public var LAST_MANEUVER_EPOCH: String? { let o = _accessor.offset(VT.LAST_MANEUVER_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LAST_MANEUVER_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LAST_MANEUVER_EPOCH) }
+  ///  ISO 8601 UTC instant when the delta-V fields above were last evaluated.
+  ///  Non-empty distinguishes an assessed 0 m/s object from an unassessed record.
+  public var DELTA_V_AS_OF: String? { let o = _accessor.offset(VT.DELTA_V_AS_OF); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DELTA_V_AS_OFSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DELTA_V_AS_OF) }
+  ///  Method and source provenance for the delta-V estimate (for example
+  ///  "sdn-ap/maneuver-detection+catalog-composer").
+  public var DELTA_V_PROVENANCE: String? { let o = _accessor.offset(VT.DELTA_V_PROVENANCE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DELTA_V_PROVENANCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DELTA_V_PROVENANCE) }
+  public static func startCAT(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 36) }
   public static func add(OBJECT_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_NAME, at: VT.OBJECT_NAME) }
   public static func add(OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_ID, at: VT.OBJECT_ID) }
   public static func add(NORAD_CAT_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORAD_CAT_ID, def: 0, at: VT.NORAD_CAT_ID) }
@@ -441,6 +473,13 @@ public struct CAT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func addVectorOf(PRODUCTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRODUCTS, at: VT.PRODUCTS) }
   public static func add(PRODUCTS_AS_OF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRODUCTS_AS_OF, at: VT.PRODUCTS_AS_OF) }
   public static func addVectorOf(RECOMMENDED: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECOMMENDED, at: VT.RECOMMENDED) }
+  public static func add(ESTIMATED_DELTA_V_MPS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ESTIMATED_DELTA_V_MPS, def: 0.0, at: VT.ESTIMATED_DELTA_V_MPS) }
+  public static func add(ESTIMATED_DELTA_V_UNC_MPS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ESTIMATED_DELTA_V_UNC_MPS, def: 0.0, at: VT.ESTIMATED_DELTA_V_UNC_MPS) }
+  public static func add(HISTORICAL_DELTA_V_MPS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HISTORICAL_DELTA_V_MPS, def: 0.0, at: VT.HISTORICAL_DELTA_V_MPS) }
+  public static func add(MANEUVER_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MANEUVER_COUNT, def: 0, at: VT.MANEUVER_COUNT) }
+  public static func add(LAST_MANEUVER_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAST_MANEUVER_EPOCH, at: VT.LAST_MANEUVER_EPOCH) }
+  public static func add(DELTA_V_AS_OF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DELTA_V_AS_OF, at: VT.DELTA_V_AS_OF) }
+  public static func add(DELTA_V_PROVENANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DELTA_V_PROVENANCE, at: VT.DELTA_V_PROVENANCE) }
   public static func endCAT(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCAT(
     _ fbb: inout FlatBufferBuilder,
@@ -472,7 +511,14 @@ public struct CAT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     CATALOG_OBJECT_IDOffset CATALOG_OBJECT_ID: Offset = Offset(),
     PRODUCTSVectorOffset PRODUCTS: Offset = Offset(),
     PRODUCTS_AS_OFOffset PRODUCTS_AS_OF: Offset = Offset(),
-    RECOMMENDEDVectorOffset RECOMMENDED: Offset = Offset()
+    RECOMMENDEDVectorOffset RECOMMENDED: Offset = Offset(),
+    ESTIMATED_DELTA_V_MPS: Double = 0.0,
+    ESTIMATED_DELTA_V_UNC_MPS: Double = 0.0,
+    HISTORICAL_DELTA_V_MPS: Double = 0.0,
+    MANEUVER_COUNT: UInt32 = 0,
+    LAST_MANEUVER_EPOCHOffset LAST_MANEUVER_EPOCH: Offset = Offset(),
+    DELTA_V_AS_OFOffset DELTA_V_AS_OF: Offset = Offset(),
+    DELTA_V_PROVENANCEOffset DELTA_V_PROVENANCE: Offset = Offset()
   ) -> Offset {
     let __start = CAT.startCAT(&fbb)
     CAT.add(OBJECT_NAME: OBJECT_NAME, &fbb)
@@ -504,6 +550,13 @@ public struct CAT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     CAT.addVectorOf(PRODUCTS: PRODUCTS, &fbb)
     CAT.add(PRODUCTS_AS_OF: PRODUCTS_AS_OF, &fbb)
     CAT.addVectorOf(RECOMMENDED: RECOMMENDED, &fbb)
+    CAT.add(ESTIMATED_DELTA_V_MPS: ESTIMATED_DELTA_V_MPS, &fbb)
+    CAT.add(ESTIMATED_DELTA_V_UNC_MPS: ESTIMATED_DELTA_V_UNC_MPS, &fbb)
+    CAT.add(HISTORICAL_DELTA_V_MPS: HISTORICAL_DELTA_V_MPS, &fbb)
+    CAT.add(MANEUVER_COUNT: MANEUVER_COUNT, &fbb)
+    CAT.add(LAST_MANEUVER_EPOCH: LAST_MANEUVER_EPOCH, &fbb)
+    CAT.add(DELTA_V_AS_OF: DELTA_V_AS_OF, &fbb)
+    CAT.add(DELTA_V_PROVENANCE: DELTA_V_PROVENANCE, &fbb)
     return CAT.endCAT(&fbb, start: __start)
   }
 
@@ -538,6 +591,13 @@ public struct CAT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.PRODUCTS, fieldName: "PRODUCTS", required: false, type: ForwardOffset<Vector<ForwardOffset<CATProduct>, CATProduct>>.self)
     try _v.visit(field: VT.PRODUCTS_AS_OF, fieldName: "PRODUCTS_AS_OF", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.RECOMMENDED, fieldName: "RECOMMENDED", required: false, type: ForwardOffset<Vector<ForwardOffset<CATRecommendation>, CATRecommendation>>.self)
+    try _v.visit(field: VT.ESTIMATED_DELTA_V_MPS, fieldName: "ESTIMATED_DELTA_V_MPS", required: false, type: Double.self)
+    try _v.visit(field: VT.ESTIMATED_DELTA_V_UNC_MPS, fieldName: "ESTIMATED_DELTA_V_UNC_MPS", required: false, type: Double.self)
+    try _v.visit(field: VT.HISTORICAL_DELTA_V_MPS, fieldName: "HISTORICAL_DELTA_V_MPS", required: false, type: Double.self)
+    try _v.visit(field: VT.MANEUVER_COUNT, fieldName: "MANEUVER_COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.LAST_MANEUVER_EPOCH, fieldName: "LAST_MANEUVER_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DELTA_V_AS_OF, fieldName: "DELTA_V_AS_OF", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DELTA_V_PROVENANCE, fieldName: "DELTA_V_PROVENANCE", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

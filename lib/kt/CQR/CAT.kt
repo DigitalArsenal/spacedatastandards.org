@@ -369,6 +369,88 @@ class CAT : Table() {
         get() {
             val o = __offset(60); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Current estimated remaining maneuvering delta-V capability [m/s] as of
+     * DELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the
+     * element-set archive) and propulsion-class bounds. Zero when assessed as
+     * non-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty.
+     */
+    val estimatedDeltaVMps : Double
+        get() {
+            val o = __offset(62)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * 1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s].
+     */
+    val estimatedDeltaVUncMps : Double
+        get() {
+            val o = __offset(64)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Cumulative historical delta-V magnitude [m/s] summed across detected or
+     * confirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF.
+     */
+    val historicalDeltaVMps : Double
+        get() {
+            val o = __offset(66)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Number of merged detected or confirmed maneuvers observed in the object's
+     * historical archive up to DELTA_V_AS_OF.
+     */
+    val maneuverCount : UInt
+        get() {
+            val o = __offset(68)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or
+     * empty when no maneuver has been observed.
+     */
+    val lastManeuverEpoch : String?
+        get() {
+            val o = __offset(70)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val lastManeuverEpochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(70, 1)
+    fun lastManeuverEpochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 70, 1)
+    /**
+     * ISO 8601 UTC instant when the delta-V fields above were last evaluated.
+     * Non-empty distinguishes an assessed 0 m/s object from an unassessed record.
+     */
+    val deltaVAsOf : String?
+        get() {
+            val o = __offset(72)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val deltaVAsOfAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(72, 1)
+    fun deltaVAsOfInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 72, 1)
+    /**
+     * Method and source provenance for the delta-V estimate (for example
+     * "sdn-ap/maneuver-detection+catalog-composer").
+     */
+    val deltaVProvenance : String?
+        get() {
+            val o = __offset(74)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val deltaVProvenanceAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(74, 1)
+    fun deltaVProvenanceInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 74, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCAT(_bb: ByteBuffer): CAT = getRootAsCAT(_bb, CAT())
@@ -377,8 +459,11 @@ class CAT : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun CATBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$CAT")
-        fun createCAT(builder: FlatBufferBuilder, objectNameOffset: Int, objectIdOffset: Int, noradCatId: UInt, objectType: Byte, opsStatusCode: Byte, owner: UByte, launchDateOffset: Int, launchSiteOffset: Int, decayDateOffset: Int, period: Double, inclination: Double, apogee: Double, perigee: Double, rcs: Double, dataStatusCode: Byte, orbitCenterOffset: Int, orbitType: Byte, deploymentDateOffset: Int, maneuverable: Boolean, size: Double, mass: Double, massType: Byte, payloadsOffset: Int, busIdOffset: Int, catalogUriOffset: Int, catalogObjectIdOffset: Int, productsOffset: Int, productsAsOfOffset: Int, recommendedOffset: Int) : Int {
-            builder.startTable(29)
+        fun createCAT(builder: FlatBufferBuilder, objectNameOffset: Int, objectIdOffset: Int, noradCatId: UInt, objectType: Byte, opsStatusCode: Byte, owner: UByte, launchDateOffset: Int, launchSiteOffset: Int, decayDateOffset: Int, period: Double, inclination: Double, apogee: Double, perigee: Double, rcs: Double, dataStatusCode: Byte, orbitCenterOffset: Int, orbitType: Byte, deploymentDateOffset: Int, maneuverable: Boolean, size: Double, mass: Double, massType: Byte, payloadsOffset: Int, busIdOffset: Int, catalogUriOffset: Int, catalogObjectIdOffset: Int, productsOffset: Int, productsAsOfOffset: Int, recommendedOffset: Int, estimatedDeltaVMps: Double, estimatedDeltaVUncMps: Double, historicalDeltaVMps: Double, maneuverCount: UInt, lastManeuverEpochOffset: Int, deltaVAsOfOffset: Int, deltaVProvenanceOffset: Int) : Int {
+            builder.startTable(36)
+            addHISTORICALDELTAVMPS(builder, historicalDeltaVMps)
+            addESTIMATEDDELTAVUNCMPS(builder, estimatedDeltaVUncMps)
+            addESTIMATEDDELTAVMPS(builder, estimatedDeltaVMps)
             addMASS(builder, mass)
             addSIZE(builder, size)
             addRCS(builder, rcs)
@@ -386,6 +471,10 @@ class CAT : Table() {
             addAPOGEE(builder, apogee)
             addINCLINATION(builder, inclination)
             addPERIOD(builder, period)
+            addDELTAVPROVENANCE(builder, deltaVProvenanceOffset)
+            addDELTAVASOF(builder, deltaVAsOfOffset)
+            addLASTMANEUVEREPOCH(builder, lastManeuverEpochOffset)
+            addMANEUVERCOUNT(builder, maneuverCount)
             addRECOMMENDED(builder, recommendedOffset)
             addPRODUCTSASOF(builder, productsAsOfOffset)
             addPRODUCTS(builder, productsOffset)
@@ -410,7 +499,7 @@ class CAT : Table() {
             addOBJECTTYPE(builder, objectType)
             return endCAT(builder)
         }
-        fun startCAT(builder: FlatBufferBuilder) = builder.startTable(29)
+        fun startCAT(builder: FlatBufferBuilder) = builder.startTable(36)
         fun addOBJECTNAME(builder: FlatBufferBuilder, objectName: Int) = builder.addOffset(0, objectName, 0)
         fun addOBJECTID(builder: FlatBufferBuilder, objectId: Int) = builder.addOffset(1, objectId, 0)
         fun addNORADCATID(builder: FlatBufferBuilder, noradCatId: UInt) = builder.addInt(2, noradCatId.toInt(), 0)
@@ -464,6 +553,13 @@ class CAT : Table() {
             return builder.endVector()
         }
         fun startRecommendedVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addESTIMATEDDELTAVMPS(builder: FlatBufferBuilder, estimatedDeltaVMps: Double) = builder.addDouble(29, estimatedDeltaVMps, 0.0)
+        fun addESTIMATEDDELTAVUNCMPS(builder: FlatBufferBuilder, estimatedDeltaVUncMps: Double) = builder.addDouble(30, estimatedDeltaVUncMps, 0.0)
+        fun addHISTORICALDELTAVMPS(builder: FlatBufferBuilder, historicalDeltaVMps: Double) = builder.addDouble(31, historicalDeltaVMps, 0.0)
+        fun addMANEUVERCOUNT(builder: FlatBufferBuilder, maneuverCount: UInt) = builder.addInt(32, maneuverCount.toInt(), 0)
+        fun addLASTMANEUVEREPOCH(builder: FlatBufferBuilder, lastManeuverEpoch: Int) = builder.addOffset(33, lastManeuverEpoch, 0)
+        fun addDELTAVASOF(builder: FlatBufferBuilder, deltaVAsOf: Int) = builder.addOffset(34, deltaVAsOf, 0)
+        fun addDELTAVPROVENANCE(builder: FlatBufferBuilder, deltaVProvenance: Int) = builder.addOffset(35, deltaVProvenance, 0)
         fun endCAT(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

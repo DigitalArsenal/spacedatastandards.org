@@ -164,6 +164,46 @@ public struct CAT : IFlatbufferObject
   /// span no product is recommended.
   public CATRecommendation? RECOMMENDED(int j) { int o = __p.__offset(60); return o != 0 ? (CATRecommendation?)(new CATRecommendation()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int RECOMMENDEDLength { get { int o = __p.__offset(60); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Current estimated remaining maneuvering delta-V capability [m/s] as of
+  /// DELTA_V_AS_OF, derived from historical maneuver detection (SDN-AP over the
+  /// element-set archive) and propulsion-class bounds. Zero when assessed as
+  /// non-maneuvering or depleted; absent/unassessed when DELTA_V_AS_OF is empty.
+  public double ESTIMATED_DELTA_V_MPS { get { int o = __p.__offset(62); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// 1-sigma uncertainty of ESTIMATED_DELTA_V_MPS [m/s].
+  public double ESTIMATED_DELTA_V_UNC_MPS { get { int o = __p.__offset(64); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Cumulative historical delta-V magnitude [m/s] summed across detected or
+  /// confirmed maneuvers in the object's $MNV archive history up to DELTA_V_AS_OF.
+  public double HISTORICAL_DELTA_V_MPS { get { int o = __p.__offset(66); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Number of merged detected or confirmed maneuvers observed in the object's
+  /// historical archive up to DELTA_V_AS_OF.
+  public uint MANEUVER_COUNT { get { int o = __p.__offset(68); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// ISO 8601 UTC epoch of the most recent detected or confirmed maneuver, or
+  /// empty when no maneuver has been observed.
+  public string LAST_MANEUVER_EPOCH { get { int o = __p.__offset(70); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetLAST_MANEUVER_EPOCHBytes() { return __p.__vector_as_span<byte>(70, 1); }
+#else
+  public ArraySegment<byte>? GetLAST_MANEUVER_EPOCHBytes() { return __p.__vector_as_arraysegment(70); }
+#endif
+  public byte[] GetLAST_MANEUVER_EPOCHArray() { return __p.__vector_as_array<byte>(70); }
+  /// ISO 8601 UTC instant when the delta-V fields above were last evaluated.
+  /// Non-empty distinguishes an assessed 0 m/s object from an unassessed record.
+  public string DELTA_V_AS_OF { get { int o = __p.__offset(72); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetDELTA_V_AS_OFBytes() { return __p.__vector_as_span<byte>(72, 1); }
+#else
+  public ArraySegment<byte>? GetDELTA_V_AS_OFBytes() { return __p.__vector_as_arraysegment(72); }
+#endif
+  public byte[] GetDELTA_V_AS_OFArray() { return __p.__vector_as_array<byte>(72); }
+  /// Method and source provenance for the delta-V estimate (for example
+  /// "sdn-ap/maneuver-detection+catalog-composer").
+  public string DELTA_V_PROVENANCE { get { int o = __p.__offset(74); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetDELTA_V_PROVENANCEBytes() { return __p.__vector_as_span<byte>(74, 1); }
+#else
+  public ArraySegment<byte>? GetDELTA_V_PROVENANCEBytes() { return __p.__vector_as_arraysegment(74); }
+#endif
+  public byte[] GetDELTA_V_PROVENANCEArray() { return __p.__vector_as_array<byte>(74); }
 
   public static Offset<CAT> CreateCAT(FlatBufferBuilder builder,
       StringOffset OBJECT_NAMEOffset = default(StringOffset),
@@ -194,8 +234,18 @@ public struct CAT : IFlatbufferObject
       StringOffset CATALOG_OBJECT_IDOffset = default(StringOffset),
       VectorOffset PRODUCTSOffset = default(VectorOffset),
       StringOffset PRODUCTS_AS_OFOffset = default(StringOffset),
-      VectorOffset RECOMMENDEDOffset = default(VectorOffset)) {
-    builder.StartTable(29);
+      VectorOffset RECOMMENDEDOffset = default(VectorOffset),
+      double ESTIMATED_DELTA_V_MPS = 0.0,
+      double ESTIMATED_DELTA_V_UNC_MPS = 0.0,
+      double HISTORICAL_DELTA_V_MPS = 0.0,
+      uint MANEUVER_COUNT = 0,
+      StringOffset LAST_MANEUVER_EPOCHOffset = default(StringOffset),
+      StringOffset DELTA_V_AS_OFOffset = default(StringOffset),
+      StringOffset DELTA_V_PROVENANCEOffset = default(StringOffset)) {
+    builder.StartTable(36);
+    CAT.AddHISTORICAL_DELTA_V_MPS(builder, HISTORICAL_DELTA_V_MPS);
+    CAT.AddESTIMATED_DELTA_V_UNC_MPS(builder, ESTIMATED_DELTA_V_UNC_MPS);
+    CAT.AddESTIMATED_DELTA_V_MPS(builder, ESTIMATED_DELTA_V_MPS);
     CAT.AddMASS(builder, MASS);
     CAT.AddSIZE(builder, SIZE);
     CAT.AddRCS(builder, RCS);
@@ -203,6 +253,10 @@ public struct CAT : IFlatbufferObject
     CAT.AddAPOGEE(builder, APOGEE);
     CAT.AddINCLINATION(builder, INCLINATION);
     CAT.AddPERIOD(builder, PERIOD);
+    CAT.AddDELTA_V_PROVENANCE(builder, DELTA_V_PROVENANCEOffset);
+    CAT.AddDELTA_V_AS_OF(builder, DELTA_V_AS_OFOffset);
+    CAT.AddLAST_MANEUVER_EPOCH(builder, LAST_MANEUVER_EPOCHOffset);
+    CAT.AddMANEUVER_COUNT(builder, MANEUVER_COUNT);
     CAT.AddRECOMMENDED(builder, RECOMMENDEDOffset);
     CAT.AddPRODUCTS_AS_OF(builder, PRODUCTS_AS_OFOffset);
     CAT.AddPRODUCTS(builder, PRODUCTSOffset);
@@ -228,7 +282,7 @@ public struct CAT : IFlatbufferObject
     return CAT.EndCAT(builder);
   }
 
-  public static void StartCAT(FlatBufferBuilder builder) { builder.StartTable(29); }
+  public static void StartCAT(FlatBufferBuilder builder) { builder.StartTable(36); }
   public static void AddOBJECT_NAME(FlatBufferBuilder builder, StringOffset OBJECT_NAMEOffset) { builder.AddOffset(0, OBJECT_NAMEOffset.Value, 0); }
   public static void AddOBJECT_ID(FlatBufferBuilder builder, StringOffset OBJECT_IDOffset) { builder.AddOffset(1, OBJECT_IDOffset.Value, 0); }
   public static void AddNORAD_CAT_ID(FlatBufferBuilder builder, uint NORAD_CAT_ID) { builder.AddUint(2, NORAD_CAT_ID, 0); }
@@ -273,6 +327,13 @@ public struct CAT : IFlatbufferObject
   public static VectorOffset CreateRECOMMENDEDVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<CATRecommendation>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateRECOMMENDEDVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<CATRecommendation>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartRECOMMENDEDVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddESTIMATED_DELTA_V_MPS(FlatBufferBuilder builder, double ESTIMATED_DELTA_V_MPS) { builder.AddDouble(29, ESTIMATED_DELTA_V_MPS, 0.0); }
+  public static void AddESTIMATED_DELTA_V_UNC_MPS(FlatBufferBuilder builder, double ESTIMATED_DELTA_V_UNC_MPS) { builder.AddDouble(30, ESTIMATED_DELTA_V_UNC_MPS, 0.0); }
+  public static void AddHISTORICAL_DELTA_V_MPS(FlatBufferBuilder builder, double HISTORICAL_DELTA_V_MPS) { builder.AddDouble(31, HISTORICAL_DELTA_V_MPS, 0.0); }
+  public static void AddMANEUVER_COUNT(FlatBufferBuilder builder, uint MANEUVER_COUNT) { builder.AddUint(32, MANEUVER_COUNT, 0); }
+  public static void AddLAST_MANEUVER_EPOCH(FlatBufferBuilder builder, StringOffset LAST_MANEUVER_EPOCHOffset) { builder.AddOffset(33, LAST_MANEUVER_EPOCHOffset.Value, 0); }
+  public static void AddDELTA_V_AS_OF(FlatBufferBuilder builder, StringOffset DELTA_V_AS_OFOffset) { builder.AddOffset(34, DELTA_V_AS_OFOffset.Value, 0); }
+  public static void AddDELTA_V_PROVENANCE(FlatBufferBuilder builder, StringOffset DELTA_V_PROVENANCEOffset) { builder.AddOffset(35, DELTA_V_PROVENANCEOffset.Value, 0); }
   public static Offset<CAT> EndCAT(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<CAT>(o);
@@ -317,6 +378,13 @@ public struct CAT : IFlatbufferObject
     _o.PRODUCTS_AS_OF = this.PRODUCTS_AS_OF;
     _o.RECOMMENDED = new List<CATRecommendationT>();
     for (var _j = 0; _j < this.RECOMMENDEDLength; ++_j) {_o.RECOMMENDED.Add(this.RECOMMENDED(_j).HasValue ? this.RECOMMENDED(_j).Value.UnPack() : null);}
+    _o.ESTIMATED_DELTA_V_MPS = this.ESTIMATED_DELTA_V_MPS;
+    _o.ESTIMATED_DELTA_V_UNC_MPS = this.ESTIMATED_DELTA_V_UNC_MPS;
+    _o.HISTORICAL_DELTA_V_MPS = this.HISTORICAL_DELTA_V_MPS;
+    _o.MANEUVER_COUNT = this.MANEUVER_COUNT;
+    _o.LAST_MANEUVER_EPOCH = this.LAST_MANEUVER_EPOCH;
+    _o.DELTA_V_AS_OF = this.DELTA_V_AS_OF;
+    _o.DELTA_V_PROVENANCE = this.DELTA_V_PROVENANCE;
   }
   public static Offset<CAT> Pack(FlatBufferBuilder builder, CATT _o) {
     if (_o == null) return default(Offset<CAT>);
@@ -349,6 +417,9 @@ public struct CAT : IFlatbufferObject
       for (var _j = 0; _j < __RECOMMENDED.Length; ++_j) { __RECOMMENDED[_j] = CATRecommendation.Pack(builder, _o.RECOMMENDED[_j]); }
       _RECOMMENDED = CreateRECOMMENDEDVector(builder, __RECOMMENDED);
     }
+    var _LAST_MANEUVER_EPOCH = _o.LAST_MANEUVER_EPOCH == null ? default(StringOffset) : builder.CreateString(_o.LAST_MANEUVER_EPOCH);
+    var _DELTA_V_AS_OF = _o.DELTA_V_AS_OF == null ? default(StringOffset) : builder.CreateString(_o.DELTA_V_AS_OF);
+    var _DELTA_V_PROVENANCE = _o.DELTA_V_PROVENANCE == null ? default(StringOffset) : builder.CreateString(_o.DELTA_V_PROVENANCE);
     return CreateCAT(
       builder,
       _OBJECT_NAME,
@@ -379,7 +450,14 @@ public struct CAT : IFlatbufferObject
       _CATALOG_OBJECT_ID,
       _PRODUCTS,
       _PRODUCTS_AS_OF,
-      _RECOMMENDED);
+      _RECOMMENDED,
+      _o.ESTIMATED_DELTA_V_MPS,
+      _o.ESTIMATED_DELTA_V_UNC_MPS,
+      _o.HISTORICAL_DELTA_V_MPS,
+      _o.MANEUVER_COUNT,
+      _LAST_MANEUVER_EPOCH,
+      _DELTA_V_AS_OF,
+      _DELTA_V_PROVENANCE);
   }
 }
 
@@ -414,6 +492,13 @@ public class CATT
   public List<CATProductT> PRODUCTS { get; set; }
   public string PRODUCTS_AS_OF { get; set; }
   public List<CATRecommendationT> RECOMMENDED { get; set; }
+  public double ESTIMATED_DELTA_V_MPS { get; set; }
+  public double ESTIMATED_DELTA_V_UNC_MPS { get; set; }
+  public double HISTORICAL_DELTA_V_MPS { get; set; }
+  public uint MANEUVER_COUNT { get; set; }
+  public string LAST_MANEUVER_EPOCH { get; set; }
+  public string DELTA_V_AS_OF { get; set; }
+  public string DELTA_V_PROVENANCE { get; set; }
 
   public CATT() {
     this.OBJECT_NAME = null;
@@ -445,6 +530,13 @@ public class CATT
     this.PRODUCTS = null;
     this.PRODUCTS_AS_OF = null;
     this.RECOMMENDED = null;
+    this.ESTIMATED_DELTA_V_MPS = 0.0;
+    this.ESTIMATED_DELTA_V_UNC_MPS = 0.0;
+    this.HISTORICAL_DELTA_V_MPS = 0.0;
+    this.MANEUVER_COUNT = 0;
+    this.LAST_MANEUVER_EPOCH = null;
+    this.DELTA_V_AS_OF = null;
+    this.DELTA_V_PROVENANCE = null;
   }
   public static CATT DeserializeFromBinary(byte[] fbBuffer) {
     return CAT.GetRootAsCAT(new ByteBuffer(fbBuffer)).UnPack();
@@ -491,6 +583,13 @@ static public class CATVerify
       && verifier.VerifyVectorOfTables(tablePos, 56 /*PRODUCTS*/, CATProductVerify.Verify, false)
       && verifier.VerifyString(tablePos, 58 /*PRODUCTS_AS_OF*/, false)
       && verifier.VerifyVectorOfTables(tablePos, 60 /*RECOMMENDED*/, CATRecommendationVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 62 /*ESTIMATED_DELTA_V_MPS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 64 /*ESTIMATED_DELTA_V_UNC_MPS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 66 /*HISTORICAL_DELTA_V_MPS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 68 /*MANEUVER_COUNT*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyString(tablePos, 70 /*LAST_MANEUVER_EPOCH*/, false)
+      && verifier.VerifyString(tablePos, 72 /*DELTA_V_AS_OF*/, false)
+      && verifier.VerifyString(tablePos, 74 /*DELTA_V_PROVENANCE*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }
