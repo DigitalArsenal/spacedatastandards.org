@@ -22,6 +22,7 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 #include "../ACW/main_generated.h"
 #include "../AEM/main_generated.h"
 #include "../AGR/main_generated.h"
+#include "../AIS/main_generated.h"
 #include "../ANI/main_generated.h"
 #include "../AOF/main_generated.h"
 #include "../APL/main_generated.h"
@@ -2219,11 +2220,12 @@ enum RecordTypeExtended : uint16_t {
   RecordTypeExtended_DCO = 303,
   RecordTypeExtended_RBF = 304,
   RecordTypeExtended_RDE = 305,
+  RecordTypeExtended_AIS = 306,
   RecordTypeExtended_MIN = RecordTypeExtended_NONE,
-  RecordTypeExtended_MAX = RecordTypeExtended_RDE
+  RecordTypeExtended_MAX = RecordTypeExtended_AIS
 };
 
-inline const RecordTypeExtended (&EnumValuesRecordTypeExtended())[51] {
+inline const RecordTypeExtended (&EnumValuesRecordTypeExtended())[52] {
   static const RecordTypeExtended values[] = {
     RecordTypeExtended_NONE,
     RecordTypeExtended_ABA,
@@ -2275,7 +2277,8 @@ inline const RecordTypeExtended (&EnumValuesRecordTypeExtended())[51] {
     RecordTypeExtended_TMX,
     RecordTypeExtended_DCO,
     RecordTypeExtended_RBF,
-    RecordTypeExtended_RDE
+    RecordTypeExtended_RDE,
+    RecordTypeExtended_AIS
   };
   return values;
 }
@@ -2333,6 +2336,7 @@ inline const char *EnumNameRecordTypeExtended(RecordTypeExtended e) {
     case RecordTypeExtended_DCO: return "DCO";
     case RecordTypeExtended_RBF: return "RBF";
     case RecordTypeExtended_RDE: return "RDE";
+    case RecordTypeExtended_AIS: return "AIS";
     default: return "";
   }
 }

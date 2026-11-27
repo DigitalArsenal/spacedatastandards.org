@@ -1,0 +1,294 @@
+// Hash: 4b9d74173c25afee8353f5a01effae09833b875220cc9168a3e287809be2dc6c
+// Version: 1.300.1
+// -----------------------------------END_HEADER
+// AI Session Event (AIS)
+// Description
+// Private operational telemetry record for AI assistant sessions and queries:
+// per-session/per-request sequencing, server-observed network and edge provenance
+// (client IP, forwarded chain, Cloudflare geo/ASN/ray, HTTP headers), requester
+// public Space Data Network identity (never private keys or credentials), browser
+// fingerprint signals, prompt/answer/tool-call transcripts, and model execution
+// metrics. Scalar and string fields lead the root table in declaration order so
+// FlatSQL projects every filterable column while _data retains the complete
+// structured record including child message, tool-call, and header tables.
+
+/// Lifecycle kind of an AI assistant session event. Append new values only.
+enum aisEventKind : byte {
+  /// Not stated.
+  UNSPECIFIED = 0,
+  /// Browser or client initialized a new AI session.
+  SESSION_START = 1,
+  /// Requester submitted a prompt/query to the AI.
+  QUERY_SUBMITTED = 2,
+  /// Model produced an intermediate or final loop turn.
+  MODEL_TURN = 3,
+  /// Assistant invoked a console or domain tool.
+  TOOL_CALL = 4,
+  /// Tool returned a result to the model loop.
+  TOOL_RESULT = 5,
+  /// Assistant completed the final answer for a query.
+  ANSWER_COMPLETED = 6,
+  /// Query or turn failed with an error.
+  ERROR = 7,
+  /// Requester or client aborted an in-flight query.
+  ABORTED = 8,
+  /// Session closed or page unloaded.
+  SESSION_END = 9
+}
+
+/// Execution outcome of an AI session event. Append new values only.
+enum aisEventStatus : byte {
+  /// Not stated.
+  UNSPECIFIED = 0,
+  /// Succeeded normally.
+  OK = 1,
+  /// In progress or accepted.
+  PENDING = 2,
+  /// Failed due to provider, tool, or runtime error.
+  ERROR = 3,
+  /// Aborted before completion.
+  ABORTED = 4,
+  /// Rejected due to rate or quota limits.
+  RATE_LIMITED = 5
+}
+
+/// Role of a structured conversation message. Append new values only.
+enum aisMessageRole : byte {
+  /// Not stated.
+  UNSPECIFIED = 0,
+  /// System instruction message.
+  SYSTEM = 1,
+  /// End-user prompt message.
+  USER = 2,
+  /// Assistant response message.
+  ASSISTANT = 3,
+  /// Tool response message.
+  TOOL = 4
+}
+
+/// One structured message in an AI conversation transcript.
+table AISMessage {
+  /// Participant role for this message.
+  ROLE:aisMessageRole = UNSPECIFIED;
+  /// UTF-8 message body text.
+  CONTENT:string;
+  /// RFC 3339 UTC timestamp when the message was created.
+  TIMESTAMP_UTC:string;
+  /// Correlating tool-call identifier when ROLE is TOOL or ASSISTANT.
+  TOOL_CALL_ID:string;
+  /// Tool name when associated with a tool invocation.
+  TOOL_NAME:string;
+}
+
+/// One structured tool call and optional result captured during a model turn.
+table AISToolCall {
+  /// Model-assigned call identifier.
+  CALL_ID:string;
+  /// Invoked tool name.
+  TOOL_NAME:string (required);
+  /// Serialized tool arguments as invoked.
+  ARGUMENTS_TEXT:string;
+  /// Serialized or summarized tool result returned to the model.
+  RESULT_TEXT:string;
+  /// True when the tool invocation returned an error.
+  IS_ERROR:bool = false;
+  /// Wall-clock duration of the tool execution in milliseconds.
+  DURATION_MS:uint32;
+}
+
+/// One non-credential HTTP header observed by the collecting edge/server.
+table AISHeader {
+  /// Lowercase HTTP header name (collector strips Authorization, Proxy-Authorization,
+  /// Cookie, Set-Cookie, X-Api-Key, X-Auth-Token, X-SDN-Token, CF-Access-JWT-Assertion,
+  /// and CF-Access-Client-Secret before persisting).
+  NAME:string (required);
+  /// Verbatim non-credential HTTP header value.
+  VALUE:string;
+}
+
+/// AI Session Event record
+table AIS {
+  // ---- Identity & event sequencing ----
+
+  /// Globally unique event identifier (UUIDv4/ULID).
+  EVENT_ID:string (required);
+  /// Stable session identifier grouping all events in one AI conversation.
+  SESSION_ID:string (required);
+  /// Identifier correlating one user query with its model turns, tools, and answer.
+  REQUEST_ID:string;
+  /// Monotonic 0-based sequence number within SESSION_ID.
+  SEQUENCE_NO:uint32;
+  /// 0-based model loop turn index within REQUEST_ID.
+  TURN_INDEX:uint32;
+  /// Lifecycle event kind.
+  EVENT_KIND:aisEventKind = UNSPECIFIED;
+  /// Server-stamped RFC 3339 UTC timestamp when received by the SDN collector.
+  RECEIVED_UTC:string;
+  /// Server-stamped Unix epoch milliseconds when received by the SDN collector.
+  RECEIVED_UNIX_MS:int64;
+  /// Client-observed RFC 3339 UTC timestamp when the event occurred.
+  CLIENT_UTC:string;
+  /// Client-observed Unix epoch milliseconds when the event occurred.
+  CLIENT_UNIX_MS:int64;
+
+  // ---- Server-observed network & edge provenance ----
+
+  /// Authoritative client IP extracted server-side from edge headers or socket remote.
+  CLIENT_IP:string;
+  /// Unsalted lowercase hex SHA-256 hash of the normalized CLIENT_IP used as a
+  /// deterministic grouping key (not an anonymization barrier for IPv4).
+  CLIENT_IP_HASH:string;
+  /// Raw TCP remote ip:port observed by the SDN HTTP listener.
+  REMOTE_ADDR:string;
+  /// Raw X-Forwarded-For chain observed by the SDN HTTP listener.
+  X_FORWARDED_FOR:string;
+  /// Cloudflare CF-Ray edge trace identifier.
+  CF_RAY:string;
+  /// Cloudflare CF-IPCountry ISO-3166-1 alpha-2 country code.
+  CF_COUNTRY:string;
+  /// Cloudflare edge region or subdivision code.
+  CF_REGION:string;
+  /// Cloudflare edge city name.
+  CF_CITY:string;
+  /// Edge-reported Autonomous System Number verbatim (e.g. "AS7922" or numeric ASN).
+  CF_ASN:string;
+  /// Edge-reported TLS protocol version.
+  CF_TLS_VERSION:string;
+  /// Server-observed HTTP Origin header.
+  HTTP_ORIGIN:string;
+  /// Server-observed HTTP Referer header (query string stripped by collector).
+  HTTP_REFERER:string;
+  /// Server-observed HTTP User-Agent header.
+  HTTP_USER_AGENT:string;
+  /// Server-observed HTTP Accept-Language header.
+  HTTP_ACCEPT_LANGUAGE:string;
+  /// Server-observed Sec-CH-UA client hint header.
+  SEC_CH_UA:string;
+  /// Server-observed Sec-CH-UA-Platform client hint header.
+  SEC_CH_UA_PLATFORM:string;
+  /// Server-observed Sec-CH-UA-Mobile client hint header.
+  SEC_CH_UA_MOBILE:string;
+
+  // ---- Requester SDN public identity (never private keys or secrets) ----
+
+  /// True when the requester had an active signed-in SDN session at event time.
+  SDN_SIGNED_IN:bool = false;
+  /// Public identity scheme (e.g. hd-wallet, ed25519, secp256k1, external-wallet).
+  SDN_IDENTITY_SCHEME:string;
+  /// Sign-in method metadata (e.g. wallet-passkey, wallet-mnemonic, external-eip1193).
+  SDN_SIGN_IN_METHOD:string;
+  /// Requester public key in lowercase hex (never private key material).
+  SDN_PUBLIC_KEY_HEX:string;
+  /// Requester public key identifier, fingerprint, or libp2p peer ID.
+  SDN_KEY_ID:string;
+  /// Non-secret BIP-32/SLIP-10 derivation path metadata when present.
+  SDN_DERIVATION_PATH:string;
+  /// Connected external wallet public address when present.
+  EXTERNAL_WALLET_ADDRESS:string;
+  /// Connected external wallet provider name (e.g. MetaMask, Phantom).
+  EXTERNAL_WALLET_NAME:string;
+  /// Connected external wallet chain identifier (e.g. eip155:1).
+  EXTERNAL_WALLET_CHAIN:string;
+
+  // ---- Client browser fingerprint & device signals ----
+
+  /// Composite lowercase hex SHA-256 browser fingerprint hash.
+  FINGERPRINT_HASH:string;
+  /// Persistent first-party browser installation UUID across sessions.
+  INSTALL_ID:string;
+  /// Sanitized client page URL/route at event time.
+  PAGE_URL:string;
+  /// Client application name (e.g. SpaceAware).
+  APP_NAME:string;
+  /// Client application build version or revision.
+  APP_VERSION:string;
+  /// Browser navigator platform string.
+  PLATFORM:string;
+  /// IANA timezone name from Intl.DateTimeFormat.
+  TIMEZONE:string;
+  /// UTC offset in minutes from Date.prototype.getTimezoneOffset() (meaningful when FINGERPRINT_HASH is set).
+  TZ_OFFSET_MIN:int32;
+  /// Comma-separated navigator.languages list.
+  LANGUAGES:string;
+  /// Physical display width in CSS pixels (screen.width).
+  SCREEN_WIDTH:uint32;
+  /// Physical display height in CSS pixels (screen.height).
+  SCREEN_HEIGHT:uint32;
+  /// Browser viewport width in CSS pixels (window.innerWidth).
+  VIEWPORT_WIDTH:uint32;
+  /// Browser viewport height in CSS pixels (window.innerHeight).
+  VIEWPORT_HEIGHT:uint32;
+  /// Display color depth in bits (screen.colorDepth).
+  COLOR_DEPTH:uint16;
+  /// Device pixel ratio (window.devicePixelRatio).
+  DEVICE_PIXEL_RATIO:float;
+  /// Logical CPU thread count (navigator.hardwareConcurrency).
+  HARDWARE_CONCURRENCY:uint16;
+  /// Approximate device memory in GiB (navigator.deviceMemory, 0 if unavailable).
+  DEVICE_MEMORY_GB:float;
+  /// Maximum simultaneous touch points (navigator.maxTouchPoints).
+  MAX_TOUCH_POINTS:uint16;
+  /// WebGL unmasked vendor string.
+  WEBGL_VENDOR:string;
+  /// WebGL unmasked renderer string.
+  WEBGL_RENDERER:string;
+  /// Lowercase hex SHA-256 hash of deterministic 2D canvas fingerprint.
+  CANVAS_HASH:string;
+  /// Lowercase hex SHA-256 hash of deterministic audio context fingerprint.
+  AUDIO_HASH:string;
+  /// Lowercase hex SHA-256 hash of deterministic browser font-metrics probe.
+  FONT_HASH:string;
+  /// True when browser reports navigator.cookieEnabled (meaningful when FINGERPRINT_HASH is set).
+  COOKIES_ENABLED:bool = false;
+  /// Browser navigator.doNotTrack value verbatim.
+  DO_NOT_TRACK:string;
+  /// True when browser reports navigator.webdriver (meaningful when FINGERPRINT_HASH is set).
+  WEBDRIVER:bool = false;
+  /// True when browser localStorage was writable at probe time (meaningful when FINGERPRINT_HASH is set).
+  LOCAL_STORAGE_WRITABLE:bool = false;
+
+  // ---- AI query, answer & model execution metrics ----
+
+  /// Configured AI provider identifier (e.g. spaceaware-proxy, anthropic, openai).
+  MODEL_PROVIDER:string;
+  /// Model identifier used for this request or turn.
+  MODEL_ID:string;
+  /// User prompt or query text submitted to the AI.
+  PROMPT_TEXT:string;
+  /// Assistant answer or turn output text.
+  ANSWER_TEXT:string;
+  /// Concise summary or card title produced for the answer.
+  SUMMARY_TEXT:string;
+  /// Execution outcome status.
+  STATUS:aisEventStatus = UNSPECIFIED;
+  /// Machine-readable error code when STATUS indicates failure.
+  ERROR_CODE:string;
+  /// Human-readable error message when STATUS indicates failure.
+  ERROR_MESSAGE:string;
+  /// Prompt/input token count reported by the provider.
+  INPUT_TOKENS:uint32;
+  /// Completion/output token count reported by the provider.
+  OUTPUT_TOKENS:uint32;
+  /// Total token count reported by the provider.
+  TOTAL_TOKENS:uint32;
+  /// Provider-reported or estimated request cost in USD (0 when unreported).
+  COST_USD:double;
+  /// Elapsed execution latency in milliseconds.
+  LATENCY_MS:uint32;
+  /// Number of tool calls executed in this turn or request.
+  TOOL_CALL_COUNT:uint32;
+  /// Server-stamped SDN collector node peer ID or hostname.
+  COLLECTOR_NODE_ID:string;
+
+  // ---- Structured child tables (retained in full inside _data) ----
+
+  /// Structured conversation messages captured with this event.
+  MESSAGES:[AISMessage];
+  /// Structured tool invocations and results captured with this event.
+  TOOL_CALLS:[AISToolCall];
+  /// Non-credential HTTP headers observed by the collecting SDN node.
+  EDGE_HEADERS:[AISHeader];
+}
+
+root_type AIS;
+file_identifier "$AIS";

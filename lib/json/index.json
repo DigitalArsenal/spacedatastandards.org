@@ -93727,6 +93727,507 @@
             },
             "$ref": "#/definitions/STX"
         },
+        "AIS": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "aisEventKind": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "SESSION_START",
+                        "QUERY_SUBMITTED",
+                        "MODEL_TURN",
+                        "TOOL_CALL",
+                        "TOOL_RESULT",
+                        "ANSWER_COMPLETED",
+                        "ERROR",
+                        "ABORTED",
+                        "SESSION_END"
+                    ]
+                },
+                "aisEventStatus": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "OK",
+                        "PENDING",
+                        "ERROR",
+                        "ABORTED",
+                        "RATE_LIMITED"
+                    ]
+                },
+                "aisMessageRole": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "SYSTEM",
+                        "USER",
+                        "ASSISTANT",
+                        "TOOL"
+                    ]
+                },
+                "AISMessage": {
+                    "type": "object",
+                    "description": "One structured message in an AI conversation transcript.",
+                    "properties": {
+                        "ROLE": {
+                            "$ref": "#/definitions/aisMessageRole",
+                            "description": "Participant role for this message."
+                        },
+                        "CONTENT": {
+                            "type": "string",
+                            "description": "UTF-8 message body text."
+                        },
+                        "TIMESTAMP_UTC": {
+                            "type": "string",
+                            "description": "RFC 3339 UTC timestamp when the message was created."
+                        },
+                        "TOOL_CALL_ID": {
+                            "type": "string",
+                            "description": "Correlating tool-call identifier when ROLE is TOOL or ASSISTANT."
+                        },
+                        "TOOL_NAME": {
+                            "type": "string",
+                            "description": "Tool name when associated with a tool invocation."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "AISToolCall": {
+                    "type": "object",
+                    "description": "One structured tool call and optional result captured during a model turn.",
+                    "properties": {
+                        "CALL_ID": {
+                            "type": "string",
+                            "description": "Model-assigned call identifier."
+                        },
+                        "TOOL_NAME": {
+                            "type": "string",
+                            "description": "Invoked tool name."
+                        },
+                        "ARGUMENTS_TEXT": {
+                            "type": "string",
+                            "description": "Serialized tool arguments as invoked."
+                        },
+                        "RESULT_TEXT": {
+                            "type": "string",
+                            "description": "Serialized or summarized tool result returned to the model."
+                        },
+                        "IS_ERROR": {
+                            "type": "boolean",
+                            "description": "True when the tool invocation returned an error."
+                        },
+                        "DURATION_MS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Wall-clock duration of the tool execution in milliseconds."
+                        }
+                    },
+                    "required": [
+                        "TOOL_NAME"
+                    ],
+                    "additionalProperties": false
+                },
+                "AISHeader": {
+                    "type": "object",
+                    "description": "One non-credential HTTP header observed by the collecting edge/server.",
+                    "properties": {
+                        "NAME": {
+                            "type": "string",
+                            "description": "Lowercase HTTP header name (collector strips Authorization, Proxy-Authorization,\nCookie, Set-Cookie, X-Api-Key, X-Auth-Token, X-SDN-Token, CF-Access-JWT-Assertion,\nand CF-Access-Client-Secret before persisting)."
+                        },
+                        "VALUE": {
+                            "type": "string",
+                            "description": "Verbatim non-credential HTTP header value."
+                        }
+                    },
+                    "required": [
+                        "NAME"
+                    ],
+                    "additionalProperties": false
+                },
+                "AIS": {
+                    "type": "object",
+                    "description": "AI Session Event record",
+                    "properties": {
+                        "EVENT_ID": {
+                            "type": "string",
+                            "description": "Globally unique event identifier (UUIDv4/ULID)."
+                        },
+                        "SESSION_ID": {
+                            "type": "string",
+                            "description": "Stable session identifier grouping all events in one AI conversation."
+                        },
+                        "REQUEST_ID": {
+                            "type": "string",
+                            "description": "Identifier correlating one user query with its model turns, tools, and answer."
+                        },
+                        "SEQUENCE_NO": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Monotonic 0-based sequence number within SESSION_ID."
+                        },
+                        "TURN_INDEX": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "0-based model loop turn index within REQUEST_ID."
+                        },
+                        "EVENT_KIND": {
+                            "$ref": "#/definitions/aisEventKind",
+                            "description": "Lifecycle event kind."
+                        },
+                        "RECEIVED_UTC": {
+                            "type": "string",
+                            "description": "Server-stamped RFC 3339 UTC timestamp when received by the SDN collector."
+                        },
+                        "RECEIVED_UNIX_MS": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807,
+                            "description": "Server-stamped Unix epoch milliseconds when received by the SDN collector."
+                        },
+                        "CLIENT_UTC": {
+                            "type": "string",
+                            "description": "Client-observed RFC 3339 UTC timestamp when the event occurred."
+                        },
+                        "CLIENT_UNIX_MS": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807,
+                            "description": "Client-observed Unix epoch milliseconds when the event occurred."
+                        },
+                        "CLIENT_IP": {
+                            "type": "string",
+                            "description": "Authoritative client IP extracted server-side from edge headers or socket remote."
+                        },
+                        "CLIENT_IP_HASH": {
+                            "type": "string",
+                            "description": "Unsalted lowercase hex SHA-256 hash of the normalized CLIENT_IP used as a\ndeterministic grouping key (not an anonymization barrier for IPv4)."
+                        },
+                        "REMOTE_ADDR": {
+                            "type": "string",
+                            "description": "Raw TCP remote ip:port observed by the SDN HTTP listener."
+                        },
+                        "X_FORWARDED_FOR": {
+                            "type": "string",
+                            "description": "Raw X-Forwarded-For chain observed by the SDN HTTP listener."
+                        },
+                        "CF_RAY": {
+                            "type": "string",
+                            "description": "Cloudflare CF-Ray edge trace identifier."
+                        },
+                        "CF_COUNTRY": {
+                            "type": "string",
+                            "description": "Cloudflare CF-IPCountry ISO-3166-1 alpha-2 country code."
+                        },
+                        "CF_REGION": {
+                            "type": "string",
+                            "description": "Cloudflare edge region or subdivision code."
+                        },
+                        "CF_CITY": {
+                            "type": "string",
+                            "description": "Cloudflare edge city name."
+                        },
+                        "CF_ASN": {
+                            "type": "string",
+                            "description": "Edge-reported Autonomous System Number verbatim (e.g. \"AS7922\" or numeric ASN)."
+                        },
+                        "CF_TLS_VERSION": {
+                            "type": "string",
+                            "description": "Edge-reported TLS protocol version."
+                        },
+                        "HTTP_ORIGIN": {
+                            "type": "string",
+                            "description": "Server-observed HTTP Origin header."
+                        },
+                        "HTTP_REFERER": {
+                            "type": "string",
+                            "description": "Server-observed HTTP Referer header (query string stripped by collector)."
+                        },
+                        "HTTP_USER_AGENT": {
+                            "type": "string",
+                            "description": "Server-observed HTTP User-Agent header."
+                        },
+                        "HTTP_ACCEPT_LANGUAGE": {
+                            "type": "string",
+                            "description": "Server-observed HTTP Accept-Language header."
+                        },
+                        "SEC_CH_UA": {
+                            "type": "string",
+                            "description": "Server-observed Sec-CH-UA client hint header."
+                        },
+                        "SEC_CH_UA_PLATFORM": {
+                            "type": "string",
+                            "description": "Server-observed Sec-CH-UA-Platform client hint header."
+                        },
+                        "SEC_CH_UA_MOBILE": {
+                            "type": "string",
+                            "description": "Server-observed Sec-CH-UA-Mobile client hint header."
+                        },
+                        "SDN_SIGNED_IN": {
+                            "type": "boolean",
+                            "description": "True when the requester had an active signed-in SDN session at event time."
+                        },
+                        "SDN_IDENTITY_SCHEME": {
+                            "type": "string",
+                            "description": "Public identity scheme (e.g. hd-wallet, ed25519, secp256k1, external-wallet)."
+                        },
+                        "SDN_SIGN_IN_METHOD": {
+                            "type": "string",
+                            "description": "Sign-in method metadata (e.g. wallet-passkey, wallet-mnemonic, external-eip1193)."
+                        },
+                        "SDN_PUBLIC_KEY_HEX": {
+                            "type": "string",
+                            "description": "Requester public key in lowercase hex (never private key material)."
+                        },
+                        "SDN_KEY_ID": {
+                            "type": "string",
+                            "description": "Requester public key identifier, fingerprint, or libp2p peer ID."
+                        },
+                        "SDN_DERIVATION_PATH": {
+                            "type": "string",
+                            "description": "Non-secret BIP-32/SLIP-10 derivation path metadata when present."
+                        },
+                        "EXTERNAL_WALLET_ADDRESS": {
+                            "type": "string",
+                            "description": "Connected external wallet public address when present."
+                        },
+                        "EXTERNAL_WALLET_NAME": {
+                            "type": "string",
+                            "description": "Connected external wallet provider name (e.g. MetaMask, Phantom)."
+                        },
+                        "EXTERNAL_WALLET_CHAIN": {
+                            "type": "string",
+                            "description": "Connected external wallet chain identifier (e.g. eip155:1)."
+                        },
+                        "FINGERPRINT_HASH": {
+                            "type": "string",
+                            "description": "Composite lowercase hex SHA-256 browser fingerprint hash."
+                        },
+                        "INSTALL_ID": {
+                            "type": "string",
+                            "description": "Persistent first-party browser installation UUID across sessions."
+                        },
+                        "PAGE_URL": {
+                            "type": "string",
+                            "description": "Sanitized client page URL/route at event time."
+                        },
+                        "APP_NAME": {
+                            "type": "string",
+                            "description": "Client application name (e.g. SpaceAware)."
+                        },
+                        "APP_VERSION": {
+                            "type": "string",
+                            "description": "Client application build version or revision."
+                        },
+                        "PLATFORM": {
+                            "type": "string",
+                            "description": "Browser navigator platform string."
+                        },
+                        "TIMEZONE": {
+                            "type": "string",
+                            "description": "IANA timezone name from Intl.DateTimeFormat."
+                        },
+                        "TZ_OFFSET_MIN": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "UTC offset in minutes from Date.prototype.getTimezoneOffset() (meaningful when FINGERPRINT_HASH is set)."
+                        },
+                        "LANGUAGES": {
+                            "type": "string",
+                            "description": "Comma-separated navigator.languages list."
+                        },
+                        "SCREEN_WIDTH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Physical display width in CSS pixels (screen.width)."
+                        },
+                        "SCREEN_HEIGHT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Physical display height in CSS pixels (screen.height)."
+                        },
+                        "VIEWPORT_WIDTH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Browser viewport width in CSS pixels (window.innerWidth)."
+                        },
+                        "VIEWPORT_HEIGHT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Browser viewport height in CSS pixels (window.innerHeight)."
+                        },
+                        "COLOR_DEPTH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Display color depth in bits (screen.colorDepth)."
+                        },
+                        "DEVICE_PIXEL_RATIO": {
+                            "type": "number",
+                            "description": "Device pixel ratio (window.devicePixelRatio)."
+                        },
+                        "HARDWARE_CONCURRENCY": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Logical CPU thread count (navigator.hardwareConcurrency)."
+                        },
+                        "DEVICE_MEMORY_GB": {
+                            "type": "number",
+                            "description": "Approximate device memory in GiB (navigator.deviceMemory, 0 if unavailable)."
+                        },
+                        "MAX_TOUCH_POINTS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Maximum simultaneous touch points (navigator.maxTouchPoints)."
+                        },
+                        "WEBGL_VENDOR": {
+                            "type": "string",
+                            "description": "WebGL unmasked vendor string."
+                        },
+                        "WEBGL_RENDERER": {
+                            "type": "string",
+                            "description": "WebGL unmasked renderer string."
+                        },
+                        "CANVAS_HASH": {
+                            "type": "string",
+                            "description": "Lowercase hex SHA-256 hash of deterministic 2D canvas fingerprint."
+                        },
+                        "AUDIO_HASH": {
+                            "type": "string",
+                            "description": "Lowercase hex SHA-256 hash of deterministic audio context fingerprint."
+                        },
+                        "FONT_HASH": {
+                            "type": "string",
+                            "description": "Lowercase hex SHA-256 hash of deterministic browser font-metrics probe."
+                        },
+                        "COOKIES_ENABLED": {
+                            "type": "boolean",
+                            "description": "True when browser reports navigator.cookieEnabled (meaningful when FINGERPRINT_HASH is set)."
+                        },
+                        "DO_NOT_TRACK": {
+                            "type": "string",
+                            "description": "Browser navigator.doNotTrack value verbatim."
+                        },
+                        "WEBDRIVER": {
+                            "type": "boolean",
+                            "description": "True when browser reports navigator.webdriver (meaningful when FINGERPRINT_HASH is set)."
+                        },
+                        "LOCAL_STORAGE_WRITABLE": {
+                            "type": "boolean",
+                            "description": "True when browser localStorage was writable at probe time (meaningful when FINGERPRINT_HASH is set)."
+                        },
+                        "MODEL_PROVIDER": {
+                            "type": "string",
+                            "description": "Configured AI provider identifier (e.g. spaceaware-proxy, anthropic, openai)."
+                        },
+                        "MODEL_ID": {
+                            "type": "string",
+                            "description": "Model identifier used for this request or turn."
+                        },
+                        "PROMPT_TEXT": {
+                            "type": "string",
+                            "description": "User prompt or query text submitted to the AI."
+                        },
+                        "ANSWER_TEXT": {
+                            "type": "string",
+                            "description": "Assistant answer or turn output text."
+                        },
+                        "SUMMARY_TEXT": {
+                            "type": "string",
+                            "description": "Concise summary or card title produced for the answer."
+                        },
+                        "STATUS": {
+                            "$ref": "#/definitions/aisEventStatus",
+                            "description": "Execution outcome status."
+                        },
+                        "ERROR_CODE": {
+                            "type": "string",
+                            "description": "Machine-readable error code when STATUS indicates failure."
+                        },
+                        "ERROR_MESSAGE": {
+                            "type": "string",
+                            "description": "Human-readable error message when STATUS indicates failure."
+                        },
+                        "INPUT_TOKENS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Prompt/input token count reported by the provider."
+                        },
+                        "OUTPUT_TOKENS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Completion/output token count reported by the provider."
+                        },
+                        "TOTAL_TOKENS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Total token count reported by the provider."
+                        },
+                        "COST_USD": {
+                            "type": "number",
+                            "description": "Provider-reported or estimated request cost in USD (0 when unreported)."
+                        },
+                        "LATENCY_MS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Elapsed execution latency in milliseconds."
+                        },
+                        "TOOL_CALL_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of tool calls executed in this turn or request."
+                        },
+                        "COLLECTOR_NODE_ID": {
+                            "type": "string",
+                            "description": "Server-stamped SDN collector node peer ID or hostname."
+                        },
+                        "MESSAGES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/AISMessage"
+                            },
+                            "description": "Structured conversation messages captured with this event."
+                        },
+                        "TOOL_CALLS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/AISToolCall"
+                            },
+                            "description": "Structured tool invocations and results captured with this event."
+                        },
+                        "EDGE_HEADERS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/AISHeader"
+                            },
+                            "description": "Non-credential HTTP headers observed by the collecting SDN node."
+                        }
+                    },
+                    "required": [
+                        "EVENT_ID",
+                        "SESSION_ID"
+                    ],
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/AIS"
+        },
         "PKB": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
@@ -130697,6 +131198,42 @@
                         "Pivot"
                     ]
                 },
+                "aisEventKind": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "SESSION_START",
+                        "QUERY_SUBMITTED",
+                        "MODEL_TURN",
+                        "TOOL_CALL",
+                        "TOOL_RESULT",
+                        "ANSWER_COMPLETED",
+                        "ERROR",
+                        "ABORTED",
+                        "SESSION_END"
+                    ]
+                },
+                "aisEventStatus": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "OK",
+                        "PENDING",
+                        "ERROR",
+                        "ABORTED",
+                        "RATE_LIMITED"
+                    ]
+                },
+                "aisMessageRole": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "SYSTEM",
+                        "USER",
+                        "ASSISTANT",
+                        "TOOL"
+                    ]
+                },
                 "analyticProfile": {
                     "type": "string",
                     "enum": [
@@ -140247,7 +140784,8 @@
                         "TMX",
                         "DCO",
                         "RBF",
-                        "RDE"
+                        "RDE",
+                        "AIS"
                     ]
                 },
                 "ABA": {
@@ -145485,6 +146023,465 @@
                             "type": "string"
                         }
                     },
+                    "additionalProperties": false
+                },
+                "AISMessage": {
+                    "type": "object",
+                    "description": "One structured message in an AI conversation transcript.",
+                    "properties": {
+                        "ROLE": {
+                            "$ref": "#/definitions/aisMessageRole",
+                            "description": "Participant role for this message."
+                        },
+                        "CONTENT": {
+                            "type": "string",
+                            "description": "UTF-8 message body text."
+                        },
+                        "TIMESTAMP_UTC": {
+                            "type": "string",
+                            "description": "RFC 3339 UTC timestamp when the message was created."
+                        },
+                        "TOOL_CALL_ID": {
+                            "type": "string",
+                            "description": "Correlating tool-call identifier when ROLE is TOOL or ASSISTANT."
+                        },
+                        "TOOL_NAME": {
+                            "type": "string",
+                            "description": "Tool name when associated with a tool invocation."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "AISToolCall": {
+                    "type": "object",
+                    "description": "One structured tool call and optional result captured during a model turn.",
+                    "properties": {
+                        "CALL_ID": {
+                            "type": "string",
+                            "description": "Model-assigned call identifier."
+                        },
+                        "TOOL_NAME": {
+                            "type": "string",
+                            "description": "Invoked tool name."
+                        },
+                        "ARGUMENTS_TEXT": {
+                            "type": "string",
+                            "description": "Serialized tool arguments as invoked."
+                        },
+                        "RESULT_TEXT": {
+                            "type": "string",
+                            "description": "Serialized or summarized tool result returned to the model."
+                        },
+                        "IS_ERROR": {
+                            "type": "boolean",
+                            "description": "True when the tool invocation returned an error."
+                        },
+                        "DURATION_MS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Wall-clock duration of the tool execution in milliseconds."
+                        }
+                    },
+                    "required": [
+                        "TOOL_NAME"
+                    ],
+                    "additionalProperties": false
+                },
+                "AISHeader": {
+                    "type": "object",
+                    "description": "One non-credential HTTP header observed by the collecting edge/server.",
+                    "properties": {
+                        "NAME": {
+                            "type": "string",
+                            "description": "Lowercase HTTP header name (collector strips Authorization, Proxy-Authorization,\nCookie, Set-Cookie, X-Api-Key, X-Auth-Token, X-SDN-Token, CF-Access-JWT-Assertion,\nand CF-Access-Client-Secret before persisting)."
+                        },
+                        "VALUE": {
+                            "type": "string",
+                            "description": "Verbatim non-credential HTTP header value."
+                        }
+                    },
+                    "required": [
+                        "NAME"
+                    ],
+                    "additionalProperties": false
+                },
+                "AIS": {
+                    "type": "object",
+                    "description": "AI Session Event record",
+                    "properties": {
+                        "EVENT_ID": {
+                            "type": "string",
+                            "description": "Globally unique event identifier (UUIDv4/ULID)."
+                        },
+                        "SESSION_ID": {
+                            "type": "string",
+                            "description": "Stable session identifier grouping all events in one AI conversation."
+                        },
+                        "REQUEST_ID": {
+                            "type": "string",
+                            "description": "Identifier correlating one user query with its model turns, tools, and answer."
+                        },
+                        "SEQUENCE_NO": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Monotonic 0-based sequence number within SESSION_ID."
+                        },
+                        "TURN_INDEX": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "0-based model loop turn index within REQUEST_ID."
+                        },
+                        "EVENT_KIND": {
+                            "$ref": "#/definitions/aisEventKind",
+                            "description": "Lifecycle event kind."
+                        },
+                        "RECEIVED_UTC": {
+                            "type": "string",
+                            "description": "Server-stamped RFC 3339 UTC timestamp when received by the SDN collector."
+                        },
+                        "RECEIVED_UNIX_MS": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807,
+                            "description": "Server-stamped Unix epoch milliseconds when received by the SDN collector."
+                        },
+                        "CLIENT_UTC": {
+                            "type": "string",
+                            "description": "Client-observed RFC 3339 UTC timestamp when the event occurred."
+                        },
+                        "CLIENT_UNIX_MS": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807,
+                            "description": "Client-observed Unix epoch milliseconds when the event occurred."
+                        },
+                        "CLIENT_IP": {
+                            "type": "string",
+                            "description": "Authoritative client IP extracted server-side from edge headers or socket remote."
+                        },
+                        "CLIENT_IP_HASH": {
+                            "type": "string",
+                            "description": "Unsalted lowercase hex SHA-256 hash of the normalized CLIENT_IP used as a\ndeterministic grouping key (not an anonymization barrier for IPv4)."
+                        },
+                        "REMOTE_ADDR": {
+                            "type": "string",
+                            "description": "Raw TCP remote ip:port observed by the SDN HTTP listener."
+                        },
+                        "X_FORWARDED_FOR": {
+                            "type": "string",
+                            "description": "Raw X-Forwarded-For chain observed by the SDN HTTP listener."
+                        },
+                        "CF_RAY": {
+                            "type": "string",
+                            "description": "Cloudflare CF-Ray edge trace identifier."
+                        },
+                        "CF_COUNTRY": {
+                            "type": "string",
+                            "description": "Cloudflare CF-IPCountry ISO-3166-1 alpha-2 country code."
+                        },
+                        "CF_REGION": {
+                            "type": "string",
+                            "description": "Cloudflare edge region or subdivision code."
+                        },
+                        "CF_CITY": {
+                            "type": "string",
+                            "description": "Cloudflare edge city name."
+                        },
+                        "CF_ASN": {
+                            "type": "string",
+                            "description": "Edge-reported Autonomous System Number verbatim (e.g. \"AS7922\" or numeric ASN)."
+                        },
+                        "CF_TLS_VERSION": {
+                            "type": "string",
+                            "description": "Edge-reported TLS protocol version."
+                        },
+                        "HTTP_ORIGIN": {
+                            "type": "string",
+                            "description": "Server-observed HTTP Origin header."
+                        },
+                        "HTTP_REFERER": {
+                            "type": "string",
+                            "description": "Server-observed HTTP Referer header (query string stripped by collector)."
+                        },
+                        "HTTP_USER_AGENT": {
+                            "type": "string",
+                            "description": "Server-observed HTTP User-Agent header."
+                        },
+                        "HTTP_ACCEPT_LANGUAGE": {
+                            "type": "string",
+                            "description": "Server-observed HTTP Accept-Language header."
+                        },
+                        "SEC_CH_UA": {
+                            "type": "string",
+                            "description": "Server-observed Sec-CH-UA client hint header."
+                        },
+                        "SEC_CH_UA_PLATFORM": {
+                            "type": "string",
+                            "description": "Server-observed Sec-CH-UA-Platform client hint header."
+                        },
+                        "SEC_CH_UA_MOBILE": {
+                            "type": "string",
+                            "description": "Server-observed Sec-CH-UA-Mobile client hint header."
+                        },
+                        "SDN_SIGNED_IN": {
+                            "type": "boolean",
+                            "description": "True when the requester had an active signed-in SDN session at event time."
+                        },
+                        "SDN_IDENTITY_SCHEME": {
+                            "type": "string",
+                            "description": "Public identity scheme (e.g. hd-wallet, ed25519, secp256k1, external-wallet)."
+                        },
+                        "SDN_SIGN_IN_METHOD": {
+                            "type": "string",
+                            "description": "Sign-in method metadata (e.g. wallet-passkey, wallet-mnemonic, external-eip1193)."
+                        },
+                        "SDN_PUBLIC_KEY_HEX": {
+                            "type": "string",
+                            "description": "Requester public key in lowercase hex (never private key material)."
+                        },
+                        "SDN_KEY_ID": {
+                            "type": "string",
+                            "description": "Requester public key identifier, fingerprint, or libp2p peer ID."
+                        },
+                        "SDN_DERIVATION_PATH": {
+                            "type": "string",
+                            "description": "Non-secret BIP-32/SLIP-10 derivation path metadata when present."
+                        },
+                        "EXTERNAL_WALLET_ADDRESS": {
+                            "type": "string",
+                            "description": "Connected external wallet public address when present."
+                        },
+                        "EXTERNAL_WALLET_NAME": {
+                            "type": "string",
+                            "description": "Connected external wallet provider name (e.g. MetaMask, Phantom)."
+                        },
+                        "EXTERNAL_WALLET_CHAIN": {
+                            "type": "string",
+                            "description": "Connected external wallet chain identifier (e.g. eip155:1)."
+                        },
+                        "FINGERPRINT_HASH": {
+                            "type": "string",
+                            "description": "Composite lowercase hex SHA-256 browser fingerprint hash."
+                        },
+                        "INSTALL_ID": {
+                            "type": "string",
+                            "description": "Persistent first-party browser installation UUID across sessions."
+                        },
+                        "PAGE_URL": {
+                            "type": "string",
+                            "description": "Sanitized client page URL/route at event time."
+                        },
+                        "APP_NAME": {
+                            "type": "string",
+                            "description": "Client application name (e.g. SpaceAware)."
+                        },
+                        "APP_VERSION": {
+                            "type": "string",
+                            "description": "Client application build version or revision."
+                        },
+                        "PLATFORM": {
+                            "type": "string",
+                            "description": "Browser navigator platform string."
+                        },
+                        "TIMEZONE": {
+                            "type": "string",
+                            "description": "IANA timezone name from Intl.DateTimeFormat."
+                        },
+                        "TZ_OFFSET_MIN": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "UTC offset in minutes from Date.prototype.getTimezoneOffset() (meaningful when FINGERPRINT_HASH is set)."
+                        },
+                        "LANGUAGES": {
+                            "type": "string",
+                            "description": "Comma-separated navigator.languages list."
+                        },
+                        "SCREEN_WIDTH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Physical display width in CSS pixels (screen.width)."
+                        },
+                        "SCREEN_HEIGHT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Physical display height in CSS pixels (screen.height)."
+                        },
+                        "VIEWPORT_WIDTH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Browser viewport width in CSS pixels (window.innerWidth)."
+                        },
+                        "VIEWPORT_HEIGHT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Browser viewport height in CSS pixels (window.innerHeight)."
+                        },
+                        "COLOR_DEPTH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Display color depth in bits (screen.colorDepth)."
+                        },
+                        "DEVICE_PIXEL_RATIO": {
+                            "type": "number",
+                            "description": "Device pixel ratio (window.devicePixelRatio)."
+                        },
+                        "HARDWARE_CONCURRENCY": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Logical CPU thread count (navigator.hardwareConcurrency)."
+                        },
+                        "DEVICE_MEMORY_GB": {
+                            "type": "number",
+                            "description": "Approximate device memory in GiB (navigator.deviceMemory, 0 if unavailable)."
+                        },
+                        "MAX_TOUCH_POINTS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Maximum simultaneous touch points (navigator.maxTouchPoints)."
+                        },
+                        "WEBGL_VENDOR": {
+                            "type": "string",
+                            "description": "WebGL unmasked vendor string."
+                        },
+                        "WEBGL_RENDERER": {
+                            "type": "string",
+                            "description": "WebGL unmasked renderer string."
+                        },
+                        "CANVAS_HASH": {
+                            "type": "string",
+                            "description": "Lowercase hex SHA-256 hash of deterministic 2D canvas fingerprint."
+                        },
+                        "AUDIO_HASH": {
+                            "type": "string",
+                            "description": "Lowercase hex SHA-256 hash of deterministic audio context fingerprint."
+                        },
+                        "FONT_HASH": {
+                            "type": "string",
+                            "description": "Lowercase hex SHA-256 hash of deterministic browser font-metrics probe."
+                        },
+                        "COOKIES_ENABLED": {
+                            "type": "boolean",
+                            "description": "True when browser reports navigator.cookieEnabled (meaningful when FINGERPRINT_HASH is set)."
+                        },
+                        "DO_NOT_TRACK": {
+                            "type": "string",
+                            "description": "Browser navigator.doNotTrack value verbatim."
+                        },
+                        "WEBDRIVER": {
+                            "type": "boolean",
+                            "description": "True when browser reports navigator.webdriver (meaningful when FINGERPRINT_HASH is set)."
+                        },
+                        "LOCAL_STORAGE_WRITABLE": {
+                            "type": "boolean",
+                            "description": "True when browser localStorage was writable at probe time (meaningful when FINGERPRINT_HASH is set)."
+                        },
+                        "MODEL_PROVIDER": {
+                            "type": "string",
+                            "description": "Configured AI provider identifier (e.g. spaceaware-proxy, anthropic, openai)."
+                        },
+                        "MODEL_ID": {
+                            "type": "string",
+                            "description": "Model identifier used for this request or turn."
+                        },
+                        "PROMPT_TEXT": {
+                            "type": "string",
+                            "description": "User prompt or query text submitted to the AI."
+                        },
+                        "ANSWER_TEXT": {
+                            "type": "string",
+                            "description": "Assistant answer or turn output text."
+                        },
+                        "SUMMARY_TEXT": {
+                            "type": "string",
+                            "description": "Concise summary or card title produced for the answer."
+                        },
+                        "STATUS": {
+                            "$ref": "#/definitions/aisEventStatus",
+                            "description": "Execution outcome status."
+                        },
+                        "ERROR_CODE": {
+                            "type": "string",
+                            "description": "Machine-readable error code when STATUS indicates failure."
+                        },
+                        "ERROR_MESSAGE": {
+                            "type": "string",
+                            "description": "Human-readable error message when STATUS indicates failure."
+                        },
+                        "INPUT_TOKENS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Prompt/input token count reported by the provider."
+                        },
+                        "OUTPUT_TOKENS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Completion/output token count reported by the provider."
+                        },
+                        "TOTAL_TOKENS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Total token count reported by the provider."
+                        },
+                        "COST_USD": {
+                            "type": "number",
+                            "description": "Provider-reported or estimated request cost in USD (0 when unreported)."
+                        },
+                        "LATENCY_MS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Elapsed execution latency in milliseconds."
+                        },
+                        "TOOL_CALL_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of tool calls executed in this turn or request."
+                        },
+                        "COLLECTOR_NODE_ID": {
+                            "type": "string",
+                            "description": "Server-stamped SDN collector node peer ID or hostname."
+                        },
+                        "MESSAGES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/AISMessage"
+                            },
+                            "description": "Structured conversation messages captured with this event."
+                        },
+                        "TOOL_CALLS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/AISToolCall"
+                            },
+                            "description": "Structured tool invocations and results captured with this event."
+                        },
+                        "EDGE_HEADERS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/AISHeader"
+                            },
+                            "description": "Non-credential HTTP headers observed by the collecting SDN node."
+                        }
+                    },
+                    "required": [
+                        "EVENT_ID",
+                        "SESSION_ID"
+                    ],
                     "additionalProperties": false
                 },
                 "ANI": {

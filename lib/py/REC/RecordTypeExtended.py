@@ -61,3 +61,4 @@ class RecordTypeExtended(object):
     DCO = 303
     RBF = 304
     RDE = 305
+    AIS = 306

@@ -1,5 +1,5 @@
-// Hash: 8fd8194bddcd0996587eab14679c989fb068e37cd4100d51cd13b900811e6254
-// Version: 1.44.94
+// Hash: af90f3ddcfca85cf353c3d9f91a3d27f5597605d8680310caa2aa02715500db9
+// Version: 1.44.95
 // -----------------------------------END_HEADER
 include "../ABA/main.fbs";
 include "../ACI/main.fbs";
@@ -10,6 +10,7 @@ include "../ACT/main.fbs";
 include "../ACW/main.fbs";
 include "../AEM/main.fbs";
 include "../AGR/main.fbs";
+include "../AIS/main.fbs";
 include "../ANI/main.fbs";
 include "../AOF/main.fbs";
 include "../APL/main.fbs";
@@ -446,7 +447,8 @@ enum RecordTypeExtended : ushort {
   TMX = 302,
   DCO = 303,
   RBF = 304,
-  RDE = 305
+  RDE = 305,
+  AIS = 306
 }  // Wide record types
 
 /// Individual record wrapper for any standard type

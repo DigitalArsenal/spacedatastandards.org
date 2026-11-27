@@ -7,6 +7,7 @@ export * as ACT from './ACT/main.js';
 export * as ACW from './ACW/main.js';
 export * as AEM from './AEM/main.js';
 export * as AGR from './AGR/main.js';
+export * as AIS from './AIS/main.js';
 export * as ANI from './ANI/main.js';
 export * as AOF from './AOF/main.js';
 export * as APL from './APL/main.js';

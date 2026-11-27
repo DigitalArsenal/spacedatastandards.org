@@ -9,6 +9,7 @@ import ACT.main_generated
 import ACW.main_generated
 import AEM.main_generated
 import AGR.main_generated
+import AIS.main_generated
 import ANI.main_generated
 import AOF.main_generated
 import APL.main_generated
@@ -1016,6 +1017,7 @@ enum RecordTypeExtended:
     RecordTypeExtended_DCO = 303
     RecordTypeExtended_RBF = 304
     RecordTypeExtended_RDE = 305
+    RecordTypeExtended_AIS = 306
 
 class Record
 
