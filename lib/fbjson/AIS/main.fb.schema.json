@@ -1,0 +1,798 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "aisEventKind": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "SESSION_START",
+        "QUERY_SUBMITTED",
+        "MODEL_TURN",
+        "TOOL_CALL",
+        "TOOL_RESULT",
+        "ANSWER_COMPLETED",
+        "ERROR",
+        "ABORTED",
+        "SESSION_END"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0,
+          "description": "Not stated."
+        },
+        "SESSION_START": {
+          "value": 1,
+          "description": "Browser or client initialized a new AI session."
+        },
+        "QUERY_SUBMITTED": {
+          "value": 2,
+          "description": "Requester submitted a prompt/query to the AI."
+        },
+        "MODEL_TURN": {
+          "value": 3,
+          "description": "Model produced an intermediate or final loop turn."
+        },
+        "TOOL_CALL": {
+          "value": 4,
+          "description": "Assistant invoked a console or domain tool."
+        },
+        "TOOL_RESULT": {
+          "value": 5,
+          "description": "Tool returned a result to the model loop."
+        },
+        "ANSWER_COMPLETED": {
+          "value": 6,
+          "description": "Assistant completed the final answer for a query."
+        },
+        "ERROR": {
+          "value": 7,
+          "description": "Query or turn failed with an error."
+        },
+        "ABORTED": {
+          "value": 8,
+          "description": "Requester or client aborted an in-flight query."
+        },
+        "SESSION_END": {
+          "value": 9,
+          "description": "Session closed or page unloaded."
+        }
+      }
+    },
+    "aisEventStatus": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "OK",
+        "PENDING",
+        "ERROR",
+        "ABORTED",
+        "RATE_LIMITED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0,
+          "description": "Not stated."
+        },
+        "OK": {
+          "value": 1,
+          "description": "Succeeded normally."
+        },
+        "PENDING": {
+          "value": 2,
+          "description": "In progress or accepted."
+        },
+        "ERROR": {
+          "value": 3,
+          "description": "Failed due to provider, tool, or runtime error."
+        },
+        "ABORTED": {
+          "value": 4,
+          "description": "Aborted before completion."
+        },
+        "RATE_LIMITED": {
+          "value": 5,
+          "description": "Rejected due to rate or quota limits."
+        }
+      }
+    },
+    "aisMessageRole": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "SYSTEM",
+        "USER",
+        "ASSISTANT",
+        "TOOL"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0,
+          "description": "Not stated."
+        },
+        "SYSTEM": {
+          "value": 1,
+          "description": "System instruction message."
+        },
+        "USER": {
+          "value": 2,
+          "description": "End-user prompt message."
+        },
+        "ASSISTANT": {
+          "value": 3,
+          "description": "Assistant response message."
+        },
+        "TOOL": {
+          "value": 4,
+          "description": "Tool response message."
+        }
+      }
+    },
+    "AISMessage": {
+      "type": "object",
+      "description": "One structured message in an AI conversation transcript.",
+      "properties": {
+        "ROLE": {
+          "$ref": "#/definitions/aisMessageRole",
+          "description": "Participant role for this message.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "Not stated."
+            },
+            "SYSTEM": {
+              "value": 1,
+              "description": "System instruction message."
+            },
+            "USER": {
+              "value": 2,
+              "description": "End-user prompt message."
+            },
+            "ASSISTANT": {
+              "value": 3,
+              "description": "Assistant response message."
+            },
+            "TOOL": {
+              "value": 4,
+              "description": "Tool response message."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "CONTENT": {
+          "type": "string",
+          "description": "UTF-8 message body text.",
+          "x-flatbuffer-type": "string"
+        },
+        "TIMESTAMP_UTC": {
+          "type": "string",
+          "description": "RFC 3339 UTC timestamp when the message was created.",
+          "x-flatbuffer-type": "string"
+        },
+        "TOOL_CALL_ID": {
+          "type": "string",
+          "description": "Correlating tool-call identifier when ROLE is TOOL or ASSISTANT.",
+          "x-flatbuffer-type": "string"
+        },
+        "TOOL_NAME": {
+          "type": "string",
+          "description": "Tool name when associated with a tool invocation.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "AISToolCall": {
+      "type": "object",
+      "description": "One structured tool call and optional result captured during a model turn.",
+      "properties": {
+        "CALL_ID": {
+          "type": "string",
+          "description": "Model-assigned call identifier.",
+          "x-flatbuffer-type": "string"
+        },
+        "TOOL_NAME": {
+          "type": "string",
+          "description": "Invoked tool name.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "ARGUMENTS_TEXT": {
+          "type": "string",
+          "description": "Serialized tool arguments as invoked.",
+          "x-flatbuffer-type": "string"
+        },
+        "RESULT_TEXT": {
+          "type": "string",
+          "description": "Serialized or summarized tool result returned to the model.",
+          "x-flatbuffer-type": "string"
+        },
+        "IS_ERROR": {
+          "type": "boolean",
+          "description": "True when the tool invocation returned an error.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "DURATION_MS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Wall-clock duration of the tool execution in milliseconds.",
+          "x-flatbuffer-type": "uint32"
+        }
+      },
+      "required": [
+        "TOOL_NAME"
+      ],
+      "additionalProperties": false
+    },
+    "AISHeader": {
+      "type": "object",
+      "description": "One non-credential HTTP header observed by the collecting edge/server.",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Lowercase HTTP header name (collector strips Authorization, Proxy-Authorization,\nCookie, Set-Cookie, X-Api-Key, X-Auth-Token, X-SDN-Token, CF-Access-JWT-Assertion,\nand CF-Access-Client-Secret before persisting).",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "VALUE": {
+          "type": "string",
+          "description": "Verbatim non-credential HTTP header value.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "NAME"
+      ],
+      "additionalProperties": false
+    },
+    "AIS": {
+      "type": "object",
+      "description": "AI Session Event record",
+      "properties": {
+        "EVENT_ID": {
+          "type": "string",
+          "description": "Globally unique event identifier (UUIDv4/ULID).",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "SESSION_ID": {
+          "type": "string",
+          "description": "Stable session identifier grouping all events in one AI conversation.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "REQUEST_ID": {
+          "type": "string",
+          "description": "Identifier correlating one user query with its model turns, tools, and answer.",
+          "x-flatbuffer-type": "string"
+        },
+        "SEQUENCE_NO": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Monotonic 0-based sequence number within SESSION_ID.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "TURN_INDEX": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "0-based model loop turn index within REQUEST_ID.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "EVENT_KIND": {
+          "$ref": "#/definitions/aisEventKind",
+          "description": "Lifecycle event kind.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "Not stated."
+            },
+            "SESSION_START": {
+              "value": 1,
+              "description": "Browser or client initialized a new AI session."
+            },
+            "QUERY_SUBMITTED": {
+              "value": 2,
+              "description": "Requester submitted a prompt/query to the AI."
+            },
+            "MODEL_TURN": {
+              "value": 3,
+              "description": "Model produced an intermediate or final loop turn."
+            },
+            "TOOL_CALL": {
+              "value": 4,
+              "description": "Assistant invoked a console or domain tool."
+            },
+            "TOOL_RESULT": {
+              "value": 5,
+              "description": "Tool returned a result to the model loop."
+            },
+            "ANSWER_COMPLETED": {
+              "value": 6,
+              "description": "Assistant completed the final answer for a query."
+            },
+            "ERROR": {
+              "value": 7,
+              "description": "Query or turn failed with an error."
+            },
+            "ABORTED": {
+              "value": 8,
+              "description": "Requester or client aborted an in-flight query."
+            },
+            "SESSION_END": {
+              "value": 9,
+              "description": "Session closed or page unloaded."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "RECEIVED_UTC": {
+          "type": "string",
+          "description": "Server-stamped RFC 3339 UTC timestamp when received by the SDN collector.",
+          "x-flatbuffer-type": "string"
+        },
+        "RECEIVED_UNIX_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Server-stamped Unix epoch milliseconds when received by the SDN collector.",
+          "x-flatbuffer-type": "int64"
+        },
+        "CLIENT_UTC": {
+          "type": "string",
+          "description": "Client-observed RFC 3339 UTC timestamp when the event occurred.",
+          "x-flatbuffer-type": "string"
+        },
+        "CLIENT_UNIX_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Client-observed Unix epoch milliseconds when the event occurred.",
+          "x-flatbuffer-type": "int64"
+        },
+        "CLIENT_IP": {
+          "type": "string",
+          "description": "Authoritative client IP extracted server-side from edge headers or socket remote.",
+          "x-flatbuffer-type": "string"
+        },
+        "CLIENT_IP_HASH": {
+          "type": "string",
+          "description": "Unsalted lowercase hex SHA-256 hash of the normalized CLIENT_IP used as a\ndeterministic grouping key (not an anonymization barrier for IPv4).",
+          "x-flatbuffer-type": "string"
+        },
+        "REMOTE_ADDR": {
+          "type": "string",
+          "description": "Raw TCP remote ip:port observed by the SDN HTTP listener.",
+          "x-flatbuffer-type": "string"
+        },
+        "X_FORWARDED_FOR": {
+          "type": "string",
+          "description": "Raw X-Forwarded-For chain observed by the SDN HTTP listener.",
+          "x-flatbuffer-type": "string"
+        },
+        "CF_RAY": {
+          "type": "string",
+          "description": "Cloudflare CF-Ray edge trace identifier.",
+          "x-flatbuffer-type": "string"
+        },
+        "CF_COUNTRY": {
+          "type": "string",
+          "description": "Cloudflare CF-IPCountry ISO-3166-1 alpha-2 country code.",
+          "x-flatbuffer-type": "string"
+        },
+        "CF_REGION": {
+          "type": "string",
+          "description": "Cloudflare edge region or subdivision code.",
+          "x-flatbuffer-type": "string"
+        },
+        "CF_CITY": {
+          "type": "string",
+          "description": "Cloudflare edge city name.",
+          "x-flatbuffer-type": "string"
+        },
+        "CF_ASN": {
+          "type": "string",
+          "description": "Edge-reported Autonomous System Number verbatim (e.g. \"AS7922\" or numeric ASN).",
+          "x-flatbuffer-type": "string"
+        },
+        "CF_TLS_VERSION": {
+          "type": "string",
+          "description": "Edge-reported TLS protocol version.",
+          "x-flatbuffer-type": "string"
+        },
+        "HTTP_ORIGIN": {
+          "type": "string",
+          "description": "Server-observed HTTP Origin header.",
+          "x-flatbuffer-type": "string"
+        },
+        "HTTP_REFERER": {
+          "type": "string",
+          "description": "Server-observed HTTP Referer header (query string stripped by collector).",
+          "x-flatbuffer-type": "string"
+        },
+        "HTTP_USER_AGENT": {
+          "type": "string",
+          "description": "Server-observed HTTP User-Agent header.",
+          "x-flatbuffer-type": "string"
+        },
+        "HTTP_ACCEPT_LANGUAGE": {
+          "type": "string",
+          "description": "Server-observed HTTP Accept-Language header.",
+          "x-flatbuffer-type": "string"
+        },
+        "SEC_CH_UA": {
+          "type": "string",
+          "description": "Server-observed Sec-CH-UA client hint header.",
+          "x-flatbuffer-type": "string"
+        },
+        "SEC_CH_UA_PLATFORM": {
+          "type": "string",
+          "description": "Server-observed Sec-CH-UA-Platform client hint header.",
+          "x-flatbuffer-type": "string"
+        },
+        "SEC_CH_UA_MOBILE": {
+          "type": "string",
+          "description": "Server-observed Sec-CH-UA-Mobile client hint header.",
+          "x-flatbuffer-type": "string"
+        },
+        "SDN_SIGNED_IN": {
+          "type": "boolean",
+          "description": "True when the requester had an active signed-in SDN session at event time.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "SDN_IDENTITY_SCHEME": {
+          "type": "string",
+          "description": "Public identity scheme (e.g. hd-wallet, ed25519, secp256k1, external-wallet).",
+          "x-flatbuffer-type": "string"
+        },
+        "SDN_SIGN_IN_METHOD": {
+          "type": "string",
+          "description": "Sign-in method metadata (e.g. wallet-passkey, wallet-mnemonic, external-eip1193).",
+          "x-flatbuffer-type": "string"
+        },
+        "SDN_PUBLIC_KEY_HEX": {
+          "type": "string",
+          "description": "Requester public key in lowercase hex (never private key material).",
+          "x-flatbuffer-type": "string"
+        },
+        "SDN_KEY_ID": {
+          "type": "string",
+          "description": "Requester public key identifier, fingerprint, or libp2p peer ID.",
+          "x-flatbuffer-type": "string"
+        },
+        "SDN_DERIVATION_PATH": {
+          "type": "string",
+          "description": "Non-secret BIP-32/SLIP-10 derivation path metadata when present.",
+          "x-flatbuffer-type": "string"
+        },
+        "EXTERNAL_WALLET_ADDRESS": {
+          "type": "string",
+          "description": "Connected external wallet public address when present.",
+          "x-flatbuffer-type": "string"
+        },
+        "EXTERNAL_WALLET_NAME": {
+          "type": "string",
+          "description": "Connected external wallet provider name (e.g. MetaMask, Phantom).",
+          "x-flatbuffer-type": "string"
+        },
+        "EXTERNAL_WALLET_CHAIN": {
+          "type": "string",
+          "description": "Connected external wallet chain identifier (e.g. eip155:1).",
+          "x-flatbuffer-type": "string"
+        },
+        "FINGERPRINT_HASH": {
+          "type": "string",
+          "description": "Composite lowercase hex SHA-256 browser fingerprint hash.",
+          "x-flatbuffer-type": "string"
+        },
+        "INSTALL_ID": {
+          "type": "string",
+          "description": "Persistent first-party browser installation UUID across sessions.",
+          "x-flatbuffer-type": "string"
+        },
+        "PAGE_URL": {
+          "type": "string",
+          "description": "Sanitized client page URL/route at event time.",
+          "x-flatbuffer-type": "string"
+        },
+        "APP_NAME": {
+          "type": "string",
+          "description": "Client application name (e.g. SpaceAware).",
+          "x-flatbuffer-type": "string"
+        },
+        "APP_VERSION": {
+          "type": "string",
+          "description": "Client application build version or revision.",
+          "x-flatbuffer-type": "string"
+        },
+        "PLATFORM": {
+          "type": "string",
+          "description": "Browser navigator platform string.",
+          "x-flatbuffer-type": "string"
+        },
+        "TIMEZONE": {
+          "type": "string",
+          "description": "IANA timezone name from Intl.DateTimeFormat.",
+          "x-flatbuffer-type": "string"
+        },
+        "TZ_OFFSET_MIN": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "UTC offset in minutes from Date.prototype.getTimezoneOffset() (meaningful when FINGERPRINT_HASH is set).",
+          "x-flatbuffer-type": "int32"
+        },
+        "LANGUAGES": {
+          "type": "string",
+          "description": "Comma-separated navigator.languages list.",
+          "x-flatbuffer-type": "string"
+        },
+        "SCREEN_WIDTH": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Physical display width in CSS pixels (screen.width).",
+          "x-flatbuffer-type": "uint32"
+        },
+        "SCREEN_HEIGHT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Physical display height in CSS pixels (screen.height).",
+          "x-flatbuffer-type": "uint32"
+        },
+        "VIEWPORT_WIDTH": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Browser viewport width in CSS pixels (window.innerWidth).",
+          "x-flatbuffer-type": "uint32"
+        },
+        "VIEWPORT_HEIGHT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Browser viewport height in CSS pixels (window.innerHeight).",
+          "x-flatbuffer-type": "uint32"
+        },
+        "COLOR_DEPTH": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Display color depth in bits (screen.colorDepth).",
+          "x-flatbuffer-type": "uint16"
+        },
+        "DEVICE_PIXEL_RATIO": {
+          "type": "number",
+          "description": "Device pixel ratio (window.devicePixelRatio).",
+          "x-flatbuffer-type": "float"
+        },
+        "HARDWARE_CONCURRENCY": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Logical CPU thread count (navigator.hardwareConcurrency).",
+          "x-flatbuffer-type": "uint16"
+        },
+        "DEVICE_MEMORY_GB": {
+          "type": "number",
+          "description": "Approximate device memory in GiB (navigator.deviceMemory, 0 if unavailable).",
+          "x-flatbuffer-type": "float"
+        },
+        "MAX_TOUCH_POINTS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Maximum simultaneous touch points (navigator.maxTouchPoints).",
+          "x-flatbuffer-type": "uint16"
+        },
+        "WEBGL_VENDOR": {
+          "type": "string",
+          "description": "WebGL unmasked vendor string.",
+          "x-flatbuffer-type": "string"
+        },
+        "WEBGL_RENDERER": {
+          "type": "string",
+          "description": "WebGL unmasked renderer string.",
+          "x-flatbuffer-type": "string"
+        },
+        "CANVAS_HASH": {
+          "type": "string",
+          "description": "Lowercase hex SHA-256 hash of deterministic 2D canvas fingerprint.",
+          "x-flatbuffer-type": "string"
+        },
+        "AUDIO_HASH": {
+          "type": "string",
+          "description": "Lowercase hex SHA-256 hash of deterministic audio context fingerprint.",
+          "x-flatbuffer-type": "string"
+        },
+        "FONT_HASH": {
+          "type": "string",
+          "description": "Lowercase hex SHA-256 hash of deterministic browser font-metrics probe.",
+          "x-flatbuffer-type": "string"
+        },
+        "COOKIES_ENABLED": {
+          "type": "boolean",
+          "description": "True when browser reports navigator.cookieEnabled (meaningful when FINGERPRINT_HASH is set).",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "DO_NOT_TRACK": {
+          "type": "string",
+          "description": "Browser navigator.doNotTrack value verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "WEBDRIVER": {
+          "type": "boolean",
+          "description": "True when browser reports navigator.webdriver (meaningful when FINGERPRINT_HASH is set).",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "LOCAL_STORAGE_WRITABLE": {
+          "type": "boolean",
+          "description": "True when browser localStorage was writable at probe time (meaningful when FINGERPRINT_HASH is set).",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "MODEL_PROVIDER": {
+          "type": "string",
+          "description": "Configured AI provider identifier (e.g. spaceaware-proxy, anthropic, openai).",
+          "x-flatbuffer-type": "string"
+        },
+        "MODEL_ID": {
+          "type": "string",
+          "description": "Model identifier used for this request or turn.",
+          "x-flatbuffer-type": "string"
+        },
+        "PROMPT_TEXT": {
+          "type": "string",
+          "description": "User prompt or query text submitted to the AI.",
+          "x-flatbuffer-type": "string"
+        },
+        "ANSWER_TEXT": {
+          "type": "string",
+          "description": "Assistant answer or turn output text.",
+          "x-flatbuffer-type": "string"
+        },
+        "SUMMARY_TEXT": {
+          "type": "string",
+          "description": "Concise summary or card title produced for the answer.",
+          "x-flatbuffer-type": "string"
+        },
+        "STATUS": {
+          "$ref": "#/definitions/aisEventStatus",
+          "description": "Execution outcome status.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "Not stated."
+            },
+            "OK": {
+              "value": 1,
+              "description": "Succeeded normally."
+            },
+            "PENDING": {
+              "value": 2,
+              "description": "In progress or accepted."
+            },
+            "ERROR": {
+              "value": 3,
+              "description": "Failed due to provider, tool, or runtime error."
+            },
+            "ABORTED": {
+              "value": 4,
+              "description": "Aborted before completion."
+            },
+            "RATE_LIMITED": {
+              "value": 5,
+              "description": "Rejected due to rate or quota limits."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "ERROR_CODE": {
+          "type": "string",
+          "description": "Machine-readable error code when STATUS indicates failure.",
+          "x-flatbuffer-type": "string"
+        },
+        "ERROR_MESSAGE": {
+          "type": "string",
+          "description": "Human-readable error message when STATUS indicates failure.",
+          "x-flatbuffer-type": "string"
+        },
+        "INPUT_TOKENS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Prompt/input token count reported by the provider.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "OUTPUT_TOKENS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Completion/output token count reported by the provider.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "TOTAL_TOKENS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Total token count reported by the provider.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "COST_USD": {
+          "type": "number",
+          "description": "Provider-reported or estimated request cost in USD (0 when unreported).",
+          "x-flatbuffer-type": "double"
+        },
+        "LATENCY_MS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Elapsed execution latency in milliseconds.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "TOOL_CALL_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of tool calls executed in this turn or request.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "COLLECTOR_NODE_ID": {
+          "type": "string",
+          "description": "Server-stamped SDN collector node peer ID or hostname.",
+          "x-flatbuffer-type": "string"
+        },
+        "MESSAGES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AISMessage"
+          },
+          "description": "Structured conversation messages captured with this event.",
+          "x-flatbuffer-type": "[AISMessage]"
+        },
+        "TOOL_CALLS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AISToolCall"
+          },
+          "description": "Structured tool invocations and results captured with this event.",
+          "x-flatbuffer-type": "[AISToolCall]"
+        },
+        "EDGE_HEADERS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AISHeader"
+          },
+          "description": "Non-credential HTTP headers observed by the collecting SDN node.",
+          "x-flatbuffer-type": "[AISHeader]"
+        }
+      },
+      "required": [
+        "EVENT_ID",
+        "SESSION_ID"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/AIS",
+  "x-flatbuffer-root-type": "AIS",
+  "x-flatbuffer-file-identifier": "$AIS"
+}

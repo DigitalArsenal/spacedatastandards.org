@@ -63,5 +63,6 @@ class RecordTypeExtended private constructor() {
         const val DCO: UShort = 303u
         const val RBF: UShort = 304u
         const val RDE: UShort = 305u
+        const val AIS: UShort = 306u
     }
 }

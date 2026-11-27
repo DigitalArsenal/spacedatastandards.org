@@ -62,5 +62,6 @@ export enum RecordTypeExtended {
   TMX = 302,
   DCO = 303,
   RBF = 304,
-  RDE = 305
+  RDE = 305,
+  AIS = 306
 }

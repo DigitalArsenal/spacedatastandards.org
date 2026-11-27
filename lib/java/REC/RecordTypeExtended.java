@@ -63,4 +63,5 @@ public final class RecordTypeExtended {
   public static final int DCO = 303;
   public static final int RBF = 304;
   public static final int RDE = 305;
+  public static final int AIS = 306;
 }

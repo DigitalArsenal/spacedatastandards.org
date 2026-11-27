@@ -1,0 +1,46 @@
+/**
+ * Lifecycle kind of an AI assistant session event. Append new values only.
+ */
+export declare enum aisEventKind {
+    /**
+     * Not stated.
+     */
+    UNSPECIFIED = 0,
+    /**
+     * Browser or client initialized a new AI session.
+     */
+    SESSION_START = 1,
+    /**
+     * Requester submitted a prompt/query to the AI.
+     */
+    QUERY_SUBMITTED = 2,
+    /**
+     * Model produced an intermediate or final loop turn.
+     */
+    MODEL_TURN = 3,
+    /**
+     * Assistant invoked a console or domain tool.
+     */
+    TOOL_CALL = 4,
+    /**
+     * Tool returned a result to the model loop.
+     */
+    TOOL_RESULT = 5,
+    /**
+     * Assistant completed the final answer for a query.
+     */
+    ANSWER_COMPLETED = 6,
+    /**
+     * Query or turn failed with an error.
+     */
+    ERROR = 7,
+    /**
+     * Requester or client aborted an in-flight query.
+     */
+    ABORTED = 8,
+    /**
+     * Session closed or page unloaded.
+     */
+    SESSION_END = 9
+}
+//# sourceMappingURL=aisEventKind.d.ts.map
